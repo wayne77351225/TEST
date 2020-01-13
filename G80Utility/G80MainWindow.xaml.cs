@@ -101,13 +101,12 @@ namespace PirnterUtility
         #region 通讯接口测试按鈕事件
         private void ConnectTest_Click(object sender, RoutedEventArgs e)
         {
-            byte[] sendArray = StringToByteArray("1F1B1F535A4A425A46100100");
+            byte[] sendArray = StringToByteArray("1F1B100100");
             if ((bool)rs232Checkbox.IsChecked)
             {
-                SerialPortConnect("PrinterInfo", sendArray);
+                SerialPortConnect("CommunicationTest", sendArray);
             }
-            // byte[] TETS = StringToByteArray("1F1B1F48461101005F5A4C5F5050543031005F564552312E3000086F0000000000000000000000C63D001D55");
-            //SetPrinterInfo(TETS); //
+
         }
         #endregion
 
@@ -132,7 +131,8 @@ namespace PirnterUtility
         }
         #endregion
         //========================取得資料後設定UI=================
-        #region 設定打印機型號/軟件版本/機器序號
+        
+           #region 設定打印機型號/軟件版本/機器序號
         private void SetPrinterInfo(byte[] buffer)
         {
             string moudle = null;
@@ -216,7 +216,7 @@ namespace PirnterUtility
                     switch (dataType )
                     {
                         case "PrinterInfo":
-                        bool isReceiveData = RS232Connect.SerialPortSendCMD("NeedReceive", data, null, 44);
+                        bool isReceiveData = RS232Connect.SerialPortSendCMD("NeedReceive", data, null, 8);
                         while (!isReceiveData)
                         {
 
@@ -227,8 +227,8 @@ namespace PirnterUtility
                                 {
                                     case "PrinterInfo":
                                         //byte[] TETS = StringToByteArray("1F1B1F48461101005F5A4C5F5050543031005F564552312E3000086F0000000000000000000000C63D001D55");
-                                        SetPrinterInfo(RS232Connect.mRecevieData); //
-                                        RS232ConnectImage.Source = new BitmapImage(new Uri("Images/green_circle.png", UriKind.Relative));
+                                        //SetPrinterInfo(RS232Connect.mRecevieData); //
+                                      
                                         break;
                                         //case "GN":
                                         //    SetGNColumnData(RS232Connect.mRecevieData, 3);
@@ -240,6 +240,11 @@ namespace PirnterUtility
                                 break;
                             }
                         }
+                            break;
+                        case "CommunicationTest": //通訊測試
+                            RS232Connect.SerialPortSendCMD("NeedReceive", data, null, 0);
+                            RS232ConnectImage.Source = new BitmapImage(new Uri("Images/green_circle.png", UriKind.Relative));
+                            RS232Connect.CloseSerialPort(); //沒立刻關閉有時會漏收命令
                             break;
                         case "Restart":
                         RS232Connect.SerialPortSendCMD("NoReceive", data, null,0);

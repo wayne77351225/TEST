@@ -139,28 +139,6 @@ namespace PirnterUtility.Tool
                 count -= bytesRead;
             }
 
-            //string receiveData = null;
-            
-            ////(0~7)前8個是無意義資料
-            //for (int i = 8; i < 18 ; i++)
-            //{
-            //    receiveData += Convert.ToChar(buffer[i]);    //機器型號
-            //}
-
-            //receiveData = null;
-            //for (int i = 18; i < 28; i++)
-            //{
-            //    receiveData += Convert.ToChar(buffer[i]);   //軟件版本    
-            //}
-
-            //receiveData = null;
-            //for (int i = 28; i < 44; i++)
-            //{
-            //    receiveData += Convert.ToChar(buffer[i]);      //機器序列號
-            //}
-
-
-            //Console.WriteLine("read:" + Encoding.Default.GetString(buffer));
             mRecevieData = buffer;
             IsConnect = true;
         }
