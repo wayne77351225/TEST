@@ -118,7 +118,7 @@ namespace PirnterUtility
 
                 case "RS232":
                     byte[] sendArray = StringToByteArray("1F1B1F535A4A425A46110000");
-                    SerialPortConnect("Restart", sendArray);
+                    SerialPortConnect("Beep", sendArray);
                     break;
                 case "USB":
 
@@ -130,9 +130,37 @@ namespace PirnterUtility
 
         }
         #endregion
+
+
+        #region 走紙方向
+        private void Direction_Click(object sender, RoutedEventArgs e)
+        {
+            byte[] sendArray;
+            switch (DeviceType)
+            {
+          
+                case "RS232":                   
+                    if (DirectionCombox.SelectedIndex == 0) {
+                        sendArray = StringToByteArray("1F1B1F9210111215161755");
+                    }
+                   else{
+                        sendArray = StringToByteArray("1F1B1F9210111215161733");
+                    }
+                   
+                    SerialPortConnect("Beep", sendArray);
+                    break;
+                case "USB":
+
+                    break;
+                case "Ethernet":
+
+                    break;
+            }
+        }
+        #endregion
         //========================取得資料後設定UI=================
-        
-           #region 設定打印機型號/軟件版本/機器序號
+
+        #region 設定打印機型號/軟件版本/機器序號
         private void SetPrinterInfo(byte[] buffer)
         {
             string moudle = null;
@@ -246,8 +274,9 @@ namespace PirnterUtility
                             RS232ConnectImage.Source = new BitmapImage(new Uri("Images/green_circle.png", UriKind.Relative));
                             RS232Connect.CloseSerialPort(); //沒立刻關閉有時會漏收命令
                             break;
-                        case "Restart":
+                        case "Beep":
                         RS232Connect.SerialPortSendCMD("NoReceive", data, null,0);
+                            RS232Connect.CloseSerialPort(); //沒立刻關閉有時會漏收命令
                             break;
                     }
                      
@@ -514,8 +543,8 @@ namespace PirnterUtility
         }
 
 
-        #endregion
 
+        #endregion
 
     }
 }
