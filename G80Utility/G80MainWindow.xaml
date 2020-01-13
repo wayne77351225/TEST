@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:PirnterUtility"
         mc:Ignorable="d"
         ResizeMode="NoResize"
-        Title="G80 Utility" Height="740" Width="1035">
+        Title="G80 Utility(Factory)" Height="740" Width="1035">
     <StackPanel  Background="#333333">
         <!--Top 通訊-->
         <Border Margin="5,10,5,3" >
@@ -16,9 +16,9 @@
                     <StackPanel Orientation="Horizontal">
                         <!--RS232-->
                         <StackPanel>
-                            <StackPanel  Margin="10,10,10,10" Orientation="Horizontal">
+                            <StackPanel  Margin="10" Orientation="Horizontal">
                                 <RadioButton FontSize="14" Name="RS232Radio" GroupName="connection" Content="{DynamicResource RS232}" VerticalAlignment="Center" Margin="0,0,5,0"   Checked="ConnectType_SelectionChanged" />
-                                <Image Margin="25,0,0,0" Source="Images/grey_circle.png" Width="12" Name="RS232ConnectImage"/>
+                                <Image Margin="35,0,0,0" Source="Images/grey_circle.png" Width="12" Name="RS232ConnectImage"/>
                             </StackPanel>
                             <ComboBox Margin="10,0,10,0"  FontSize="14" Width="100" Height="30" Name="DeviceSelectRS232"
                             ItemsSource="{Binding Device}"
@@ -31,55 +31,45 @@
                                 <ComboBoxItem Content="115200"/>
                             </ComboBox>
                         </StackPanel>
-                        <!--虛擬串口-->
-                        <StackPanel>
-                            <StackPanel  Margin="5,10,10,10" Orientation="Horizontal">
-                                <RadioButton FontSize="14"  Name="VisualUSBRadio" GroupName="connection" Content="虚拟串口" VerticalAlignment="Center" Margin="0,0,5,0"  Checked="ConnectType_SelectionChanged" />
-                                <Image Margin="15,0,0,0" Source="Images/grey_circle.png" Width="12" Name="VisualUSBConnectImage"/>
-                            </StackPanel>
-                            <ComboBox Margin="5,0,10,0"  FontSize="14"  Height="30"  Width="100" SelectionChanged="BaudRateCom_SelectionChanged">
-                                <ComboBoxItem Content="COM1"/>
-                                <ComboBoxItem Content="COM2"/>
-                                <ComboBoxItem Content="COM3"/>
-                            </ComboBox>
-                            <Button Margin="5,10,10,0" Content="刷新串口" Padding="5" />
-                        </StackPanel>
+
                         <!--USB-->
                         <StackPanel>
-                            <StackPanel  Margin="5,10,10,10" Orientation="Horizontal">
-                                <RadioButton FontSize="14"  Name="USBRadio" GroupName="connection" Content="{DynamicResource USB}" VerticalAlignment="Center" Margin="0,0,5,0"  Checked="ConnectType_SelectionChanged" />
-                                <Image Margin="33,0,0,0"  Source="Images/grey_circle.png" Width="12" Name="USBConnectImage"/>
+                            <StackPanel  Margin="10" Orientation="Horizontal">
+                                <RadioButton FontSize="14"  Name="USBRadio" GroupName="connection" Content="{DynamicResource USB}" VerticalAlignment="Center"   Checked="ConnectType_SelectionChanged" />
+                                <Image Margin="52,0,0,0"  Source="Images/grey_circle.png" Width="12" Name="USBConnectImage"/>
                             </StackPanel>
-                            <ComboBox Margin="5,0,10,0" FontSize="14" Width="90" Height="30" Name="DeviceSelectUSB"
+                            <ComboBox Margin="10,0,10,0" FontSize="14" Width="120" Height="30" Name="DeviceSelectUSB"
                                 ItemsSource="{Binding Device}"
                              DisplayMemberPath="DisplayName"
                             />
                         </StackPanel>
                         <!--乙太網-->
                         <StackPanel>
-                            <StackPanel Margin="5,10,10,10" Orientation="Horizontal">
-                                <RadioButton FontSize="14" Name="EhernetRadio" GroupName="connection" Content="{DynamicResource Ethernet}" VerticalAlignment="Center" Margin="0,0,5,0" Checked="ConnectType_SelectionChanged"/>
-                                <Image  Margin="25,0,0,0"   Source="Images/grey_circle.png" Width="12" Name="EthernetConnectImage"/>
+                            <StackPanel Margin="10" Orientation="Horizontal">
+                                <RadioButton FontSize="14" Name="EhernetRadio" GroupName="connection" Content="{DynamicResource Ethernet}" VerticalAlignment="Center"  Checked="ConnectType_SelectionChanged"/>
+                                <Image  Margin="52,0,0,0"   Source="Images/grey_circle.png" Width="12" Name="EthernetConnectImage"/>
                             </StackPanel>
-                            <TextBox Margin="5,0,10,0"  FontSize="14"  Height="30"  Width="110" Foreground="#BDBDBD" Padding="5"/>
+                            <TextBox Margin="10,0,10,0"  FontSize="14"  Height="30"  Width="110" Foreground="#BDBDBD" Padding="5"/>
                         </StackPanel>
                         <!--通訊測試-->
-                        <StackPanel Margin="5,0,10,0" VerticalAlignment="Center">
+                        <StackPanel Margin="10,0,10,0" VerticalAlignment="Center">
                             <CheckBox Content="串口" Margin="0,0,0,5" Name="rs232Checkbox"/>
-                            <CheckBox Content="USB虚拟串口"  Margin="0,0,0,5" Name="VisualCheckbox"/>
                             <CheckBox Content="USB打印设备" Margin="0,0,0,5" Name="USBCheckbox"/>
-                            <CheckBox Content="以太网" Margin="0,0,0,5" Name="EthernetCheckbox"/>
-                            <Button Content="通讯接口测试" Padding="5" Name="ConnectTest" Click="ConnectTest_Click"/>
+                            <CheckBox Content="以太网" Margin="0,0,0,15" Name="EthernetCheckbox"/>
+                            <Button Content="三接口测试" Padding="5" Name="ConnectTest" Click="ConnectTest_Click"/>
                         </StackPanel>
                     </StackPanel>
                 </GroupBox>
                 <!--機器信息-->
                 <GroupBox Header="机器信息" Margin="15,5,0,10" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14" Height="150">
                     <StackPanel VerticalAlignment="Top">
-                        <Label Content="机器序列号:" FontSize="14" Margin="2,0,0,0"/>
-                        <TextBox Width="120" Height="30"  Name="PrinterSN"/>
-                        <Button  Margin="5" Content="设置序列号" Padding="5" FontSize="14" Width="120"/>
-                        <Label Content="GP80250   V1.0 " Margin="3,0,0,0" Name="PrinterModule" />
+                        <Label Content="机器序列号:" FontSize="14" Margin="5,0,0,0"/>
+                        <TextBox Width="200" Height="30"  Name="PrinterSN" HorizontalAlignment="Left" Margin="5,0,0,0"/>
+                        <Label Content="GP80250   V1.0：2020-01-10 " Margin="5,3,0,0" Name="PrinterModule" />
+                        <StackPanel Orientation="Horizontal">
+                            <Button  Margin="5" Content="读取信息" Padding="5" FontSize="14" Width="100"/>
+                            <Button  Margin="5" Content="设置序列号" Padding="5" FontSize="14" Width="100"/>
+                        </StackPanel>
                     </StackPanel>
                 </GroupBox>
                 <!--其他設定-->
@@ -109,10 +99,10 @@
 
         <!--Tap分頁-->
         <TabControl Height="470" TabStripPlacement="Top" Margin="5,3,5,0" >
-            <!--數據傳輸-->
-            <TabItem Header="{DynamicResource PrintTest}"  FontSize="14">
-                <Border Margin="5,5,5,1" >
-                    <StackPanel  Height="445" Margin="10,0,0,0">
+            <!--數據傳輸--><!--
+            <TabItem Header="{DynamicResource PrintTest}"  FontSize="14" >
+                <Border Margin="5,5,5,1"  >
+                    <StackPanel  Height="445" Margin="10,0,0,0" >
                         <GroupBox  Header="發送數據" Width="985" Height="260" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14"  HorizontalAlignment="Left" >
                             <TextBox Width="970" Height="236"  TextWrapping="Wrap"  VerticalScrollBarVisibility="Auto"/>
                         </GroupBox>
@@ -163,7 +153,7 @@
                         </StackPanel>
                     </StackPanel>
                 </Border>
-            </TabItem>
+            </TabItem>-->
 
             <!--參數設定-->
             <TabItem Header="{DynamicResource PrinterConfig}"  FontSize="14">
@@ -482,7 +472,7 @@
             </TabItem>
 
             <!--黑標功能-->
-            <TabItem Header="{DynamicResource BLineSetting}"  FontSize="14">
+            <TabItem Header="{DynamicResource BLineSetting}"  FontSize="14" Visibility="Collapsed">
                 <StackPanel Height="380"  Margin="20,50,0,0">
                     <Grid >
                         <Grid.ColumnDefinitions >

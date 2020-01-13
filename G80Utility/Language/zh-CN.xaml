@@ -13,7 +13,7 @@
     <sys:String x:Key="EthernetConnect">连接</sys:String>
 
     <!--Expander Header-->
-    <sys:String x:Key="PrinterAction">打印机操作</sys:String>
+    <sys:String x:Key="PrinterAction">维修维护</sys:String>
     <sys:String x:Key="PrintTest">数据传输</sys:String>
     <sys:String x:Key="PrinterConfig">参数设置</sys:String>
     <sys:String x:Key="BLineSetting">黑标设置</sys:String>
