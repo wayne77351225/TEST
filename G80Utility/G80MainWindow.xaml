@@ -1,0 +1,702 @@
+﻿<Window x:Class="PirnterUtility.G80MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:PirnterUtility"
+        mc:Ignorable="d"
+        ResizeMode="NoResize"
+        Title="G80 Utility" Height="740" Width="1035">
+    <StackPanel  Background="#333333">
+        <!--Top 通訊-->
+        <Border Margin="5,10,5,3" >
+            <StackPanel Background="#595959" Orientation="Horizontal" >
+                <!--通訊介面-->
+                <GroupBox Header="{DynamicResource ConnectionInterface}" Margin="10,10,0,10" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14"  Height="150">
+                    <StackPanel Orientation="Horizontal">
+                        <!--RS232-->
+                        <StackPanel>
+                            <StackPanel  Margin="10,10,10,10" Orientation="Horizontal">
+                                <RadioButton FontSize="14" Name="RS232Radio" GroupName="connection" Content="{DynamicResource RS232}" VerticalAlignment="Center" Margin="0,0,5,0"   Checked="ConnectType_SelectionChanged" />
+                                <Image Margin="25,0,0,0" Source="Images/grey_circle.png" Width="12" Name="RS232ConnectImage"/>
+                            </StackPanel>
+                            <ComboBox Margin="10,0,10,0"  FontSize="14" Width="100" Height="30" Name="DeviceSelectRS232"
+                            ItemsSource="{Binding Device}"
+                            DisplayMemberPath="DisplayName"
+                            SelectionChanged="RS232_SelectedChnaged"/>
+                            <ComboBox Margin="10,10,10,0"  FontSize="14"  Height="30" Name="BaudRateCom"  Width="100" SelectionChanged="BaudRateCom_SelectionChanged">
+                                <ComboBoxItem Content="9600"/>
+                                <ComboBoxItem Content="19200"/>
+                                <ComboBoxItem Content="38400"/>
+                                <ComboBoxItem Content="115200"/>
+                            </ComboBox>
+                        </StackPanel>
+                        <!--虛擬串口-->
+                        <StackPanel>
+                            <StackPanel  Margin="5,10,10,10" Orientation="Horizontal">
+                                <RadioButton FontSize="14"  Name="VisualUSBRadio" GroupName="connection" Content="虚拟串口" VerticalAlignment="Center" Margin="0,0,5,0"  Checked="ConnectType_SelectionChanged" />
+                                <Image Margin="15,0,0,0" Source="Images/grey_circle.png" Width="12" Name="VisualUSBConnectImage"/>
+                            </StackPanel>
+                            <ComboBox Margin="5,0,10,0"  FontSize="14"  Height="30"  Width="100" SelectionChanged="BaudRateCom_SelectionChanged">
+                                <ComboBoxItem Content="COM1"/>
+                                <ComboBoxItem Content="COM2"/>
+                                <ComboBoxItem Content="COM3"/>
+                            </ComboBox>
+                            <Button Margin="5,10,10,0" Content="刷新串口" Padding="5" />
+                        </StackPanel>
+                        <!--USB-->
+                        <StackPanel>
+                            <StackPanel  Margin="5,10,10,10" Orientation="Horizontal">
+                                <RadioButton FontSize="14"  Name="USBRadio" GroupName="connection" Content="{DynamicResource USB}" VerticalAlignment="Center" Margin="0,0,5,0"  Checked="ConnectType_SelectionChanged" />
+                                <Image Margin="33,0,0,0"  Source="Images/grey_circle.png" Width="12" Name="USBConnectImage"/>
+                            </StackPanel>
+                            <ComboBox Margin="5,0,10,0" FontSize="14" Width="90" Height="30" Name="DeviceSelectUSB"
+                                ItemsSource="{Binding Device}"
+                             DisplayMemberPath="DisplayName"
+                            />
+                        </StackPanel>
+                        <!--乙太網-->
+                        <StackPanel>
+                            <StackPanel Margin="5,10,10,10" Orientation="Horizontal">
+                                <RadioButton FontSize="14" Name="EhernetRadio" GroupName="connection" Content="{DynamicResource Ethernet}" VerticalAlignment="Center" Margin="0,0,5,0" Checked="ConnectType_SelectionChanged"/>
+                                <Image  Margin="25,0,0,0"   Source="Images/grey_circle.png" Width="12" Name="EthernetConnectImage"/>
+                            </StackPanel>
+                            <TextBox Margin="5,0,10,0"  FontSize="14"  Height="30"  Width="110" Foreground="#BDBDBD" Padding="5"/>
+                        </StackPanel>
+                        <!--通訊測試-->
+                        <StackPanel Margin="5,0,10,0" VerticalAlignment="Center">
+                            <CheckBox Content="串口" Margin="0,0,0,5" Name="rs232Checkbox"/>
+                            <CheckBox Content="USB虚拟串口"  Margin="0,0,0,5" Name="VisualCheckbox"/>
+                            <CheckBox Content="USB打印设备" Margin="0,0,0,5" Name="USBCheckbox"/>
+                            <CheckBox Content="以太网" Margin="0,0,0,5" Name="EthernetCheckbox"/>
+                            <Button Content="通讯接口测试" Padding="5" Name="ConnectTest" Click="ConnectTest_Click"/>
+                        </StackPanel>
+                    </StackPanel>
+                </GroupBox>
+                <!--機器信息-->
+                <GroupBox Header="机器信息" Margin="15,5,0,10" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14" Height="150">
+                    <StackPanel VerticalAlignment="Top">
+                        <Label Content="机器序列号:" FontSize="14" Margin="2,0,0,0"/>
+                        <TextBox Width="120" Height="30"  Name="PrinterSN"/>
+                        <Button  Margin="5" Content="设置序列号" Padding="5" FontSize="14" Width="120"/>
+                        <Label Content="GP80250   V1.0 " Margin="3,0,0,0" Name="PrinterModule" />
+                    </StackPanel>
+                </GroupBox>
+                <!--其他設定-->
+                <GroupBox Header="其他设定" Margin="15,5,10,10" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14"  Height="150">
+                    <StackPanel>
+                        <!--Change Language-->
+                        <StackPanel Orientation="Horizontal" Margin="7,10,5,10" HorizontalAlignment="Center">
+                            <Label Padding="0" FontSize="14" Content="{DynamicResource SelectLanguage}" VerticalAlignment="Center"/>
+                            <ComboBox  FontSize="14" Padding="8,8,0,0" Width="100" Height="30" Background="#424242" SelectionChanged="Language_SelectionChanged" Name="language" >
+                                <ComboBoxItem  Content="{DynamicResource zhTW}" />
+                                <ComboBoxItem  Content="{DynamicResource zhCN}" />
+                                <ComboBoxItem  Content="{DynamicResource enUS}" />
+                            </ComboBox>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Button  Margin="10,5,5,5" Content="导入参数" Padding="5" FontSize="14" Width="85"/>
+                            <Button  Margin="5" Content="重启打印机" Padding="5" FontSize="14" Width="85" Name="Restart" Click="Restart_Click"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Button  Margin="10,5,5,5" Content="保存参数" Padding="5" FontSize="14" Width="85"/>
+                            <Button  Margin="5,5,10,5" Content="登录管理员" Padding="5" FontSize="14" Width="85"/>
+                        </StackPanel>
+                    </StackPanel>
+                </GroupBox>
+            </StackPanel>
+        </Border>
+
+        <!--Tap分頁-->
+        <TabControl Height="470" TabStripPlacement="Top" Margin="5,3,5,0" >
+            <!--數據傳輸-->
+            <TabItem Header="{DynamicResource PrintTest}"  FontSize="14">
+                <Border Margin="5,5,5,1" >
+                    <StackPanel  Height="445" Margin="10,0,0,0">
+                        <GroupBox  Header="發送數據" Width="985" Height="260" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14"  HorizontalAlignment="Left" >
+                            <TextBox Width="970" Height="236"  TextWrapping="Wrap"  VerticalScrollBarVisibility="Auto"/>
+                        </GroupBox>
+                        <StackPanel Orientation="Horizontal" Margin="0,20,0,0"  >
+                            <StackPanel Margin="5,20,0,0" >
+                                <StackPanel  Margin="0,0,10,10" Orientation="Horizontal">
+                                    <Button Width="100" Content="發送" Margin="0,0,10,0" Padding="0,5,0,5" FontSize="14" />
+                                    <Button Width="100" Content="打印" Margin="0,0,10,0" Padding="0,5,0,5" FontSize="14" />
+                                    <Button Width="100" Content="清空" Margin="0,0,10,0" Padding="0,5,0,5" FontSize="14" />
+                                    <Button Width="100" Content="打開文件" Margin="0,0,10,0" Padding="0,5,0,5" FontSize="14" />
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,0"  >
+                                    <RadioButton Content="十六进制模式" Margin="0,0,20,0" Padding="5,0,0,0"  VerticalAlignment="Center" FontSize="14"/>
+                                    <RadioButton Content="二維碼模式" Padding="5,0,0,0" VerticalAlignment="Center"  FontSize="14"/>
+                                    <Label Content="二維碼大小：" Margin="25,0,0,0" VerticalAlignment="Top"  FontSize="14"/>
+                                    <TextBox Width="50"  FontSize="14" Height="22"/>
+                                </StackPanel>
+                                <StackPanel  Margin="-2,10,10,15" Orientation="Horizontal">
+                                    <Label Content="定时发送间隔："  FontSize="14"/>
+                                    <TextBox Width="70"  FontSize="14" Height="22"/>
+                                    <Label Content="ms"  FontSize="14" Margin="0,0,10,0"/>
+                                    <Button Content="開始定時"  FontSize="14" Width="80" Margin="0,0,22,0"/>
+                                    <Button Content="十六进制转存模式"  FontSize="14" Width="130"/>
+                                </StackPanel>
+                            </StackPanel>
+                            <GroupBox Header="打印小票测试"  Width="520"  Margin="5,0,10,5" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14">
+                                <StackPanel  >
+                                    <StackPanel Orientation="Horizontal" Margin="10,20,5,10" >
+                                        <RadioButton Content="一鍵測試" Margin="0,0,15,0" Padding="5,0,0,0"  VerticalAlignment="Center" FontSize="14"/>
+                                        <RadioButton Content="時間戳記" Padding="5,0,0,0" VerticalAlignment="Center"  FontSize="14"/>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" Margin="0,5,5,10">
+                                        <StackPanel Orientation="Horizontal" Margin="10,5,5,0">
+                                            <Label Content="從" VerticalAlignment="Top"  FontSize="14"/>
+                                            <TextBox Width="80"  FontSize="14" Height="22"/>
+                                            <Label Content="張開始"  FontSize="14"/>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal" Margin="0,5,5,0">
+                                            <Label Content="到"  VerticalAlignment="Top"  FontSize="14"/>
+                                            <TextBox Width="80"  FontSize="14" Height="22"/>
+                                            <Label Content="張結束" FontSize="14"/>
+                                        </StackPanel>
+                                        <Button Content="開始計數" Height="26" FontSize="14" Width="75" Margin="5,0,10,0"/>
+                                        <Button Content="停止計數" Height="26" FontSize="14" Width="75"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </GroupBox>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+            </TabItem>
+
+            <!--參數設定-->
+            <TabItem Header="{DynamicResource PrinterConfig}"  FontSize="14">
+                <Border Background="#595959" >
+                    <StackPanel Height="445" Width="1010" Orientation="Horizontal">
+                        <StackPanel>
+                            <TextBlock Text="勾选后才会下载参数到打印机中" Margin="0,5,0,5" Foreground="#99ef71" FontSize="14" HorizontalAlignment="Center" />
+                            <!--全局操作-->
+                            <GroupBox Header="全局操作" Margin="5,0,0,5" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14" >
+                                <StackPanel HorizontalAlignment="Center" Orientation="Horizontal"  Margin="5">
+                                    <Button  Margin="0,0,10,0" Content="读取参数" Padding="10,5,10,5" Width="100"/>
+                                    <Button  Margin="0,0,0,0" Content="设置参数" Padding="10,5,10,5" Width="100"/>
+                                </StackPanel>
+                            </GroupBox>
+                            <!--通讯参数设置-->
+                            <GroupBox Header="通讯参数设置" Margin="5,0,0,0" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14" Width="265">
+                                <StackPanel Margin="10,5,5,5">
+                                    <StackPanel  Margin="0,0,0,6" Orientation="Horizontal">
+                                        <Button  Margin="0,0,5,0" Content="设置IP地址" Padding="10,5,10,5" Width="110"/>
+                                        <TextBox  Margin="0,0,5,0" Width="100" Height="26"  Foreground="#BDBDBD"/>
+                                        <CheckBox VerticalAlignment="Center" IsChecked="True"/>
+                                    </StackPanel>
+                                    <StackPanel  Margin="0,0,0,6" Orientation="Horizontal">
+                                        <Button  Margin="0,0,5,0" Content="设置网关地址" Padding="10,5,10,5" Width="110"/>
+                                        <TextBox  Margin="0,0,5,0" Width="100" Height="26"  Foreground="#BDBDBD"/>
+                                        <CheckBox VerticalAlignment="Center" IsChecked="True"/>
+                                    </StackPanel>
+                                    <StackPanel  Margin="0,0,0,6" Orientation="Horizontal">
+                                        <Button  Margin="0,0,5,0" Content="设置MAC地址" Padding="10,5,10,5" Width="110"/>
+                                        <TextBox  Margin="0,0,5,0" Width="100" Height="26"  Foreground="#BDBDBD"/>
+                                        <CheckBox VerticalAlignment="Center" IsChecked="True"/>
+                                    </StackPanel>
+                                    <StackPanel  Margin="0,0,0,6" Orientation="Horizontal">
+                                        <Button  Margin="0,0,5,0" Content="自动断线时间" Padding="10,5,10,5" Width="110"/>
+                                        <ComboBox  Margin="0,0,5,0" Width="100" Height="26" Text="IP Address" Foreground="#BDBDBD" />
+                                        <CheckBox VerticalAlignment="Center" IsChecked="True"/>
+                                    </StackPanel>
+                                    <StackPanel  Margin="0,0,0,6" Orientation="Horizontal">
+                                        <Button  Margin="0,0,5,0" Content="网络连接数量" Padding="10,5,10,5" Width="110"/>
+                                        <ComboBox  Margin="0,0,5,0" Width="100" Height="26" Text="IP Address" Foreground="#BDBDBD">
+                                            <ComboBoxItem>1个</ComboBoxItem>
+                                            <ComboBoxItem>2个</ComboBoxItem>
+                                        </ComboBox>
+                                        <CheckBox VerticalAlignment="Center" IsChecked="True"/>
+                                    </StackPanel>
+                                    <StackPanel  Margin="0,0,0,6" Orientation="Horizontal">
+                                        <Button  Margin="0,0,5,0" Content="网口通讯速度" Padding="10,5,10,5" Width="110"/>
+                                        <ComboBox  Margin="0,0,5,0" Width="100" Height="26" Text="IP Address" Foreground="#BDBDBD">
+                                            <ComboBoxItem>10Base</ComboBoxItem>
+                                            <ComboBoxItem>10Base/100Base</ComboBoxItem>
+                                        </ComboBox>
+                                        <CheckBox VerticalAlignment="Center" IsChecked="True"/>
+                                    </StackPanel>
+                                    <StackPanel  Margin="0,0,0,6" Orientation="Horizontal">
+                                        <Button  Margin="0,0,5,0" Content="DHCP模式" Padding="10,5,10,5" Width="110"/>
+                                        <ComboBox  Margin="0,0,5,0" Width="100" Height="26" Text="IP Address" Foreground="#BDBDBD">
+                                            <ComboBoxItem>静态DHCP</ComboBoxItem>
+                                            <ComboBoxItem>模式1</ComboBoxItem>
+                                            <ComboBoxItem>模式2</ComboBoxItem>
+                                            <ComboBoxItem>模式3</ComboBoxItem>
+                                        </ComboBox>
+                                        <CheckBox VerticalAlignment="Center" IsChecked="True"/>
+                                    </StackPanel>
+                                    <StackPanel  Margin="0,0,0,6" Orientation="Horizontal">
+                                        <Button  Margin="0,0,5,0" Content="USB模式" Padding="10,5,10,5" Width="110"/>
+                                        <ComboBox  Margin="0,0,5,0" Width="100" Height="26" Text="IP Address" Foreground="#BDBDBD">
+                                            <ComboBoxItem>UTP</ComboBoxItem>
+                                            <ComboBoxItem>VCOM</ComboBoxItem>
+                                        </ComboBox>
+                                        <CheckBox VerticalAlignment="Center" IsChecked="True"/>
+                                    </StackPanel>
+                                    <StackPanel  Margin="0,0,0,0" Orientation="Horizontal">
+                                        <Button  Margin="0,0,5,0" Content="USB端口" Padding="10,5,10,5" Width="110"/>
+                                        <ComboBox  Margin="0,0,5,0" Width="100" Height="26" Text="IP Address" Foreground="#BDBDBD">
+                                            <ComboBoxItem>固定</ComboBoxItem>
+                                            <ComboBoxItem>不固定</ComboBoxItem>
+                                        </ComboBox>
+                                        <CheckBox VerticalAlignment="Center" IsChecked="True"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </GroupBox>
+                        </StackPanel>
+                        <!--打印机属性设置-->
+                        <GroupBox Header="DIP打印机属性设置" Margin="10,5,10,5" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14" Height="433" Width="725" VerticalAlignment="Top">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="38*" />
+                                    <ColumnDefinition Width="32*"/>
+                                    <ColumnDefinition Width="35*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="55"/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+                                <!--column1-->
+                                <StackPanel Grid.RowSpan="2" Margin="5,10,10,0" >
+                                    <StackPanel  Margin="0,0,0,7" Orientation="Horizontal">
+                                        <Button  Margin="0,0,5,0" Content="80客户选择" Padding="10,5,10,5" Width="125"/>
+                                        <ComboBox  Margin="0,0,5,0" Width="90" Height="26" Text="IP Address" Foreground="#BDBDBD"/>
+                                        <CheckBox VerticalAlignment="Center" IsChecked="True"/>
+                                    </StackPanel>
+                                    <StackPanel  Margin="0,0,0,7" Orientation="Horizontal">
+                                        <Button  Margin="0,0,5,0" Content="80型号选择" Padding="10,5,10,5" Width="125"/>
+                                        <ComboBox  Margin="0,0,5,0" Width="90" Height="26" Text="IP Address" Foreground="#BDBDBD"/>
+                                        <CheckBox VerticalAlignment="Center" IsChecked="True"/>
+                                    </StackPanel>
+                                    <StackPanel  Margin="0,0,0,7" Orientation="Horizontal">
+                                        <Button  Margin="0,0,5,0" Content="80型号选择Ⅱ" Padding="10,5,10,5" Width="125"/>
+                                        <ComboBox  Margin="0,0,5,0" Width="90" Height="26" Text="IP Address" Foreground="#BDBDBD"/>
+                                        <CheckBox VerticalAlignment="Center" IsChecked="True"/>
+                                    </StackPanel>
+                                    <StackPanel  Margin="0,0,0,7" Orientation="Horizontal">
+                                        <Button  Margin="0,0,5,0" Content="走纸方向" Padding="10,5,10,5" Width="125"/>
+                                        <ComboBox  Margin="0,0,5,0" Width="90" Height="26" Text="IP Address" Foreground="#BDBDBD"/>
+                                        <CheckBox VerticalAlignment="Center" IsChecked="True"/>
+                                    </StackPanel>
+                                    <StackPanel  Margin="0,0,0,7" Orientation="Horizontal">
+                                        <Button  Margin="0,0,5,0" Content="马达加速" Padding="10,5,10,5" Width="125"/>
+                                        <ComboBox  Margin="0,0,5,0" Width="90" Height="26" Text="IP Address" Foreground="#BDBDBD"/>
+                                        <CheckBox VerticalAlignment="Center" IsChecked="True"/>
+                                    </StackPanel>
+                                    <StackPanel  Margin="0,0,0,7" Orientation="Horizontal">
+                                        <Button  Margin="0,0,5,0" Content="马达加速度" Padding="10,5,10,5" Width="125"/>
+                                        <ComboBox  Margin="0,0,5,0" Width="90" Height="26" Text="IP Address" Foreground="#BDBDBD"/>
+                                        <CheckBox VerticalAlignment="Center" IsChecked="True"/>
+                                    </StackPanel>
+                                    <StackPanel  Margin="0,0,0,7" Orientation="Horizontal">
+                                        <Button  Margin="0,0,5,0" Content="LED设置" Padding="10,5,10,5" Width="125"/>
+                                        <ComboBox  Margin="0,0,5,0" Width="90" Height="26" Text="IP Address" Foreground="#BDBDBD"/>
+                                        <CheckBox VerticalAlignment="Center" IsChecked="True"/>
+                                    </StackPanel>
+                                    <StackPanel  Margin="0,0,0,7" Orientation="Horizontal">
+                                        <Button  Margin="0,0,5,0" Content="合盖后自动切纸" Padding="10,5,10,5" Width="125"/>
+                                        <ComboBox  Margin="0,0,5,0" Width="90" Height="26" Text="IP Address" Foreground="#BDBDBD"/>
+                                        <CheckBox VerticalAlignment="Center" IsChecked="True"/>
+                                    </StackPanel>
+                                    <StackPanel  Margin="0,0,0,7" Orientation="Horizontal">
+                                        <Button  Margin="0,0,5,0" Content="垂直移动单位" Padding="10,5,10,5" Width="125"/>
+                                        <ComboBox  Margin="0,0,5,0" Width="90" Height="26" Text="IP Address" Foreground="#BDBDBD"/>
+                                        <CheckBox VerticalAlignment="Center" IsChecked="True"/>
+                                    </StackPanel>
+                                    <StackPanel  Margin="0,0,0,7" Orientation="Horizontal">
+                                        <Button  Margin="0,0,5,0" Content="代码页固定" Padding="10,5,10,5" Width="125"/>
+                                        <ComboBox  Margin="0,0,5,0" Width="90" Height="26" Text="IP Address" Foreground="#BDBDBD"/>
+                                        <CheckBox VerticalAlignment="Center" IsChecked="True"/>
+                                    </StackPanel>
+                                    <StackPanel  Margin="0,0,0,7" Orientation="Horizontal">
+                                        <Button  Margin="0,0,5,0" Content="自检页LOGO设置" Padding="5" Width="125"/>
+                                        <ComboBox  Margin="0,0,5,0" Width="90" Height="26" Text="IP Address" Foreground="#BDBDBD"/>
+                                        <CheckBox VerticalAlignment="Center" IsChecked="True"/>
+                                    </StackPanel>
+                                </StackPanel>
+                                <!--代碼頁-->
+                                <GroupBox Grid.Column="1" Grid.ColumnSpan="2" Height="55"  Width="450" Header="代码页" VerticalAlignment="Top" HorizontalAlignment="Left" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14" >
+                                    <StackPanel  Margin="5,0,0,0" Orientation="Horizontal">
+                                        <Button  Margin="0,0,10,0" Content="设置代码页" Padding="10,5,10,5" Width="130" Height="28"/>
+                                        <Button  Margin="0,0,10,0" Content="打印代码页" Padding="10,5,10,5" Width="130" Height="28"/>
+                                        <ComboBox  Margin="0,0,10,0" Width="130" Height="28" Text="IP Address" Foreground="#BDBDBD"/>
+                                    </StackPanel>
+                                </GroupBox>
+                                <!--column2-->
+                                <StackPanel Grid.Column="1" Grid.Row="1" Margin="0,5,0,0">
+                                    <StackPanel  Margin="0,0,0,9" Orientation="Horizontal">
+                                        <Button  Margin="0,0,5,0" Content="纸尽重打" Padding="10,5,10,5" Width="90"/>
+                                        <ComboBox  Margin="0,0,5,0" Width="90" Height="26" Text="IP Address" Foreground="#BDBDBD"/>
+                                        <CheckBox VerticalAlignment="Center" IsChecked="True"/>
+                                    </StackPanel>
+                                    <StackPanel  Margin="0,0,0,9" Orientation="Horizontal">
+                                        <Button  Margin="0,0,5,0" Content="黑标功能" Padding="10,5,10,5" Width="90"/>
+                                        <ComboBox  Margin="0,0,5,0" Width="90" Height="26" Text="IP Address" Foreground="#BDBDBD"/>
+                                        <CheckBox VerticalAlignment="Center" IsChecked="True"/>
+                                    </StackPanel>
+                                    <StackPanel  Margin="0,0,0,9" Orientation="Horizontal">
+                                        <Button  Margin="0,0,5,0" Content="FontB字体" Padding="10,5,10,5" Width="90"/>
+                                        <ComboBox  Margin="0,0,5,0" Width="90" Height="26" Text="IP Address" Foreground="#BDBDBD"/>
+                                        <CheckBox VerticalAlignment="Center" IsChecked="True"/>
+                                    </StackPanel>
+                                    <StackPanel  Margin="0,0,0,9" Orientation="Horizontal">
+                                        <Button  Margin="0,0,5,0" Content="MAC地址显" Padding="5" Width="90"/>
+                                        <ComboBox  Margin="0,0,5,0" Width="90" Height="26" Text="IP Address" Foreground="#BDBDBD"/>
+                                        <CheckBox VerticalAlignment="Center" IsChecked="True"/>
+                                    </StackPanel>
+                                    <StackPanel  Margin="0,0,0,9" Orientation="Horizontal">
+                                        <Button  Margin="0,0,5,0" Content="二维码功能" Padding="10,5,10,5" Width="90"/>
+                                        <ComboBox  Margin="0,0,5,0" Width="90" Height="26" Text="IP Address" Foreground="#BDBDBD"/>
+                                        <CheckBox VerticalAlignment="Center" IsChecked="True"/>
+                                    </StackPanel>
+                                    <StackPanel  Margin="0,0,0,9" Orientation="Horizontal">
+                                        <Button  Margin="0,0,5,0" Content="浓度模式" Padding="10,5,10,5" Width="90"/>
+                                        <ComboBox  Margin="0,0,5,0" Width="90" Height="26" Text="IP Address" Foreground="#BDBDBD"/>
+                                        <CheckBox VerticalAlignment="Center" IsChecked="True"/>
+                                    </StackPanel>
+                                    <StackPanel  Margin="0,0,0,9" Orientation="Horizontal">
+                                        <Button  Margin="0,0,5,0" Content="浓度调节" Padding="10,5,10,5" Width="90"/>
+                                        <ComboBox  Margin="0,0,5,0" Width="90" Height="26" Text="IP Address" Foreground="#BDBDBD"/>
+                                        <CheckBox VerticalAlignment="Center" IsChecked="True"/>
+                                    </StackPanel>
+                                    <StackPanel  Margin="0,0,0,9" Orientation="Horizontal">
+                                        <Button  Margin="0,0,5,0" Content="字体设置" Padding="10,5,10,5" Width="90"/>
+                                        <ComboBox  Margin="0,0,5,0" Width="90" Height="26" Text="IP Address" Foreground="#BDBDBD"/>
+                                        <CheckBox VerticalAlignment="Center" IsChecked="True"/>
+                                    </StackPanel>
+                                    <StackPanel  Margin="0,0,0,9" Orientation="Horizontal">
+                                        <Button  Margin="0,0,5,0" Content="定制字体" Padding="10,5,10,5" Width="90"/>
+                                        <ComboBox  Margin="0,0,5,0" Width="90" Height="26" Text="IP Address" Foreground="#BDBDBD"/>
+                                        <CheckBox VerticalAlignment="Center" IsChecked="True"/>
+                                    </StackPanel>
+                                </StackPanel>
+                                <!--column3-->
+                                <StackPanel Grid.Column="2" Grid.Row="1" Margin="0,5,0,0">
+                                    <StackPanel  Margin="0,0,0,7" Orientation="Horizontal">
+                                        <Button  Margin="0,0,5,0" Content="打印纸宽" Padding="10,5,10,5" Width="90"/>
+                                        <ComboBox  Margin="0,0,5,0" Width="90" Height="26" Text="IP Address" Foreground="#BDBDBD"/>
+                                        <CheckBox VerticalAlignment="Center" IsChecked="True"/>
+                                    </StackPanel>
+                                    <StackPanel  Margin="0,0,0,7" Orientation="Horizontal">
+                                        <Button  Margin="0,0,5,0" Content="打印速度" Padding="10,5,10,5" Width="90"/>
+                                        <ComboBox  Margin="0,0,5,0" Width="90" Height="26" Text="IP Address" Foreground="#BDBDBD"/>
+                                        <CheckBox VerticalAlignment="Center" IsChecked="True"/>
+                                    </StackPanel>
+                                    <StackPanel  Margin="0,0,0,7" Orientation="Horizontal">
+                                        <Button  Margin="0,0,5,0" Content="310纸宽" Padding="10,5,10,5" Width="90"/>
+                                        <ComboBox  Margin="0,0,5,0" Width="90" Height="26" Text="IP Address" Foreground="#BDBDBD"/>
+                                        <CheckBox VerticalAlignment="Center" IsChecked="True"/>
+                                    </StackPanel>
+                                    <StackPanel  Margin="0,0,0,7" Orientation="Horizontal">
+                                        <Button  Margin="0,0,5,0" Content="1B 21 功能" Padding="10,5,10,5" Width="90"/>
+                                        <ComboBox  Margin="0,0,5,0" Width="90" Height="26" Text="IP Address" Foreground="#BDBDBD"/>
+                                        <CheckBox VerticalAlignment="Center" IsChecked="True"/>
+                                    </StackPanel>
+                                    <StackPanel  Margin="0,0,0,7" Orientation="Horizontal">
+                                        <Button  Margin="0,0,5,0" Content="DIP开关" Padding="10,5,10,5" Width="90"/>
+                                        <ComboBox  Margin="0,0,5,0" Width="90" Height="26" Text="IP Address" Foreground="#BDBDBD"/>
+                                        <CheckBox VerticalAlignment="Center" IsChecked="True"/>
+                                    </StackPanel>
+                                    <!--dip設置-->
+                                    <GroupBox Header="软件 DIP 设置" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14" Height="155" Width="235" HorizontalAlignment="Left">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition  Width="35*" />
+                                                <ColumnDefinition Width="45*"/>
+                                                <ColumnDefinition  Width="22*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="24*"/>
+                                                <RowDefinition  Height="24*"/>
+                                                <RowDefinition  Height="24*"/>
+                                                <RowDefinition  Height="30*"/>
+                                            </Grid.RowDefinitions>
+                                            <CheckBox Content="切刀"  FontSize="14" Padding="3,0,0,0" Margin="3,5,0,0"/>
+                                            <CheckBox Grid.Column="1" Content="蜂鸣器"  FontSize="14" Padding="3,0,0,0" Margin="3,5,0,0" />
+                                            <CheckBox Grid.Column="2" Content="浓度"  FontSize="14" Padding="3,0,0,0" Margin="3,5,0,0" />
+                                            <CheckBox Grid.Row="1" Content="中文禁止"  FontSize="14"  Padding="3,0,0,0" Margin="3,5,0,0"/>
+                                            <CheckBox Grid.Column="1" Grid.Row="1" Content="48/42字符数"  FontSize="14"  Padding="3,0,0,0" Margin="3,5,0,0"/>
+                                            <CheckBox Grid.Column="2" Grid.Row="1" Content="钱箱"  FontSize="14"  Padding="3,0,0,0" Margin="3,5,0,0"/>
+                                            <StackPanel  Orientation="Horizontal"  Grid.Row="2" Grid.ColumnSpan="3" >
+                                                <Label  Content="串口波特率"  FontSize="14"  VerticalAlignment="Center" />
+                                                <ComboBox  Margin="5,0,0,0" FontSize="14" Width="135" Height="22" HorizontalAlignment="Left">
+                                                    <ComboBoxItem Content="9600"/>
+                                                    <ComboBoxItem Content="19200"/>
+                                                    <ComboBoxItem Content="38400"/>
+                                                    <ComboBoxItem Content="115200"/>
+                                                </ComboBox>
+                                            </StackPanel>
+                                           
+                                            <Button Grid.ColumnSpan="3" Grid.Row="3" Margin="4,5,0,5" Content="设置DIP值"  FontSize="14" Padding="5"  Width="215" HorizontalAlignment="Left"/>
+                                        </Grid>
+                                    </GroupBox>
+                                </StackPanel>
+                            </Grid>
+                        </GroupBox>
+                        <StackPanel>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+            </TabItem>
+
+            <!--NVLogo-->
+            <TabItem Header="{DynamicResource NVLogo}"  FontSize="14">
+                <StackPanel Height="415" Orientation="Horizontal">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="10" >
+                            <Button Content="打开图片集"  Padding="10,5,10,5" Width="110" Margin="0,0,10,0" FontSize="14"/>
+                            <Label Content="已打开 " VerticalAlignment="Center" FontSize="14" />
+                            <TextBox Width="50" Height="22" FontSize="14" IsEnabled="False"/>
+                            <Label Content="张图片 " VerticalAlignment="Center" Margin="0,0,10,0" FontSize="14"/>
+                            <Button Content="清空图片集" Padding="10,5,10,5" Width="110" FontSize="14" />
+                        </StackPanel>
+
+                        <GroupBox Header="{DynamicResource ShowPic}"  Margin="10,0,10,5" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14" Width="425" Height="325">
+                            <ScrollViewer >
+                                <Image Name="NVlogoImg"/>
+                            </ScrollViewer>
+
+                        </GroupBox>
+                    </StackPanel>
+                    <StackPanel  Margin="10,0,10,0" VerticalAlignment="Center">
+                        <Button Content="{DynamicResource SelectLogoAndDonwald}" Padding="20,10,20,10" Margin="0,0,0,15" Name="PrintLogoBtn"/>
+                        <Button Content="{DynamicResource ClearLogo}" Padding="20,10,20,10" Margin="0,0,0,0" Name="ClearLogoBtn"/>
+                    </StackPanel>
+                    <GroupBox Header="{DynamicResource LogoSetting}"  Margin="10,44,10,40" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14" Width="175" Height="325">
+                        <StackPanel  Margin="10,5,10,0" HorizontalAlignment="Center">
+                            <RadioButton Content="{DynamicResource SingleWidthandHeight}" Padding="10,0,0,0" Margin="3,10,0,10"  x:Name="SingleWidthandHeightRadio" GroupName="NVRadio"/>
+                            <RadioButton Content="{DynamicResource DoubleWidth}" Padding="10,0,0,0" Margin="3,0,0,10"  x:Name="DoubleWidthRadio" GroupName="NVRadio"/>
+                            <RadioButton Content="{DynamicResource DoubleHeight}" Padding="10,0,0,0" Margin="3,0,0,10"  x:Name="DoubleHeightRadio" GroupName="NVRadio"/>
+                            <RadioButton Content="{DynamicResource DoubleWidthandHeight}" Padding="10,0,0,0" Margin="3,0,0,10" x:Name="DoubleWidthandHeightRadio" GroupName="NVRadio"/>
+                            <StackPanel Orientation="Horizontal" Margin="0,10,0,10" >
+                                <Label Content="{DynamicResource Ordinal}"/>
+                                <TextBox Width="50" x:Name="NVLogoPieceTXT"/>
+                                <Label Content="{DynamicResource piece}"/>
+                            </StackPanel>
+                            <Button Content="{DynamicResource PrintLogo}" Padding="10" Margin="0,10,0,15" Width="100" HorizontalAlignment="Left" x:Name="SelectLogoAndDonwaldBtn"/>
+                        </StackPanel>
+                    </GroupBox>
+                </StackPanel>
+            </TabItem>
+
+            <!--黑標功能-->
+            <TabItem Header="{DynamicResource BLineSetting}"  FontSize="14">
+                <StackPanel Height="380"  Margin="20,50,0,0">
+                    <Grid >
+                        <Grid.ColumnDefinitions >
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions >
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <StackPanel Orientation="Horizontal" Margin="0,5,0,20">
+                            <Button Content="{DynamicResource SetBLineBillMaxLen}" Padding="20,5,20,5"  Margin="0,0,15,0" Width="200"  />
+                            <TextBox Width="100" Name="SetBLineBillMaxLenTxt"/>
+                            <Label Content="mm" Margin="0,0,10,0"/>
+                            <Button Width="253" Content="{DynamicResource DetectBlineFeedPrintTest}" Margin="40,0,10,0" Padding="20,5,20,5" Name="DetectBlineFeedPrintTestBtn"/>
+                        </StackPanel>
+                        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,5,0,20">
+                            <Button Content="{DynamicResource SetBlineMaxWidth}"   Padding="20,5,20,5"  Margin="0,0,15,0" Width="200"  />
+                            <TextBox Width="100" Name="SetBlineMaxWidthTxt" />
+                            <Label Content="mm" Margin="0,0,10,0"/>
+                            <Button Width="253"  Content="{DynamicResource DetectBlineCutPrintTest}" Margin="40,0,10,0"  Padding="20,5,20,5" Name="DetectBlineCutPrintTestBtn" />
+                        </StackPanel>
+                        <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,5,0,20">
+                            <Button Content="{DynamicResource DetectBlineFeed}"  Padding="20,5,20,5"  Margin="0,0,15,0" Width="200"   />
+                            <TextBox Width="100"  Name="DetectBlineFeedTxt"/>
+                            <Label Content="mm" Margin="0,0,10,0"/>
+                        </StackPanel>
+                        <StackPanel Grid.Row="3" Orientation="Horizontal" Margin="0,5,0,20">
+                            <Button Content="{DynamicResource DetectBlineFeedAndCut}" Padding="20,5,20,5"  Margin="0,0,15,0" Width="200" />
+                            <TextBox Width="100" Name="DetectBlineFeedAndCutTxt" />
+                            <Label Content="mm" Margin="0,0,10,0"/>
+                        </StackPanel>
+                    </Grid>
+                </StackPanel>
+            </TabItem>
+
+            <!--打印機操作-->
+            <TabItem Header="{DynamicResource PrinterAction}"  FontSize="14">
+                <Border CornerRadius="5" Background="#595959" Margin="0,0,1,2">
+                    <StackPanel Height="445">
+                        <Label Content="{DynamicResource PrinterAction}" FontSize="14"/>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="22*"/>
+                                <ColumnDefinition Width="20*"/>
+                                <ColumnDefinition Width="24*"/>
+                                <ColumnDefinition Width="20*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <!--打印机统计信息-->
+                            <GroupBox Header="打印机统计信息" Grid.RowSpan="2" Margin="10,0,5,5" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14">
+                                <StackPanel>
+                                    <StackPanel  Margin="10,5,0,5" Orientation="Horizontal">
+                                        <Label Content="走纸总行数：" FontSize="14" />
+                                        <TextBox Width="50" IsEnabled="False"/>
+                                        <Label Content="行" FontSize="14"/>
+                                        <CheckBox VerticalAlignment="Center" Margin="20,0,0,0"/>
+                                    </StackPanel>
+                                    <StackPanel  Margin="10,5,0,5"  Orientation="Horizontal">
+                                        <Label Content="打印行数：" FontSize="14" Margin="0,0,12,0"/>
+                                        <TextBox Width="50" IsEnabled="False"/>
+                                        <Label Content="行" FontSize="14"/>
+                                        <CheckBox VerticalAlignment="Center" Margin="20,0,0,0"/>
+                                    </StackPanel>
+                                    <StackPanel  Margin="10,5,0,5"  Orientation="Horizontal">
+                                        <Label Content="切纸次数：" FontSize="14"  Margin="0,0,12,0"/>
+                                        <TextBox Width="50" IsEnabled="False"/>
+                                        <Label Content="次" FontSize="14"/>
+                                        <CheckBox VerticalAlignment="Center" Margin="20,0,0,0"/>
+                                    </StackPanel>
+                                    <StackPanel  Margin="10,5,0,5"  Orientation="Horizontal">
+                                        <Label Content="开盖次数：" FontSize="14"  Margin="0,0,12,0"/>
+                                        <TextBox Width="50" IsEnabled="False"/>
+                                        <Label Content="次" FontSize="14"/>
+                                        <CheckBox VerticalAlignment="Center" Margin="20,0,0,0"/>
+                                    </StackPanel>
+                                    <StackPanel  Margin="10,5,0,5"  Orientation="Horizontal">
+                                        <Label Content="缺纸次数：" FontSize="14"  Margin="0,0,12,0"/>
+                                        <TextBox Width="50" IsEnabled="False"/>
+                                        <Label Content="次" FontSize="14"/>
+                                        <CheckBox VerticalAlignment="Center" Margin="20,0,0,0"/>
+                                    </StackPanel>
+                                    <StackPanel  Margin="10,5,0,5"  Orientation="Horizontal">
+                                        <Label Content="故障次数：" FontSize="14"  Margin="0,0,12,0"/>
+                                        <TextBox Width="50" IsEnabled="False"/>
+                                        <Label Content="次" FontSize="14"/>
+                                        <CheckBox VerticalAlignment="Center" Margin="20,0,0,0"/>
+                                    </StackPanel>
+                                    <StackPanel  Margin="10,5,0,5"  Orientation="Horizontal">
+                                        <Label Content="开机次数：" FontSize="14"  Margin="0,0,12,0"/>
+                                        <TextBox Width="50" IsEnabled="False"/>
+                                        <Label Content="次" FontSize="14"/>
+                                        <CheckBox VerticalAlignment="Center" Margin="20,0,0,0"/>
+                                    </StackPanel>
+                                    <StackPanel  Margin="0,5,0,5"  Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <Button  Margin="10,5,10,5"  Content="全选" Padding="5" Width="50" FontSize="14"/>
+                                        <Button  Margin="10,5,10,5"  Content="清除" Padding="5"  Width="50"  FontSize="14"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </GroupBox>
+                            <!--组合命令测试-->
+                            <GroupBox Grid.Column="1" Grid.RowSpan="2" Header="组合命令测试" Margin="5,0,5,5" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14">
+                                <StackPanel>
+                                    <Button  Margin="10,15,10,5" Content="打印自检页" Padding="5" FontSize="14" Width="180"  />
+                                    <Button  Margin="10,5,10,5" Content="电源测试" Padding="5" FontSize="14" Width="180" />
+                                    <Button  Margin="10,5,10,5" Content="打开钱箱" Padding="5" FontSize="14" Width="180" />
+                                    <Button  Margin="10,5,10,5" Content="打印均匀测试" Padding="5" FontSize="14" Width="180" />
+                                    <Button  Margin="10,5,10,5" Content="联机测试" Padding="5" FontSize="14" Width="180"  />
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="5,10,0,10">
+                                        <StackPanel Margin="0,0,7,0" >
+                                            <CheckBox Content="二维码" FontSize="14" Padding="5,0,0,0" Margin="0,0,0,10" />
+                                            <CheckBox Content="通用指令" FontSize="14" Padding="5,0,0,0" Margin="0,0,0,10"/>
+                                            <CheckBox Content="页模式" FontSize="14" Padding="5,0,0,0"/>
+                                        </StackPanel>
+                                        <Button  Margin="10,0,0,0" Content="指令测试" Padding="5" FontSize="14" Width="90"  Height="70"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </GroupBox>
+                            <!--单项硬件测试-->
+                            <GroupBox Grid.Column="2" Grid.RowSpan="2" Header="单项硬件测试" Margin="5,0,5,5" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14">
+                                <StackPanel>
+                                    <StackPanel Orientation="Horizontal" Margin="10" >
+                                        <Button  Content="LED测试" Padding="5" FontSize="14"  Width="110"/>
+                                        <Button  Margin="10,0,0,0"  Content="蜂鸣器测试" Padding="5" FontSize="14" Width="110"/>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" Margin="10" >
+                                        <Button  Content="切刀测试" Padding="5" FontSize="14"  Width="110"/>
+                                        <Button  Margin="10,0,0,0"  Content="钱箱测试" Padding="5" FontSize="14" Width="110"/>
+                                    </StackPanel>
+                                    <Button HorizontalAlignment="Left" Margin="10,5,10,5" Content="步进电机测试" Padding="5" FontSize="14"  Width="110"/>
+                                    <StackPanel Orientation="Horizontal" Margin="10" >
+                                        <Button  Content="SDRAM测试" Padding="5" FontSize="14"  Width="110"/>
+                                        <Button  Margin="10,0,0,0"  Content="FLASH测试" Padding="5" FontSize="14" Width="110"/>
+                                    </StackPanel>
+                                    <TextBlock Text="测试SDRAM和FLASH时，如果测试成功则蜂鸣器鸣叫" TextWrapping="Wrap" LineHeight="20" Margin="10,50,10,0"/>
+                                </StackPanel>
+                            </GroupBox>
+                            <!--通用测试-->
+                            <GroupBox Grid.Column="3" Header="通用测试" Margin="5,0,5,5" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14">
+                                <StackPanel>
+                                    <StackPanel Orientation="Horizontal" Margin="10" >
+                                        <Button  Content="连续切纸" Padding="5" FontSize="14"  Width="100"/>
+                                        <TextBox  Margin="10,0,0,0"   FontSize="14" Width="80"/>
+                                    </StackPanel>
+                                    <Button HorizontalAlignment="Left" Margin="10,5,10,5" Content="自检测试(长)" Padding="5" FontSize="14"  Width="100"/>
+                                </StackPanel>
+                            </GroupBox>
+                            <!--打印机状态信息-->
+                            <GroupBox Grid.Column="3" Grid.Row="1" Header="打印机状态信息" Margin="5,0,5,5" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14">
+                                <StackPanel>
+                                    <TextBlock Text="打印机状态：就绪" Margin="10"/>
+                                    <StackPanel Orientation="Horizontal" Margin="10,0,10,10">
+                                        <TextBlock Text="电源电压：" VerticalAlignment="Center" />
+                                        <TextBox  Margin="17,0,0,0" IsEnabled="False"  FontSize="14" Width="80" Height="22"/>
+                                        <TextBlock Text="V" Margin="5,0,0,0" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" Margin="10,0,10,10">
+                                        <TextBlock Text="打印头温度：" VerticalAlignment="Center" />
+                                        <TextBox  Margin="3,0,0,0" IsEnabled="False"  FontSize="14" Width="80" Height="22"/>
+                                        <TextBlock Text="度" Margin="5,0,0,0" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </GroupBox>
+                            <Button Grid.ColumnSpan="4" Grid.Row="2" HorizontalAlignment="Center" Margin="10,10,10,5" Content="读取所有数据" Padding="5" FontSize="14"  Width="120" Height="35"/>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+            </TabItem>
+
+            <!--工廠生產-->
+            <TabItem Header="工厂生产"  FontSize="14">
+                <Border CornerRadius="5" Background="#595959" Margin="0,0,1,2">
+                    <StackPanel Height="415" >
+                        <GroupBox Header="一键测试" Width="280" Height="200" Margin="0,50,10,5" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14" VerticalAlignment="Top">
+                            <Grid>
+                                <Grid.ColumnDefinitions >
+                                    <ColumnDefinition Width="90"/>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="30"/>
+                                    <RowDefinition Height="30"/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+                                <CheckBox Content="LED指示灯" FontSize="14" Padding="5,0,0,0"  Margin="10,10,0,0" />
+                                <CheckBox Grid.Column="1"  Content="蜂鸣器" FontSize="14" Padding="5,0,0,0"  Margin="10,10,0,0" />
+                                <CheckBox Grid.Column="2" Content="切刀" FontSize="14" Padding="5,0,0,0"   Margin="10,10,0,0"/>
+                                <CheckBox Grid.Row="1" Content="钱箱" FontSize="14" Padding="5,0,0,0"  Margin="10,10,0,0" />
+                                <CheckBox Grid.Row="1"  Grid.Column="1"  Content="步进电机" FontSize="14" Padding="5,0,0,0" Margin="10,10,0,0" />
+                                <CheckBox Grid.Row="1"  Grid.Column="2" Content="自检页" FontSize="14" Padding="5,0,0,0"  Margin="10,10,0,0" />
+                                <StackPanel  Grid.Row="2" Grid.ColumnSpan="3" Orientation="Horizontal" HorizontalAlignment="Center" >
+                                    <Button  Margin="10,5,10,5" Content="全选" Padding="5" FontSize="14"  Height="30" Width="80"/>
+                                    <Button  Margin="10,5,10,5" Content="一键测试" Padding="5" FontSize="14"  Height="30" Width="80"/>
+                                </StackPanel>
+                            </Grid>
+                        </GroupBox>
+                        <Button  Margin="0,20,10,5"  Content="出厂设置" Padding="5" FontSize="14"  Height="30" Width="280" VerticalAlignment="Top"/>
+                    </StackPanel>
+                </Border>
+            </TabItem>
+        </TabControl>
+
+        <!--Bottom 狀態列-->
+        <Border Margin="5,5,5,5" Height="45" >
+            <StackPanel Background="#595959"  Orientation="Horizontal" >
+                <Label Content="状态信息：" Height="25" FontSize="14" Margin="5,0,0,0" />
+                <TextBox Width="700" Margin="0,10,10,10"  Padding="5,5,0,0" Height="25" FontSize="14" Text="参数读取完成！" Foreground="#BDBDBD" IsEnabled="False"/>
+            </StackPanel>
+        </Border>
+    </StackPanel>
+</Window>

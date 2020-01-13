@@ -1,0 +1,275 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                     xmlns:sys="clr-namespace:System;assembly=mscorlib">
+    <!--Window Title-->
+    <sys:String x:Key="WindowTitle">G80 Utility v1.0</sys:String>
+
+    <!--Top通訊介面-->
+    <sys:String x:Key="ConnectionInterface">通讯介面</sys:String>
+    <sys:String x:Key="ConnectionType">种类：</sys:String>
+    <sys:String x:Key="USB">USB口</sys:String>
+    <sys:String x:Key="RS232">串口</sys:String>
+    <sys:String x:Key="Ethernet">网口</sys:String>
+    <sys:String x:Key="EthernetConnect">连接</sys:String>
+
+    <!--Expander Header-->
+    <sys:String x:Key="PrinterAction">打印机操作</sys:String>
+    <sys:String x:Key="PrintTest">数据传输</sys:String>
+    <sys:String x:Key="PrinterConfig">参数设置</sys:String>
+    <sys:String x:Key="BLineSetting">黑标设置</sys:String>
+    <sys:String x:Key="NVLogo">NV Logo</sys:String>
+
+
+    <!--印表機操作-->
+    <sys:String x:Key="CutSetting">切纸设置</sys:String>
+    <sys:String x:Key="CutNumber">切纸次数(100以內)</sys:String>
+    <sys:String x:Key="Cut">切纸</sys:String>
+    <sys:String x:Key="CommandTest">指令测试</sys:String>
+    <sys:String x:Key="CommandTestBtn">测试</sys:String>
+    <sys:String x:Key="PrintTestPage">打印自检页</sys:String>
+    <sys:String x:Key="ConnectTest">联机测试</sys:String>
+    <sys:String x:Key="PowerTest">电源测试</sys:String>
+    <sys:String x:Key="PrintEvenTest">打印均匀测试</sys:String>
+    <sys:String x:Key="OpenCashDrawer">下踢钱箱</sys:String>
+    <sys:String x:Key="RestartPirnter">重启打印机</sys:String>
+
+    <!--黑標設定-->
+    <sys:String x:Key="SetBLineBillMaxLen">设置黑标票据最大长度</sys:String>
+    <sys:String x:Key="DetectBlineFeedPrintTest">检测到黑标后进行打印测试</sys:String>
+    <sys:String x:Key="SetBlineMaxWidth">设置黑标最大宽度</sys:String>
+    <sys:String x:Key="DetectBlineCutPrintTest">检测到黑标后进行切纸测试</sys:String>
+    <sys:String x:Key="DetectBlineFeed">检测到黑标后走纸</sys:String>
+    <sys:String x:Key="DetectBlineFeedAndCut">检测到黑标后走纸并切纸</sys:String>
+    <sys:String x:Key="LoadBLineSettings">读取黑标设置</sys:String>
+
+    <!--NV Logo-->
+    <sys:String x:Key="ShowPic">图片显示</sys:String>
+    <sys:String x:Key="LogoSetting">NV Logo 参数设定</sys:String>
+    <sys:String x:Key="Ordinal">第</sys:String>
+    <sys:String x:Key="piece">张</sys:String>
+    <sys:String x:Key="SingleWidthandHeight">单倍宽高</sys:String>
+    <sys:String x:Key="DoubleWidth">双倍宽度</sys:String>
+    <sys:String x:Key="DoubleHeight">双倍高度</sys:String>
+    <sys:String x:Key="DoubleWidthandHeight">双倍宽高</sys:String>
+    <sys:String x:Key="SelectLogoAndDonwald">下载Logo</sys:String>
+    <sys:String x:Key="PrintLogo">打印Logo</sys:String>
+    <sys:String x:Key="ClearLogo">清除Logo</sys:String>
+
+    <!--*******************************************************Tab & Expander Header*********************************************************************-->
+
+    <!--Expander Header-Printer Configuration-->
+    <sys:String x:Key="PrinterSetup">打印机设定</sys:String>
+    <sys:String x:Key="SensorSetup">标签感测器设定</sys:String>
+    <sys:String x:Key="WifiModuleSetting">Wifi模块设定</sys:String>
+    <sys:String x:Key="BluetoothSetup">蓝芽设定</sys:String>
+    <sys:String x:Key="RS232Setup">RS232 设定</sys:String>
+    <sys:String x:Key="EthernetSetup">Ethernet设定</sys:String>
+    <sys:String x:Key="SettingFile">档案设定</sys:String>
+
+
+    <!--Expander Header-Command Tool-->
+    <sys:String x:Key="SendCommand">传送命令</sys:String>
+    <sys:String x:Key="SendFile">传送档案</sys:String>
+
+    <!--**********************************************************************印表機資訊*********************************************************************-->
+    <!--printer status-->
+    <sys:String x:Key="EVENT_NONE">就绪</sys:String>
+    <sys:String x:Key="EVENT_HEADOPEN">上盖开启</sys:String>
+    <sys:String x:Key="EVENT_PAUSE">暂停</sys:String>
+    <sys:String x:Key="EVENT_DEMAND">按键需求</sys:String>
+    <sys:String x:Key="EVENT_RIBBONOUT">碳带用尽</sys:String>
+    <sys:String x:Key="EVENT_RIBBONERROR">碳带错误</sys:String>
+    <sys:String x:Key="EVENT_GAPOUT">找不到间隙</sys:String>
+    <sys:String x:Key="EVENT_LABELOUT">标签用尽</sys:String>
+    <sys:String x:Key="EVENT_NOTPH">印字头错误</sys:String>
+    <sys:String x:Key="EVENT_NOCUTTER">未安装切刀</sys:String>
+    <sys:String x:Key="EVENT_NOPEELER">未安装剥纸器</sys:String>
+    <sys:String x:Key="EVENT_SDNO">未插入SD卡</sys:String>
+    <sys:String x:Key="EVENT_CUTTERJAM">切刀卡纸</sys:String>
+    <sys:String x:Key="EVENT_SDLOCK">SD卡写入保护</sys:String>
+    <sys:String x:Key="EVENT_MEM_NOCAPACITY">记忆体配置错误</sys:String>
+    <sys:String x:Key="EVENT_LABELERROR">标签错误</sys:String>
+    <sys:String x:Key="EVENT_POWERERROR">电源错误</sys:String>
+    <sys:String x:Key="EVENT_BATLOW">电池没电</sys:String>
+    
+    <!--**********************************************************************印表機一般設定*********************************************************************-->
+    <!--印表機一般設定欄位-->
+    <sys:String x:Key="Speed">速度</sys:String>
+    <sys:String x:Key="Density">热度</sys:String>
+    <!--列印模式-->
+    <sys:String x:Key="ThermalMode">打印模式</sys:String>
+    <sys:String x:Key="DirectThermal">直接感热</sys:String>
+    <sys:String x:Key="ThermalTansfer">感热转印`</sys:String>
+    <!--標籤紙類型-->
+    <sys:String x:Key="LabelType">标签纸类型</sys:String>
+    <sys:String x:Key="GapLabel">间隙标签</sys:String>
+    <sys:String x:Key="BLineLabel">黑标纸</sys:String>
+    <sys:String x:Key="ContinueLabel">连续纸</sys:String>
+    <sys:String x:Key="LabelWidth">标签宽度</sys:String>
+    <sys:String x:Key="LabelHeight">标签高度</sys:String>
+    <sys:String x:Key="GapDistance">间隙高度</sys:String>
+    <sys:String x:Key="GapOffset">间隙偏移量</sys:String>
+    <sys:String x:Key="BLineThickness">黑标粗细</sys:String>
+    <sys:String x:Key="BLineFeedLen">黑标偏移量</sys:String>
+    <sys:String x:Key="ContinueOffset">连续纸偏移量</sys:String>
+    <!--列印方向-->
+    <sys:String x:Key="Direction">打印方向</sys:String>
+    <sys:String x:Key="Topout">顶端出纸</sys:String>
+    <sys:String x:Key="Buttomout">底端出纸</sys:String>
+    <!--鏡射繪圖-->
+    <sys:String x:Key="Mirror">镜射绘图</sys:String>
+    <sys:String x:Key="ReferenceX">X轴位移</sys:String>
+    <sys:String x:Key="ReferenceY">Y轴位移</sys:String>
+    <!--繪圖反向-->
+    <sys:String x:Key="DrawReverse">绘图反向</sys:String>
+    <!--列印後動作-->
+    <sys:String x:Key="PostPrintAction">打印後动作</sys:String>
+    <sys:String x:Key="NormalAction">停在原地</sys:String>
+    <sys:String x:Key="TearMode">撕纸</sys:String>
+    <sys:String x:Key="PeelMode">剥纸</sys:String>
+    <sys:String x:Key="CutModeAction">裁切</sys:String>
+    <!--按鍵後列印-->
+    <sys:String x:Key="OnDemand">按键後打印</sys:String>
+    <sys:String x:Key="on">开启</sys:String>
+    <sys:String x:Key="off">关闭</sys:String>
+    <!--<sys:String x:Key="CutNumber">裁切张数</sys:String>-->
+    <!--裁切任務-->
+    <sys:String x:Key="CutAction">裁切任务</sys:String>
+    <sys:String x:Key="CutEverylabel">每张都切</sys:String>
+    <sys:String x:Key="CutbyCutNumber">指定张数裁切</sys:String>
+    <sys:String x:Key="Cutonlylastone">切最後一张</sys:String>
+    <!--裁切方式-->
+    <sys:String x:Key="CutMode">裁切方式</sys:String>
+    <sys:String x:Key="FullCut">全切</sys:String>
+    <sys:String x:Key="PartialCut">半切</sys:String>
+    <sys:String x:Key="BackAfterCut">切完後是否回拉</sys:String>
+    <!--標籤感測方式-->
+    <sys:String x:Key="Type">标签感测器</sys:String>
+    <sys:String x:Key="ByLabel">依标签</sys:String>
+    <sys:String x:Key="SeeThrough">穿透式</sys:String>
+    <sys:String x:Key="Reflective">反射式</sys:String>
+    <!--true or false-->
+    <sys:String x:Key="yes">是</sys:String>
+    <sys:String x:Key="no">否</sys:String>
+
+    <!--上蓋關閉後吐紙-->
+    <sys:String x:Key="CoverCloseAutoFeed">上盖关闭后吐纸</sys:String>
+    <sys:String x:Key="AutoFeed">吐纸</sys:String>
+    <sys:String x:Key="NotAvailable">不提供</sys:String>
+
+    <!--印表機設定button-->
+    <sys:String x:Key="GNDeafult">一般设定初始化</sys:String>
+    <sys:String x:Key="ReadConfiguration">读取</sys:String>
+    <sys:String x:Key="CompleteSetting">设定</sys:String>
+    
+    <!--***************************************************感應器設定***********************************************************-->    
+    <sys:String x:Key="ManualMode">手动</sys:String>
+    <sys:String x:Key="AutoSeeLevel">穿透强度</sys:String>
+    <sys:String x:Key="AutoRefLevel">反射强度</sys:String>
+    <sys:String x:Key="ManSeeEmitLevel">手动-穿透-发射强度</sys:String>
+    <sys:String x:Key="ManRefEmitLevel">手动-反射-发射强度</sys:String>
+    <sys:String x:Key="ManSeeReadLevel">手动-穿透-接收强度</sys:String>
+    <sys:String x:Key="ManRefReadLevel">手动-反射-接收强度</sys:String>
+    <sys:String x:Key="Heigh">强</sys:String>
+    <sys:String x:Key="Middle">中</sys:String>
+    <sys:String x:Key="Low">弱</sys:String>
+    <sys:String x:Key="Weak">微弱</sys:String>
+
+    <!--感應器button-->
+    <sys:String x:Key="SensorDeafult">标籤感测器初始化</sys:String>
+
+    <!--*************************************wifi/bluetooth/rs232/ethernet/file**************************************-->
+    <!--wifi模塊設定 content-->
+    <sys:String x:Key="APSSID">AP SSID</sys:String>
+    <sys:String x:Key="Auth">认证模式</sys:String>
+    <sys:String x:Key="Encry">加密算法</sys:String>
+    <sys:String x:Key="Pwd">Wifi密码</sys:String>
+    <sys:String x:Key="WifiMode">Wifi模式</sys:String>
+    <sys:String x:Key="AP">AP</sys:String>
+    <sys:String x:Key="STA">STA</sys:String>
+    <sys:String x:Key="SetBaudRate">Buad Rate设定</sys:String>
+    <sys:String x:Key="ResetWifi">重启Wifi模组</sys:String>
+    <!--WIFI下方設定名稱與ETHERNET共用-->
+    <sys:String x:Key="IPMode">IP 模式</sys:String>
+    <sys:String x:Key="StaticIP">静态IP</sys:String>
+    <sys:String x:Key="DHCP">动态IP</sys:String>
+    <sys:String x:Key="PortNumber">端口号</sys:String>
+    <sys:String x:Key="IPAddress">IP 地址</sys:String>
+    <sys:String x:Key="Gateway">网关地址</sys:String>
+    <sys:String x:Key="Mask">子网掩码</sys:String>
+    
+    <!--藍芽設定 content-->
+    <sys:String x:Key="BlueToothName">蓝芽名称</sys:String>
+    <sys:String x:Key="BlueToothPIN">PIN 码</sys:String>
+
+    <!--RS232設定 content-->
+    <sys:String x:Key="BaudRate">每秒传输位元</sys:String>
+    <sys:String x:Key="Databits">资料位元</sys:String>
+    <sys:String x:Key="Parity">同位检查</sys:String>
+    <sys:String x:Key="StopBits">停止位元</sys:String>
+    <sys:String x:Key="FlowControl">流量控制</sys:String>
+
+    <!--*************************************************************RTC設定*****************************************************-->
+    <sys:String x:Key="year">年</sys:String>
+    <sys:String x:Key="month">月</sys:String>
+    <sys:String x:Key="day">日</sys:String>
+    <sys:String x:Key="hour">时</sys:String>
+    <sys:String x:Key="min">分</sys:String>
+    <sys:String x:Key="sec">秒</sys:String>
+    <sys:String x:Key="getCurrentTime">取得系统时间</sys:String>
+
+    <!--******************************************************檔案設定存檔讀檔/Printer Function/ Common Tool*****************************************************-->
+    <!--檔案設定 content-->
+    <sys:String x:Key="SaveFile">储存设定值为档案</sys:String>
+    <sys:String x:Key="LoadFile">从档案读取设定值</sys:String>
+    
+    <!--Printer Function content-->
+    <sys:String x:Key="FactoryDefault">恢复出厂设置</sys:String>
+    <sys:String x:Key="RTCSetup">RTC设定</sys:String>
+
+    <!-- Common Tool content-->
+    
+    <!--**********************************************************************底部功能*********************************************************************-->
+    <!--for Bottom Button-->
+    <sys:String x:Key="AboutButton">关於(_A)</sys:String>
+    <sys:String x:Key="PrinterParameterQuery">参数查询</sys:String>
+    <sys:String x:Key="ExitButton">关闭窗口</sys:String>
+
+    <!--Language Selection-->
+    <sys:String x:Key="SelectLanguage">语系切换：</sys:String>
+    <sys:String x:Key="zhTW">繁体中文</sys:String>
+    <sys:String x:Key="zhCN">简体中文</sys:String>
+    <sys:String x:Key="enUS">英文(美)</sys:String>
+
+    <!--about content-->
+    <sys:String x:Key="ToolVerison">打印机工具 版本 Beta v2.1</sys:String>
+    <sys:String x:Key="CopyrightTop">Copyright(C) Ganinscha Network Inc.</sys:String>
+    <sys:String x:Key="CopyrightBottom">2019 All rights reserved.</sys:String>
+    <sys:String x:Key="CloseButton">关闭</sys:String>
+
+    <!--**********************************************************************共用功能*********************************************************************-->
+    <!--message box-->
+    <sys:String x:Key="GNSettingComplete">写入完成</sys:String>
+    <sys:String x:Key="TransferTimeout">传输逾时</sys:String>
+    <sys:String x:Key="ErrorFormat">部分栏位格式错误，请输入数字</sys:String>
+    <sys:String x:Key="ColumnEmpty">部分栏位空白，请输入内容</sys:String>
+    <sys:String x:Key="wifisetOK">WIFI模块设定成功</sys:String>
+    <sys:String x:Key="wifisetFail">WIFI模块设定失败</sys:String>
+    <sys:String x:Key="wifiresetOK">WIFI模块重启成功</sys:String>
+    <sys:String x:Key="wifiresetFail">WIFI模块重启失败</sys:String>
+    <sys:String x:Key="NotFoundSettingFile">找不到配置文件，读取配置文件失败!</sys:String>
+    <sys:String x:Key="CommandEmpty">尚未输入指令</sys:String>
+    <sys:String x:Key="ConnectTimeout">联机逾时</sys:String>
+    <sys:String x:Key="NoDPIError">尚未取得打印机dpi信息，部分字段将无法正常计算，请先更新打印机信息</sys:String>
+    <sys:String x:Key="NOFramework4.0">请先安装.Net Framework4.0方可正常执行此程序</sys:String>
+    <sys:String x:Key="GNSettingEmpty">上次储存打印机设定有误，储存档为空白，请重新储存档案!</sys:String>
+    <sys:String x:Key="FailedSend">传送失败:</sys:String>
+    <sys:String x:Key="ComportSetError">串口设定错误!</sys:String>
+    <sys:String x:Key="CannotOpenComport">无法开启串口</sys:String>
+    <sys:String x:Key="NotSettingComport">尚未设定串口</sys:String>
+    
+    <!--button-->
+    <sys:String x:Key="Load">读取</sys:String>
+    <sys:String x:Key="Set">设定</sys:String>
+    <sys:String x:Key="Cancel">取消</sys:String>
+</ResourceDictionary>
