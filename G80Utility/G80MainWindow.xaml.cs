@@ -1,4 +1,5 @@
-﻿using Microsoft.Win32;
+﻿using G80Utility.Tool;
+using Microsoft.Win32;
 using PirnterUtility.Models;
 using PirnterUtility.Tool;
 using PirnterUtility.ViewModels;
@@ -101,7 +102,7 @@ namespace PirnterUtility
         #region 通讯接口测试按鈕事件
         private void ConnectTest_Click(object sender, RoutedEventArgs e)
         {
-            byte[] sendArray = StringToByteArray("1F1B100100");
+            byte[] sendArray = StringToByteArray(Command.RS232_COMMUNITCATION_TEST);
             if ((bool)rs232Checkbox.IsChecked)
             {
                 SerialPortConnect("CommunicationTest", sendArray);
@@ -113,11 +114,11 @@ namespace PirnterUtility
         #region 重啟印表機按鈕事件
         private void Restart_Click(object sender, RoutedEventArgs e)
         {
+            byte[] sendArray = StringToByteArray(Command.RESTART);
             switch (DeviceType)
             {
 
-                case "RS232":
-                    byte[] sendArray = StringToByteArray("1F1B1F535A4A425A46110000");
+                case "RS232":                   
                     SerialPortConnect("Beep", sendArray);
                     break;
                 case "USB":
@@ -131,22 +132,19 @@ namespace PirnterUtility
         }
         #endregion
 
-
         #region 走紙方向
         private void Direction_Click(object sender, RoutedEventArgs e)
         {
             byte[] sendArray;
             switch (DeviceType)
-            {
-          
+            {         
                 case "RS232":                   
                     if (DirectionCombox.SelectedIndex == 0) {
-                        sendArray = StringToByteArray("1F1B1F9210111215161755");
+                        sendArray = StringToByteArray(Command.Direction_H80250N);
                     }
                    else{
-                        sendArray = StringToByteArray("1F1B1F9210111215161733");
-                    }
-                   
+                        sendArray = StringToByteArray(Command.Direction_80250N);
+                    }                   
                     SerialPortConnect("Beep", sendArray);
                     break;
                 case "USB":
