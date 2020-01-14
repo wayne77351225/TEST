@@ -278,7 +278,7 @@ namespace PirnterUtility
         }
         #endregion
 
-        #region 設定濃度調節鈕事件
+        #region 設定濃度調節按鈕事件
         private void DensityBtn_Click(object sender, RoutedEventArgs e)
         {
             byte[] sendArray = null;
@@ -332,6 +332,59 @@ namespace PirnterUtility
         }
         #endregion
 
+        #region 設定MAC顯示按鈕事件
+        private void MACShowBtn_Click(object sender, RoutedEventArgs e)
+        {
+            byte[] sendArray;
+            if (MACShowCom.SelectedIndex == 0)
+            {
+                sendArray = StringToByteArray(Command.MAC_SHOW_DEC_SETTING);
+            }
+            else
+            {
+                sendArray = StringToByteArray(Command.MAC_SHOW_HEX_SETTING);
+            }
+            switch (DeviceType)
+            {
+                case "RS232":
+                    SerialPortConnect("BeepOrSetting", sendArray);
+                    break;
+                case "USB":
+
+                    break;
+                case "Ethernet":
+
+                    break;
+            }
+        }
+        #endregion
+
+        #region 設定二維碼按鈕事件
+        private void QRCodeBtn_Click(object sender, RoutedEventArgs e)
+        {
+            byte[] sendArray;
+            if (QRCodeCom.SelectedIndex == 0)
+            {
+                sendArray = StringToByteArray(Command.QRCODE_OFF_SETTING);
+            }
+            else
+            {
+                sendArray = StringToByteArray(Command.QRCODE_ON_SETTING);
+            }
+            switch (DeviceType)
+            {
+                case "RS232":
+                    SerialPortConnect("BeepOrSetting", sendArray);
+                    break;
+                case "USB":
+
+                    break;
+                case "Ethernet":
+
+                    break;
+            }
+        }
+        #endregion
         //========================取得資料後設定UI=================
 
         #region 設定打印機型號/軟件版本/機器序號
@@ -703,13 +756,7 @@ namespace PirnterUtility
             }
 
         }
-
-
-
-
-
         #endregion
-
 
     }
 }

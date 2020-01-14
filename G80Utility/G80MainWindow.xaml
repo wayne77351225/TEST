@@ -344,13 +344,19 @@
                                         <CheckBox VerticalAlignment="Center" IsChecked="True"/>
                                     </StackPanel>
                                     <StackPanel  Margin="0,0,0,10" Orientation="Horizontal">
-                                        <ComboBox  Margin="0,0,5,0" Width="90" Height="26" Foreground="#BDBDBD"/>
-                                        <Button  Margin="0,0,5,0" Content="MAC地址显示" Padding="10,5,10,5" Width="125"/>
+                                        <ComboBox  Margin="0,0,5,0" Name="MACShowCom" Width="90" Height="26" Foreground="#BDBDBD">
+                                            <ComboBoxItem>十进制</ComboBoxItem>
+                                            <ComboBoxItem>十六进制</ComboBoxItem>
+                                        </ComboBox>
+                                        <Button  Margin="0,0,5,0" Content="MAC地址显示" Name="MACShowBtn" Click="MACShowBtn_Click" Padding="10,5,10,5" Width="125"/>
                                         <CheckBox VerticalAlignment="Center" IsChecked="True"/>
                                     </StackPanel>
                                     <StackPanel  Margin="0,0,0,10" Orientation="Horizontal">
-                                        <ComboBox  Margin="0,0,5,0" Width="90" Height="26" Foreground="#BDBDBD"/>
-                                        <Button  Margin="0,0,5,0" Content="二维码功能" Padding="5" Width="125"/>
+                                        <ComboBox  Margin="0,0,5,0" Name="QRCodeCom" Width="90" Height="26" Foreground="#BDBDBD">
+                                            <ComboBoxItem>无效</ComboBoxItem>
+                                            <ComboBoxItem>有效</ComboBoxItem>
+                                        </ComboBox>
+                                        <Button  Margin="0,0,5,0" Content="二维码功能" Name="QRCodeBtn" Click="QRCodeBtn_Click" Padding="5" Width="125"/>
                                         <CheckBox VerticalAlignment="Center" IsChecked="True"/>
                                     </StackPanel>
                                     <StackPanel  Margin="0,0,0,10" Orientation="Horizontal">
