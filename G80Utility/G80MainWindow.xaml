@@ -253,7 +253,7 @@
                                 <GroupBox  Margin="10,5,0,10" Grid.ColumnSpan="2" Height="65"  Width="495" Header="代码页" VerticalAlignment="Center" HorizontalAlignment="Left" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14" >
                                     <StackPanel  Margin="10,0,0,0" Orientation="Horizontal">
                                         <ComboBox  Margin="0,0,10,0" Name="CodePageCom" Width="130" Height="28" Text="IP Address" Foreground="#BDBDBD"/>
-                                        <Button  Margin="0,0,10,0" Name="CodePageSetBtn" Content="设置代码页" Padding="10,5,10,5" Width="130" Height="28"/>
+                                        <Button  Margin="0,0,10,0" Name="CodePageSetBtn" Click="CodePageSetBtn_Click" Content="设置代码页" Padding="10,5,10,5" Width="130" Height="28"/>
                                         <Button  Margin="0,0,10,0" Name="CodePagePrintBtn"  Content="打印代码页" Padding="10,5,10,5" Width="130" Height="28"/>
                                         <CheckBox VerticalAlignment="Center" IsChecked="True"/>
                                     </StackPanel>
@@ -329,8 +329,11 @@
                                         <CheckBox VerticalAlignment="Center" IsChecked="True"/>
                                     </StackPanel>
                                     <StackPanel  Margin="0,0,0,10" Orientation="Horizontal">
-                                        <ComboBox  Margin="0,0,5,0" Width="90" Height="26" Foreground="#BDBDBD"/>
-                                        <Button  Margin="0,0,5,0" Content="打印纸宽" Padding="10,5,10,5" Width="125"/>
+                                        <ComboBox  Margin="0,0,5,0" Name="PaperWidthCom" Width="90" Height="26" Foreground="#BDBDBD">
+                                            <ComboBoxItem>58MM</ComboBoxItem>
+                                            <ComboBoxItem>80MM</ComboBoxItem>
+                                        </ComboBox>
+                                        <Button  Margin="0,0,5,0" Content="打印纸宽" Name="PaperWidthBtn" Click="PaperWidthBtn_Click" Padding="10,5,10,5" Width="125"/>
                                         <CheckBox VerticalAlignment="Center" IsChecked="True"/>
                                     </StackPanel>
                                     <StackPanel  Margin="0,0,0,10" Orientation="Horizontal">
@@ -365,8 +368,11 @@
                                         <CheckBox VerticalAlignment="Center" IsChecked="True"/>
                                     </StackPanel>
                                     <StackPanel  Margin="0,0,0,10" Orientation="Horizontal">
-                                        <ComboBox  Margin="0,0,5,0" Width="90" Height="26" Foreground="#BDBDBD"/>
-                                        <Button  Margin="0,0,5,0" Content="DIP开关" Padding="10,5,10,5" Width="125"/>
+                                        <ComboBox  Margin="0,0,5,0" Name="DIPSwitchCom" Width="90" Height="26" Foreground="#BDBDBD">
+                                            <ComboBoxItem>不使用硬件DIP</ComboBoxItem>
+                                            <ComboBoxItem>使用硬件DIP</ComboBoxItem>
+                                        </ComboBox>
+                                        <Button  Margin="0,0,5,0" Content="DIP开关" Name="DIPSwitchBtn" Click="DIPSwitchBtn_Click" Padding="10,5,10,5" Width="125"/>
                                         <CheckBox VerticalAlignment="Center" IsChecked="True"/>
                                     </StackPanel>
 

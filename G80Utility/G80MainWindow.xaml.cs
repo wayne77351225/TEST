@@ -110,6 +110,7 @@ namespace PirnterUtility
         #endregion
 
         //========================Btn點擊事件===========================
+       
         #region 通讯接口测试按鈕事件
         private void ConnectTest_Click(object sender, RoutedEventArgs e)
         {
@@ -140,6 +141,30 @@ namespace PirnterUtility
                     break;
             }
 
+        }
+        #endregion
+
+        #region 設定代碼頁按鈕事件
+        private void CodePageSetBtn_Click(object sender, RoutedEventArgs e)
+        {
+            string HexCode = CodePageCom.SelectedItem.ToString();
+            HexCode = HexCode.Split(':')[0];
+            if (HexCode.Length < 2) {
+                HexCode = HexCode + "0";
+            }
+            byte[] sendArray = StringToByteArray(Command.CODEPAGE_SETTING_HEADER+ HexCode);
+            switch (DeviceType)
+            {
+                case "RS232":
+                    SerialPortConnect("BeepOrSetting", sendArray);
+                    break;
+                case "USB":
+
+                    break;
+                case "Ethernet":
+
+                    break;
+            }
         }
         #endregion
 
@@ -385,6 +410,62 @@ namespace PirnterUtility
             }
         }
         #endregion
+
+        #region 設定打印紙寬按鈕事件
+        private void PaperWidthBtn_Click(object sender, RoutedEventArgs e)
+        {
+            byte[] sendArray;
+            if (PaperWidthCom.SelectedIndex == 0)
+            {
+                sendArray = StringToByteArray(Command.PAPER_WIDTH_58MM_SETTING);
+            }
+            else
+            {
+                sendArray = StringToByteArray(Command.PAPER_WIDTH_80MM_SETTING);
+            }
+            switch (DeviceType)
+            {
+                case "RS232":
+                    SerialPortConnect("BeepOrSetting", sendArray);
+                    break;
+                case "USB":
+
+                    break;
+                case "Ethernet":
+
+                    break;
+            }
+        }
+        #endregion
+
+        #region 設定DIP開關按鈕事件
+        private void DIPSwitchBtn_Click(object sender, RoutedEventArgs e)
+        {
+            byte[] sendArray;
+            if (DIPSwitchCom.SelectedIndex == 0)
+            {
+                sendArray = StringToByteArray(Command.DIP_OFF_SETTING);
+            }
+            else
+            {
+                sendArray = StringToByteArray(Command.DIP_ON_SETTING);
+            }
+            switch (DeviceType)
+            {
+                case "RS232":
+                    SerialPortConnect("BeepOrSetting", sendArray);
+                    break;
+                case "USB":
+
+                    break;
+                case "Ethernet":
+
+                    break;
+            }
+        }
+        #endregion
+
+
         //========================取得資料後設定UI=================
 
         #region 設定打印機型號/軟件版本/機器序號
@@ -757,6 +838,7 @@ namespace PirnterUtility
 
         }
         #endregion
+
 
     }
 }
