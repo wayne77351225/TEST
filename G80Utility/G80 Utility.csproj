@@ -77,9 +77,9 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Models\Device.cs" />
-    <Compile Include="Models\GenricSettings.cs" />
     <Compile Include="Themes\LeftMarginMultiplierConverter.cs" />
     <Compile Include="Themes\TreeViewItemExtensions.cs" />
+    <Compile Include="Tool\CodePage.cs" />
     <Compile Include="Tool\Command.cs" />
     <Compile Include="Tool\Kernel32.cs" />
     <Compile Include="Tool\RS232Connect.cs" />
