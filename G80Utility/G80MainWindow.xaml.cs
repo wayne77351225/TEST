@@ -287,12 +287,12 @@ namespace PirnterUtility
         #region FontB設定按鈕事件
         private void FontBSettingBtn_Click(object sender, RoutedEventArgs e)
         {
-            byte[] sendArray;
+            byte[] sendArray = null;
             if (FontBSettingCom.SelectedIndex == 0)
             {
                 sendArray = StringToByteArray(Command.FONTB_OFF_SETTING);
             }
-            else
+            else if (FontBSettingCom.SelectedIndex == 1)
             {
                 sendArray = StringToByteArray(Command.FONTB_ON_SETTING);
             }
@@ -314,12 +314,12 @@ namespace PirnterUtility
         #region 設定定制字體按鈕事件
         private void CustomziedFontBtn_Click(object sender, RoutedEventArgs e)
         {
-            byte[] sendArray;
+            byte[] sendArray = null;
             if (CustomziedFontCom.SelectedIndex == 0)
             {
                 sendArray = StringToByteArray(Command.CUSTOMIZED_FONT_OFF_SETTING);
             }
-            else
+            else if (CustomziedFontCom.SelectedIndex == 1)
             {
                 sendArray = StringToByteArray(Command.CUSTOMIZED_FONT_ON_SETTING);
             }
@@ -341,12 +341,12 @@ namespace PirnterUtility
         #region 走紙方向按鈕事件
         private void Direction_Click(object sender, RoutedEventArgs e)
         {
-            byte[] sendArray;
+            byte[] sendArray = null;
             if (DirectionCombox.SelectedIndex == 0)
             {
                 sendArray = StringToByteArray(Command.DIRECTION_H80250N_SETTING);
             }
-            else
+            else if (DirectionCombox.SelectedIndex == 1)
             {
                 sendArray = StringToByteArray(Command.DIRECTION_80250N_SETTING);
             }
@@ -368,12 +368,12 @@ namespace PirnterUtility
         #region 設定馬達加速開關按鈕事件
         private void MotorAccControlBtn_Click(object sender, RoutedEventArgs e)
         {
-            byte[] sendArray;
+            byte[] sendArray = null;
             if (MotorAccControlCom.SelectedIndex == 0)
             {
                 sendArray = StringToByteArray(Command.ACCELERATION_OF_MOTOR_OFF_SETTING);
             }
-            else
+            else if (MotorAccControlCom.SelectedIndex == 1)
             {
                 sendArray = StringToByteArray(Command.ACCELERATION_OF_MOTOR_ON_SETTING);
             }
@@ -434,12 +434,12 @@ namespace PirnterUtility
         #region 設定濃度模式按鈕事件
         private void DensityModeBtn_Click(object sender, RoutedEventArgs e)
         {
-            byte[] sendArray;
+            byte[] sendArray = null;
             if (DensityModeCom.SelectedIndex == 0)
             {
                 sendArray = StringToByteArray(Command.DENSITY_MODE_LOW_SETTING);
             }
-            else
+            else if (DensityModeCom.SelectedIndex == 1)
             {
                 sendArray = StringToByteArray(Command.DENSITY_MODE_HIGH_SETTING);
             }
@@ -512,16 +512,125 @@ namespace PirnterUtility
 
         }
         #endregion
+       
+        #region 設定紙盡重打按鈕事件
+        private void PaperOutReprintBtn_Click(object sender, RoutedEventArgs e)
+        {
+            byte[] sendArray = null;
+            if (PaperOutReprintCom.SelectedIndex == 0)
+            {
+                sendArray = StringToByteArray(Command.PAPEROUT_REPRINT_OFF_SETTING);
+            }
+            else if (PaperOutReprintCom.SelectedIndex == 1)
+            {
+                sendArray = StringToByteArray(Command.PAPEROUT_REPRINT_ON_SETTING);
+            }
+            switch (DeviceType)
+            {
+                case "RS232":
+                    SerialPortConnect("BeepOrSetting", sendArray);
+                    break;
+                case "USB":
+
+                    break;
+                case "Ethernet":
+
+                    break;
+            }
+
+        }
+        #endregion
+
+        #region 設定打印紙寬按鈕事件
+        private void PaperWidthBtn_Click(object sender, RoutedEventArgs e)
+        {
+            byte[] sendArray = null;
+            if (PaperWidthCom.SelectedIndex == 0)
+            {
+                sendArray = StringToByteArray(Command.PAPER_WIDTH_58MM_SETTING);
+            }
+            else if (PaperWidthCom.SelectedIndex == 1)
+            {
+                sendArray = StringToByteArray(Command.PAPER_WIDTH_80MM_SETTING);
+            }
+            switch (DeviceType)
+            {
+                case "RS232":
+                    SerialPortConnect("BeepOrSetting", sendArray);
+                    break;
+                case "USB":
+
+                    break;
+                case "Ethernet":
+
+                    break;
+            }
+        }
+        #endregion
+
+        #region 設定合蓋自動切紙按鈕事件
+        private void HeadCloseCutBtn_Click(object sender, RoutedEventArgs e)
+        {
+            byte[] sendArray = null;
+            if (HeadCloseCutCom.SelectedIndex == 0)
+            {
+                sendArray = StringToByteArray(Command.HEADCLOSE_AUTOCUT_OFF_SETTING);
+            }
+            else if (HeadCloseCutCom.SelectedIndex == 1)
+            {
+                sendArray = StringToByteArray(Command.HEADCLOSE_AUTOCUT_ON_SETTING);
+            }
+            switch (DeviceType)
+            {
+                case "RS232":
+                    SerialPortConnect("BeepOrSetting", sendArray);
+                    break;
+                case "USB":
+
+                    break;
+                case "Ethernet":
+
+                    break;
+            }
+        }
+        #endregion
+        
+        #region 設定垂直移動單位按鈕事件
+        private void YOffsetBtn_Click(object sender, RoutedEventArgs e)
+        {
+            byte[] sendArray = null;
+            if (YOffsetCom.SelectedIndex == 0)
+            {
+                sendArray = StringToByteArray(Command.Y_OFFSET_1_SETTING);
+            }
+            else if (YOffsetCom.SelectedIndex ==1)
+            {
+                sendArray = StringToByteArray(Command.Y_OFFSET_05_SETTING);
+            }
+            switch (DeviceType)
+            {
+                case "RS232":
+                    SerialPortConnect("BeepOrSetting", sendArray);
+                    break;
+                case "USB":
+
+                    break;
+                case "Ethernet":
+
+                    break;
+            }
+        }
+        #endregion
 
         #region 設定MAC顯示按鈕事件
         private void MACShowBtn_Click(object sender, RoutedEventArgs e)
         {
-            byte[] sendArray;
+            byte[] sendArray = null;
             if (MACShowCom.SelectedIndex == 0)
             {
                 sendArray = StringToByteArray(Command.MAC_SHOW_DEC_SETTING);
             }
-            else
+            else if (MACShowCom.SelectedIndex == 1)
             {
                 sendArray = StringToByteArray(Command.MAC_SHOW_HEX_SETTING);
             }
@@ -543,12 +652,12 @@ namespace PirnterUtility
         #region 設定二維碼按鈕事件
         private void QRCodeBtn_Click(object sender, RoutedEventArgs e)
         {
-            byte[] sendArray;
+            byte[] sendArray = null;
             if (QRCodeCom.SelectedIndex == 0)
             {
                 sendArray = StringToByteArray(Command.QRCODE_OFF_SETTING);
             }
-            else
+            else if (QRCodeCom.SelectedIndex == 1)
             {
                 sendArray = StringToByteArray(Command.QRCODE_ON_SETTING);
             }
@@ -567,17 +676,17 @@ namespace PirnterUtility
         }
         #endregion
 
-        #region 設定打印紙寬按鈕事件
-        private void PaperWidthBtn_Click(object sender, RoutedEventArgs e)
+        #region 設定自檢頁logo按鈕事件
+        private void LogoPrintControlBtn_Click(object sender, RoutedEventArgs e)
         {
-            byte[] sendArray;
-            if (PaperWidthCom.SelectedIndex == 0)
+            byte[] sendArray =null;
+            if (LogoPrintControlCom.SelectedIndex == 0)
             {
-                sendArray = StringToByteArray(Command.PAPER_WIDTH_58MM_SETTING);
+                sendArray = StringToByteArray(Command.LOGO_PRINT_OFF_SETTING);
             }
-            else
+            else if (LogoPrintControlCom.SelectedIndex == 1)
             {
-                sendArray = StringToByteArray(Command.PAPER_WIDTH_80MM_SETTING);
+                sendArray = StringToByteArray(Command.LOGO_PRINT_ON_SETTING);
             }
             switch (DeviceType)
             {
@@ -591,18 +700,19 @@ namespace PirnterUtility
 
                     break;
             }
+
         }
         #endregion
 
         #region 設定DIP開關按鈕事件
         private void DIPSwitchBtn_Click(object sender, RoutedEventArgs e)
         {
-            byte[] sendArray;
+            byte[] sendArray = null;
             if (DIPSwitchCom.SelectedIndex == 0)
             {
                 sendArray = StringToByteArray(Command.DIP_OFF_SETTING);
             }
-            else
+            else if (DIPSwitchCom.SelectedIndex == 1)
             {
                 sendArray = StringToByteArray(Command.DIP_ON_SETTING);
             }
@@ -992,5 +1102,6 @@ namespace PirnterUtility
 
         #endregion
 
+        
     }
 }

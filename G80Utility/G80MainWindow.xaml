@@ -333,8 +333,11 @@
                                 <!--column2-->
                                 <StackPanel Grid.Column="1" Grid.Row="1" Margin="10,10,0,0">
                                     <StackPanel  Margin="0,0,0,10" Orientation="Horizontal">
-                                        <ComboBox  Margin="0,0,5,0" Width="90" Height="26" Foreground="#BDBDBD"/>
-                                        <Button  Margin="0,0,5,0" Content="纸尽重打" Padding="10,5,10,5" Width="125"/>
+                                        <ComboBox  Margin="0,0,5,0" Name="PaperOutReprintCom" Width="90" Height="26" Foreground="#BDBDBD">
+                                            <ComboBoxItem>关闭</ComboBoxItem>
+                                            <ComboBoxItem>打开</ComboBoxItem>
+                                        </ComboBox>
+                                        <Button  Margin="0,0,5,0" Content="纸尽重打" Name="PaperOutReprintBtn" Click="PaperOutReprintBtn_Click" Padding="10,5,10,5" Width="125"/>
                                         <CheckBox VerticalAlignment="Center" IsChecked="True"/>
                                     </StackPanel>
                                     <StackPanel  Margin="0,0,0,10" Orientation="Horizontal">
@@ -346,13 +349,19 @@
                                         <CheckBox VerticalAlignment="Center" IsChecked="True"/>
                                     </StackPanel>
                                     <StackPanel  Margin="0,0,0,10" Orientation="Horizontal">
-                                        <ComboBox  Margin="0,0,5,0" Width="90" Height="26" Foreground="#BDBDBD"/>
-                                        <Button  Margin="0,0,5,0" Content="合盖后自动切纸" Padding="10,5,10,5" Width="125"/>
+                                        <ComboBox  Margin="0,0,5,0" Name="HeadCloseCutCom" Width="90" Height="26" Foreground="#BDBDBD">
+                                            <ComboBoxItem>不切纸</ComboBoxItem>
+                                            <ComboBoxItem>切纸</ComboBoxItem>
+                                        </ComboBox>
+                                        <Button  Margin="0,0,5,0" Name="HeadCloseCutBtn" Click="HeadCloseCutBtn_Click" Content="合盖后自动切纸" Padding="10,5,10,5" Width="125"/>
                                         <CheckBox VerticalAlignment="Center" IsChecked="True"/>
                                     </StackPanel>
                                     <StackPanel  Margin="0,0,0,10" Orientation="Horizontal">
-                                        <ComboBox  Margin="0,0,5,0" Width="90" Height="26"  Foreground="#BDBDBD"/>
-                                        <Button  Margin="0,0,5,0" Content="垂直移动单位" Padding="10,5,10,5" Width="125"/>
+                                        <ComboBox  Margin="0,0,5,0" Name="YOffsetCom" Width="90" Height="26"  Foreground="#BDBDBD">
+                                            <ComboBoxItem>1.0</ComboBoxItem>
+                                            <ComboBoxItem>0.5</ComboBoxItem>
+                                        </ComboBox>
+                                        <Button  Margin="0,0,5,0" Name="YOffsetBtn" Click="YOffsetBtn_Click" Content="垂直移动单位" Padding="10,5,10,5" Width="125"/>
                                         <CheckBox VerticalAlignment="Center" IsChecked="True"/>
                                     </StackPanel>
                                     <StackPanel  Margin="0,0,0,10" Orientation="Horizontal">
@@ -372,8 +381,11 @@
                                         <CheckBox VerticalAlignment="Center" IsChecked="True"/>
                                     </StackPanel>
                                     <StackPanel  Margin="0,0,0,10" Orientation="Horizontal">
-                                        <ComboBox  Margin="0,0,5,0" Width="90" Height="26" Foreground="#BDBDBD"/>
-                                        <Button  Margin="0,0,5,0" Content="自检页LOGO设置" Padding="10,5,10,5" Width="125"/>
+                                        <ComboBox  Margin="0,0,5,0" Name="LogoPrintControlCom" Width="90" Height="26" Foreground="#BDBDBD">
+                                            <ComboBoxItem>自检页不打印LOGO</ComboBoxItem>
+                                            <ComboBoxItem>自检页打印LOGO</ComboBoxItem>
+                                        </ComboBox>
+                                        <Button  Margin="0,0,5,0" Name="LogoPrintControlBtn" Click="LogoPrintControlBtn_Click"  Content="自检页LOGO设置" Padding="10,5,10,5" Width="125"/>
                                         <CheckBox VerticalAlignment="Center" IsChecked="True"/>
                                     </StackPanel>
                                     <StackPanel  Margin="0,0,0,10" Orientation="Horizontal">
