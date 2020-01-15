@@ -402,20 +402,20 @@
                                     <!--dip設置-->
                                 <GroupBox  Grid.Column="2" Grid.RowSpan="2" VerticalAlignment="Top" Margin="10,10,0,0" Header="软件 DIP 设置" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14" Height="385" Width="170" HorizontalAlignment="Left">
                                     <StackPanel  >
-                                        <CheckBox Content="切刀"  FontSize="14" Padding="5,0,0,0" Margin="10,15,0,0"/>
-                                        <CheckBox Content="蜂鸣器"  FontSize="14" Padding="5,0,0,0" Margin="10,10,0,0" />
-                                        <CheckBox Content="浓度"  FontSize="14" Padding="5,0,0,0" Margin="10,10,0,0" />
-                                        <CheckBox Content="中文禁止"  FontSize="14"  Padding="5,0,0,0" Margin="10,10,0,0"/>
-                                        <CheckBox Content="48/42字符数"  FontSize="14"  Padding="5,0,0,0" Margin="10,10,0,0"/>
-                                        <CheckBox Content="钱箱"  FontSize="14"  Padding="5,0,0,0" Margin="10,10,0,0"/>
+                                        <CheckBox Content="切刀" Name="CutterCheckBox" FontSize="14" Padding="5,0,0,0" Margin="10,15,0,0"/>
+                                        <CheckBox Content="蜂鸣器"  Name="BeepCheckBox" FontSize="14" Padding="5,0,0,0" Margin="10,10,0,0" />
+                                        <CheckBox Content="浓度" Name="DensityCheckBox" FontSize="14" Padding="5,0,0,0" Margin="10,10,0,0" />
+                                        <CheckBox Content="中文禁止" Name="ChineseForbiddenCheckBox" FontSize="14"  Padding="5,0,0,0" Margin="10,10,0,0"/>
+                                        <CheckBox Content="48/42字符数" Name="CharNumberCheckBox"  FontSize="14"  Padding="5,0,0,0" Margin="10,10,0,0"/>
+                                        <CheckBox Content="钱箱" Name="CashboxCheckBox" FontSize="14"  Padding="5,0,0,0" Margin="10,10,0,0"/>
                                         <Label  Content="串口波特率："  FontSize="14"  VerticalAlignment="Center"  Margin="5,10,0,0" />
-                                        <ComboBox   Margin="10,3,0,0" FontSize="14" Width="140" Height="22" HorizontalAlignment="Left" >
-                                            <ComboBoxItem Content="9600"/>
+                                        <ComboBox Name="DIPBaudRateCom"  Margin="10,3,0,0" FontSize="14" Width="140" Height="22" HorizontalAlignment="Left" >
                                             <ComboBoxItem Content="19200"/>
-                                            <ComboBoxItem Content="38400"/>
+                                            <ComboBoxItem Content="9600"/>
                                             <ComboBoxItem Content="115200"/>
+                                            <ComboBoxItem Content="38400"/>
                                         </ComboBox>
-                                        <Button Margin="10,10,0,5" Content="设置DIP值"  FontSize="14" Padding="5"  Width="140" HorizontalAlignment="Left"/>
+                                        <Button Margin="10,10,0,5" Name="DIPSettingBtn" Click="DIPSettingBtn_Click" Content="设置DIP值"  FontSize="14" Padding="5"  Width="140" HorizontalAlignment="Left"/>
                                     </StackPanel>
                                 </GroupBox>
                             </Grid>

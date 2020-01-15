@@ -4,6 +4,7 @@ using PirnterUtility.Models;
 using PirnterUtility.Tool;
 using PirnterUtility.ViewModels;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
@@ -91,7 +92,7 @@ namespace PirnterUtility
             //BaudRate預設
             BaudRateCom.SelectedIndex = 2;
             App.Current.Properties["BaudRateSetting"] = 38400;
-            
+
             //default 為選取RS232
             this.RS232Radio.IsChecked = true;
 
@@ -110,7 +111,7 @@ namespace PirnterUtility
         #endregion
 
         //========================Btn點擊事件===========================
-       
+
         #region 通讯接口测试按鈕事件
         private void ConnectTest_Click(object sender, RoutedEventArgs e)
         {
@@ -149,10 +150,11 @@ namespace PirnterUtility
         {   //取得設定代碼
             string HexCode = CodePageCom.SelectedItem.ToString();
             HexCode = HexCode.Split(':')[0];
-            if (HexCode.Length < 2) {
+            if (HexCode.Length < 2)
+            {
                 HexCode = HexCode + "0";
             }
-            byte[] sendArray = StringToByteArray(Command.CODEPAGE_SETTING_HEADER+ HexCode);
+            byte[] sendArray = StringToByteArray(Command.CODEPAGE_SETTING_HEADER + HexCode);
             switch (DeviceType)
             {
                 case "RS232":
@@ -178,20 +180,21 @@ namespace PirnterUtility
             byte[] char2 = Command.CODEPAGE_PRINT_CHAR2;
             byte[] selectedCode;
             byte[] selectedName;
-            
+
             //加入header
-            for (int i = 0; i < header.Length; i++) {
+            for (int i = 0; i < header.Length; i++)
+            {
                 codePage.Add(header[i]);
             }
 
             //取得代碼
             string HexCode = CodePageCom.SelectedItem.ToString();
-            int Code =Int32.Parse(HexCode.Split(':')[0]);
+            int Code = Int32.Parse(HexCode.Split(':')[0]);
 
             //取得代碼和名稱 byte array
             string CodeName = CodePageCom.SelectedItem.ToString();
             selectedCode = BitConverter.GetBytes(Code);
-            selectedName =Encoding.Default.GetBytes(CodeName);
+            selectedName = Encoding.Default.GetBytes(CodeName);
 
             //加入代碼
             codePage.Add(selectedCode[0]);
@@ -400,7 +403,7 @@ namespace PirnterUtility
             switch (AccMotorCom.SelectedIndex)
             {
                 case 0: //1.0=>01
-                    sendArray = StringToByteArray(Command.ACCELERATION_OF_MOTOR_SETTING +"01");
+                    sendArray = StringToByteArray(Command.ACCELERATION_OF_MOTOR_SETTING + "01");
                     break;
                 case 1: //0.8=>02
                     sendArray = StringToByteArray(Command.ACCELERATION_OF_MOTOR_SETTING + "02");
@@ -512,7 +515,7 @@ namespace PirnterUtility
 
         }
         #endregion
-       
+
         #region 設定紙盡重打按鈕事件
         private void PaperOutReprintBtn_Click(object sender, RoutedEventArgs e)
         {
@@ -594,7 +597,7 @@ namespace PirnterUtility
             }
         }
         #endregion
-        
+
         #region 設定垂直移動單位按鈕事件
         private void YOffsetBtn_Click(object sender, RoutedEventArgs e)
         {
@@ -603,7 +606,7 @@ namespace PirnterUtility
             {
                 sendArray = StringToByteArray(Command.Y_OFFSET_1_SETTING);
             }
-            else if (YOffsetCom.SelectedIndex ==1)
+            else if (YOffsetCom.SelectedIndex == 1)
             {
                 sendArray = StringToByteArray(Command.Y_OFFSET_05_SETTING);
             }
@@ -679,7 +682,7 @@ namespace PirnterUtility
         #region 設定自檢頁logo按鈕事件
         private void LogoPrintControlBtn_Click(object sender, RoutedEventArgs e)
         {
-            byte[] sendArray =null;
+            byte[] sendArray = null;
             if (LogoPrintControlCom.SelectedIndex == 0)
             {
                 sendArray = StringToByteArray(Command.LOGO_PRINT_OFF_SETTING);
@@ -730,6 +733,108 @@ namespace PirnterUtility
             }
         }
         #endregion
+
+        #region DIP值設定按鈕事件
+        private void DIPSettingBtn_Click(object sender, RoutedEventArgs e)
+        {
+            BitArray dipArray = new BitArray(8);
+            byte[] sendArray = null;
+            if (CutterCheckBox.IsChecked == true)
+            {
+                dipArray.Set(0, false);
+            }
+            else
+            {
+                dipArray.Set(0, true);
+            }
+
+            if (BeepCheckBox.IsChecked == true)
+            {
+                dipArray.Set(1, false);
+            }
+            else
+            {
+                dipArray.Set(1, true);
+            }
+            if (DensityCheckBox.IsChecked == true)
+            {
+                dipArray.Set(2, false);
+            }
+            else
+            {
+                dipArray.Set(2, true);
+            }
+            if (ChineseForbiddenCheckBox.IsChecked == true)
+            {
+                dipArray.Set(3, false);
+            }
+            else
+            {
+                dipArray.Set(3, true);
+            }
+            if (CharNumberCheckBox.IsChecked == true)
+            {
+                dipArray.Set(4, false);
+            }
+            else
+            {
+                dipArray.Set(4, true);
+            }
+            if (CashboxCheckBox.IsChecked == true)
+            {
+                dipArray.Set(5, false);
+            }
+            else
+            {
+                dipArray.Set(5, true);
+            }
+
+            switch (DIPBaudRateCom.SelectedIndex)
+            {
+                case 0: //19200 00取反11
+                    dipArray.Set(6, true);
+                    dipArray.Set(7, true);
+                    break;
+                case 1: //9600 01取反10
+                    dipArray.Set(6, true);
+                    dipArray.Set(7, false);
+                    break;
+                case 2: //115200 10取反 01
+                    dipArray.Set(6, false);
+                    dipArray.Set(7, true);
+                    break;
+                case 3: //38400 11取反00
+                    dipArray.Set(6, false);
+                    dipArray.Set(7, false);
+                    break;
+            }
+            for (int i = 0; i < dipArray.Length; i++)
+            {
+                Console.WriteLine(dipArray.Get(i));
+            }
+
+            //bit array轉btye array
+            byte[] bytes = new byte[1];
+            dipArray.CopyTo(bytes, 0);
+            sendArray = StringToByteArray(Command.DIP_VALUE_SETTING_HEADER);
+            Array.Resize(ref sendArray, sendArray.Length + 1);
+            sendArray[sendArray.Length - 1] = bytes[0];
+            switch (DeviceType)
+            {
+                case "RS232":
+                    SerialPortConnect("BeepOrSetting", sendArray);
+                    break;
+                case "USB":
+
+                    break;
+                case "Ethernet":
+
+                    break;
+            }
+
+        }
+        #endregion
+
 
         //========================取得資料後設定UI=================
 
@@ -1100,8 +1205,10 @@ namespace PirnterUtility
 
         }
 
+
+
         #endregion
 
-        
+
     }
 }

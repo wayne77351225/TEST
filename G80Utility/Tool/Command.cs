@@ -106,8 +106,8 @@ namespace G80Utility.Tool
         public static string DENSITY_MODE_HIGH_SETTING = "1F 1B 1F 53 5A 4A 42 5A 46 31 26 02 01";
 
         //設定紙盡重打
-        public static string PAPEROUT_REPRINT_OFF_SETTING = "1F 1B 1F 53 5A 4A 42 5A 46 31 21 02 00";
-        public static string PAPEROUT_REPRINT_ON_SETTING = "1F 1B 1F 53 5A 4A 42 5A 46 31 21 02 01";
+        public static string PAPEROUT_REPRINT_OFF_SETTING = "1F 1B 1F F4 11 22 33 33";
+        public static string PAPEROUT_REPRINT_ON_SETTING = "1F 1B 1F F4 11 22 33 55";
 
         //設定合蓋後自動切紙
         public static string HEADCLOSE_AUTOCUT_OFF_SETTING = "1F 1B 1F 53 5A 4A 42 5A 46 31 17 02 00";
@@ -120,6 +120,10 @@ namespace G80Utility.Tool
         //設定自檢頁logo是否打印
         public static string LOGO_PRINT_OFF_SETTING = "1F 1B 1F 53 5A 4A 42 5A 46 31 20 02 00";
         public static string LOGO_PRINT_ON_SETTING = "1F 1B 1F 53 5A 4A 42 5A 46 31 20 02 01";
+
+
+        //設定DIP值HEAER
+        public static string DIP_VALUE_SETTING_HEADER = "1F 1B 1F A1 10 11 12 13 14 15";
 
     }
 }
