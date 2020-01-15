@@ -254,7 +254,7 @@
                                     <StackPanel  Margin="10,0,0,0" Orientation="Horizontal">
                                         <ComboBox  Margin="0,0,10,0" Name="CodePageCom" Width="130" Height="28" Text="IP Address" Foreground="#BDBDBD"/>
                                         <Button  Margin="0,0,10,0" Name="CodePageSetBtn" Click="CodePageSetBtn_Click" Content="设置代码页" Padding="10,5,10,5" Width="130" Height="28"/>
-                                        <Button  Margin="0,0,10,0" Name="CodePagePrintBtn"  Content="打印代码页" Padding="10,5,10,5" Width="130" Height="28"/>
+                                        <Button  Margin="0,0,10,0" Name="CodePagePrintBtn" Click="CodePagePrintBtn_Click"  Content="打印代码页" Padding="10,5,10,5" Width="130" Height="28"/>
                                         <CheckBox VerticalAlignment="Center" IsChecked="True"/>
                                     </StackPanel>
                                 </GroupBox>
@@ -281,8 +281,11 @@
                                         <CheckBox VerticalAlignment="Center" IsChecked="True"/>
                                     </StackPanel>
                                     <StackPanel  Margin="0,0,0,10" Orientation="Horizontal">
-                                        <ComboBox  Margin="0,0,5,0" Width="100" Height="26" Foreground="#BDBDBD"/>
-                                        <Button  Margin="0,0,5,0" Content="定制字体" Padding="10,5,10,5" Width="100"/>
+                                        <ComboBox  Margin="0,0,5,0" Name="CustomziedFontCom" Width="100" Height="26" Foreground="#BDBDBD">
+                                            <ComboBoxItem>关闭</ComboBoxItem>
+                                            <ComboBoxItem>启用</ComboBoxItem>
+                                        </ComboBox>
+                                        <Button  Margin="0,0,5,0" Name="CustomziedFontBtn" Click="CustomziedFontBtn_Click" Content="定制字体" Padding="10,5,10,5" Width="100"/>
                                         <CheckBox VerticalAlignment="Center" IsChecked="True"/>
                                     </StackPanel>
                                     <StackPanel  Margin="0,0,0,10" Orientation="Horizontal">
@@ -294,8 +297,11 @@
                                         <CheckBox VerticalAlignment="Center" IsChecked="True"/>
                                     </StackPanel>
                                     <StackPanel  Margin="0,0,0,10" Orientation="Horizontal">
-                                        <ComboBox  Margin="0,0,5,0" Width="100" Height="26"  Foreground="#BDBDBD"/>
-                                        <Button  Margin="0,0,5,0" Content="马达加速"  Padding="10,5,10,5" Width="100" />
+                                        <ComboBox  Margin="0,0,5,0" Name="MotorAccControlCom" Width="100" Height="26"  Foreground="#BDBDBD">
+                                            <ComboBoxItem>关闭</ComboBoxItem>
+                                            <ComboBoxItem>开启</ComboBoxItem>
+                                        </ComboBox>
+                                        <Button  Margin="0,0,5,0" Content="马达加速"  Name="MotorAccControlBtn" Click="MotorAccControlBtn_Click"  Padding="10,5,10,5" Width="100" />
                                         <CheckBox VerticalAlignment="Center" IsChecked="True"/>
                                     </StackPanel>
                                     <StackPanel  Margin="0,0,0,10" Orientation="Horizontal">
@@ -310,8 +316,11 @@
                                         <CheckBox VerticalAlignment="Center" IsChecked="True"/>
                                     </StackPanel>
                                     <StackPanel  Margin="0,0,0,10" Orientation="Horizontal">
-                                        <ComboBox  Margin="0,0,5,0" Width="100" Height="26" Foreground="#BDBDBD"/>
-                                        <Button  Margin="0,0,5,0" Content="浓度模式" Padding="10,5,10,5" Width="100"/>
+                                        <ComboBox  Margin="0,0,5,0" Name="DensityModeCom" Width="100" Height="26" Foreground="#BDBDBD">
+                                            <ComboBoxItem>低</ComboBoxItem>
+                                            <ComboBoxItem>高</ComboBoxItem>
+                                        </ComboBox>
+                                        <Button  Margin="0,0,5,0"  Name="DensityModeBtn" Click="DensityModeBtn_Click" Content="浓度模式" Padding="10,5,10,5" Width="100"/>
                                         <CheckBox VerticalAlignment="Center" IsChecked="True"/>
                                     </StackPanel>
                                     <StackPanel  Margin="0,0,0,10" Orientation="Horizontal">

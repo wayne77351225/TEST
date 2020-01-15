@@ -146,7 +146,7 @@ namespace PirnterUtility
 
         #region 設定代碼頁按鈕事件
         private void CodePageSetBtn_Click(object sender, RoutedEventArgs e)
-        {
+        {   //取得設定代碼
             string HexCode = CodePageCom.SelectedItem.ToString();
             HexCode = HexCode.Split(':')[0];
             if (HexCode.Length < 2) {
@@ -165,6 +165,70 @@ namespace PirnterUtility
 
                     break;
             }
+        }
+        #endregion
+
+        #region 打印代碼頁按鈕事件
+        private void CodePagePrintBtn_Click(object sender, RoutedEventArgs e)
+        {
+            List<byte> codePage = new List<byte>();
+            byte[] header = Command.CODEPAGE_PRINT_HEADER;
+            byte[] separate = Command.CODEPAGE_PRINT_SEPARATE;
+            byte[] char1 = Command.CODEPAGE_PRINT_CHAR1;
+            byte[] char2 = Command.CODEPAGE_PRINT_CHAR2;
+            byte[] selectedCode;
+            byte[] selectedName;
+            
+            //加入header
+            for (int i = 0; i < header.Length; i++) {
+                codePage.Add(header[i]);
+            }
+
+            //取得代碼
+            string HexCode = CodePageCom.SelectedItem.ToString();
+            int Code =Int32.Parse(HexCode.Split(':')[0]);
+
+            //取得代碼和名稱 byte array
+            string CodeName = CodePageCom.SelectedItem.ToString();
+            selectedCode = BitConverter.GetBytes(Code);
+            selectedName =Encoding.Default.GetBytes(CodeName);
+
+            //加入代碼
+            codePage.Add(selectedCode[0]);
+
+            //加入區隔
+            for (int i = 0; i < separate.Length; i++)
+            {
+                codePage.Add(separate[i]);
+            }
+
+            //加入名稱
+            for (int i = 0; i < selectedName.Length; i++)
+            {
+                codePage.Add(selectedName[i]);
+            }
+
+            //加入char1
+            for (int i = 0; i < char1.Length; i++)
+            {
+                codePage.Add(char1[i]);
+            }
+
+            //加入名稱
+            for (int i = 0; i < selectedName.Length; i++)
+            {
+                codePage.Add(selectedName[i]);
+            }
+
+            //加入char2
+            for (int i = 0; i < char2.Length; i++)
+            {
+                codePage.Add(char2[i]);
+            }
+
+            byte[] sendArray = codePage.ToArray();
+            SerialPortConnect("BeepOrSetting", sendArray);
+
         }
         #endregion
 
@@ -237,6 +301,33 @@ namespace PirnterUtility
         }
         #endregion
 
+        #region 設定定制字體按鈕事件
+        private void CustomziedFontBtn_Click(object sender, RoutedEventArgs e)
+        {
+            byte[] sendArray;
+            if (CustomziedFontCom.SelectedIndex == 0)
+            {
+                sendArray = StringToByteArray(Command.CUSTOMIZED_FONT_OFF_SETTING);
+            }
+            else
+            {
+                sendArray = StringToByteArray(Command.CUSTOMIZED_FONT_ON_SETTING);
+            }
+            switch (DeviceType)
+            {
+                case "RS232":
+                    SerialPortConnect("BeepOrSetting", sendArray);
+                    break;
+                case "USB":
+
+                    break;
+                case "Ethernet":
+
+                    break;
+            }
+        }
+        #endregion
+
         #region 走紙方向按鈕事件
         private void Direction_Click(object sender, RoutedEventArgs e)
         {
@@ -248,6 +339,33 @@ namespace PirnterUtility
             else
             {
                 sendArray = StringToByteArray(Command.DIRECTION_80250N_SETTING);
+            }
+            switch (DeviceType)
+            {
+                case "RS232":
+                    SerialPortConnect("BeepOrSetting", sendArray);
+                    break;
+                case "USB":
+
+                    break;
+                case "Ethernet":
+
+                    break;
+            }
+        }
+        #endregion
+
+        #region 設定馬達加速開關按鈕事件
+        private void MotorAccControlBtn_Click(object sender, RoutedEventArgs e)
+        {
+            byte[] sendArray;
+            if (MotorAccControlCom.SelectedIndex == 0)
+            {
+                sendArray = StringToByteArray(Command.ACCELERATION_OF_MOTOR_OFF_SETTING);
+            }
+            else
+            {
+                sendArray = StringToByteArray(Command.ACCELERATION_OF_MOTOR_ON_SETTING);
             }
             switch (DeviceType)
             {
@@ -286,6 +404,34 @@ namespace PirnterUtility
                 case 4: //0.2=>05
                     sendArray = StringToByteArray(Command.ACCELERATION_OF_MOTOR_SETTING + "05");
                     break;
+            }
+            switch (DeviceType)
+            {
+                case "RS232":
+                    SerialPortConnect("BeepOrSetting", sendArray);
+                    break;
+                case "USB":
+
+                    break;
+                case "Ethernet":
+
+                    break;
+            }
+
+        }
+        #endregion
+
+        #region 設定濃度模式按鈕事件
+        private void DensityModeBtn_Click(object sender, RoutedEventArgs e)
+        {
+            byte[] sendArray;
+            if (DensityModeCom.SelectedIndex == 0)
+            {
+                sendArray = StringToByteArray(Command.DENSITY_MODE_LOW_SETTING);
+            }
+            else
+            {
+                sendArray = StringToByteArray(Command.DENSITY_MODE_HIGH_SETTING);
             }
             switch (DeviceType)
             {
@@ -464,7 +610,6 @@ namespace PirnterUtility
             }
         }
         #endregion
-
 
         //========================取得資料後設定UI=================
 
@@ -837,8 +982,8 @@ namespace PirnterUtility
             }
 
         }
-        #endregion
 
+        #endregion
 
     }
 }
