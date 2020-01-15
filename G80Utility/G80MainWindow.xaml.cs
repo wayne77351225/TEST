@@ -225,9 +225,19 @@ namespace PirnterUtility
             {
                 codePage.Add(char2[i]);
             }
-
             byte[] sendArray = codePage.ToArray();
-            SerialPortConnect("BeepOrSetting", sendArray);
+            switch (DeviceType)
+            {
+                case "RS232":
+                    SerialPortConnect("BeepOrSetting", sendArray);
+                    break;
+                case "USB":
+
+                    break;
+                case "Ethernet":
+
+                    break;
+            }
 
         }
         #endregion
@@ -641,9 +651,6 @@ namespace PirnterUtility
 
         }
         #endregion
-
-
-
 
         //========================RS232的設定/傳送與接收===========================
 
