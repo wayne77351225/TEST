@@ -107,6 +107,8 @@ namespace PirnterUtility
             //CodePage
             CodePageCom.ItemsSource = CodePage.getCodePageList();
 
+            //dip baud rade default
+            DIPBaudRateCom.SelectedIndex = 1;
         }
         #endregion
 
@@ -1090,7 +1092,7 @@ namespace PirnterUtility
         #region DIP值設定按鈕事件
         private void DIPSettingBtn_Click(object sender, RoutedEventArgs e)
         {
-            //if () { } else { MessageBox.Show(FindResource("ColumnEmpty") as string); }
+            
             BitArray dipArray = new BitArray(8);
             byte[] sendArray = null;
             if (CutterCheckBox.IsChecked == true)
