@@ -31,6 +31,38 @@ namespace G80Utility.Tool
         //重啟打印機
         public static string RESTART = "1F 1B 1F 53 5A 4A 42 5A 46 11 00 00";
 
+        //設定ip address HEADER
+        public static string IP_SETTING_HEADER = "1F 1B 1F 91 00 49 50";
+
+        //設定gateway
+        public static string GATEWAY_SETTING_HEADER = "1F 1B 1F 53 5A 4A 42 5A 46 30 11 02";
+
+        //設定mac address
+
+        //設定自動斷線時間HEADER
+        public static string NETWORK_AUTODICONNECTED_SETTING_HEADER = "1F 1B 1F 95 01 02 03 11 12 13";
+
+        //設定網路連接數量
+        public static string CONNECT_CLIENT_1_SETTING = "1F 1B 1F 99 01 02 03 11 12 13 55";
+        public static string CONNECT_CLIENT_2_SETTING = "1F 1B 1F 99 01 02 03 11 12 13 33";
+
+        //設定網口通訊速度
+        public static string ETHERNET_SPEED_SETTING_10MHZ = "1F 1B 1F 9D 11 12 13 01 02 03 33";
+        public static string ETHERNET_SPEED_SETTING_100MHZ = "1F 1B 1F 9D 11 12 13 01 02 03 55";
+
+        //設定DHCP模式HEADER
+        public static string DHCP_MODE_SETTING_HEADER = "1F 1B 1F 10 13 14 15 19 18 17";
+
+
+        //設定USB模式
+        public static string USB_UTP_SETTING = "1F 1B 1F A3 16 17 18 19 18 17 76";
+        public static string USB_VCOM_SETTING = "1F 1B 1F A3 16 17 18 19 18 17 67";
+
+        //設定USB端口值
+        public static string USB_FIXED_SETTING = "1F 1B 1F 9C 11 12 13 01 02 03 33";
+        public static string USB_UNFIXED_SETTING = "1F 1B 1F 9C 11 12 13 01 02 03 55";
+
+
         //設定語言
         public static string LANGUAGE_SETTING_GB18030 = "1F 1B 1F EE 11 12 13 55 0A";
         public static string LANGUAGE_SETTING_BIG5 = "1F 1B 1F EE 11 12 13 33 0A";
@@ -83,8 +115,8 @@ namespace G80Utility.Tool
         public static string QRCODE_OFF_SETTING = "1F 1B 1F 94 01 02 03 11 12 13 55";
 
         //設定DIP開關
-        public static string DIP_ON_SETTING = "1F 1B 1F 94 01 02 03 11 12 13 33";
-        public static string DIP_OFF_SETTING = "1F 1B 1F 94 01 02 03 11 12 13 55";
+        public static string DIP_ON_SETTING = "1F 1B 1F C0 15 14 13 12 11 10 AA";
+        public static string DIP_OFF_SETTING = "1F 1B 1F C0 15 14 13 12 11 10 77";
 
         //設定紙寬
         public static string PAPER_WIDTH_80MM_SETTING = "1F 1B 1F A4 01 02 03 11 12 13 55";
