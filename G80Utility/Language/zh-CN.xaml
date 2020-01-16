@@ -252,7 +252,7 @@
     <sys:String x:Key="GNSettingComplete">写入完成</sys:String>
     <sys:String x:Key="TransferTimeout">传输逾时</sys:String>
     <sys:String x:Key="ErrorFormat">部分栏位格式错误，请输入数字</sys:String>
-    <sys:String x:Key="ColumnEmpty">部分栏位空白，请输入内容</sys:String>
+    <sys:String x:Key="ColumnEmpty">栏位空白，请输入内容</sys:String>
     <sys:String x:Key="wifisetOK">WIFI模块设定成功</sys:String>
     <sys:String x:Key="wifisetFail">WIFI模块设定失败</sys:String>
     <sys:String x:Key="wifiresetOK">WIFI模块重启成功</sys:String>

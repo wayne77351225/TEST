@@ -245,7 +245,7 @@
                             </GroupBox>
                         </StackPanel>
                         <!--打印机属性设置-->
-                        <GroupBox Header="打印机属性设置" Margin="10,6,10,5" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14" Height="433" Width="725" VerticalAlignment="Top">
+                        <GroupBox Header="打印机属性设置" Margin="10,6,10,5" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14" Height="433" Width="720" VerticalAlignment="Top">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="33*" />
