@@ -745,6 +745,41 @@ namespace PirnterUtility
         }
         #endregion
 
+        #region 設定打印速度按鈕事件
+        private void PrintSpeedBtn_Click(object sender, RoutedEventArgs e)
+        {
+            if (PrintSpeedCom.SelectedIndex != -1)
+            {
+                byte[] sendArray = null;
+                switch (PrintSpeedCom.SelectedIndex)
+                {
+                    case 0: //200 mm/s
+                        sendArray = StringToByteArray(Command.PRINT_SPEED_200_SETTING);
+                        break;
+                    case 1://250 mm/s
+                        sendArray = StringToByteArray(Command.PRINT_SPEED_250_SETTING);
+                        break;
+                    case 2://300 mm/s
+                        sendArray = StringToByteArray(Command.PRINT_SPEED_300_SETTING);
+                        break;             
+                }
+                switch (DeviceType)
+                {
+                    case "RS232":
+                        SerialPortConnect("BeepOrSetting", sendArray);
+                        break;
+                    case "USB":
+
+                        break;
+                    case "Ethernet":
+
+                        break;
+                }
+            }
+            else { MessageBox.Show(FindResource("ColumnEmpty") as string); }
+        }
+        #endregion
+
         #region 設定濃度模式按鈕事件
         private void DensityModeBtn_Click(object sender, RoutedEventArgs e)
         {
@@ -1565,8 +1600,8 @@ namespace PirnterUtility
 
 
 
-        #endregion
 
+        #endregion
 
     }
 }
