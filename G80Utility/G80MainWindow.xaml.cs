@@ -260,28 +260,29 @@ namespace PirnterUtility
         #region 設定網路連接數量按鈕事件
         private void ConnectClientBtn_Click(object sender, RoutedEventArgs e)
         {
-            if (ConnectClientCom.SelectedIndex !=-1) { 
-            byte[] sendArray = null;
-            if (ConnectClientCom.SelectedIndex == 0)
+            if (ConnectClientCom.SelectedIndex != -1)
             {
-                sendArray = StringToByteArray(Command.CONNECT_CLIENT_1_SETTING);
-            }
-            else if (ConnectClientCom.SelectedIndex == 1)
-            {
-                sendArray = StringToByteArray(Command.CONNECT_CLIENT_2_SETTING);
-            }
-            switch (DeviceType)
-            {
-                case "RS232":
-                    SerialPortConnect("BeepOrSetting", sendArray);
-                    break;
-                case "USB":
+                byte[] sendArray = null;
+                if (ConnectClientCom.SelectedIndex == 0)
+                {
+                    sendArray = StringToByteArray(Command.CONNECT_CLIENT_1_SETTING);
+                }
+                else if (ConnectClientCom.SelectedIndex == 1)
+                {
+                    sendArray = StringToByteArray(Command.CONNECT_CLIENT_2_SETTING);
+                }
+                switch (DeviceType)
+                {
+                    case "RS232":
+                        SerialPortConnect("BeepOrSetting", sendArray);
+                        break;
+                    case "USB":
 
-                    break;
-                case "Ethernet":
+                        break;
+                    case "Ethernet":
 
-                    break;
-            }
+                        break;
+                }
             }
             else { MessageBox.Show(FindResource("ColumnEmpty") as string); }
         }
@@ -761,7 +762,7 @@ namespace PirnterUtility
                         break;
                     case 2://300 mm/s
                         sendArray = StringToByteArray(Command.PRINT_SPEED_300_SETTING);
-                        break;             
+                        break;
                 }
                 switch (DeviceType)
                 {
@@ -1127,7 +1128,7 @@ namespace PirnterUtility
         #region DIP值設定按鈕事件
         private void DIPSettingBtn_Click(object sender, RoutedEventArgs e)
         {
-            
+
             BitArray dipArray = new BitArray(8);
             byte[] sendArray = null;
             if (CutterCheckBox.IsChecked == true)
@@ -1190,7 +1191,7 @@ namespace PirnterUtility
                     dipArray.Set(6, true);
                     dipArray.Set(7, false);
                     break;
-                case 2: //115200 10取反 01
+               case 2: //115200 10取反 01
                     dipArray.Set(6, false);
                     dipArray.Set(7, true);
                     break;
@@ -1310,7 +1311,7 @@ namespace PirnterUtility
                     switch (dataType)
                     {
                         case "PrinterInfo":
-                            bool isReceiveData = RS232Connect.SerialPortSendCMD("NeedReceive", data, null, 8);
+                            bool isReceiveData = RS232Connect.SerialPortSendCMD("NeedReceive", data, null, 9);
                             while (!isReceiveData)
                             {
 
@@ -1319,9 +1320,11 @@ namespace PirnterUtility
                                     switch (dataType)
                                     {
                                         case "PrinterInfo":
-
+                                            byte[] convert = { RS232Connect.mRecevieData[0] };
+                                            Console.WriteLine(convetBytetoString(convert));
                                             break;
                                     }
+                                    break;
                                 }
                             }
                             break;
@@ -1603,5 +1606,40 @@ namespace PirnterUtility
 
         #endregion
 
+        private void Test_Click(object sender, RoutedEventArgs e)
+        {
+
+            byte[] sendArray = null;
+
+            sendArray = StringToByteArray("1F 1B 1F 53 5A 4A 42 5A 46 31 35 01");
+
+            switch (DeviceType)
+            {
+                case "RS232":
+                    SerialPortConnect("PrinterInfo", sendArray);
+                    break;
+                case "USB":
+
+                    break;
+                case "Ethernet":
+
+                    break;
+            }
+
+        }
+
+        public string convetBytetoString(byte[] data) {
+
+            string result1=null;
+            BitArray ba = new BitArray(data);
+           
+            for (int i = 0; i < ba.Length; i++)
+            {
+                result1 += (ba.Get(i) + " ");
+            }
+
+            return result1;
+
+        }
     }
 }

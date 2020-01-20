@@ -94,7 +94,7 @@ namespace PirnterUtility.Tool
 
                             Task.Factory.StartNew(() =>
                             {
-                                ReceiveInfo(recevieLength); //通訊測試收到資料44長度                       
+                                ReceiveInfo(recevieLength);                      
                             });
                             break;
                         case "NoReceive":
@@ -141,6 +141,7 @@ namespace PirnterUtility.Tool
 
             mRecevieData = buffer;
             IsConnect = true;
+            isReceiveData = true;
         }
 
         //接收設定回復結果
