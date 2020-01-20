@@ -248,8 +248,8 @@
                         <GroupBox Header="打印机属性设置" Margin="10,6,10,5" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14" Height="433" Width="720" VerticalAlignment="Top">
                             <Grid>
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="30*" />
-                                    <ColumnDefinition Width="35*"/>
+                                    <ColumnDefinition Width="28*" />
+                                    <ColumnDefinition Width="32*"/>
                                     <ColumnDefinition Width="23*"/>
                                 </Grid.ColumnDefinitions>
                                 <Grid.RowDefinitions>
@@ -412,12 +412,12 @@
                                             <ComboBoxItem>不使用硬件DIP</ComboBoxItem>
                                             <ComboBoxItem>使用硬件DIP</ComboBoxItem>
                                         </ComboBox>
-                                        <Button  Margin="0,0,5,0" Content="DIP开关" Name="DIPSwitchBtn" Click="DIPSwitchBtn_Click" Width="75" Height="26"/>
+                                        <Button  Margin="0,0,5,0" Content="DIP开关" Name="DIPSwitchBtn" Click="DIPSwitchBtn_Click" Width="70" Height="26"/>
                                         <CheckBox VerticalAlignment="Center" IsChecked="True"/>
                                     </StackPanel>
                                     <!--dip設置-->
                                     <GroupBox  VerticalAlignment="Top" Margin="0,10,0,0" Header="软件 DIP 设置" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14" Height="340" Width="180" HorizontalAlignment="Left">
-                                        <StackPanel  >
+                                        <StackPanel>
                                             <CheckBox Content="切刀" Name="CutterCheckBox" FontSize="14" Padding="5,0,0,0" Margin="10,15,0,0"/>
                                             <CheckBox Content="蜂鸣器"  Name="BeepCheckBox" FontSize="14" Padding="5,0,0,0" Margin="10,10,0,0" />
                                             <CheckBox Content="浓度" Name="DensityCheckBox" FontSize="14" Padding="5,0,0,0" Margin="10,10,0,0" />
@@ -702,6 +702,7 @@
                 <TextBox Width="500" Margin="0,10,10,10"  Padding="5,5,0,0" Height="25" FontSize="14" Text="参数读取完成！" Foreground="#BDBDBD" IsEnabled="False"/>
                 <Label Content="打印机实时状态："  Height="25" FontSize="14" Margin="30,0,0,0" />
                 <Label Content="开盖；缺纸；过温" Height="25" FontSize="14"  />
+                <Button Name="Test" Content="測試BAUD和狀態" Click="Test_Click"/>
             </StackPanel>
         </Border>
     </StackPanel>
