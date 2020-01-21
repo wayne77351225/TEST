@@ -81,9 +81,9 @@
     <Compile Include="Themes\TreeViewItemExtensions.cs" />
     <Compile Include="Tool\CodePage.cs" />
     <Compile Include="Tool\Command.cs" />
+    <Compile Include="Tool\Config.cs" />
     <Compile Include="Tool\Kernel32.cs" />
     <Compile Include="Tool\RS232Connect.cs" />
-    <Compile Include="Tool\UnitChange.cs" />
     <Compile Include="Tool\USBDetector.cs" />
     <Compile Include="ViewModels\DeviceViewModel.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />

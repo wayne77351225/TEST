@@ -160,9 +160,40 @@ namespace G80Utility.Tool
         public static string LOGO_PRINT_OFF_SETTING = "1F 1B 1F 53 5A 4A 42 5A 46 31 20 02 00";
         public static string LOGO_PRINT_ON_SETTING = "1F 1B 1F 53 5A 4A 42 5A 46 31 20 02 01";
 
-
         //設定DIP值HEAER
         public static string DIP_VALUE_SETTING_HEADER = "1F 1B 1F A1 10 11 12 13 14 15";
+
+        //讀取所有欄位header
+        public static string READ_ALL_HEADER = "1F 1B 1F 53 5A 4A 42 5A 46";
+
+        //收到IP的命令分類
+        public static string RE_IP_CLASSFY = "30-10";
+
+        //收到Gateway的命令分類
+        public static string RE_GATEWAY_CLASSFY = "30-11";
+
+        //收到Mac的命令分類
+        public static string RE_MAC_CLASSFY = "30-12";
+
+        //收到自動斷線的命令分類
+        public static string RE_AUTODISCONNECT_CLASSFY = "30-13";
+
+        //收到連線數的命令分類
+        public static string RE_CLIENTCOUNT_CLASSFY = "30-14";
+
+        //收到網速的命令分類
+        public static string RE_NETWORK_SPEED_CLASSFY = "30-15";
+
+        //收到DHCP模式的命令分類
+        public static string RE_DHCP_MODE_CLASSFY = "30-16";
+
+        //收到USB MODE的命令分類
+        public static string RE_USB_MODE_CLASSFY = "30-17";
+
+        //收到USB端口的命令分類
+        public static string RE_USB_FIX_CLASSFY = "30-18";
+
+
 
     }
 }

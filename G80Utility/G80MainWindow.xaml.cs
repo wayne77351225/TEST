@@ -10,6 +10,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO.Ports;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -112,21 +113,208 @@ namespace PirnterUtility
         }
         #endregion
 
+        #region 參數設置核取框是否勾選檢查
+        private void IsParaSettingChecked() {
+            if (SetIPCheckbox.IsChecked == true)
+            {
+                Config.isSetIPChecked = true;
+            }
+            else {
+                Config.isSetIPChecked = false;
+            }
+
+            if (SetGatewayCheckbox.IsChecked == true)
+            {
+                Config.isSetGatewayChecked = true;
+            }
+            else
+            {
+                Config.isSetGatewayChecked = false;
+            }
+
+            if (SetMACCheckbox.IsChecked == true)
+            {
+                Config.isSetMacChecked = true;
+            }
+            else
+            {
+                Config.isSetMacChecked = false;
+            }
+
+            if (AutoDisconnectheckbox.IsChecked == true)
+            {
+                Config.isAutoDisconnectChecked = true;
+            }
+            else
+            {
+                Config.isAutoDisconnectChecked = false;
+            }
+
+            if (ConnectClientbox.IsChecked == true)
+            {
+                Config.isConnectClientChecked = true;
+            }
+            else
+            {
+                Config.isConnectClientChecked = false;
+            }
+            if (EthernetSpeedCheckbox.IsChecked == true)
+            {
+                Config.isEthernetSpeedChecked = true;
+            }
+            else
+            {
+                Config.isEthernetSpeedChecked = false;
+            }
+            if (DHCPModeCheckbox.IsChecked == true)
+            {
+                Config.isDHCPModeChecked = true;
+            }
+            else
+            {
+                Config.isDHCPModeChecked = false;
+            }
+            if (USBModeCheckbox.IsChecked == true)
+            {
+                Config.isUSBModeChecked = true;
+            }
+            else
+            {
+                Config.isUSBModeChecked = false;
+            }
+            if (USBFixedCheckbox.IsChecked == true)
+            {
+                Config.isUSBFixedChecked = true;
+            }
+            else
+            {
+                Config.isUSBFixedChecked = false;
+            }
+        }
+        #endregion
+
+        #region 傳送所有讀取指令
+        private void readALL()
+        {
+            byte[] sendArray = null;
+            if (Config.isSetIPChecked) {
+                sendArray = StringToByteArray(Command.READ_ALL_HEADER + "30 10 01");
+                SendCmd(sendArray, "ReadPara", 12);
+              
+            }
+            
+            if (Config.isSetGatewayChecked)
+            {
+                sendArray = StringToByteArray(Command.READ_ALL_HEADER + "30 11 01");
+                SendCmd(sendArray,"ReadPara", 12);
+            }
+            
+            if (Config.isSetMacChecked)
+            {
+                sendArray = StringToByteArray(Command.READ_ALL_HEADER + "30 12 01");
+                SendCmd(sendArray, "ReadPara", 14);
+            }
+
+            if (Config.isAutoDisconnectChecked)
+            {
+                sendArray = StringToByteArray(Command.READ_ALL_HEADER + "30 13 01");
+                SendCmd(sendArray, "ReadPara", 9);
+            }
+
+            if (Config.isConnectClientChecked)
+            {
+                sendArray = StringToByteArray(Command.READ_ALL_HEADER + "30 14 01");
+                SendCmd(sendArray, "ReadPara", 9);
+            }
+
+            if (Config.isEthernetSpeedChecked)
+            {
+                sendArray = StringToByteArray(Command.READ_ALL_HEADER + "30 15 01");
+                SendCmd(sendArray, "ReadPara", 9);
+            }
+
+            if (Config.isDHCPModeChecked)
+            {
+                sendArray = StringToByteArray(Command.READ_ALL_HEADER + "30 16 01");
+                SendCmd(sendArray, "ReadPara", 9);
+            }
+
+            if (Config.isUSBModeChecked)
+            {
+                sendArray = StringToByteArray(Command.READ_ALL_HEADER + "30 17 01");
+                SendCmd(sendArray, "ReadPara", 9);
+            }
+
+            if (Config.isUSBFixedChecked)
+            {
+                sendArray = StringToByteArray(Command.READ_ALL_HEADER + "30 18 01");
+                SendCmd(sendArray, "ReadPara", 9);
+            }
+           
+        }
+        #endregion
+
+        #region 參數設置所有欄位設定內容
+        public void setParaColumn(byte[] data) {
+            string receiveData = BitConverter.ToString(data);
+            Console.WriteLine(receiveData);
+            if (receiveData.Contains(Command.RE_IP_CLASSFY))
+            {
+                if (byteArraytoIPV4(data, 8) != "")
+                {
+                    SetIPText.Text = byteArraytoIPV4(data, 8);
+                }
+                else {
+                    SysStatusText.Foreground = new SolidColorBrush(Colors.White); 
+                    SysStatusText.Text = "";
+                }
+                
+            }
+            if (receiveData.Contains(Command.RE_GATEWAY_CLASSFY))
+            {
+                SetGatewayText.Text = byteArraytoIPV4(data, 8);
+            }
+            if (receiveData.Contains(Command.RE_MAC_CLASSFY))
+            {
+                SetMACText.Text = byteArraytoHexString(data, 8);
+            }
+            if (receiveData.Contains(Command.RE_AUTODISCONNECT_CLASSFY))
+            {
+                AutoDisconnectCom.SelectedIndex = byteToInt(data);
+            }
+            if (receiveData.Contains(Command.RE_CLIENTCOUNT_CLASSFY))
+            {
+                ConnectClientCom.SelectedIndex = byteToInt(data)-1;
+            }
+            if (receiveData.Contains(Command.RE_NETWORK_SPEED_CLASSFY))
+            {
+                if (byteToInt(data) == 0 || byteToInt(data)==1)
+                {
+                    EthernetSpeedCom.SelectedIndex = byteToInt(data);
+                }
+                else
+                {
+                    //SysStatusText.Foreground = new SolidColorBrush(Colors.Red);
+                    SysStatusText.Text = "网口通讯速度讀取不到參數";
+                    MessageBox.Show("网口通讯速度讀取不到參數");
+                }
+                             
+            }
+            if (receiveData.Contains(Command.RE_DHCP_MODE_CLASSFY))
+            {
+                DHCPModeCom.SelectedIndex = byteToInt(data);
+            }
+            if (receiveData.Contains(Command.RE_USB_MODE_CLASSFY))
+            {
+               USBModeCom.SelectedIndex = byteToInt(data);
+            }
+            if (receiveData.Contains(Command.RE_USB_FIX_CLASSFY))
+            {
+                USBFixedCom.SelectedIndex = byteToInt(data);
+            }
+        }
+        #endregion
         //========================Btn點擊事件===========================
-
-        #region 讀取所有參數設定
-        private void ReadAllBtn_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-        #endregion
-
-        #region 寫入所有參數設定
-        private void WriteAllBtn_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-        #endregion
 
         #region 通讯接口测试按鈕事件
         private void ConnectTest_Click(object sender, RoutedEventArgs e)
@@ -134,7 +322,7 @@ namespace PirnterUtility
             byte[] sendArray = StringToByteArray(Command.RS232_COMMUNICATION_TEST);
             if ((bool)rs232Checkbox.IsChecked)
             {
-                SerialPortConnect("CommunicationTest", sendArray);
+                SerialPortConnect("CommunicationTest", sendArray,0);
             }
 
         }
@@ -148,7 +336,7 @@ namespace PirnterUtility
             {
 
                 case "RS232":
-                    SerialPortConnect("BeepOrSetting", sendArray);
+                    SerialPortConnect("BeepOrSetting", sendArray,0);
                     break;
                 case "USB":
 
@@ -160,6 +348,22 @@ namespace PirnterUtility
 
         }
         #endregion
+
+        #region 讀取所有參數設定
+        private void ReadAllBtn_Click(object sender, RoutedEventArgs e)
+        {
+            IsParaSettingChecked();
+            readALL();
+        }
+        #endregion
+
+        #region 寫入所有參數設定
+        private void WriteAllBtn_Click(object sender, RoutedEventArgs e)
+        {
+            
+        }
+        #endregion
+
 
         #region 設定IP Address按鈕事件
         private void SetIPBtn_Click(object sender, RoutedEventArgs e)
@@ -173,7 +377,7 @@ namespace PirnterUtility
                 switch (DeviceType)
                 {
                     case "RS232":
-                        SerialPortConnect("BeepOrSetting", sendArray);
+                        SerialPortConnect("BeepOrSetting", sendArray,0);
                         break;
                     case "USB":
 
@@ -202,7 +406,7 @@ namespace PirnterUtility
                 switch (DeviceType)
                 {
                     case "RS232":
-                        SerialPortConnect("BeepOrSetting", sendArray);
+                        SerialPortConnect("BeepOrSetting", sendArray, 0);
                         break;
                     case "USB":
 
@@ -239,7 +443,7 @@ namespace PirnterUtility
             switch (DeviceType)
             {
                 case "RS232":
-                    SerialPortConnect("BeepOrSetting", sendArray);
+                    SerialPortConnect("BeepOrSetting", sendArray, 0);
                     break;
                 case "USB":
 
@@ -281,7 +485,7 @@ namespace PirnterUtility
                 switch (DeviceType)
                 {
                     case "RS232":
-                        SerialPortConnect("BeepOrSetting", sendArray);
+                        SerialPortConnect("BeepOrSetting", sendArray, 0);
                         break;
                     case "USB":
 
@@ -312,7 +516,7 @@ namespace PirnterUtility
                 switch (DeviceType)
                 {
                     case "RS232":
-                        SerialPortConnect("BeepOrSetting", sendArray);
+                        SerialPortConnect("BeepOrSetting", sendArray, 0);
                         break;
                     case "USB":
 
@@ -343,7 +547,7 @@ namespace PirnterUtility
                 switch (DeviceType)
                 {
                     case "RS232":
-                        SerialPortConnect("BeepOrSetting", sendArray);
+                        SerialPortConnect("BeepOrSetting", sendArray, 0);
                         break;
                     case "USB":
 
@@ -382,7 +586,7 @@ namespace PirnterUtility
                 switch (DeviceType)
                 {
                     case "RS232":
-                        SerialPortConnect("BeepOrSetting", sendArray);
+                        SerialPortConnect("BeepOrSetting", sendArray, 0);
                         break;
                     case "USB":
 
@@ -413,7 +617,7 @@ namespace PirnterUtility
                 switch (DeviceType)
                 {
                     case "RS232":
-                        SerialPortConnect("BeepOrSetting", sendArray);
+                        SerialPortConnect("BeepOrSetting", sendArray, 0);
                         break;
                     case "USB":
 
@@ -445,7 +649,7 @@ namespace PirnterUtility
                 switch (DeviceType)
                 {
                     case "RS232":
-                        SerialPortConnect("BeepOrSetting", sendArray);
+                        SerialPortConnect("BeepOrSetting", sendArray, 0);
                         break;
                     case "USB":
 
@@ -475,7 +679,7 @@ namespace PirnterUtility
                 switch (DeviceType)
                 {
                     case "RS232":
-                        SerialPortConnect("BeepOrSetting", sendArray);
+                        SerialPortConnect("BeepOrSetting", sendArray, 0);
                         break;
                     case "USB":
 
@@ -553,7 +757,7 @@ namespace PirnterUtility
                 switch (DeviceType)
                 {
                     case "RS232":
-                        SerialPortConnect("BeepOrSetting", sendArray);
+                        SerialPortConnect("BeepOrSetting", sendArray, 0);
                         break;
                     case "USB":
 
@@ -600,7 +804,7 @@ namespace PirnterUtility
                 switch (DeviceType)
                 {
                     case "RS232":
-                        SerialPortConnect("BeepOrSetting", sendArray);
+                        SerialPortConnect("BeepOrSetting", sendArray, 0);
                         break;
                     case "USB":
 
@@ -632,7 +836,7 @@ namespace PirnterUtility
                 switch (DeviceType)
                 {
                     case "RS232":
-                        SerialPortConnect("BeepOrSetting", sendArray);
+                        SerialPortConnect("BeepOrSetting", sendArray, 0);
                         break;
                     case "USB":
 
@@ -664,7 +868,7 @@ namespace PirnterUtility
                 switch (DeviceType)
                 {
                     case "RS232":
-                        SerialPortConnect("BeepOrSetting", sendArray);
+                        SerialPortConnect("BeepOrSetting", sendArray, 0);
                         break;
                     case "USB":
 
@@ -696,7 +900,7 @@ namespace PirnterUtility
                 switch (DeviceType)
                 {
                     case "RS232":
-                        SerialPortConnect("BeepOrSetting", sendArray);
+                        SerialPortConnect("BeepOrSetting", sendArray, 0);
                         break;
                     case "USB":
 
@@ -728,7 +932,7 @@ namespace PirnterUtility
                 switch (DeviceType)
                 {
                     case "RS232":
-                        SerialPortConnect("BeepOrSetting", sendArray);
+                        SerialPortConnect("BeepOrSetting", sendArray, 0);
                         break;
                     case "USB":
 
@@ -770,7 +974,7 @@ namespace PirnterUtility
                 switch (DeviceType)
                 {
                     case "RS232":
-                        SerialPortConnect("BeepOrSetting", sendArray);
+                        SerialPortConnect("BeepOrSetting", sendArray, 0);
                         break;
                     case "USB":
 
@@ -805,7 +1009,7 @@ namespace PirnterUtility
                 switch (DeviceType)
                 {
                     case "RS232":
-                        SerialPortConnect("BeepOrSetting", sendArray);
+                        SerialPortConnect("BeepOrSetting", sendArray, 0);
                         break;
                     case "USB":
 
@@ -837,7 +1041,7 @@ namespace PirnterUtility
                 switch (DeviceType)
                 {
                     case "RS232":
-                        SerialPortConnect("BeepOrSetting", sendArray);
+                        SerialPortConnect("BeepOrSetting", sendArray, 0);
                         break;
                     case "USB":
 
@@ -894,7 +1098,7 @@ namespace PirnterUtility
                 switch (DeviceType)
                 {
                     case "RS232":
-                        SerialPortConnect("BeepOrSetting", sendArray);
+                        SerialPortConnect("BeepOrSetting", sendArray, 0);
                         break;
                     case "USB":
 
@@ -925,7 +1129,7 @@ namespace PirnterUtility
                 switch (DeviceType)
                 {
                     case "RS232":
-                        SerialPortConnect("BeepOrSetting", sendArray);
+                        SerialPortConnect("BeepOrSetting", sendArray, 0);
                         break;
                     case "USB":
 
@@ -957,7 +1161,7 @@ namespace PirnterUtility
                 switch (DeviceType)
                 {
                     case "RS232":
-                        SerialPortConnect("BeepOrSetting", sendArray);
+                        SerialPortConnect("BeepOrSetting", sendArray, 0);
                         break;
                     case "USB":
 
@@ -989,7 +1193,7 @@ namespace PirnterUtility
                 switch (DeviceType)
                 {
                     case "RS232":
-                        SerialPortConnect("BeepOrSetting", sendArray);
+                        SerialPortConnect("BeepOrSetting", sendArray, 0);
                         break;
                     case "USB":
 
@@ -1021,7 +1225,7 @@ namespace PirnterUtility
                 switch (DeviceType)
                 {
                     case "RS232":
-                        SerialPortConnect("BeepOrSetting", sendArray);
+                        SerialPortConnect("BeepOrSetting", sendArray, 0);
                         break;
                     case "USB":
 
@@ -1053,7 +1257,7 @@ namespace PirnterUtility
                 switch (DeviceType)
                 {
                     case "RS232":
-                        SerialPortConnect("BeepOrSetting", sendArray);
+                        SerialPortConnect("BeepOrSetting", sendArray, 0);
                         break;
                     case "USB":
 
@@ -1085,7 +1289,7 @@ namespace PirnterUtility
                 switch (DeviceType)
                 {
                     case "RS232":
-                        SerialPortConnect("BeepOrSetting", sendArray);
+                        SerialPortConnect("BeepOrSetting", sendArray, 0);
                         break;
                     case "USB":
 
@@ -1117,7 +1321,7 @@ namespace PirnterUtility
                 switch (DeviceType)
                 {
                     case "RS232":
-                        SerialPortConnect("BeepOrSetting", sendArray);
+                        SerialPortConnect("BeepOrSetting", sendArray, 0);
                         break;
                     case "USB":
 
@@ -1149,7 +1353,7 @@ namespace PirnterUtility
                 switch (DeviceType)
                 {
                     case "RS232":
-                        SerialPortConnect("BeepOrSetting", sendArray);
+                        SerialPortConnect("BeepOrSetting", sendArray, 0);
                         break;
                     case "USB":
 
@@ -1252,7 +1456,7 @@ namespace PirnterUtility
             switch (DeviceType)
             {
                 case "RS232":
-                    SerialPortConnect("BeepOrSetting", sendArray);
+                    SerialPortConnect("BeepOrSetting", sendArray, 0);
                     break;
                 case "USB":
 
@@ -1264,8 +1468,6 @@ namespace PirnterUtility
 
         }
         #endregion
-
-
 
 
         //========================取得資料後設定UI=================
@@ -1339,7 +1541,7 @@ namespace PirnterUtility
         #endregion
 
         #region RS232傳送資料
-        private void SerialPortConnect(string dataType, byte[] data)
+        private void SerialPortConnect(string dataType, byte[] data,int receiveLength)
         {
             RS232Connect.CloseSerialPort();
             if (RS232PortName != null)
@@ -1350,8 +1552,8 @@ namespace PirnterUtility
                 {
                     switch (dataType)
                     {
-                        case "PrinterInfo":
-                            bool isReceiveData = RS232Connect.SerialPortSendCMD("NeedReceive", data, null, 9);
+                        case "ReadPara":
+                            bool isReceiveData = RS232Connect.SerialPortSendCMD("NeedReceive", data, null, receiveLength);
                             while (!isReceiveData)
                             {
 
@@ -1359,9 +1561,9 @@ namespace PirnterUtility
                                 {
                                     switch (dataType)
                                     {
-                                        case "PrinterInfo":
-                                            byte[] convert = { RS232Connect.mRecevieData[0] };
-                                            Console.WriteLine(convetBytetoString(convert));
+                                        case "ReadPara":
+                                            
+                                            setParaColumn(RS232Connect.mRecevieData);
                                             break;
                                     }
                                     break;
@@ -1403,6 +1605,9 @@ namespace PirnterUtility
         }
         #endregion
 
+        //============================各種資料類型的轉換=============================
+
+        #region hex string to byte array
         public static byte[] StringToByteArray(string hex)
         {
             string afterConvert = hex.Replace(" ", "");
@@ -1411,7 +1616,68 @@ namespace PirnterUtility
                              .Select(x => Convert.ToByte(afterConvert.Substring(x, 2), 16))
                              .ToArray();
         }
+        #endregion
 
+        #region byte array to IPV4
+        public string byteArraytoIPV4(byte[]  data,int startindex) {
+            byte[] IPV4 = new byte[4];
+           
+            for (int i = 0; i < 4; i++) {
+                IPV4[i] = data[startindex+i];
+            }
+            IPAddress ip = new IPAddress(IPV4);
+            return ip.ToString();
+
+        }
+        #endregion
+
+        #region byte array to hex string
+        public string byteArraytoHexString(byte[] data, int startindex)
+        {
+            byte[] hexArray = new byte[6];
+
+            for (int i = 0; i < 6; i++)
+            {
+                hexArray[i] = data[startindex + i];
+            }
+            string maxHex=BitConverter.ToString(hexArray).Replace("-", ":");
+            return maxHex;
+
+        }
+        #endregion
+
+
+        #region byte to int
+        public int byteToInt(byte[] data)
+        {
+            byte convert=data[data.Length-1];
+            int intValue = Convert.ToInt32(convert);
+
+            
+            return intValue;
+
+        }
+        #endregion
+
+        //========================不同通道傳送命令===========================
+
+        #region 不同通道傳送命令
+        public void SendCmd(byte[] sendArray, string sendType,int length) {
+            switch (DeviceType)
+            {
+                case "RS232":
+                    SerialPortConnect(sendType, sendArray,length);
+                    break;
+                case "USB":
+
+                    break;
+                case "Ethernet":
+
+                    break;
+            }
+        }
+        #endregion
+        
         //=========================RS232 port search and get=====================
 
         #region 取得rs232 port
@@ -1646,6 +1912,9 @@ namespace PirnterUtility
 
         #endregion
 
+
+        //===============================測試完可刪===========================
+
         private void Test_Click(object sender, RoutedEventArgs e)
         {
 
@@ -1656,7 +1925,7 @@ namespace PirnterUtility
             switch (DeviceType)
             {
                 case "RS232":
-                    SerialPortConnect("PrinterInfo", sendArray);
+                    SerialPortConnect("ReadPara", sendArray, 0);
                     break;
                 case "USB":
 
