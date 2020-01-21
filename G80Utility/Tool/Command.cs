@@ -37,7 +37,8 @@ namespace G80Utility.Tool
         //設定gateway
         public static string GATEWAY_SETTING_HEADER = "1F 1B 1F 53 5A 4A 42 5A 46 30 11 02";
 
-        //設定mac address
+        //設定mac address Header
+        public static string MAC_ADDRESS_SETTING_HEADER = "1F 1B 1F 91 00 49 44";
 
         //設定自動斷線時間HEADER
         public static string NETWORK_AUTODICONNECTED_SETTING_HEADER = "1F 1B 1F 95 01 02 03 11 12 13";

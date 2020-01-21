@@ -114,6 +114,20 @@ namespace PirnterUtility
 
         //========================Btn點擊事件===========================
 
+        #region 讀取所有參數設定
+        private void ReadAllBtn_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+        #endregion
+
+        #region 寫入所有參數設定
+        private void WriteAllBtn_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+        #endregion
+
         #region 通讯接口测试按鈕事件
         private void ConnectTest_Click(object sender, RoutedEventArgs e)
         {
@@ -209,7 +223,31 @@ namespace PirnterUtility
         #region 設定MAC按鈕事件
         private void SetMACBtn_Click(object sender, RoutedEventArgs e)
         {
+            byte[] sendArray = null;
+            Random random = new Random();
+            int mac4 = random.Next(0, 255);
+            int mac5 = random.Next(0, 255);
+            int mac6 = random.Next(0, 255);
 
+            string hexMac4 = mac4.ToString("X2"); //X:16進位,2:2位數
+            string hexMac5 = mac5.ToString("X2");
+            string hexMac6 = mac6.ToString("X2");
+
+            //寫入MAC Address
+            sendArray = StringToByteArray(Command.MAC_ADDRESS_SETTING_HEADER + "00 47 50" + hexMac4+ hexMac5+ hexMac6);
+            SetMACText.Text = "00:47:50:" + hexMac4 + ":" + hexMac5 + ":" + hexMac6;
+            switch (DeviceType)
+            {
+                case "RS232":
+                    SerialPortConnect("BeepOrSetting", sendArray);
+                    break;
+                case "USB":
+
+                    break;
+                case "Ethernet":
+
+                    break;
+            }
         }
         #endregion
 
@@ -1191,7 +1229,7 @@ namespace PirnterUtility
                     dipArray.Set(6, true);
                     dipArray.Set(7, false);
                     break;
-               case 2: //115200 10取反 01
+                case 2: //115200 10取反 01
                     dipArray.Set(6, false);
                     dipArray.Set(7, true);
                     break;
@@ -1226,6 +1264,8 @@ namespace PirnterUtility
 
         }
         #endregion
+
+
 
 
         //========================取得資料後設定UI=================
@@ -1628,11 +1668,12 @@ namespace PirnterUtility
 
         }
 
-        public string convetBytetoString(byte[] data) {
+        public string convetBytetoString(byte[] data)
+        {
 
-            string result1=null;
+            string result1 = null;
             BitArray ba = new BitArray(data);
-           
+
             for (int i = 0; i < ba.Length; i++)
             {
                 result1 += (ba.Get(i) + " ");
@@ -1641,5 +1682,7 @@ namespace PirnterUtility
             return result1;
 
         }
+
+       
     }
 }

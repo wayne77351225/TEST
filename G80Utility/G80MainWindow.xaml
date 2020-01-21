@@ -165,8 +165,8 @@
                             <!--全局操作-->
                             <GroupBox Header="全局操作" Margin="5,0,0,5" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14" >
                                 <StackPanel HorizontalAlignment="Center" Orientation="Horizontal"  Margin="5">
-                                    <Button  Margin="0,0,10,0" Content="读取参数" Padding="10,5,10,5" Width="120"/>
-                                    <Button  Margin="0,0,0,0" Content="设置参数" Padding="10,5,10,5" Width="120"/>
+                                    <Button  Margin="0,0,10,0" Content="读取参数" Name="ReadAllBtn" Click="ReadAllBtn_Click" Padding="10,5,10,5" Width="120"/>
+                                    <Button  Margin="0,0,0,0" Content="设置参数" Name="WriteAllBtn" Click="WriteAllBtn_Click" Padding="10,5,10,5" Width="120"/>
                                 </StackPanel>
                             </GroupBox>
                             <!--通讯参数设置-->
@@ -183,7 +183,7 @@
                                         <CheckBox VerticalAlignment="Center" IsChecked="True"/>
                                     </StackPanel>
                                     <StackPanel  Margin="0,0,0,6" Orientation="Horizontal">
-                                        <TextBox  Margin="0,0,5,0" Name="SetMACText" Width="110" Height="26"  Foreground="#BDBDBD"/>
+                                        <TextBox  Margin="0,0,5,0" Name="SetMACText" Width="110" Height="26"  Foreground="#BDBDBD" IsEnabled="False"/>
                                         <Button  Margin="0,0,5,0" Name="SetMACBtn" Click="SetMACBtn_Click" Content="设置MAC地址" Padding="10,5,10,5" Width="110"/>
                                         <CheckBox VerticalAlignment="Center" IsChecked="True"/>
                                     </StackPanel>
