@@ -530,6 +530,37 @@ namespace PirnterUtility
         }
         #endregion
 
+        //========================取得資料後設定UI=================
+
+        #region 設定打印機型號/軟件版本/機器序號
+        private void SetPrinterInfo(byte[] buffer)
+        {
+            string moudle = null;
+            string sfvesion = null;
+            string sn = null;
+            //(0~7)前8個是無意義資料
+            for (int i = 8; i < 18; i++)
+            {
+                moudle += Convert.ToChar(buffer[i]);    //機器型號
+            }
+            Console.WriteLine("module:" + moudle);
+
+            for (int i = 18; i < 28; i++)
+            {
+                sfvesion += Convert.ToChar(buffer[i]);   //軟件版本    
+            }
+            PrinterModule.Content = moudle + "  " + sfvesion;
+            Console.WriteLine("VER:" + sfvesion);
+            for (int i = 28; i < 44; i++)
+            {
+                sn += Convert.ToChar(buffer[i]);      //機器序列號
+            }
+            PrinterSN.Text = sn;
+            Console.WriteLine("SN:" + sn);
+
+        }
+        #endregion
+
         #region 參數設置所有欄位設定內容
         public void setParaColumn(byte[] data)
         {
@@ -888,302 +919,66 @@ namespace PirnterUtility
         }
         #endregion
 
-
         #region 設定IP Address按鈕事件
         private void SetIPBtn_Click(object sender, RoutedEventArgs e)
         {
-            byte[] sendArray = null;
-            if (SetIPText.Text != "")
-            {
-                var address = SetIPText.Text;
-                String result = String.Concat(address.Split('.').Select(x => int.Parse(x).ToString("X2")));
-                sendArray = StringToByteArray(Command.IP_SETTING_HEADER + result);
-                switch (DeviceType)
-                {
-                    case "RS232":
-                        SerialPortConnect("BeepOrSetting", sendArray, 0);
-                        break;
-                    case "USB":
-
-                        break;
-                    case "Ethernet":
-
-                        break;
-                }
-            }
-            else
-            {
-                MessageBox.Show(FindResource("ColumnEmpty") as string);
-            }
+            SetIP();
         }
         #endregion
 
         #region  設定Gateway按鈕事件
         private void SetGatewayBtn_Click(object sender, RoutedEventArgs e)
         {
-            byte[] sendArray = null;
-            if (SetGatewayText.Text != "")
-            {
-                var gateway = SetGatewayText.Text;
-                String result = String.Concat(gateway.Split('.').Select(x => int.Parse(x).ToString("X2")));
-                sendArray = StringToByteArray(Command.GATEWAY_SETTING_HEADER + result);
-                switch (DeviceType)
-                {
-                    case "RS232":
-                        SerialPortConnect("BeepOrSetting", sendArray, 0);
-                        break;
-                    case "USB":
-
-                        break;
-                    case "Ethernet":
-
-                        break;
-                }
-            }
-            else
-            {
-                MessageBox.Show(FindResource("ColumnEmpty") as string);
-            }
-
+            SetGateway();
         }
         #endregion
 
         #region 設定MAC按鈕事件
         private void SetMACBtn_Click(object sender, RoutedEventArgs e)
         {
-            byte[] sendArray = null;
-            Random random = new Random();
-            int mac4 = random.Next(0, 255);
-            int mac5 = random.Next(0, 255);
-            int mac6 = random.Next(0, 255);
-
-            string hexMac4 = mac4.ToString("X2"); //X:16進位,2:2位數
-            string hexMac5 = mac5.ToString("X2");
-            string hexMac6 = mac6.ToString("X2");
-
-            //寫入MAC Address
-            sendArray = StringToByteArray(Command.MAC_ADDRESS_SETTING_HEADER + "00 47 50" + hexMac4 + hexMac5 + hexMac6);
-            SetMACText.Text = "00:47:50:" + hexMac4 + ":" + hexMac5 + ":" + hexMac6;
-            switch (DeviceType)
-            {
-                case "RS232":
-                    SerialPortConnect("BeepOrSetting", sendArray, 0);
-                    break;
-                case "USB":
-
-                    break;
-                case "Ethernet":
-
-                    break;
-            }
+            SetMAC();
         }
         #endregion
 
         #region 設定自動斷線時間按鈕事件
         private void AutoDisconnectBtn_Click(object sender, RoutedEventArgs e)
         {
-            byte[] sendArray = null;
-            if (AutoDisconnectCom.SelectedIndex != -1)
-            {
-                switch (AutoDisconnectCom.SelectedIndex)
-                {
-                    case 0: //不設定=>55 00
-                        sendArray = StringToByteArray(Command.NETWORK_AUTODICONNECTED_SETTING_HEADER + "55 00");
-                        break;
-                    case 1: //1min=>33 01
-                        sendArray = StringToByteArray(Command.NETWORK_AUTODICONNECTED_SETTING_HEADER + "33 01");
-                        break;
-                    case 2: //2min=>33 02
-                        sendArray = StringToByteArray(Command.NETWORK_AUTODICONNECTED_SETTING_HEADER + "33 02");
-                        break;
-                    case 3: //3min=>33 03
-                        sendArray = StringToByteArray(Command.NETWORK_AUTODICONNECTED_SETTING_HEADER + "33 03");
-                        break;
-                    case 4: //4min=>33 04
-                        sendArray = StringToByteArray(Command.NETWORK_AUTODICONNECTED_SETTING_HEADER + "33 04");
-                        break;
-                    case 5: //5min=>33 05
-                        sendArray = StringToByteArray(Command.NETWORK_AUTODICONNECTED_SETTING_HEADER + "33 05");
-                        break;
-                }
-                switch (DeviceType)
-                {
-                    case "RS232":
-                        SerialPortConnect("BeepOrSetting", sendArray, 0);
-                        break;
-                    case "USB":
-
-                        break;
-                    case "Ethernet":
-
-                        break;
-                }
-            }
-            else { MessageBox.Show(FindResource("ColumnEmpty") as string); }
+            AutoDisconnect();
         }
         #endregion
 
         #region 設定網路連接數量按鈕事件
         private void ConnectClientBtn_Click(object sender, RoutedEventArgs e)
         {
-            if (ConnectClientCom.SelectedIndex != -1)
-            {
-                byte[] sendArray = null;
-                if (ConnectClientCom.SelectedIndex == 0)
-                {
-                    sendArray = StringToByteArray(Command.CONNECT_CLIENT_1_SETTING);
-                }
-                else if (ConnectClientCom.SelectedIndex == 1)
-                {
-                    sendArray = StringToByteArray(Command.CONNECT_CLIENT_2_SETTING);
-                }
-                switch (DeviceType)
-                {
-                    case "RS232":
-                        SerialPortConnect("BeepOrSetting", sendArray, 0);
-                        break;
-                    case "USB":
-
-                        break;
-                    case "Ethernet":
-
-                        break;
-                }
-            }
-            else { MessageBox.Show(FindResource("ColumnEmpty") as string); }
+            ConnectClient();
         }
         #endregion
 
         #region 設定網口通訊速度按鈕事件
         private void EthernetSpeedBtn_Click(object sender, RoutedEventArgs e)
         {
-            if (EthernetSpeedCom.SelectedIndex != -1)
-            {
-                byte[] sendArray = null;
-                if (EthernetSpeedCom.SelectedIndex == 0)
-                {
-                    sendArray = StringToByteArray(Command.ETHERNET_SPEED_SETTING_10MHZ);
-                }
-                else if (EthernetSpeedCom.SelectedIndex == 1)
-                {
-                    sendArray = StringToByteArray(Command.ETHERNET_SPEED_SETTING_100MHZ);
-                }
-                switch (DeviceType)
-                {
-                    case "RS232":
-                        SerialPortConnect("BeepOrSetting", sendArray, 0);
-                        break;
-                    case "USB":
-
-                        break;
-                    case "Ethernet":
-
-                        break;
-                }
-            }
-            else { MessageBox.Show(FindResource("ColumnEmpty") as string); }
+            EthernetSpeed();
         }
         #endregion
 
         #region 設定DHCP模式按鈕事件
         private void DHCPModeBtn_Click(object sender, RoutedEventArgs e)
         {
-            if (DHCPModeCom.SelectedIndex != -1)
-            {
-                byte[] sendArray = null;
-
-                switch (DHCPModeCom.SelectedIndex)
-                {
-                    case 0: //STATIC=>11
-                        sendArray = StringToByteArray(Command.DHCP_MODE_SETTING_HEADER + "11");
-                        break;
-                    case 1: //MODE1=>22
-                        sendArray = StringToByteArray(Command.DHCP_MODE_SETTING_HEADER + "22");
-                        break;
-                    case 2: //MODE2=>33
-                        sendArray = StringToByteArray(Command.DHCP_MODE_SETTING_HEADER + "33");
-                        break;
-                    case 3: //MODE3=>44
-                        sendArray = StringToByteArray(Command.DHCP_MODE_SETTING_HEADER + "44");
-                        break;
-                }
-                switch (DeviceType)
-                {
-                    case "RS232":
-                        SerialPortConnect("BeepOrSetting", sendArray, 0);
-                        break;
-                    case "USB":
-
-                        break;
-                    case "Ethernet":
-
-                        break;
-                }
-            }
-            else { MessageBox.Show(FindResource("ColumnEmpty") as string); }
+            DHCPMode();
         }
         #endregion
 
         #region 設定USB模式按鈕事件
         private void USBModeBtn_Click(object sender, RoutedEventArgs e)
         {
-            if (USBModeCom.SelectedIndex != -1)
-            {
-                byte[] sendArray = null;
-                if (USBModeCom.SelectedIndex == 0)
-                {
-                    sendArray = StringToByteArray(Command.USB_UTP_SETTING);
-                }
-                else if (USBModeCom.SelectedIndex == 1)
-                {
-                    sendArray = StringToByteArray(Command.USB_VCOM_SETTING);
-                }
-                switch (DeviceType)
-                {
-                    case "RS232":
-                        SerialPortConnect("BeepOrSetting", sendArray, 0);
-                        break;
-                    case "USB":
-
-                        break;
-                    case "Ethernet":
-
-                        break;
-                }
-            }
-            else { MessageBox.Show(FindResource("ColumnEmpty") as string); }
+            USBMode();
         }
         #endregion
 
         #region 設定USB端口值按鈕事件
         private void USBFixedBtn_Click(object sender, RoutedEventArgs e)
         {
-            if (USBFixedCom.SelectedIndex != -1)
-            {
-                byte[] sendArray = null;
-
-                if (USBFixedCom.SelectedIndex == 0)
-                {
-                    sendArray = StringToByteArray(Command.USB_UNFIXED_SETTING);
-                }
-                else if (USBFixedCom.SelectedIndex == 1)
-                {
-                    sendArray = StringToByteArray(Command.USB_FIXED_SETTING);
-                }
-                switch (DeviceType)
-                {
-                    case "RS232":
-                        SerialPortConnect("BeepOrSetting", sendArray, 0);
-                        break;
-                    case "USB":
-
-                        break;
-                    case "Ethernet":
-
-                        break;
-                }
-            }
-            else { MessageBox.Show(FindResource("ColumnEmpty") as string); }
+            USBFixed();
         }
         #endregion
 
@@ -1994,36 +1789,306 @@ namespace PirnterUtility
         #endregion
 
 
-        //========================取得資料後設定UI=================
+        //========================參數設置每個寫入命令功能=================
 
-        #region 設定打印機型號/軟件版本/機器序號
-        private void SetPrinterInfo(byte[] buffer)
+        #region 設定IP Address
+        private void SetIP()
         {
-            string moudle = null;
-            string sfvesion = null;
-            string sn = null;
-            //(0~7)前8個是無意義資料
-            for (int i = 8; i < 18; i++)
+            byte[] sendArray = null;
+            if (SetIPText.Text != "")
             {
-                moudle += Convert.ToChar(buffer[i]);    //機器型號
-            }
-            Console.WriteLine("module:" + moudle);
+                var address = SetIPText.Text;
+                String result = String.Concat(address.Split('.').Select(x => int.Parse(x).ToString("X2")));
+                sendArray = StringToByteArray(Command.IP_SETTING_HEADER + result);
+                switch (DeviceType)
+                {
+                    case "RS232":
+                        SerialPortConnect("BeepOrSetting", sendArray, 0);
+                        break;
+                    case "USB":
 
-            for (int i = 18; i < 28; i++)
-            {
-                sfvesion += Convert.ToChar(buffer[i]);   //軟件版本    
+                        break;
+                    case "Ethernet":
+
+                        break;
+                }
             }
-            PrinterModule.Content = moudle + "  " + sfvesion;
-            Console.WriteLine("VER:" + sfvesion);
-            for (int i = 28; i < 44; i++)
+            else
             {
-                sn += Convert.ToChar(buffer[i]);      //機器序列號
+                MessageBox.Show(FindResource("ColumnEmpty") as string);
             }
-            PrinterSN.Text = sn;
-            Console.WriteLine("SN:" + sn);
+        }
+        #endregion
+
+        #region  設定Gateway
+        private void SetGateway()
+        {
+            byte[] sendArray = null;
+            if (SetGatewayText.Text != "")
+            {
+                var gateway = SetGatewayText.Text;
+                String result = String.Concat(gateway.Split('.').Select(x => int.Parse(x).ToString("X2")));
+                sendArray = StringToByteArray(Command.GATEWAY_SETTING_HEADER + result);
+                switch (DeviceType)
+                {
+                    case "RS232":
+                        SerialPortConnect("BeepOrSetting", sendArray, 0);
+                        break;
+                    case "USB":
+
+                        break;
+                    case "Ethernet":
+
+                        break;
+                }
+            }
+            else
+            {
+                MessageBox.Show(FindResource("ColumnEmpty") as string);
+            }
 
         }
         #endregion
+
+        #region 設定MAC
+        private void SetMAC()
+        {
+            byte[] sendArray = null;
+            Random random = new Random();
+            int mac4 = random.Next(0, 255);
+            int mac5 = random.Next(0, 255);
+            int mac6 = random.Next(0, 255);
+
+            string hexMac4 = mac4.ToString("X2"); //X:16進位,2:2位數
+            string hexMac5 = mac5.ToString("X2");
+            string hexMac6 = mac6.ToString("X2");
+
+            //寫入MAC Address
+            sendArray = StringToByteArray(Command.MAC_ADDRESS_SETTING_HEADER + "00 47 50" + hexMac4 + hexMac5 + hexMac6);
+            SetMACText.Text = "00:47:50:" + hexMac4 + ":" + hexMac5 + ":" + hexMac6;
+            switch (DeviceType)
+            {
+                case "RS232":
+                    SerialPortConnect("BeepOrSetting", sendArray, 0);
+                    break;
+                case "USB":
+
+                    break;
+                case "Ethernet":
+
+                    break;
+            }
+        }
+        #endregion
+
+        #region 設定自動斷線時間
+        private void AutoDisconnect()
+        {
+            byte[] sendArray = null;
+            if (AutoDisconnectCom.SelectedIndex != -1)
+            {
+                switch (AutoDisconnectCom.SelectedIndex)
+                {
+                    case 0: //不設定=>55 00
+                        sendArray = StringToByteArray(Command.NETWORK_AUTODICONNECTED_SETTING_HEADER + "55 00");
+                        break;
+                    case 1: //1min=>33 01
+                        sendArray = StringToByteArray(Command.NETWORK_AUTODICONNECTED_SETTING_HEADER + "33 01");
+                        break;
+                    case 2: //2min=>33 02
+                        sendArray = StringToByteArray(Command.NETWORK_AUTODICONNECTED_SETTING_HEADER + "33 02");
+                        break;
+                    case 3: //3min=>33 03
+                        sendArray = StringToByteArray(Command.NETWORK_AUTODICONNECTED_SETTING_HEADER + "33 03");
+                        break;
+                    case 4: //4min=>33 04
+                        sendArray = StringToByteArray(Command.NETWORK_AUTODICONNECTED_SETTING_HEADER + "33 04");
+                        break;
+                    case 5: //5min=>33 05
+                        sendArray = StringToByteArray(Command.NETWORK_AUTODICONNECTED_SETTING_HEADER + "33 05");
+                        break;
+                }
+                switch (DeviceType)
+                {
+                    case "RS232":
+                        SerialPortConnect("BeepOrSetting", sendArray, 0);
+                        break;
+                    case "USB":
+
+                        break;
+                    case "Ethernet":
+
+                        break;
+                }
+            }
+            else { MessageBox.Show(FindResource("ColumnEmpty") as string); }
+        }
+        #endregion
+
+        #region 設定網路連接數量
+        private void ConnectClient()
+        {
+            if (ConnectClientCom.SelectedIndex != -1)
+            {
+                byte[] sendArray = null;
+                if (ConnectClientCom.SelectedIndex == 0)
+                {
+                    sendArray = StringToByteArray(Command.CONNECT_CLIENT_1_SETTING);
+                }
+                else if (ConnectClientCom.SelectedIndex == 1)
+                {
+                    sendArray = StringToByteArray(Command.CONNECT_CLIENT_2_SETTING);
+                }
+                switch (DeviceType)
+                {
+                    case "RS232":
+                        SerialPortConnect("BeepOrSetting", sendArray, 0);
+                        break;
+                    case "USB":
+
+                        break;
+                    case "Ethernet":
+
+                        break;
+                }
+            }
+            else { MessageBox.Show(FindResource("ColumnEmpty") as string); }
+        }
+        #endregion
+
+        #region 設定網口通訊速度
+        private void EthernetSpeed()
+        {
+            if (EthernetSpeedCom.SelectedIndex != -1)
+            {
+                byte[] sendArray = null;
+                if (EthernetSpeedCom.SelectedIndex == 0)
+                {
+                    sendArray = StringToByteArray(Command.ETHERNET_SPEED_SETTING_10MHZ);
+                }
+                else if (EthernetSpeedCom.SelectedIndex == 1)
+                {
+                    sendArray = StringToByteArray(Command.ETHERNET_SPEED_SETTING_100MHZ);
+                }
+                switch (DeviceType)
+                {
+                    case "RS232":
+                        SerialPortConnect("BeepOrSetting", sendArray, 0);
+                        break;
+                    case "USB":
+
+                        break;
+                    case "Ethernet":
+
+                        break;
+                }
+            }
+            else { MessageBox.Show(FindResource("ColumnEmpty") as string); }
+        }
+        #endregion
+
+        #region 設定DHCP模式
+        private void DHCPMode()
+        {
+            if (DHCPModeCom.SelectedIndex != -1)
+            {
+                byte[] sendArray = null;
+
+                switch (DHCPModeCom.SelectedIndex)
+                {
+                    case 0: //STATIC=>11
+                        sendArray = StringToByteArray(Command.DHCP_MODE_SETTING_HEADER + "11");
+                        break;
+                    case 1: //MODE1=>22
+                        sendArray = StringToByteArray(Command.DHCP_MODE_SETTING_HEADER + "22");
+                        break;
+                    case 2: //MODE2=>33
+                        sendArray = StringToByteArray(Command.DHCP_MODE_SETTING_HEADER + "33");
+                        break;
+                    case 3: //MODE3=>44
+                        sendArray = StringToByteArray(Command.DHCP_MODE_SETTING_HEADER + "44");
+                        break;
+                }
+                switch (DeviceType)
+                {
+                    case "RS232":
+                        SerialPortConnect("BeepOrSetting", sendArray, 0);
+                        break;
+                    case "USB":
+
+                        break;
+                    case "Ethernet":
+
+                        break;
+                }
+            }
+            else { MessageBox.Show(FindResource("ColumnEmpty") as string); }
+        }
+        #endregion
+
+        #region 設定USB模式
+        private void USBMode()
+        {
+            if (USBModeCom.SelectedIndex != -1)
+            {
+                byte[] sendArray = null;
+                if (USBModeCom.SelectedIndex == 0)
+                {
+                    sendArray = StringToByteArray(Command.USB_UTP_SETTING);
+                }
+                else if (USBModeCom.SelectedIndex == 1)
+                {
+                    sendArray = StringToByteArray(Command.USB_VCOM_SETTING);
+                }
+                switch (DeviceType)
+                {
+                    case "RS232":
+                        SerialPortConnect("BeepOrSetting", sendArray, 0);
+                        break;
+                    case "USB":
+
+                        break;
+                    case "Ethernet":
+
+                        break;
+                }
+            }
+            else { MessageBox.Show(FindResource("ColumnEmpty") as string); }
+        }
+        #endregion
+
+        #region 設定USB端口值按鈕事件
+        private void USBFixed()
+        {
+            if (USBFixedCom.SelectedIndex != -1)
+            {
+                byte[] sendArray = null;
+
+                if (USBFixedCom.SelectedIndex == 0)
+                {
+                    sendArray = StringToByteArray(Command.USB_UNFIXED_SETTING);
+                }
+                else if (USBFixedCom.SelectedIndex == 1)
+                {
+                    sendArray = StringToByteArray(Command.USB_FIXED_SETTING);
+                }
+                switch (DeviceType)
+                {
+                    case "RS232":
+                        SerialPortConnect("BeepOrSetting", sendArray, 0);
+                        break;
+                    case "USB":
+
+                        break;
+                    case "Ethernet":
+
+                        break;
+                }
+            }
+            else { MessageBox.Show(FindResource("ColumnEmpty") as string); }
+        }
+        #endregion
+
 
         //========================RS232的設定/傳送與接收===========================
 
@@ -2086,7 +2151,6 @@ namespace PirnterUtility
                                     switch (dataType)
                                     {
                                         case "ReadPara":
-
                                             setParaColumn(RS232Connect.mRecevieData);
                                             break;
                                     }
