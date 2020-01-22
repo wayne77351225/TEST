@@ -109,12 +109,14 @@ namespace PirnterUtility
         #endregion
 
         #region 參數設置核取框是否勾選檢查
-        private void IsParaSettingChecked() {
+        private void IsParaSettingChecked()
+        {
             if (SetIPCheckbox.IsChecked == true)
             {
                 Config.isSetIPChecked = true;
             }
-            else {
+            else
+            {
                 Config.isSetIPChecked = false;
             }
 
@@ -162,7 +164,7 @@ namespace PirnterUtility
             {
                 Config.isEthernetSpeedChecked = false;
             }
-            
+
             if (DHCPModeCheckbox.IsChecked == true)
             {
                 Config.isDHCPModeChecked = true;
@@ -171,7 +173,7 @@ namespace PirnterUtility
             {
                 Config.isDHCPModeChecked = false;
             }
-            
+
             if (USBModeCheckbox.IsChecked == true)
             {
                 Config.isUSBModeChecked = true;
@@ -180,7 +182,7 @@ namespace PirnterUtility
             {
                 Config.isUSBModeChecked = false;
             }
-            
+
             if (USBFixedCheckbox.IsChecked == true)
             {
                 Config.isUSBFixedChecked = true;
@@ -226,6 +228,131 @@ namespace PirnterUtility
                 Config.isCustomziedFontChecked = false;
             }
 
+            if (DirectionCheckbox.IsChecked == true)
+            {
+                Config.isDirectionChecked = true;
+            }
+            else
+            {
+                Config.isDirectionChecked = false;
+            }
+
+            if (MotorAccControlCheckbox.IsChecked == true)
+            {
+                Config.isMotorAccControlChecked = true;
+            }
+            else
+            {
+                Config.isMotorAccControlChecked = false;
+            }
+
+            if (AccMotorCheckbox.IsChecked == true)
+            {
+                Config.isAccMotorChecked = true;
+            }
+            else
+            {
+                Config.isAccMotorChecked = false;
+            }
+
+            if (PrintSpeedCheckbox.IsChecked == true)
+            {
+                Config.isPrintSpeedChecked = true;
+            }
+            else
+            {
+                Config.isPrintSpeedChecked = false;
+            }
+
+            if (DensityModeCheckbox.IsChecked == true)
+            {
+                Config.isDensityModeChecked = true;
+            }
+            else
+            {
+                Config.isDensityModeChecked = false;
+            }
+
+            if (DensityCheckbox.IsChecked == true)
+            {
+                Config.isDensityChecked = true;
+            }
+            else
+            {
+                Config.isDensityChecked = false;
+            }
+
+            if (PaperOutReprintCheckbox.IsChecked == true)
+            {
+                Config.isPaperOutReprintChecked = true;
+            }
+            else
+            {
+                Config.isPaperOutReprintChecked = false;
+            }
+
+            if (PaperWidthCheckbox.IsChecked == true)
+            {
+                Config.isPaperWidthChecked = true;
+            }
+            else
+            {
+                Config.isPaperWidthChecked = false;
+            }
+
+            if (HeadCloseCutCheckbox.IsChecked == true)
+            {
+                Config.isHeadCloseCutChecked = true;
+            }
+            else
+            {
+                Config.isHeadCloseCutChecked = false;
+            }
+
+            if (YOffsetCheckbox.IsChecked == true)
+            {
+                Config.isYOffsetChecked = true;
+            }
+            else
+            {
+                Config.isYOffsetChecked = false;
+            }
+
+            if (MACShowCheckbox.IsChecked == true)
+            {
+                Config.isMACShowChecked = true;
+            }
+            else
+            {
+                Config.isMACShowChecked = false;
+            }
+
+            if (QRCodeCheckbox.IsChecked == true)
+            {
+                Config.isQRCodeChecked = true;
+            }
+            else
+            {
+                Config.isQRCodeChecked = false;
+            }
+
+            if (LogoPrintControlCheckbox.IsChecked == true)
+            {
+                Config.isLogoPrintControlhecked = true;
+            }
+            else
+            {
+                Config.isLogoPrintControlhecked = false;
+            }
+
+            if (DIPSwitchCheckbox.IsChecked == true)
+            {
+                Config.isDIPSwitchChecked = true;
+            }
+            else
+            {
+                Config.isDIPSwitchChecked = false;
+            }
         }
         #endregion
 
@@ -233,18 +360,19 @@ namespace PirnterUtility
         private void readALL()
         {
             byte[] sendArray = null;
-            if (Config.isSetIPChecked) {
+            if (Config.isSetIPChecked)
+            {
                 sendArray = StringToByteArray(Command.READ_ALL_HEADER + "30 10 01");
                 SendCmd(sendArray, "ReadPara", 12);
-              
+
             }
-            
+
             if (Config.isSetGatewayChecked)
             {
                 sendArray = StringToByteArray(Command.READ_ALL_HEADER + "30 11 01");
-                SendCmd(sendArray,"ReadPara", 12);
+                SendCmd(sendArray, "ReadPara", 12);
             }
-            
+
             if (Config.isSetMacChecked)
             {
                 sendArray = StringToByteArray(Command.READ_ALL_HEADER + "30 12 01");
@@ -311,17 +439,106 @@ namespace PirnterUtility
                 SendCmd(sendArray, "ReadPara", 9);
             }
 
+            if (Config.isDirectionChecked)
+            {
+                sendArray = StringToByteArray(Command.READ_ALL_HEADER + "31 13 01");
+                SendCmd(sendArray, "ReadPara", 9);
+            }
+
+            if (Config.isMotorAccControlChecked)
+            {
+                sendArray = StringToByteArray(Command.READ_ALL_HEADER + "31 14 01");
+                SendCmd(sendArray, "ReadPara", 9);
+            }
+
+            if (Config.isAccMotorChecked)
+            {
+                sendArray = StringToByteArray(Command.READ_ALL_HEADER + "31 15 01");
+                SendCmd(sendArray, "ReadPara", 9);
+            }
+
+            if (Config.isPrintSpeedChecked)
+            {
+                sendArray = StringToByteArray(Command.READ_ALL_HEADER + "31 31 01");
+                SendCmd(sendArray, "ReadPara", 10);
+            }
+
+            if (Config.isDensityModeChecked)
+            {
+                sendArray = StringToByteArray(Command.READ_ALL_HEADER + "31 26 01");
+                SendCmd(sendArray, "ReadPara", 9);
+            }
+
+            if (Config.isDensityChecked)
+            {
+                sendArray = StringToByteArray(Command.READ_ALL_HEADER + "31 27 01");
+                SendCmd(sendArray, "ReadPara", 9);
+            }
+
+            if (Config.isPaperOutReprintChecked)
+            {
+                sendArray = StringToByteArray(Command.READ_ALL_HEADER + "31 21 01");
+                SendCmd(sendArray, "ReadPara", 9);
+            }
+
+            if (Config.isPaperWidthChecked)
+            {
+                sendArray = StringToByteArray(Command.READ_ALL_HEADER + "31 30 01");
+                SendCmd(sendArray, "ReadPara", 9);
+            }
+
+            if (Config.isHeadCloseCutChecked)
+            {
+                sendArray = StringToByteArray(Command.READ_ALL_HEADER + "31 17 01");
+                SendCmd(sendArray, "ReadPara", 9);
+            }
+
+            if (Config.isYOffsetChecked)
+            {
+                sendArray = StringToByteArray(Command.READ_ALL_HEADER + "31 18 01");
+                SendCmd(sendArray, "ReadPara", 9);
+            }
+
+            if (Config.isMACShowChecked)
+            {
+                sendArray = StringToByteArray(Command.READ_ALL_HEADER + "31 24 01");
+                SendCmd(sendArray, "ReadPara", 9);
+            }
+
+            if (Config.isQRCodeChecked)
+            {
+                sendArray = StringToByteArray(Command.READ_ALL_HEADER + "31 25 01");
+                SendCmd(sendArray, "ReadPara", 9);
+            }
+
+            if (Config.isLogoPrintControlhecked)
+            {
+                sendArray = StringToByteArray(Command.READ_ALL_HEADER + "31 20 01");
+                SendCmd(sendArray, "ReadPara", 9);
+            }
+
+            if (Config.isDIPSwitchChecked)
+            {
+                sendArray = StringToByteArray(Command.READ_ALL_HEADER + "31 34 01");
+                SendCmd(sendArray, "ReadPara", 9);
+            }
+
+            //最後發送DIP值讀取命令
+            sendArray = StringToByteArray(Command.READ_ALL_HEADER + "31 35 01");
+            SendCmd(sendArray, "ReadPara", 9);
+
         }
         #endregion
 
         #region 參數設置所有欄位設定內容
-        public void setParaColumn(byte[] data) {
+        public void setParaColumn(byte[] data)
+        {
             string receiveData = BitConverter.ToString(data);
             Console.WriteLine(receiveData);
-            
+
             if (receiveData.Contains(Command.RE_IP_CLASSFY))
             {
-                checkIsGetData(SetIPText,null,data, "设置IP地址",false,0);
+                checkIsGetData(SetIPText, null, data, "设置IP地址", false, 0);
             }
 
             if (receiveData.Contains(Command.RE_GATEWAY_CLASSFY))
@@ -343,8 +560,8 @@ namespace PirnterUtility
             }
 
             if (receiveData.Contains(Command.RE_AUTODISCONNECT_CLASSFY))
-            {  
-                checkIsGetData(null,AutoDisconnectCom, data, "自动断线时间", false, 1);
+            {
+                checkIsGetData(null, AutoDisconnectCom, data, "自动断线时间", false, 1);
             }
 
             if (receiveData.Contains(Command.RE_CLIENTCOUNT_CLASSFY))
@@ -354,7 +571,7 @@ namespace PirnterUtility
 
             if (receiveData.Contains(Command.RE_NETWORK_SPEED_CLASSFY))
             {
-                checkIsGetData(null, EthernetSpeedCom,data, "网口通讯速度", false, 1);
+                checkIsGetData(null, EthernetSpeedCom, data, "网口通讯速度", false, 1);
             }
 
             if (receiveData.Contains(Command.RE_DHCP_MODE_CLASSFY))
@@ -372,19 +589,20 @@ namespace PirnterUtility
                 checkIsGetData(null, USBFixedCom, data, "USB端口", false, 1);
             }
 
-            //因為代碼頁要判斷收到的選項很多所以不共用checkIsGetData(
             if (receiveData.Contains(Command.RE_CODEPAGE_CLASSFY))
             {
-                string code=receiveData.Substring(receiveData.Length - 2, 2); //取得收到hex string
-                List<string> codeList= CodePage.getCodePageList();
-                int index=99; //設這個數代表沒有符合的選項就是讀取不到資料
-                for(int i=0;i<codeList.Count;i++)
+                string code = receiveData.Substring(receiveData.Length - 2, 2); //取得收到hex string
+                List<string> codeList = CodePage.getCodePageList();
+                int index = 99; //設這個數代表沒有符合的選項就是讀取不到資料
+                for (int i = 0; i < codeList.Count; i++)
                 { //取得的會是個位數，前面要補0否則比對會有錯
                     string getItemCode = codeList[i].Split(':')[0];
-                    if (getItemCode.Length < 2) {
+                    if (getItemCode.Length < 2)
+                    {
                         getItemCode = "0" + getItemCode;
                     }
-                    if (getItemCode.Contains(code)) {
+                    if (getItemCode.Contains(code))
+                    {
                         index = i;
                         break;
                     }
@@ -393,9 +611,9 @@ namespace PirnterUtility
                 {
                     CodePageCom.SelectedIndex = index;
                 }
-                else {
-                    SysStatusText.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFEF7171")); ;
-                    SysStatusText.Text = "设置代码页" + FindResource("NotReadParameterYet") as string;
+                else
+                {
+                    setSysStatusColorAndText("设置代码页" + FindResource("NotReadParameterYet") as string, "#FFEF7171");
                 }
             }
 
@@ -414,11 +632,163 @@ namespace PirnterUtility
                 checkIsGetData(null, CustomziedFontCom, data, "定制字体", false, 1);
             }
 
+            if (receiveData.Contains(Command.RE_DIRECTION_CLASSFY))
+            {
+                checkIsGetData(null, DirectionCombox, data, "走纸方向", false, 1);
+            }
+
+            if (receiveData.Contains(Command.RE_MOTOR_ACC_CONTROL_CLASSFY))
+            {
+                checkIsGetData(null, MotorAccControlCom, data, "马达加速", false, 1);
+            }
+
+            if (receiveData.Contains(Command.RE_MOTOR_ACC_CLASSFY))
+            {
+                switch (byteToIntForOneByte(data))
+                {
+                    case 10:
+                        AccMotorCom.SelectedIndex = 0;
+                        break;
+                    case 8:
+                        AccMotorCom.SelectedIndex = 1;
+                        break;
+                    case 6:
+                        AccMotorCom.SelectedIndex = 2;
+                        break;
+                    case 4:
+                        AccMotorCom.SelectedIndex = 3;
+                        break;
+                    case 2:
+                        AccMotorCom.SelectedIndex = 4;
+                        break;
+
+                    default:
+                        setSysStatusColorAndText("马达加速度" + FindResource("NotReadParameterYet") as string, "#FFEF7171");
+                        break;
+                }
+
+            }
+
+            if (receiveData.Contains(Command.RE_PRINT_SPEED_CLASSFY))
+            {
+                //checkIsGetData(null, PrintSpeedCom, data, "马达加速", false, 1);
+                string speed = hexStringToInt(receiveData).ToString();
+                switch (speed)
+                {
+                    case "200":
+                        PrintSpeedCom.SelectedIndex = 0;
+                        break;
+                    case "250":
+                        PrintSpeedCom.SelectedIndex = 1;
+                        break;
+                    case "300":
+                        PrintSpeedCom.SelectedIndex = 2;
+                        break;
+                    default:
+                        setSysStatusColorAndText("打印速度" + FindResource("NotReadParameterYet") as string, "#FFEF7171");
+                        break;
+                }
+
+            }
+
+            if (receiveData.Contains(Command.RE_DENSITY_MODE_CLASSFY))
+            {
+                checkIsGetData(null, DensityModeCom, data, "浓度模式", false, 1);
+            }
+
+            if (receiveData.Contains(Command.RE_DENSITY_CLASSFY))
+            {
+                checkIsGetData(null, DensityCom, data, "浓度调节", true, 10);
+            }
+
+            if (receiveData.Contains(Command.RE_PAPEROUT_CLASSFY))
+            {
+                checkIsGetData(null, PaperOutReprintCom, data, "纸尽重打", false, 1);
+            }
+
+            if (receiveData.Contains(Command.RE_PAPERWIDTH_CLASSFY))
+            {
+                checkIsGetData(null, PaperWidthCom, data, "打印纸宽", false, 1);
+            }
+
+            if (receiveData.Contains(Command.RE_HEADCLOSE_CUT_CLASSFY))
+            {
+                checkIsGetData(null, HeadCloseCutCom, data, "合盖后自动切纸", false, 1);
+            }
+
+            if (receiveData.Contains(Command.RE_YOFFSET_CLASSFY))
+            {
+                checkIsGetData(null, YOffsetCom, data, "垂直移动单位", false, 1);
+            }
+
+            if (receiveData.Contains(Command.RE_MACSHOW_CLASSFY))
+            {
+                checkIsGetData(null, MACShowCom, data, "MAC地址显示", false, 1);
+            }
+
+            if (receiveData.Contains(Command.RE_QRCODE_CLASSFY))
+            {
+                checkIsGetData(null, QRCodeCom, data, "二维码功能", false, 1);
+            }
+
+            if (receiveData.Contains(Command.RE_LOGOPRINT_CLASSFY))
+            {
+                checkIsGetData(null, LogoPrintControlCom, data, "自检页LOGO设置", false, 1);
+            }
+
+            if (receiveData.Contains(Command.RE_DIPSW_CLASSFY))
+            {
+                checkIsGetData(null, DIPSwitchCom, data, "DIP开关", false, 1);
+            }
+
+            if (receiveData.Contains(Command.RE_DIPVALUE_CLASSFY))
+            {
+                byte[] bytes = new byte[1];
+                bytes[0] = data[data.Length - 1];
+                BitArray diparray = new BitArray(bytes);
+                //前五個選項因為0(false)代表有選，設定給checkbox時會剛好相反，所以這邊取反
+                for (int i = 0; i < diparray.Length - 2; i++)
+                {
+                    if (diparray[i] == true)
+                    {
+                        diparray[i] = false;
+                    }
+                    else
+                    {
+                        diparray[i] = true;
+                    }
+                }
+                CutterCheckBox.IsChecked = diparray[0];
+                BeepCheckBox.IsChecked = diparray[1];
+                DensityCheckBox.IsChecked = diparray[2];
+                ChineseForbiddenCheckBox.IsChecked = diparray[3];
+                CharNumberCheckBox.IsChecked = diparray[4];
+                CashboxCheckBox.IsChecked = diparray[5];
+
+                string binary = Convert.ToInt32(diparray.Get(6)).ToString() + Convert.ToInt32(diparray.Get(7)).ToString();
+                switch (binary)
+                {
+                    case "11": //19200
+                        DIPBaudRateCom.SelectedIndex = 0;
+                        break;
+                    case "10": //9600
+                        DIPBaudRateCom.SelectedIndex = 1;
+                        break;
+                    case "01": //115200
+                        DIPBaudRateCom.SelectedIndex = 2;
+                        break;
+                    case "00": //38400
+                        DIPBaudRateCom.SelectedIndex = 3;
+                        break;
+                }
+                Console.WriteLine(binary);
+            }
         }
         #endregion
 
         #region 判斷參數設定欄位是否取得資料
-        private void checkIsGetData(TextBox SelectedText, ComboBox SelectedCom,byte[] data,string msg,bool isSubtractOne,int itemFinalNo) {
+        private void checkIsGetData(TextBox SelectedText, ComboBox SelectedCom, byte[] data, string msg, bool isSubtractOne, int itemFinalNo)
+        {
             if (SelectedText != null) //判斷ip和gateway是否讀取到資料
             {
                 if (byteArraytoIPV4(data, 8) != "")
@@ -427,35 +797,43 @@ namespace PirnterUtility
                 }
                 else
                 {
-                    SysStatusText.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFEF7171")); ;
-                    SysStatusText.Text = msg + FindResource("NotReadParameterYet") as string;
+                    setSysStatusColorAndText(msg + FindResource("NotReadParameterYet") as string, "#FFEF7171");
                 }
             }
-            else if(SelectedCom !=null) //判斷combobox是否讀取到資料
+            else if (SelectedCom != null) //判斷combobox是否讀取到資料
             {
-                if (isSubtractOne) { //index 從1開始者
-                    if (byteToInt(data) >= 1 && byteToInt(data) <= itemFinalNo)
+                if (isSubtractOne)
+                { //index 從1開始者
+                    if (byteToIntForOneByte(data) >= 1 && byteToIntForOneByte(data) <= itemFinalNo)
                     {
-                        SelectedCom.SelectedIndex = byteToInt(data)-1;
+                        SelectedCom.SelectedIndex = byteToIntForOneByte(data) - 1;
                     }
                     else
                     {
-                        SysStatusText.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFEF7171")); ;
-                        SysStatusText.Text = msg + FindResource("NotReadParameterYet") as string;
+                        setSysStatusColorAndText(msg + FindResource("NotReadParameterYet") as string, "#FFEF7171");
                     }
 
-                } else {//index 從0開始者
-                    if (byteToInt(data) >= 0 && byteToInt(data) <= itemFinalNo)
+                }
+                else
+                {//index 從0開始者
+                    if (byteToIntForOneByte(data) >= 0 && byteToIntForOneByte(data) <= itemFinalNo)
                     {
-                        SelectedCom.SelectedIndex = byteToInt(data);
+                        SelectedCom.SelectedIndex = byteToIntForOneByte(data);
                     }
                     else
                     {
-                        SysStatusText.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFEF7171")); ;
-                        SysStatusText.Text = msg + FindResource("NotReadParameterYet") as string;
+                        setSysStatusColorAndText(msg + FindResource("NotReadParameterYet") as string, "#FFEF7171");
                     }
-                }              
-            }                   
+                }
+            }
+        }
+        #endregion
+
+        #region 狀態列設定文字與顏色
+        private void setSysStatusColorAndText(string msg, string color)
+        {
+            SysStatusText.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString(color));
+            SysStatusText.Text = msg;
         }
 
         #endregion
@@ -468,7 +846,7 @@ namespace PirnterUtility
             byte[] sendArray = StringToByteArray(Command.RS232_COMMUNICATION_TEST);
             if ((bool)rs232Checkbox.IsChecked)
             {
-                SerialPortConnect("CommunicationTest", sendArray,0);
+                SerialPortConnect("CommunicationTest", sendArray, 0);
             }
 
         }
@@ -482,7 +860,7 @@ namespace PirnterUtility
             {
 
                 case "RS232":
-                    SerialPortConnect("BeepOrSetting", sendArray,0);
+                    SerialPortConnect("BeepOrSetting", sendArray, 0);
                     break;
                 case "USB":
 
@@ -506,7 +884,7 @@ namespace PirnterUtility
         #region 寫入所有參數設定
         private void WriteAllBtn_Click(object sender, RoutedEventArgs e)
         {
-            
+
         }
         #endregion
 
@@ -523,7 +901,7 @@ namespace PirnterUtility
                 switch (DeviceType)
                 {
                     case "RS232":
-                        SerialPortConnect("BeepOrSetting", sendArray,0);
+                        SerialPortConnect("BeepOrSetting", sendArray, 0);
                         break;
                     case "USB":
 
@@ -584,7 +962,7 @@ namespace PirnterUtility
             string hexMac6 = mac6.ToString("X2");
 
             //寫入MAC Address
-            sendArray = StringToByteArray(Command.MAC_ADDRESS_SETTING_HEADER + "00 47 50" + hexMac4+ hexMac5+ hexMac6);
+            sendArray = StringToByteArray(Command.MAC_ADDRESS_SETTING_HEADER + "00 47 50" + hexMac4 + hexMac5 + hexMac6);
             SetMACText.Text = "00:47:50:" + hexMac4 + ":" + hexMac5 + ":" + hexMac6;
             switch (DeviceType)
             {
@@ -1687,7 +2065,7 @@ namespace PirnterUtility
         #endregion
 
         #region RS232傳送資料
-        private void SerialPortConnect(string dataType, byte[] data,int receiveLength)
+        private void SerialPortConnect(string dataType, byte[] data, int receiveLength)
         {
             RS232Connect.CloseSerialPort();
             if (RS232PortName != null)
@@ -1708,7 +2086,7 @@ namespace PirnterUtility
                                     switch (dataType)
                                     {
                                         case "ReadPara":
-                                            
+
                                             setParaColumn(RS232Connect.mRecevieData);
                                             break;
                                     }
@@ -1765,11 +2143,13 @@ namespace PirnterUtility
         #endregion
 
         #region byte array to IPV4
-        public string byteArraytoIPV4(byte[]  data,int startindex) {
+        public string byteArraytoIPV4(byte[] data, int startindex)
+        {
             byte[] IPV4 = new byte[4];
-           
-            for (int i = 0; i < 4; i++) {
-                IPV4[i] = data[startindex+i];
+
+            for (int i = 0; i < 4; i++)
+            {
+                IPV4[i] = data[startindex + i];
             }
             IPAddress ip = new IPAddress(IPV4);
             return ip.ToString();
@@ -1786,18 +2166,29 @@ namespace PirnterUtility
             {
                 hexArray[i] = data[startindex + i];
             }
-            string maxHex=BitConverter.ToString(hexArray).Replace("-", ":");
+            string maxHex = BitConverter.ToString(hexArray).Replace("-", ":");
             return maxHex;
 
         }
         #endregion
 
-        #region byte to int
-        public int byteToInt(byte[] data)
+        #region one byte to int
+        public int byteToIntForOneByte(byte[] data)
         {
-            byte convert=data[data.Length-1];
+            byte convert = data[data.Length - 1];
             int intValue = Convert.ToInt32(convert);
-           
+
+            return intValue;
+
+        }
+        #endregion
+
+        #region hex string to int
+        public int hexStringToInt(string data)
+        {
+            string hex = data.Replace("-", "");
+            hex = hex.Substring(hex.Length - 4, 4);
+            int intValue = Convert.ToInt32(hex, 16);
             return intValue;
 
         }
@@ -1806,11 +2197,12 @@ namespace PirnterUtility
         //========================不同通道傳送命令===========================
 
         #region 不同通道傳送命令
-        public void SendCmd(byte[] sendArray, string sendType,int length) {
+        public void SendCmd(byte[] sendArray, string sendType, int length)
+        {
             switch (DeviceType)
             {
                 case "RS232":
-                    SerialPortConnect(sendType, sendArray,length);
+                    SerialPortConnect(sendType, sendArray, length);
                     break;
                 case "USB":
 
@@ -1821,7 +2213,7 @@ namespace PirnterUtility
             }
         }
         #endregion
-        
+
         //=========================RS232 port search and get=====================
 
         #region 取得rs232 port
@@ -2096,6 +2488,6 @@ namespace PirnterUtility
 
         }
 
-       
+
     }
 }

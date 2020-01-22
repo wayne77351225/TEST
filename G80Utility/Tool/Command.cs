@@ -205,6 +205,50 @@ namespace G80Utility.Tool
         //收到設置定制字型的命令分類
         public static string RE_CUSTOMFONT_CLASSFY = "31-29";
 
+        //收到設置走紙方向的命令分類
+        public static string RE_DIRECTION_CLASSFY = "31-13";
+
+        //收到設置馬達加速與否的命令分類
+        public static string RE_MOTOR_ACC_CONTROL_CLASSFY = "31-14";
+
+        //收到設置馬達加速度的命令分類
+        public static string RE_MOTOR_ACC_CLASSFY = "31-15";
+
+        //收到設置打印速度的命令分類
+        public static string RE_PRINT_SPEED_CLASSFY = "31-31";
+
+        //收到設置濃度模式的命令分類
+        public static string RE_DENSITY_MODE_CLASSFY = "31-26";
+
+        //收到設置濃度調節的命令分類
+        public static string RE_DENSITY_CLASSFY = "31-27";
+
+        //收到紙盡重打的命令分類
+        public static string RE_PAPEROUT_CLASSFY = "31-21";
+
+        //收到打印紙寬的命令分類
+        public static string RE_PAPERWIDTH_CLASSFY = "31-30";
+
+        //收到合蓋後自動切紙的命令分類
+        public static string RE_HEADCLOSE_CUT_CLASSFY = "31-17";
+
+        //收到垂直移動單位的命令分類
+        public static string RE_YOFFSET_CLASSFY = "31-18";
+
+        //收到mac地址顯示的命令分類
+        public static string RE_MACSHOW_CLASSFY = "31-24";
+
+        //收到二維碼功能的命令分類
+        public static string RE_QRCODE_CLASSFY = "31-25";
+
+        //收到自檢頁logo設置的命令分類
+        public static string RE_LOGOPRINT_CLASSFY = "31-20";
+
+        //收到dip開關的命令分類
+        public static string RE_DIPSW_CLASSFY = "31-34";
+
+        //收到dip值的命令分類
+        public static string RE_DIPVALUE_CLASSFY = "31-35";
     }
 }
 
