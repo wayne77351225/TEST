@@ -193,7 +193,17 @@ namespace G80Utility.Tool
         //收到USB端口的命令分類
         public static string RE_USB_FIX_CLASSFY = "30-18";
 
+        //收到設置代碼頁的命令分類
+        public static string RE_CODEPAGE_CLASSFY = "31-36";
 
+        //收到設置語言的命令分類
+        public static string RE_LANGUAGES_CLASSFY = "31-28";
+
+        //收到設置FONTB的命令分類
+        public static string RE_FONTB_CLASSFY = "31-23";
+
+        //收到設置定制字型的命令分類
+        public static string RE_CUSTOMFONT_CLASSFY = "31-29";
 
     }
 }

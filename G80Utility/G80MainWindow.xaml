@@ -262,7 +262,7 @@
                                         <ComboBox  Margin="0,0,10,0" Name="CodePageCom" Width="130" Height="28" Text="IP Address" Foreground="#BDBDBD"/>
                                         <Button  Margin="0,0,10,0" Name="CodePageSetBtn" Click="CodePageSetBtn_Click" Content="设置代码页" Padding="10,5,10,5" Width="130" Height="28"/>
                                         <Button  Margin="0,0,10,0" Name="CodePagePrintBtn" Click="CodePagePrintBtn_Click"  Content="打印代码页" Padding="10,5,10,5" Width="130" Height="28"/>
-                                        <CheckBox VerticalAlignment="Center" IsChecked="True"/>
+                                        <CheckBox VerticalAlignment="Center" IsChecked="True" Name="CodePageSetCheckbox"/>
                                     </StackPanel>
                                 </GroupBox>
                                 <!--column1-->
@@ -277,7 +277,7 @@
                                             <ComboBoxItem>日文JIS</ComboBoxItem>
                                         </ComboBox>
                                         <Button  Margin="0,0,5,0" Content="语言设置" Padding="10,5,10,5" Width="100" Name="LanguageSetBtn" Click="LanguageSetBtn_Click"/>
-                                        <CheckBox VerticalAlignment="Center" IsChecked="True"/>
+                                        <CheckBox VerticalAlignment="Center" IsChecked="True" Name="LanguageSetCheckbox"/>
                                     </StackPanel>
                                     <StackPanel  Margin="0,0,0,10" Orientation="Horizontal">
                                         <ComboBox  Margin="0,0,5,0" Width="100" Height="26" Name="FontBSettingCom" Foreground="#BDBDBD">
@@ -285,7 +285,7 @@
                                             <ComboBoxItem>支持</ComboBoxItem>
                                         </ComboBox>
                                         <Button  Margin="0,0,5,0" Content="FontB字体" Name="FontBSettingBtn" Padding="10,5,10,5" Width="100" Click="FontBSettingBtn_Click"/>
-                                        <CheckBox VerticalAlignment="Center" IsChecked="True"/>
+                                        <CheckBox VerticalAlignment="Center" IsChecked="True" Name="FontBSettingCheckbox" />
                                     </StackPanel>
                                     <StackPanel  Margin="0,0,0,10" Orientation="Horizontal">
                                         <ComboBox  Margin="0,0,5,0" Name="CustomziedFontCom" Width="100" Height="26" Foreground="#BDBDBD">
@@ -293,7 +293,7 @@
                                             <ComboBoxItem>启用</ComboBoxItem>
                                         </ComboBox>
                                         <Button  Margin="0,0,5,0" Name="CustomziedFontBtn" Click="CustomziedFontBtn_Click" Content="定制字体" Padding="10,5,10,5" Width="100"/>
-                                        <CheckBox VerticalAlignment="Center" IsChecked="True"/>
+                                        <CheckBox VerticalAlignment="Center" IsChecked="True" Name="CustomziedFontCheckbox" />
                                     </StackPanel>
                                     <StackPanel  Margin="0,0,0,10" Orientation="Horizontal">
                                         <ComboBox  Margin="0,0,5,0" Width="100" Height="26"  Foreground="#BDBDBD" Name="DirectionCombox">

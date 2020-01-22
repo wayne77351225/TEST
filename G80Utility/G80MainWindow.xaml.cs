@@ -190,6 +190,41 @@ namespace PirnterUtility
                 Config.isUSBFixedChecked = false;
             }
 
+            if (CodePageSetCheckbox.IsChecked == true)
+            {
+                Config.isCodePageSetChecked = true;
+            }
+            else
+            {
+                Config.isCodePageSetChecked = false;
+            }
+
+            if (LanguageSetCheckbox.IsChecked == true)
+            {
+                Config.isLanguageSetChecked = true;
+            }
+            else
+            {
+                Config.isLanguageSetChecked = false;
+            }
+
+            if (FontBSettingCheckbox.IsChecked == true)
+            {
+                Config.isFontBSettingChecked = true;
+            }
+            else
+            {
+                Config.isFontBSettingChecked = false;
+            }
+
+            if (CustomziedFontCheckbox.IsChecked == true)
+            {
+                Config.isCustomziedFontChecked = true;
+            }
+            else
+            {
+                Config.isCustomziedFontChecked = false;
+            }
 
         }
         #endregion
@@ -251,7 +286,31 @@ namespace PirnterUtility
                 sendArray = StringToByteArray(Command.READ_ALL_HEADER + "30 18 01");
                 SendCmd(sendArray, "ReadPara", 9);
             }
-           
+
+            if (Config.isCodePageSetChecked)
+            {
+                sendArray = StringToByteArray(Command.READ_ALL_HEADER + "31 36 01");
+                SendCmd(sendArray, "ReadPara", 9);
+            }
+
+            if (Config.isLanguageSetChecked)
+            {
+                sendArray = StringToByteArray(Command.READ_ALL_HEADER + "31 28 01");
+                SendCmd(sendArray, "ReadPara", 9);
+            }
+
+            if (Config.isFontBSettingChecked)
+            {
+                sendArray = StringToByteArray(Command.READ_ALL_HEADER + "31 23 01");
+                SendCmd(sendArray, "ReadPara", 9);
+            }
+
+            if (Config.isCustomziedFontChecked)
+            {
+                sendArray = StringToByteArray(Command.READ_ALL_HEADER + "31 29 01");
+                SendCmd(sendArray, "ReadPara", 9);
+            }
+
         }
         #endregion
 
@@ -279,8 +338,9 @@ namespace PirnterUtility
                     SysStatusText.Text = "设置MAC地址" + FindResource("NotReadParameterYet") as string;
                 }
             }
+
             if (receiveData.Contains(Command.RE_AUTODISCONNECT_CLASSFY))
-            {
+            {  
                 checkIsGetData(null,AutoDisconnectCom, data, "自动断线时间");
             }
             if (receiveData.Contains(Command.RE_CLIENTCOUNT_CLASSFY))
@@ -295,14 +355,24 @@ namespace PirnterUtility
                     SysStatusText.Text = "网络连接数量" + FindResource("NotReadParameterYet") as string;
                 }
             }
+
             if (receiveData.Contains(Command.RE_NETWORK_SPEED_CLASSFY))
             {
                 checkIsGetData(null, EthernetSpeedCom,data, "网口通讯速度");
             }
             if (receiveData.Contains(Command.RE_DHCP_MODE_CLASSFY))
-            {               
-                checkIsGetData(null, DHCPModeCom, data, "DHCP模式");
+            {              
+                if (byteToInt(data) >= 0 && byteToInt(data) <= 3)
+                {
+                    DHCPModeCom.SelectedIndex = byteToInt(data);
+                }
+                else
+                {
+                    SysStatusText.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFEF7171")); ;
+                    SysStatusText.Text = "DHCP模式" + FindResource("NotReadParameterYet") as string;
+                }
             }
+
             if (receiveData.Contains(Command.RE_USB_MODE_CLASSFY))
             {
                 checkIsGetData(null, USBModeCom, data, "USB模式");
@@ -311,6 +381,57 @@ namespace PirnterUtility
             {
                 checkIsGetData(null, USBFixedCom, data, "USB端口");
             }
+
+            //因為代碼頁要判斷收到的選項很多所以不共用checkIsGetData(
+            if (receiveData.Contains(Command.RE_CODEPAGE_CLASSFY))
+            {
+                string code=receiveData.Substring(receiveData.Length - 2, 2); //取得收到hex string
+                List<string> codeList= CodePage.getCodePageList();
+                int index=99; //設這個數代表沒有符合的選項就是讀取不到資料
+                for(int i=0;i<codeList.Count;i++)
+                { //取得的會是個位數，前面要補0否則比對會有錯
+                    string getItemCode = codeList[i].Split(':')[0];
+                    if (getItemCode.Length < 2) {
+                        getItemCode = "0" + getItemCode;
+                    }
+                    if (getItemCode.Contains(code)) {
+                        index = i;
+                        break;
+                    }
+                }
+                if (index != 99)
+                {
+                    CodePageCom.SelectedIndex = index;
+                }
+                else {
+                    SysStatusText.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFEF7171")); ;
+                    SysStatusText.Text = "设置代码页" + FindResource("NotReadParameterYet") as string;
+                }
+            }
+
+            if (receiveData.Contains(Command.RE_LANGUAGES_CLASSFY))
+            {
+                if (byteToInt(data) >= 1 && byteToInt(data) <= 6)
+                {
+                    LanguageSetCom.SelectedIndex = byteToInt(data) - 1; //因為這邊要-1所以不共用checkIsGetData()
+                }
+                else
+                {
+                    SysStatusText.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFEF7171")); ;
+                    SysStatusText.Text = "语言设置" + FindResource("NotReadParameterYet") as string;
+                }
+            }
+
+            if (receiveData.Contains(Command.RE_FONTB_CLASSFY))
+            {
+                checkIsGetData(null, FontBSettingCom, data, "FontB字体");
+            }
+
+            if (receiveData.Contains(Command.RE_CUSTOMFONT_CLASSFY))
+            {
+                checkIsGetData(null, CustomziedFontCom, data, "定制字体");
+            }
+
         }
         #endregion
 
@@ -702,7 +823,7 @@ namespace PirnterUtility
                 HexCode = HexCode.Split(':')[0];
                 if (HexCode.Length < 2)
                 {
-                    HexCode = HexCode + "0";
+                    HexCode = "0" + HexCode;
                 }
                 byte[] sendArray = StringToByteArray(Command.CODEPAGE_SETTING_HEADER + HexCode);
                 switch (DeviceType)
@@ -1675,14 +1796,12 @@ namespace PirnterUtility
         }
         #endregion
 
-
         #region byte to int
         public int byteToInt(byte[] data)
         {
             byte convert=data[data.Length-1];
             int intValue = Convert.ToInt32(convert);
-
-            
+           
             return intValue;
 
         }

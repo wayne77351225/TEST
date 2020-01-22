@@ -16,5 +16,15 @@ namespace G80Utility.Tool
         public static bool isDHCPModeChecked;
         public static bool isUSBModeChecked;
         public static bool isUSBFixedChecked;
+        public static bool isCodePageSetChecked;
+
+        public static bool isLanguageSetChecked;
+        public static bool isFontBSettingChecked;
+        public static bool isCustomziedFontChecked;
+        //public static bool isCodePageSetChecked;
+        //public static bool isCodePageSetChecked;
+        //public static bool isCodePageSetChecked;
+        //public static bool isCodePageSetChecked;
+        //public static bool isCodePageSetChecked;
     }
 }
