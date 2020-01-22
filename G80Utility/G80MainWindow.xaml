@@ -171,24 +171,24 @@
                             </GroupBox>
                             <!--通讯参数设置-->
                             <GroupBox Header="通讯参数设置" Margin="5,0,0,0" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14" Width="270">
-                                <StackPanel Margin="10,5,5,5">
+                                <StackPanel Margin="3,5,5,5">
                                     <StackPanel  Margin="0,0,0,6" Orientation="Horizontal">
-                                        <TextBox  Margin="0,0,5,0" Name="SetIPText" Width="110" Height="26"  Foreground="#BDBDBD"/>
+                                        <TextBox  Margin="0,0,5,0" Name="SetIPText" Width="117" Height="26"  Foreground="#BDBDBD"/>
                                         <Button  Margin="0,0,5,0" Name="SetIPBtn" Click="SetIPBtn_Click" Content="设置IP地址" Padding="10,5,10,5" Width="110"/>
                                         <CheckBox VerticalAlignment="Center" IsChecked="True" Name="SetIPCheckbox" />
                                     </StackPanel>
                                     <StackPanel  Margin="0,0,0,6" Orientation="Horizontal">
-                                        <TextBox  Margin="0,0,5,0" Name="SetGatewayText" Width="110" Height="26"  Foreground="#BDBDBD"/>
+                                        <TextBox  Margin="0,0,5,0" Name="SetGatewayText" Width="117" Height="26"  Foreground="#BDBDBD"/>
                                         <Button  Margin="0,0,5,0" Name="SetGatewayBtn"  Click="SetGatewayBtn_Click" Content="设置网关地址" Padding="10,5,10,5" Width="110"/>
                                         <CheckBox VerticalAlignment="Center" IsChecked="True" Name="SetGatewayCheckbox"/>
                                     </StackPanel>
                                     <StackPanel  Margin="0,0,0,6" Orientation="Horizontal">
-                                        <TextBox  Margin="0,0,5,0" Name="SetMACText" Width="110" Height="26"  Foreground="#BDBDBD" IsEnabled="False"/>
+                                        <TextBox  Margin="0,0,5,0" Name="SetMACText" Width="117" Height="26"  Foreground="#BDBDBD" IsEnabled="False"/>
                                         <Button  Margin="0,0,5,0" Name="SetMACBtn" Click="SetMACBtn_Click" Content="设置MAC地址" Padding="10,5,10,5" Width="110"/>
                                         <CheckBox VerticalAlignment="Center" IsChecked="True" Name="SetMACCheckbox"/>
                                     </StackPanel>
                                     <StackPanel  Margin="0,0,0,6" Orientation="Horizontal">
-                                        <ComboBox  Margin="0,0,5,0" Width="110" Name="AutoDisconnectCom" Height="26" Foreground="#BDBDBD">
+                                        <ComboBox  Margin="0,0,5,0" Width="117" Name="AutoDisconnectCom" Height="26" Foreground="#BDBDBD">
                                             <ComboBoxItem>无</ComboBoxItem>
                                             <ComboBoxItem>1分钟</ComboBoxItem>
                                             <ComboBoxItem>2分钟</ComboBoxItem>
@@ -200,7 +200,7 @@
                                         <CheckBox VerticalAlignment="Center" IsChecked="True" Name="AutoDisconnectheckbox"/>
                                     </StackPanel>
                                     <StackPanel  Margin="0,0,0,6" Orientation="Horizontal">
-                                        <ComboBox  Margin="0,0,5,0" Name="ConnectClientCom" Width="110" Height="26" Foreground="#BDBDBD">
+                                        <ComboBox  Margin="0,0,5,0" Name="ConnectClientCom" Width="117" Height="26" Foreground="#BDBDBD">
                                             <ComboBoxItem>1个</ComboBoxItem>
                                             <ComboBoxItem>2个</ComboBoxItem>
                                         </ComboBox>
@@ -208,7 +208,7 @@
                                         <CheckBox VerticalAlignment="Center" IsChecked="True" Name="ConnectClientbox"/>
                                     </StackPanel>
                                     <StackPanel  Margin="0,0,0,6" Orientation="Horizontal">
-                                        <ComboBox  Margin="0,0,5,0" Name="EthernetSpeedCom" Width="110" Height="26" Foreground="#BDBDBD">
+                                        <ComboBox  Margin="0,0,5,0" Name="EthernetSpeedCom" Width="117" Height="26" Foreground="#BDBDBD">
                                             <ComboBoxItem>10Base</ComboBoxItem>
                                             <ComboBoxItem>10Base/100Base</ComboBoxItem>
                                         </ComboBox>
@@ -216,7 +216,7 @@
                                         <CheckBox VerticalAlignment="Center" IsChecked="True"  Name="EthernetSpeedCheckbox"/>
                                     </StackPanel>
                                     <StackPanel  Margin="0,0,0,6" Orientation="Horizontal">
-                                        <ComboBox Name="DHCPModeCom"  Margin="0,0,5,0" Width="110" Height="26" Foreground="#BDBDBD">
+                                        <ComboBox Name="DHCPModeCom"  Margin="0,0,5,0" Width="117" Height="26" Foreground="#BDBDBD">
                                             <ComboBoxItem>静态DHCP</ComboBoxItem>
                                             <ComboBoxItem>模式1</ComboBoxItem>
                                             <ComboBoxItem>模式2</ComboBoxItem>
@@ -226,7 +226,7 @@
                                         <CheckBox VerticalAlignment="Center" IsChecked="True" Name="DHCPModeCheckbox"/>
                                     </StackPanel>
                                     <StackPanel  Margin="0,0,0,6" Orientation="Horizontal">
-                                        <ComboBox Name="USBModeCom" Margin="0,0,5,0" Width="110" Height="26" Foreground="#BDBDBD">
+                                        <ComboBox Name="USBModeCom" Margin="0,0,5,0" Width="117" Height="26" Foreground="#BDBDBD">
                                             <ComboBoxItem>UTP</ComboBoxItem>
                                             <ComboBoxItem>VCOM</ComboBoxItem>
                                         </ComboBox>
@@ -234,7 +234,7 @@
                                         <CheckBox VerticalAlignment="Center" IsChecked="True" Name="USBModeCheckbox"/>
                                     </StackPanel>
                                     <StackPanel  Margin="0,0,0,0" Orientation="Horizontal">
-                                        <ComboBox  Name="USBFixedCom" Margin="0,0,5,0" Width="110" Height="26" Text="IP Address" Foreground="#BDBDBD">
+                                        <ComboBox  Name="USBFixedCom" Margin="0,0,5,0" Width="117" Height="26" Text="IP Address" Foreground="#BDBDBD">
                                             <ComboBoxItem>不固定</ComboBoxItem>
                                             <ComboBoxItem>固定</ComboBoxItem>
                                         </ComboBox>

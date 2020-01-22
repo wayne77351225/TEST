@@ -318,14 +318,17 @@ namespace PirnterUtility
         public void setParaColumn(byte[] data) {
             string receiveData = BitConverter.ToString(data);
             Console.WriteLine(receiveData);
+            
             if (receiveData.Contains(Command.RE_IP_CLASSFY))
             {
-                checkIsGetData(SetIPText,null,data, "设置IP地址");
+                checkIsGetData(SetIPText,null,data, "设置IP地址",false,0);
             }
+
             if (receiveData.Contains(Command.RE_GATEWAY_CLASSFY))
             {
-                checkIsGetData(SetGatewayText, null, data, "设置网关地址");
+                checkIsGetData(SetGatewayText, null, data, "设置网关地址", false, 0);
             }
+
             if (receiveData.Contains(Command.RE_MAC_CLASSFY))
             {
                 if (byteArraytoHexString(data, 8) != "")
@@ -341,45 +344,32 @@ namespace PirnterUtility
 
             if (receiveData.Contains(Command.RE_AUTODISCONNECT_CLASSFY))
             {  
-                checkIsGetData(null,AutoDisconnectCom, data, "自动断线时间");
+                checkIsGetData(null,AutoDisconnectCom, data, "自动断线时间", false, 1);
             }
+
             if (receiveData.Contains(Command.RE_CLIENTCOUNT_CLASSFY))
             {
-                if (byteToInt(data) == 0 || byteToInt(data) == 1)
-                {
-                    ConnectClientCom.SelectedIndex = byteToInt(data) - 1; //因為這邊要-1所以不共用checkIsGetData()
-                }
-                else
-                {
-                    SysStatusText.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFEF7171")); ;
-                    SysStatusText.Text = "网络连接数量" + FindResource("NotReadParameterYet") as string;
-                }
+                checkIsGetData(null, ConnectClientCom, data, "网络连接数量", true, 2);
             }
 
             if (receiveData.Contains(Command.RE_NETWORK_SPEED_CLASSFY))
             {
-                checkIsGetData(null, EthernetSpeedCom,data, "网口通讯速度");
+                checkIsGetData(null, EthernetSpeedCom,data, "网口通讯速度", false, 1);
             }
+
             if (receiveData.Contains(Command.RE_DHCP_MODE_CLASSFY))
-            {              
-                if (byteToInt(data) >= 0 && byteToInt(data) <= 3)
-                {
-                    DHCPModeCom.SelectedIndex = byteToInt(data);
-                }
-                else
-                {
-                    SysStatusText.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFEF7171")); ;
-                    SysStatusText.Text = "DHCP模式" + FindResource("NotReadParameterYet") as string;
-                }
+            {
+                checkIsGetData(null, DHCPModeCom, data, "DHCP模式", false, 3);
             }
 
             if (receiveData.Contains(Command.RE_USB_MODE_CLASSFY))
             {
-                checkIsGetData(null, USBModeCom, data, "USB模式");
+                checkIsGetData(null, USBModeCom, data, "USB模式", false, 1);
             }
+
             if (receiveData.Contains(Command.RE_USB_FIX_CLASSFY))
             {
-                checkIsGetData(null, USBFixedCom, data, "USB端口");
+                checkIsGetData(null, USBFixedCom, data, "USB端口", false, 1);
             }
 
             //因為代碼頁要判斷收到的選項很多所以不共用checkIsGetData(
@@ -411,32 +401,24 @@ namespace PirnterUtility
 
             if (receiveData.Contains(Command.RE_LANGUAGES_CLASSFY))
             {
-                if (byteToInt(data) >= 1 && byteToInt(data) <= 6)
-                {
-                    LanguageSetCom.SelectedIndex = byteToInt(data) - 1; //因為這邊要-1所以不共用checkIsGetData()
-                }
-                else
-                {
-                    SysStatusText.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFEF7171")); ;
-                    SysStatusText.Text = "语言设置" + FindResource("NotReadParameterYet") as string;
-                }
+                checkIsGetData(null, EthernetSpeedCom, data, "语言设置", true, 6);
             }
 
             if (receiveData.Contains(Command.RE_FONTB_CLASSFY))
             {
-                checkIsGetData(null, FontBSettingCom, data, "FontB字体");
+                checkIsGetData(null, FontBSettingCom, data, "FontB字体", false, 1);
             }
 
             if (receiveData.Contains(Command.RE_CUSTOMFONT_CLASSFY))
             {
-                checkIsGetData(null, CustomziedFontCom, data, "定制字体");
+                checkIsGetData(null, CustomziedFontCom, data, "定制字体", false, 1);
             }
 
         }
         #endregion
 
-        #region 判斷參數設定co欄位是否取得資料
-        private void checkIsGetData(TextBox SelectedText, ComboBox SelectedCom,byte[] data,string msg) {
+        #region 判斷參數設定欄位是否取得資料
+        private void checkIsGetData(TextBox SelectedText, ComboBox SelectedCom,byte[] data,string msg,bool isSubtractOne,int itemFinalNo) {
             if (SelectedText != null) //判斷ip和gateway是否讀取到資料
             {
                 if (byteArraytoIPV4(data, 8) != "")
@@ -451,19 +433,33 @@ namespace PirnterUtility
             }
             else if(SelectedCom !=null) //判斷combobox是否讀取到資料
             {
-                if (byteToInt(data) == 0 || byteToInt(data) == 1)
-                {
-                    SelectedCom.SelectedIndex = byteToInt(data);
-                }
-                else
-                {
-                    SysStatusText.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFEF7171")); ;
-                    SysStatusText.Text = msg + FindResource("NotReadParameterYet") as string;
-                }
+                if (isSubtractOne) { //index 從1開始者
+                    if (byteToInt(data) >= 1 && byteToInt(data) <= itemFinalNo)
+                    {
+                        SelectedCom.SelectedIndex = byteToInt(data)-1;
+                    }
+                    else
+                    {
+                        SysStatusText.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFEF7171")); ;
+                        SysStatusText.Text = msg + FindResource("NotReadParameterYet") as string;
+                    }
+
+                } else {//index 從0開始者
+                    if (byteToInt(data) >= 0 && byteToInt(data) <= itemFinalNo)
+                    {
+                        SelectedCom.SelectedIndex = byteToInt(data);
+                    }
+                    else
+                    {
+                        SysStatusText.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFEF7171")); ;
+                        SysStatusText.Text = msg + FindResource("NotReadParameterYet") as string;
+                    }
+                }              
             }                   
         }
 
         #endregion
+
         //========================Btn點擊事件===========================
 
         #region 通讯接口测试按鈕事件
