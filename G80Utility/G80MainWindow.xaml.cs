@@ -734,7 +734,7 @@ namespace PirnterUtility
 
             if (receiveData.Contains(Command.RE_AUTODISCONNECT_CLASSFY))
             {
-                checkIsGetData(null, AutoDisconnectCom, data, "自动断线时间", false, 1);
+                checkIsGetData(null, AutoDisconnectCom, data, "自动断线时间", false, 8);
             }
 
             if (receiveData.Contains(Command.RE_CLIENTCOUNT_CLASSFY))
@@ -867,6 +867,7 @@ namespace PirnterUtility
             if (receiveData.Contains(Command.RE_DENSITY_MODE_CLASSFY))
             {
                 checkIsGetData(null, DensityModeCom, data, "浓度模式", false, 1);
+
             }
 
             if (receiveData.Contains(Command.RE_DENSITY_CLASSFY))
