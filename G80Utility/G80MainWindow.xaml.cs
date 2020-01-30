@@ -530,6 +530,148 @@ namespace PirnterUtility
         }
         #endregion
 
+        #region 傳送所有寫入指令
+        private void sendALL()
+        {
+            if (Config.isSetIPChecked)
+            {
+                SetIP();
+            }
+
+            if (Config.isSetGatewayChecked)
+            {
+                SetGateway();
+            }
+
+            if (Config.isSetMacChecked)
+            {
+                SetMAC();
+            }
+
+            if (Config.isAutoDisconnectChecked)
+            {
+                AutoDisconnect();
+            }
+
+            if (Config.isConnectClientChecked)
+            {
+                ConnectClient();
+            }
+
+            if (Config.isEthernetSpeedChecked)
+            {
+                EthernetSpeed();
+            }
+
+            if (Config.isDHCPModeChecked)
+            {
+                DHCPMode();
+            }
+
+            if (Config.isUSBModeChecked)
+            {
+                USBMode();
+            }
+
+            if (Config.isUSBFixedChecked)
+            {
+                USBFixed();
+            }
+
+            if (Config.isCodePageSetChecked)
+            {
+                CodePageSet();
+            }
+
+            if (Config.isLanguageSetChecked)
+            {
+                LanguageSet();
+            }
+
+            if (Config.isFontBSettingChecked)
+            {
+                FontBSetting();
+            }
+
+            if (Config.isCustomziedFontChecked)
+            {
+                CustomziedFont();
+            }
+
+            if (Config.isDirectionChecked)
+            {
+                SetDirection();
+            }
+
+            if (Config.isMotorAccControlChecked)
+            {
+                MotorAccControl();
+            }
+
+            if (Config.isAccMotorChecked)
+            {
+                AccMotor();
+            }
+
+            if (Config.isPrintSpeedChecked)
+            {
+                PrintSpeed();
+            }
+
+            if (Config.isDensityModeChecked)
+            {
+                DensityMode();
+            }
+
+            if (Config.isDensityChecked)
+            {
+                Density();
+            }
+
+            if (Config.isPaperOutReprintChecked)
+            {
+                PaperOutReprint();
+            }
+
+            if (Config.isPaperWidthChecked)
+            {
+                PaperWidth();
+            }
+
+            if (Config.isHeadCloseCutChecked)
+            {
+                HeadCloseCut();
+            }
+
+            if (Config.isYOffsetChecked)
+            {
+                YOffset();
+            }
+
+            if (Config.isMACShowChecked)
+            {
+                MACShow();
+            }
+
+            if (Config.isQRCodeChecked)
+            {
+                QRCode();
+            }
+
+            if (Config.isLogoPrintControlhecked)
+            {
+                LogoPrintControl();
+            }
+
+            if (Config.isDIPSwitchChecked)
+            {
+                DIPSwitch();
+            }
+
+            DIPSetting();
+        }
+        #endregion
+
         //========================取得資料後設定UI=================
 
         #region 設定打印機型號/軟件版本/機器序號
@@ -835,7 +977,7 @@ namespace PirnterUtility
             {
                 if (isSubtractOne)
                 { //index 從1開始者
-                    if (byteToIntForOneByte(data) >= 1 && byteToIntForOneByte(data) <= itemFinalNo)
+                    if (byteToIntForOneByte(data) >= 1 && byteToIntForOneByte(data) <= itemFinalNo )
                     {
                         SelectedCom.SelectedIndex = byteToIntForOneByte(data) - 1;
                     }
@@ -915,7 +1057,8 @@ namespace PirnterUtility
         #region 寫入所有參數設定
         private void WriteAllBtn_Click(object sender, RoutedEventArgs e)
         {
-
+            IsParaSettingChecked();
+            sendALL();
         }
         #endregion
 
@@ -985,30 +1128,7 @@ namespace PirnterUtility
         #region 設定代碼頁按鈕事件
         private void CodePageSetBtn_Click(object sender, RoutedEventArgs e)
         {
-            if (CodePageCom.SelectedIndex != -1)
-            {
-                //取得設定代碼
-                string HexCode = CodePageCom.SelectedItem.ToString();
-                HexCode = HexCode.Split(':')[0];
-                if (HexCode.Length < 2)
-                {
-                    HexCode = "0" + HexCode;
-                }
-                byte[] sendArray = StringToByteArray(Command.CODEPAGE_SETTING_HEADER + HexCode);
-                switch (DeviceType)
-                {
-                    case "RS232":
-                        SerialPortConnect("BeepOrSetting", sendArray, 0);
-                        break;
-                    case "USB":
-
-                        break;
-                    case "Ethernet":
-
-                        break;
-                }
-            }
-            else { MessageBox.Show(FindResource("ColumnEmpty") as string); }
+            CodePageSet();
         }
         #endregion
 
@@ -1094,697 +1214,126 @@ namespace PirnterUtility
         #region 設定語言按鈕事件
         private void LanguageSetBtn_Click(object sender, RoutedEventArgs e)
         {
-
-
-            if (LanguageSetCom.SelectedIndex != -1)
-            {
-                byte[] sendArray = null;
-                switch (LanguageSetCom.SelectedIndex)
-                {
-                    case 0:
-                        sendArray = StringToByteArray(Command.LANGUAGE_SETTING_GB18030);
-                        break;
-                    case 1:
-                        sendArray = StringToByteArray(Command.LANGUAGE_SETTING_BIG5);
-                        break;
-                    case 2:
-                        sendArray = StringToByteArray(Command.LANGUAGE_SETTING_KOREAN);
-                        break;
-                    case 3:
-                        sendArray = StringToByteArray(Command.LANGUAGE_SETTING_JAPANESE);
-                        break;
-                    case 4:
-                        sendArray = StringToByteArray(Command.LANGUAGE_SETTING_SHIFT_JIS);
-                        break;
-                    case 5:
-                        sendArray = StringToByteArray(Command.LANGUAGE_SETTING_JIS);
-                        break;
-                }
-                switch (DeviceType)
-                {
-                    case "RS232":
-                        SerialPortConnect("BeepOrSetting", sendArray, 0);
-                        break;
-                    case "USB":
-
-                        break;
-                    case "Ethernet":
-
-                        break;
-                }
-            }
-            else { MessageBox.Show(FindResource("ColumnEmpty") as string); }
+            LanguageSet();
         }
         #endregion
 
         #region FontB設定按鈕事件
         private void FontBSettingBtn_Click(object sender, RoutedEventArgs e)
         {
-            if (FontBSettingCom.SelectedIndex != -1)
-            {
-                byte[] sendArray = null;
-
-                if (FontBSettingCom.SelectedIndex == 0)
-                {
-                    sendArray = StringToByteArray(Command.FONTB_OFF_SETTING);
-                }
-                else if (FontBSettingCom.SelectedIndex == 1)
-                {
-                    sendArray = StringToByteArray(Command.FONTB_ON_SETTING);
-                }
-                switch (DeviceType)
-                {
-                    case "RS232":
-                        SerialPortConnect("BeepOrSetting", sendArray, 0);
-                        break;
-                    case "USB":
-
-                        break;
-                    case "Ethernet":
-
-                        break;
-                }
-            }
-            else { MessageBox.Show(FindResource("ColumnEmpty") as string); }
+            FontBSetting();
         }
         #endregion
 
         #region 設定定制字體按鈕事件
         private void CustomziedFontBtn_Click(object sender, RoutedEventArgs e)
         {
-            if (CustomziedFontCom.SelectedIndex != -1)
-            {
-                byte[] sendArray = null;
-
-                if (CustomziedFontCom.SelectedIndex == 0)
-                {
-                    sendArray = StringToByteArray(Command.CUSTOMIZED_FONT_OFF_SETTING);
-                }
-                else if (CustomziedFontCom.SelectedIndex == 1)
-                {
-                    sendArray = StringToByteArray(Command.CUSTOMIZED_FONT_ON_SETTING);
-                }
-                switch (DeviceType)
-                {
-                    case "RS232":
-                        SerialPortConnect("BeepOrSetting", sendArray, 0);
-                        break;
-                    case "USB":
-
-                        break;
-                    case "Ethernet":
-
-                        break;
-                }
-            }
-            else { MessageBox.Show(FindResource("ColumnEmpty") as string); }
+            CustomziedFont();
         }
         #endregion
 
         #region 走紙方向按鈕事件
         private void Direction_Click(object sender, RoutedEventArgs e)
         {
-            if (DirectionCombox.SelectedIndex != -1)
-            {
-                byte[] sendArray = null;
-
-                if (DirectionCombox.SelectedIndex == 0)
-                {
-                    sendArray = StringToByteArray(Command.DIRECTION_H80250N_SETTING);
-                }
-                else if (DirectionCombox.SelectedIndex == 1)
-                {
-                    sendArray = StringToByteArray(Command.DIRECTION_80250N_SETTING);
-                }
-                switch (DeviceType)
-                {
-                    case "RS232":
-                        SerialPortConnect("BeepOrSetting", sendArray, 0);
-                        break;
-                    case "USB":
-
-                        break;
-                    case "Ethernet":
-
-                        break;
-                }
-            }
-            else { MessageBox.Show(FindResource("ColumnEmpty") as string); }
+            SetDirection();
         }
         #endregion
 
         #region 設定馬達加速開關按鈕事件
         private void MotorAccControlBtn_Click(object sender, RoutedEventArgs e)
         {
-            if (MotorAccControlCom.SelectedIndex != -1)
-            {
-                byte[] sendArray = null;
-
-                if (MotorAccControlCom.SelectedIndex == 0)
-                {
-                    sendArray = StringToByteArray(Command.ACCELERATION_OF_MOTOR_OFF_SETTING);
-                }
-                else if (MotorAccControlCom.SelectedIndex == 1)
-                {
-                    sendArray = StringToByteArray(Command.ACCELERATION_OF_MOTOR_ON_SETTING);
-                }
-                switch (DeviceType)
-                {
-                    case "RS232":
-                        SerialPortConnect("BeepOrSetting", sendArray, 0);
-                        break;
-                    case "USB":
-
-                        break;
-                    case "Ethernet":
-
-                        break;
-                }
-            }
-            else { MessageBox.Show(FindResource("ColumnEmpty") as string); }
+            MotorAccControl();
         }
         #endregion
 
         #region 設定馬達加速度按鈕事件
         private void AccMotorBtn_Click(object sender, RoutedEventArgs e)
         {
-            if (AccMotorCom.SelectedIndex != -1)
-            {
-                byte[] sendArray = null;
-
-                switch (AccMotorCom.SelectedIndex)
-                {
-                    case 0: //1.0=>01
-                        sendArray = StringToByteArray(Command.ACCELERATION_OF_MOTOR_SETTING + "01");
-                        break;
-                    case 1: //0.8=>02
-                        sendArray = StringToByteArray(Command.ACCELERATION_OF_MOTOR_SETTING + "02");
-                        break;
-                    case 2: //0.6=>03
-                        sendArray = StringToByteArray(Command.ACCELERATION_OF_MOTOR_SETTING + "03");
-                        break;
-                    case 3: //0.4=>04
-                        sendArray = StringToByteArray(Command.ACCELERATION_OF_MOTOR_SETTING + "04");
-                        break;
-                    case 4: //0.2=>05
-                        sendArray = StringToByteArray(Command.ACCELERATION_OF_MOTOR_SETTING + "05");
-                        break;
-                }
-                switch (DeviceType)
-                {
-                    case "RS232":
-                        SerialPortConnect("BeepOrSetting", sendArray, 0);
-                        break;
-                    case "USB":
-
-                        break;
-                    case "Ethernet":
-
-                        break;
-                }
-            }
-            else { MessageBox.Show(FindResource("ColumnEmpty") as string); }
+            AccMotor();
         }
         #endregion
 
         #region 設定打印速度按鈕事件
         private void PrintSpeedBtn_Click(object sender, RoutedEventArgs e)
         {
-            if (PrintSpeedCom.SelectedIndex != -1)
-            {
-                byte[] sendArray = null;
-                switch (PrintSpeedCom.SelectedIndex)
-                {
-                    case 0: //200 mm/s
-                        sendArray = StringToByteArray(Command.PRINT_SPEED_200_SETTING);
-                        break;
-                    case 1://250 mm/s
-                        sendArray = StringToByteArray(Command.PRINT_SPEED_250_SETTING);
-                        break;
-                    case 2://300 mm/s
-                        sendArray = StringToByteArray(Command.PRINT_SPEED_300_SETTING);
-                        break;
-                }
-                switch (DeviceType)
-                {
-                    case "RS232":
-                        SerialPortConnect("BeepOrSetting", sendArray, 0);
-                        break;
-                    case "USB":
-
-                        break;
-                    case "Ethernet":
-
-                        break;
-                }
-            }
-            else { MessageBox.Show(FindResource("ColumnEmpty") as string); }
+            PrintSpeed();
         }
         #endregion
 
         #region 設定濃度模式按鈕事件
         private void DensityModeBtn_Click(object sender, RoutedEventArgs e)
         {
-            if (DensityModeCom.SelectedIndex != -1)
-            {
-                byte[] sendArray = null;
-
-                if (DensityModeCom.SelectedIndex == 0)
-                {
-                    sendArray = StringToByteArray(Command.DENSITY_MODE_LOW_SETTING);
-                }
-                else if (DensityModeCom.SelectedIndex == 1)
-                {
-                    sendArray = StringToByteArray(Command.DENSITY_MODE_HIGH_SETTING);
-                }
-                switch (DeviceType)
-                {
-                    case "RS232":
-                        SerialPortConnect("BeepOrSetting", sendArray, 0);
-                        break;
-                    case "USB":
-
-                        break;
-                    case "Ethernet":
-
-                        break;
-                }
-            }
-            else { MessageBox.Show(FindResource("ColumnEmpty") as string); }
+            DensityMode();
         }
         #endregion
 
         #region 設定濃度調節按鈕事件
         private void DensityBtn_Click(object sender, RoutedEventArgs e)
         {
-            if (DensityCom.SelectedIndex != -1)
-            {
-                byte[] sendArray = null;
-
-                switch (DensityCom.SelectedIndex)
-                {
-                    case 0: //1=>16
-                        sendArray = StringToByteArray(Command.DENSITY_SETTING_HEADER + "16");
-                        break;
-                    case 1: //2=>61
-                        sendArray = StringToByteArray(Command.DENSITY_SETTING_HEADER + "61");
-                        break;
-                    case 2: //3=>01
-                        sendArray = StringToByteArray(Command.DENSITY_SETTING_HEADER + "01");
-                        break;
-                    case 3: //4=>02
-                        sendArray = StringToByteArray(Command.DENSITY_SETTING_HEADER + "02");
-                        break;
-                    case 4: //5=>03
-                        sendArray = StringToByteArray(Command.DENSITY_SETTING_HEADER + "03");
-                        break;
-                    case 5: //6=>04
-                        sendArray = StringToByteArray(Command.DENSITY_SETTING_HEADER + "04");
-                        break;
-                    case 6: //7=>05
-                        sendArray = StringToByteArray(Command.DENSITY_SETTING_HEADER + "05");
-                        break;
-                    case 7: //8=>06
-                        sendArray = StringToByteArray(Command.DENSITY_SETTING_HEADER + "06");
-                        break;
-                    case 8: //9=>07
-                        sendArray = StringToByteArray(Command.DENSITY_SETTING_HEADER + "07");
-                        break;
-                    case 9: //10=>08
-                        sendArray = StringToByteArray(Command.DENSITY_SETTING_HEADER + "08");
-                        break;
-                }
-                switch (DeviceType)
-                {
-                    case "RS232":
-                        SerialPortConnect("BeepOrSetting", sendArray, 0);
-                        break;
-                    case "USB":
-
-                        break;
-                    case "Ethernet":
-
-                        break;
-                }
-            }
-            else { MessageBox.Show(FindResource("ColumnEmpty") as string); }
+            Density();
         }
         #endregion
 
         #region 設定紙盡重打按鈕事件
         private void PaperOutReprintBtn_Click(object sender, RoutedEventArgs e)
         {
-            if (PaperOutReprintCom.SelectedIndex != -1)
-            {
-                byte[] sendArray = null;
-                if (PaperOutReprintCom.SelectedIndex == 0)
-                {
-                    sendArray = StringToByteArray(Command.PAPEROUT_REPRINT_OFF_SETTING);
-                }
-                else if (PaperOutReprintCom.SelectedIndex == 1)
-                {
-                    sendArray = StringToByteArray(Command.PAPEROUT_REPRINT_ON_SETTING);
-                }
-                switch (DeviceType)
-                {
-                    case "RS232":
-                        SerialPortConnect("BeepOrSetting", sendArray, 0);
-                        break;
-                    case "USB":
-
-                        break;
-                    case "Ethernet":
-
-                        break;
-                }
-            }
-            else { MessageBox.Show(FindResource("ColumnEmpty") as string); }
+            PaperOutReprint();
         }
         #endregion
 
         #region 設定打印紙寬按鈕事件
         private void PaperWidthBtn_Click(object sender, RoutedEventArgs e)
         {
-            if (PaperWidthCom.SelectedIndex != -1)
-            {
-                byte[] sendArray = null;
-
-                if (PaperWidthCom.SelectedIndex == 0)
-                {
-                    sendArray = StringToByteArray(Command.PAPER_WIDTH_58MM_SETTING);
-                }
-                else if (PaperWidthCom.SelectedIndex == 1)
-                {
-                    sendArray = StringToByteArray(Command.PAPER_WIDTH_80MM_SETTING);
-                }
-                switch (DeviceType)
-                {
-                    case "RS232":
-                        SerialPortConnect("BeepOrSetting", sendArray, 0);
-                        break;
-                    case "USB":
-
-                        break;
-                    case "Ethernet":
-
-                        break;
-                }
-            }
-            else { MessageBox.Show(FindResource("ColumnEmpty") as string); }
+            PaperWidth();
         }
         #endregion
 
         #region 設定合蓋自動切紙按鈕事件
         private void HeadCloseCutBtn_Click(object sender, RoutedEventArgs e)
         {
-            if (HeadCloseCutCom.SelectedIndex != -1)
-            {
-                byte[] sendArray = null;
-
-                if (HeadCloseCutCom.SelectedIndex == 0)
-                {
-                    sendArray = StringToByteArray(Command.HEADCLOSE_AUTOCUT_OFF_SETTING);
-                }
-                else if (HeadCloseCutCom.SelectedIndex == 1)
-                {
-                    sendArray = StringToByteArray(Command.HEADCLOSE_AUTOCUT_ON_SETTING);
-                }
-                switch (DeviceType)
-                {
-                    case "RS232":
-                        SerialPortConnect("BeepOrSetting", sendArray, 0);
-                        break;
-                    case "USB":
-
-                        break;
-                    case "Ethernet":
-
-                        break;
-                }
-            }
-            else { MessageBox.Show(FindResource("ColumnEmpty") as string); }
+            HeadCloseCut();
         }
         #endregion
 
         #region 設定垂直移動單位按鈕事件
         private void YOffsetBtn_Click(object sender, RoutedEventArgs e)
         {
-            if (YOffsetCom.SelectedIndex != -1)
-            {
-                byte[] sendArray = null;
-
-                if (YOffsetCom.SelectedIndex == 0)
-                {
-                    sendArray = StringToByteArray(Command.Y_OFFSET_1_SETTING);
-                }
-                else if (YOffsetCom.SelectedIndex == 1)
-                {
-                    sendArray = StringToByteArray(Command.Y_OFFSET_05_SETTING);
-                }
-                switch (DeviceType)
-                {
-                    case "RS232":
-                        SerialPortConnect("BeepOrSetting", sendArray, 0);
-                        break;
-                    case "USB":
-
-                        break;
-                    case "Ethernet":
-
-                        break;
-                }
-            }
-            else { MessageBox.Show(FindResource("ColumnEmpty") as string); }
+            YOffset();
         }
         #endregion
 
         #region 設定MAC顯示按鈕事件
         private void MACShowBtn_Click(object sender, RoutedEventArgs e)
         {
-            if (MACShowCom.SelectedIndex != -1)
-            {
-                byte[] sendArray = null;
-
-                if (MACShowCom.SelectedIndex == 0)
-                {
-                    sendArray = StringToByteArray(Command.MAC_SHOW_DEC_SETTING);
-                }
-                else if (MACShowCom.SelectedIndex == 1)
-                {
-                    sendArray = StringToByteArray(Command.MAC_SHOW_HEX_SETTING);
-                }
-                switch (DeviceType)
-                {
-                    case "RS232":
-                        SerialPortConnect("BeepOrSetting", sendArray, 0);
-                        break;
-                    case "USB":
-
-                        break;
-                    case "Ethernet":
-
-                        break;
-                }
-            }
-            else { MessageBox.Show(FindResource("ColumnEmpty") as string); }
+            MACShow();
         }
         #endregion
 
         #region 設定二維碼按鈕事件
         private void QRCodeBtn_Click(object sender, RoutedEventArgs e)
         {
-            if (QRCodeCom.SelectedIndex != -1)
-            {
-                byte[] sendArray = null;
-
-                if (QRCodeCom.SelectedIndex == 0)
-                {
-                    sendArray = StringToByteArray(Command.QRCODE_OFF_SETTING);
-                }
-                else if (QRCodeCom.SelectedIndex == 1)
-                {
-                    sendArray = StringToByteArray(Command.QRCODE_ON_SETTING);
-                }
-                switch (DeviceType)
-                {
-                    case "RS232":
-                        SerialPortConnect("BeepOrSetting", sendArray, 0);
-                        break;
-                    case "USB":
-
-                        break;
-                    case "Ethernet":
-
-                        break;
-                }
-            }
-            else { MessageBox.Show(FindResource("ColumnEmpty") as string); }
+            QRCode();
         }
         #endregion
 
         #region 設定自檢頁logo按鈕事件
         private void LogoPrintControlBtn_Click(object sender, RoutedEventArgs e)
         {
-            if (LogoPrintControlCom.SelectedIndex != -1)
-            {
-                byte[] sendArray = null;
-
-                if (LogoPrintControlCom.SelectedIndex == 0)
-                {
-                    sendArray = StringToByteArray(Command.LOGO_PRINT_OFF_SETTING);
-                }
-                else if (LogoPrintControlCom.SelectedIndex == 1)
-                {
-                    sendArray = StringToByteArray(Command.LOGO_PRINT_ON_SETTING);
-                }
-                switch (DeviceType)
-                {
-                    case "RS232":
-                        SerialPortConnect("BeepOrSetting", sendArray, 0);
-                        break;
-                    case "USB":
-
-                        break;
-                    case "Ethernet":
-
-                        break;
-                }
-            }
-            else { MessageBox.Show(FindResource("ColumnEmpty") as string); }
+            LogoPrintControl();
         }
         #endregion
 
         #region 設定DIP開關按鈕事件
         private void DIPSwitchBtn_Click(object sender, RoutedEventArgs e)
         {
-            if (DIPSwitchCom.SelectedIndex != -1)
-            {
-                byte[] sendArray = null;
-
-                if (DIPSwitchCom.SelectedIndex == 0)
-                {
-                    sendArray = StringToByteArray(Command.DIP_OFF_SETTING);
-                }
-                else if (DIPSwitchCom.SelectedIndex == 1)
-                {
-                    sendArray = StringToByteArray(Command.DIP_ON_SETTING);
-                }
-                switch (DeviceType)
-                {
-                    case "RS232":
-                        SerialPortConnect("BeepOrSetting", sendArray, 0);
-                        break;
-                    case "USB":
-
-                        break;
-                    case "Ethernet":
-
-                        break;
-                }
-            }
-            else { MessageBox.Show(FindResource("ColumnEmpty") as string); }
+            DIPSwitch();
         }
         #endregion
 
         #region DIP值設定按鈕事件
         private void DIPSettingBtn_Click(object sender, RoutedEventArgs e)
         {
-
-            BitArray dipArray = new BitArray(8);
-            byte[] sendArray = null;
-            if (CutterCheckBox.IsChecked == true)
-            {
-                dipArray.Set(0, false);
-            }
-            else
-            {
-                dipArray.Set(0, true);
-            }
-
-            if (BeepCheckBox.IsChecked == true)
-            {
-                dipArray.Set(1, false);
-            }
-            else
-            {
-                dipArray.Set(1, true);
-            }
-            if (DensityCheckBox.IsChecked == true)
-            {
-                dipArray.Set(2, false);
-            }
-            else
-            {
-                dipArray.Set(2, true);
-            }
-            if (ChineseForbiddenCheckBox.IsChecked == true)
-            {
-                dipArray.Set(3, false);
-            }
-            else
-            {
-                dipArray.Set(3, true);
-            }
-            if (CharNumberCheckBox.IsChecked == true)
-            {
-                dipArray.Set(4, false);
-            }
-            else
-            {
-                dipArray.Set(4, true);
-            }
-            if (CashboxCheckBox.IsChecked == true)
-            {
-                dipArray.Set(5, false);
-            }
-            else
-            {
-                dipArray.Set(5, true);
-            }
-
-            switch (DIPBaudRateCom.SelectedIndex)
-            {
-                case 0: //19200 00取反11
-                    dipArray.Set(6, true);
-                    dipArray.Set(7, true);
-                    break;
-                case 1: //9600 01取反10
-                    dipArray.Set(6, true);
-                    dipArray.Set(7, false);
-                    break;
-                case 2: //115200 10取反 01
-                    dipArray.Set(6, false);
-                    dipArray.Set(7, true);
-                    break;
-                case 3: //38400 11取反00
-                    dipArray.Set(6, false);
-                    dipArray.Set(7, false);
-                    break;
-            }
-            for (int i = 0; i < dipArray.Length; i++)
-            {
-                Console.WriteLine(dipArray.Get(i));
-            }
-
-            //bit array轉btye array
-            byte[] bytes = new byte[1];
-            dipArray.CopyTo(bytes, 0);
-            sendArray = StringToByteArray(Command.DIP_VALUE_SETTING_HEADER);
-            Array.Resize(ref sendArray, sendArray.Length + 1);
-            sendArray[sendArray.Length - 1] = bytes[0];
-            switch (DeviceType)
-            {
-                case "RS232":
-                    SerialPortConnect("BeepOrSetting", sendArray, 0);
-                    break;
-                case "USB":
-
-                    break;
-                case "Ethernet":
-
-                    break;
-            }
-
+            DIPSetting();
         }
         #endregion
 
@@ -2057,7 +1606,7 @@ namespace PirnterUtility
         }
         #endregion
 
-        #region 設定USB端口值按鈕事件
+        #region 設定USB端口值
         private void USBFixed()
         {
             if (USBFixedCom.SelectedIndex != -1)
@@ -2089,6 +1638,731 @@ namespace PirnterUtility
         }
         #endregion
 
+        #region 設定代碼頁
+        private void CodePageSet()
+        {
+            if (CodePageCom.SelectedIndex != -1)
+            {
+                //取得設定代碼
+                string HexCode = CodePageCom.SelectedItem.ToString();
+                HexCode = HexCode.Split(':')[0];
+                if (HexCode.Length < 2)
+                {
+                    HexCode = "0" + HexCode;
+                }
+                byte[] sendArray = StringToByteArray(Command.CODEPAGE_SETTING_HEADER + HexCode);
+                switch (DeviceType)
+                {
+                    case "RS232":
+                        SerialPortConnect("BeepOrSetting", sendArray, 0);
+                        break;
+                    case "USB":
+
+                        break;
+                    case "Ethernet":
+
+                        break;
+                }
+            }
+            else { MessageBox.Show(FindResource("ColumnEmpty") as string); }
+        }
+        #endregion       
+
+        #region 設定語言
+        private void LanguageSet()
+        {
+
+            if (LanguageSetCom.SelectedIndex != -1)
+            {
+                byte[] sendArray = null;
+                switch (LanguageSetCom.SelectedIndex)
+                {
+                    case 0:
+                        sendArray = StringToByteArray(Command.LANGUAGE_SETTING_GB18030);
+                        break;
+                    case 1:
+                        sendArray = StringToByteArray(Command.LANGUAGE_SETTING_BIG5);
+                        break;
+                    case 2:
+                        sendArray = StringToByteArray(Command.LANGUAGE_SETTING_KOREAN);
+                        break;
+                    case 3:
+                        sendArray = StringToByteArray(Command.LANGUAGE_SETTING_JAPANESE);
+                        break;
+                    case 4:
+                        sendArray = StringToByteArray(Command.LANGUAGE_SETTING_SHIFT_JIS);
+                        break;
+                    case 5:
+                        sendArray = StringToByteArray(Command.LANGUAGE_SETTING_JIS);
+                        break;
+                }
+                switch (DeviceType)
+                {
+                    case "RS232":
+                        SerialPortConnect("BeepOrSetting", sendArray, 0);
+                        break;
+                    case "USB":
+
+                        break;
+                    case "Ethernet":
+
+                        break;
+                }
+            }
+            else { MessageBox.Show(FindResource("ColumnEmpty") as string); }
+        }
+        #endregion
+
+        #region FontB設定
+        private void FontBSetting()
+        {
+            if (FontBSettingCom.SelectedIndex != -1)
+            {
+                byte[] sendArray = null;
+
+                if (FontBSettingCom.SelectedIndex == 0)
+                {
+                    sendArray = StringToByteArray(Command.FONTB_OFF_SETTING);
+                }
+                else if (FontBSettingCom.SelectedIndex == 1)
+                {
+                    sendArray = StringToByteArray(Command.FONTB_ON_SETTING);
+                }
+                switch (DeviceType)
+                {
+                    case "RS232":
+                        SerialPortConnect("BeepOrSetting", sendArray, 0);
+                        break;
+                    case "USB":
+
+                        break;
+                    case "Ethernet":
+
+                        break;
+                }
+            }
+            else { MessageBox.Show(FindResource("ColumnEmpty") as string); }
+        }
+        #endregion
+
+        #region 設定定制字體
+        private void CustomziedFont()
+        {
+            if (CustomziedFontCom.SelectedIndex != -1)
+            {
+                byte[] sendArray = null;
+
+                if (CustomziedFontCom.SelectedIndex == 0)
+                {
+                    sendArray = StringToByteArray(Command.CUSTOMIZED_FONT_OFF_SETTING);
+                }
+                else if (CustomziedFontCom.SelectedIndex == 1)
+                {
+                    sendArray = StringToByteArray(Command.CUSTOMIZED_FONT_ON_SETTING);
+                }
+                switch (DeviceType)
+                {
+                    case "RS232":
+                        SerialPortConnect("BeepOrSetting", sendArray, 0);
+                        break;
+                    case "USB":
+
+                        break;
+                    case "Ethernet":
+
+                        break;
+                }
+            }
+            else { MessageBox.Show(FindResource("ColumnEmpty") as string); }
+        }
+        #endregion
+
+        #region 走紙方向
+        private void SetDirection()
+        {
+            if (DirectionCombox.SelectedIndex != -1)
+            {
+                byte[] sendArray = null;
+
+                if (DirectionCombox.SelectedIndex == 0)
+                {
+                    sendArray = StringToByteArray(Command.DIRECTION_H80250N_SETTING);
+                }
+                else if (DirectionCombox.SelectedIndex == 1)
+                {
+                    sendArray = StringToByteArray(Command.DIRECTION_80250N_SETTING);
+                }
+                switch (DeviceType)
+                {
+                    case "RS232":
+                        SerialPortConnect("BeepOrSetting", sendArray, 0);
+                        break;
+                    case "USB":
+
+                        break;
+                    case "Ethernet":
+
+                        break;
+                }
+            }
+            else { MessageBox.Show(FindResource("ColumnEmpty") as string); }
+        }
+        #endregion
+
+        #region 設定馬達加速開關
+        private void MotorAccControl()
+        {
+            if (MotorAccControlCom.SelectedIndex != -1)
+            {
+                byte[] sendArray = null;
+
+                if (MotorAccControlCom.SelectedIndex == 0)
+                {
+                    sendArray = StringToByteArray(Command.ACCELERATION_OF_MOTOR_OFF_SETTING);
+                }
+                else if (MotorAccControlCom.SelectedIndex == 1)
+                {
+                    sendArray = StringToByteArray(Command.ACCELERATION_OF_MOTOR_ON_SETTING);
+                }
+                switch (DeviceType)
+                {
+                    case "RS232":
+                        SerialPortConnect("BeepOrSetting", sendArray, 0);
+                        break;
+                    case "USB":
+
+                        break;
+                    case "Ethernet":
+
+                        break;
+                }
+            }
+            else { MessageBox.Show(FindResource("ColumnEmpty") as string); }
+        }
+        #endregion
+
+        #region 設定馬達加速度
+        private void AccMotor()
+        {
+            if (AccMotorCom.SelectedIndex != -1)
+            {
+                byte[] sendArray = null;
+
+                switch (AccMotorCom.SelectedIndex)
+                {
+                    case 0: //1.0=>01
+                        sendArray = StringToByteArray(Command.ACCELERATION_OF_MOTOR_SETTING + "01");
+                        break;
+                    case 1: //0.8=>02
+                        sendArray = StringToByteArray(Command.ACCELERATION_OF_MOTOR_SETTING + "02");
+                        break;
+                    case 2: //0.6=>03
+                        sendArray = StringToByteArray(Command.ACCELERATION_OF_MOTOR_SETTING + "03");
+                        break;
+                    case 3: //0.4=>04
+                        sendArray = StringToByteArray(Command.ACCELERATION_OF_MOTOR_SETTING + "04");
+                        break;
+                    case 4: //0.2=>05
+                        sendArray = StringToByteArray(Command.ACCELERATION_OF_MOTOR_SETTING + "05");
+                        break;
+                }
+                switch (DeviceType)
+                {
+                    case "RS232":
+                        SerialPortConnect("BeepOrSetting", sendArray, 0);
+                        break;
+                    case "USB":
+
+                        break;
+                    case "Ethernet":
+
+                        break;
+                }
+            }
+            else { MessageBox.Show(FindResource("ColumnEmpty") as string); }
+        }
+        #endregion
+
+        #region 設定打印速度
+        private void PrintSpeed()
+        {
+            if (PrintSpeedCom.SelectedIndex != -1)
+            {
+                byte[] sendArray = null;
+                switch (PrintSpeedCom.SelectedIndex)
+                {
+                    case 0: //200 mm/s
+                        sendArray = StringToByteArray(Command.PRINT_SPEED_200_SETTING);
+                        break;
+                    case 1://250 mm/s
+                        sendArray = StringToByteArray(Command.PRINT_SPEED_250_SETTING);
+                        break;
+                    case 2://300 mm/s
+                        sendArray = StringToByteArray(Command.PRINT_SPEED_300_SETTING);
+                        break;
+                }
+                switch (DeviceType)
+                {
+                    case "RS232":
+                        SerialPortConnect("BeepOrSetting", sendArray, 0);
+                        break;
+                    case "USB":
+
+                        break;
+                    case "Ethernet":
+
+                        break;
+                }
+            }
+            else { MessageBox.Show(FindResource("ColumnEmpty") as string); }
+        }
+        #endregion
+
+        #region 設定濃度模式
+        private void DensityMode()
+        {
+            if (DensityModeCom.SelectedIndex != -1)
+            {
+                byte[] sendArray = null;
+
+                if (DensityModeCom.SelectedIndex == 0)
+                {
+                    sendArray = StringToByteArray(Command.DENSITY_MODE_LOW_SETTING);
+                }
+                else if (DensityModeCom.SelectedIndex == 1)
+                {
+                    sendArray = StringToByteArray(Command.DENSITY_MODE_HIGH_SETTING);
+                }
+                switch (DeviceType)
+                {
+                    case "RS232":
+                        SerialPortConnect("BeepOrSetting", sendArray, 0);
+                        break;
+                    case "USB":
+
+                        break;
+                    case "Ethernet":
+
+                        break;
+                }
+            }
+            else { MessageBox.Show(FindResource("ColumnEmpty") as string); }
+        }
+        #endregion
+
+        #region 設定濃度調節
+        private void Density()
+        {
+            if (DensityCom.SelectedIndex != -1)
+            {
+                byte[] sendArray = null;
+
+                switch (DensityCom.SelectedIndex)
+                {
+                    case 0: //1=>16
+                        sendArray = StringToByteArray(Command.DENSITY_SETTING_HEADER + "16");
+                        break;
+                    case 1: //2=>61
+                        sendArray = StringToByteArray(Command.DENSITY_SETTING_HEADER + "61");
+                        break;
+                    case 2: //3=>01
+                        sendArray = StringToByteArray(Command.DENSITY_SETTING_HEADER + "01");
+                        break;
+                    case 3: //4=>02
+                        sendArray = StringToByteArray(Command.DENSITY_SETTING_HEADER + "02");
+                        break;
+                    case 4: //5=>03
+                        sendArray = StringToByteArray(Command.DENSITY_SETTING_HEADER + "03");
+                        break;
+                    case 5: //6=>04
+                        sendArray = StringToByteArray(Command.DENSITY_SETTING_HEADER + "04");
+                        break;
+                    case 6: //7=>05
+                        sendArray = StringToByteArray(Command.DENSITY_SETTING_HEADER + "05");
+                        break;
+                    case 7: //8=>06
+                        sendArray = StringToByteArray(Command.DENSITY_SETTING_HEADER + "06");
+                        break;
+                    case 8: //9=>07
+                        sendArray = StringToByteArray(Command.DENSITY_SETTING_HEADER + "07");
+                        break;
+                    case 9: //10=>08
+                        sendArray = StringToByteArray(Command.DENSITY_SETTING_HEADER + "08");
+                        break;
+                }
+                switch (DeviceType)
+                {
+                    case "RS232":
+                        SerialPortConnect("BeepOrSetting", sendArray, 0);
+                        break;
+                    case "USB":
+
+                        break;
+                    case "Ethernet":
+
+                        break;
+                }
+            }
+            else { MessageBox.Show(FindResource("ColumnEmpty") as string); }
+        }
+        #endregion
+
+        #region 設定紙盡重打
+        private void PaperOutReprint()
+        {
+            if (PaperOutReprintCom.SelectedIndex != -1)
+            {
+                byte[] sendArray = null;
+                if (PaperOutReprintCom.SelectedIndex == 0)
+                {
+                    sendArray = StringToByteArray(Command.PAPEROUT_REPRINT_OFF_SETTING);
+                }
+                else if (PaperOutReprintCom.SelectedIndex == 1)
+                {
+                    sendArray = StringToByteArray(Command.PAPEROUT_REPRINT_ON_SETTING);
+                }
+                switch (DeviceType)
+                {
+                    case "RS232":
+                        SerialPortConnect("BeepOrSetting", sendArray, 0);
+                        break;
+                    case "USB":
+
+                        break;
+                    case "Ethernet":
+
+                        break;
+                }
+            }
+            else { MessageBox.Show(FindResource("ColumnEmpty") as string); }
+        }
+        #endregion
+
+        #region 設定打印紙寬
+        private void PaperWidth()
+        {
+            if (PaperWidthCom.SelectedIndex != -1)
+            {
+                byte[] sendArray = null;
+
+                if (PaperWidthCom.SelectedIndex == 0)
+                {
+                    sendArray = StringToByteArray(Command.PAPER_WIDTH_58MM_SETTING);
+                }
+                else if (PaperWidthCom.SelectedIndex == 1)
+                {
+                    sendArray = StringToByteArray(Command.PAPER_WIDTH_80MM_SETTING);
+                }
+                switch (DeviceType)
+                {
+                    case "RS232":
+                        SerialPortConnect("BeepOrSetting", sendArray, 0);
+                        break;
+                    case "USB":
+
+                        break;
+                    case "Ethernet":
+
+                        break;
+                }
+            }
+            else { MessageBox.Show(FindResource("ColumnEmpty") as string); }
+        }
+        #endregion
+
+        #region 設定合蓋自動切紙
+        private void HeadCloseCut()
+        {
+            if (HeadCloseCutCom.SelectedIndex != -1)
+            {
+                byte[] sendArray = null;
+
+                if (HeadCloseCutCom.SelectedIndex == 0)
+                {
+                    sendArray = StringToByteArray(Command.HEADCLOSE_AUTOCUT_OFF_SETTING);
+                }
+                else if (HeadCloseCutCom.SelectedIndex == 1)
+                {
+                    sendArray = StringToByteArray(Command.HEADCLOSE_AUTOCUT_ON_SETTING);
+                }
+                switch (DeviceType)
+                {
+                    case "RS232":
+                        SerialPortConnect("BeepOrSetting", sendArray, 0);
+                        break;
+                    case "USB":
+
+                        break;
+                    case "Ethernet":
+
+                        break;
+                }
+            }
+            else { MessageBox.Show(FindResource("ColumnEmpty") as string); }
+        }
+        #endregion
+
+        #region 設定垂直移動單位
+        private void YOffset()
+        {
+            if (YOffsetCom.SelectedIndex != -1)
+            {
+                byte[] sendArray = null;
+
+                if (YOffsetCom.SelectedIndex == 0)
+                {
+                    sendArray = StringToByteArray(Command.Y_OFFSET_1_SETTING);
+                }
+                else if (YOffsetCom.SelectedIndex == 1)
+                {
+                    sendArray = StringToByteArray(Command.Y_OFFSET_05_SETTING);
+                }
+                switch (DeviceType)
+                {
+                    case "RS232":
+                        SerialPortConnect("BeepOrSetting", sendArray, 0);
+                        break;
+                    case "USB":
+
+                        break;
+                    case "Ethernet":
+
+                        break;
+                }
+            }
+            else { MessageBox.Show(FindResource("ColumnEmpty") as string); }
+        }
+        #endregion
+
+        #region 設定MAC顯示
+        private void MACShow()
+        {
+            if (MACShowCom.SelectedIndex != -1)
+            {
+                byte[] sendArray = null;
+
+                if (MACShowCom.SelectedIndex == 0)
+                {
+                    sendArray = StringToByteArray(Command.MAC_SHOW_DEC_SETTING);
+                }
+                else if (MACShowCom.SelectedIndex == 1)
+                {
+                    sendArray = StringToByteArray(Command.MAC_SHOW_HEX_SETTING);
+                }
+                switch (DeviceType)
+                {
+                    case "RS232":
+                        SerialPortConnect("BeepOrSetting", sendArray, 0);
+                        break;
+                    case "USB":
+
+                        break;
+                    case "Ethernet":
+
+                        break;
+                }
+            }
+            else { MessageBox.Show(FindResource("ColumnEmpty") as string); }
+        }
+        #endregion
+
+        #region 設定二維碼
+        private void QRCode()
+        {
+            if (QRCodeCom.SelectedIndex != -1)
+            {
+                byte[] sendArray = null;
+
+                if (QRCodeCom.SelectedIndex == 0)
+                {
+                    sendArray = StringToByteArray(Command.QRCODE_OFF_SETTING);
+                }
+                else if (QRCodeCom.SelectedIndex == 1)
+                {
+                    sendArray = StringToByteArray(Command.QRCODE_ON_SETTING);
+                }
+                switch (DeviceType)
+                {
+                    case "RS232":
+                        SerialPortConnect("BeepOrSetting", sendArray, 0);
+                        break;
+                    case "USB":
+
+                        break;
+                    case "Ethernet":
+
+                        break;
+                }
+            }
+            else { MessageBox.Show(FindResource("ColumnEmpty") as string); }
+        }
+        #endregion
+
+        #region 設定自檢頁logo
+        private void LogoPrintControl()
+        {
+            if (LogoPrintControlCom.SelectedIndex != -1)
+            {
+                byte[] sendArray = null;
+
+                if (LogoPrintControlCom.SelectedIndex == 0)
+                {
+                    sendArray = StringToByteArray(Command.LOGO_PRINT_OFF_SETTING);
+                }
+                else if (LogoPrintControlCom.SelectedIndex == 1)
+                {
+                    sendArray = StringToByteArray(Command.LOGO_PRINT_ON_SETTING);
+                }
+                switch (DeviceType)
+                {
+                    case "RS232":
+                        SerialPortConnect("BeepOrSetting", sendArray, 0);
+                        break;
+                    case "USB":
+
+                        break;
+                    case "Ethernet":
+
+                        break;
+                }
+            }
+            else { MessageBox.Show(FindResource("ColumnEmpty") as string); }
+        }
+        #endregion
+
+        #region 設定DIP開關
+        private void DIPSwitch()
+        {
+            if (DIPSwitchCom.SelectedIndex != -1)
+            {
+                byte[] sendArray = null;
+
+                if (DIPSwitchCom.SelectedIndex == 0)
+                {
+                    sendArray = StringToByteArray(Command.DIP_OFF_SETTING);
+                }
+                else if (DIPSwitchCom.SelectedIndex == 1)
+                {
+                    sendArray = StringToByteArray(Command.DIP_ON_SETTING);
+                }
+                switch (DeviceType)
+                {
+                    case "RS232":
+                        SerialPortConnect("BeepOrSetting", sendArray, 0);
+                        break;
+                    case "USB":
+
+                        break;
+                    case "Ethernet":
+
+                        break;
+                }
+            }
+            else { MessageBox.Show(FindResource("ColumnEmpty") as string); }
+        }
+        #endregion
+
+        #region DIP值設定
+        private void DIPSetting()
+        {
+
+            BitArray dipArray = new BitArray(8);
+            byte[] sendArray = null;
+            if (CutterCheckBox.IsChecked == true)
+            {
+                dipArray.Set(0, false);
+            }
+            else
+            {
+                dipArray.Set(0, true);
+            }
+
+            if (BeepCheckBox.IsChecked == true)
+            {
+                dipArray.Set(1, false);
+            }
+            else
+            {
+                dipArray.Set(1, true);
+            }
+            if (DensityCheckBox.IsChecked == true)
+            {
+                dipArray.Set(2, false);
+            }
+            else
+            {
+                dipArray.Set(2, true);
+            }
+            if (ChineseForbiddenCheckBox.IsChecked == true)
+            {
+                dipArray.Set(3, false);
+            }
+            else
+            {
+                dipArray.Set(3, true);
+            }
+            if (CharNumberCheckBox.IsChecked == true)
+            {
+                dipArray.Set(4, false);
+            }
+            else
+            {
+                dipArray.Set(4, true);
+            }
+            if (CashboxCheckBox.IsChecked == true)
+            {
+                dipArray.Set(5, false);
+            }
+            else
+            {
+                dipArray.Set(5, true);
+            }
+
+            switch (DIPBaudRateCom.SelectedIndex)
+            {
+                case 0: //19200 00取反11
+                    dipArray.Set(6, true);
+                    dipArray.Set(7, true);
+                    break;
+                case 1: //9600 01取反10
+                    dipArray.Set(6, true);
+                    dipArray.Set(7, false);
+                    break;
+                case 2: //115200 10取反 01
+                    dipArray.Set(6, false);
+                    dipArray.Set(7, true);
+                    break;
+                case 3: //38400 11取反00
+                    dipArray.Set(6, false);
+                    dipArray.Set(7, false);
+                    break;
+            }
+            for (int i = 0; i < dipArray.Length; i++)
+            {
+                Console.WriteLine(dipArray.Get(i));
+            }
+
+            //bit array轉btye array
+            byte[] bytes = new byte[1];
+            dipArray.CopyTo(bytes, 0);
+            sendArray = StringToByteArray(Command.DIP_VALUE_SETTING_HEADER);
+            Array.Resize(ref sendArray, sendArray.Length + 1);
+            sendArray[sendArray.Length - 1] = bytes[0];
+            switch (DeviceType)
+            {
+                case "RS232":
+                    SerialPortConnect("BeepOrSetting", sendArray, 0);
+                    break;
+                case "USB":
+
+                    break;
+                case "Ethernet":
+
+                    break;
+            }
+
+        }
+        #endregion
 
         //========================RS232的設定/傳送與接收===========================
 
