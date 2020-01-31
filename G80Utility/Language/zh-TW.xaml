@@ -263,6 +263,7 @@
     <sys:String x:Key="NotSettingComport">尚未設定通訊埠</sys:String>
     <sys:String x:Key="NotReadParameterYet">读取不到参数</sys:String>
     <sys:String x:Key="ErrorFormat">欄位輸入錯誤，請重新輸入</sys:String>
+    <sys:String x:Key="LessLength">序號長度需為16個字長</sys:String>
 
     <!--button-->
     <sys:String x:Key="Load">讀取</sys:String>

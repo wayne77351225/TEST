@@ -356,6 +356,38 @@ namespace PirnterUtility
         }
         #endregion
 
+        #region 工廠生產核取框是否勾選檢查
+        private void IsFactortyChecked()
+        {
+            if (CMDQRCodeCheckbox.IsChecked == true)
+            {
+                Config.isCMDQRCodeChecked = true;
+            }
+            else
+            {
+                Config.isCMDQRCodeChecked = false;
+            }
+
+            if (CMDGeneralCheckbox.IsChecked == true)
+            {
+                Config.isCMDGeneralChecked = true;
+            }
+            else
+            {
+                Config.isCMDGeneralChecked = false;
+            }
+
+            if (CMDPageCheckbox.IsChecked == true)
+            {
+                Config.isCMDPageChecked = true;
+            }
+            else
+            {
+                Config.isCMDPageChecked = false;
+            }
+        }
+        #endregion
+
         #region 傳送所有讀取指令
         private void readALL()
         {
@@ -674,31 +706,41 @@ namespace PirnterUtility
 
         //========================取得資料後設定UI=================
 
-        #region 設定打印機型號/軟件版本/機器序號
+        #region 取得打印機型號/軟件版本/機器序號
         private void SetPrinterInfo(byte[] buffer)
         {
+            string sn = null;
             string moudle = null;
             string sfvesion = null;
-            string sn = null;
-            //(0~7)前8個是無意義資料
-            for (int i = 8; i < 18; i++)
-            {
-                moudle += Convert.ToChar(buffer[i]);    //機器型號
-            }
-            Console.WriteLine("module:" + moudle);
+            string date = null;
 
-            for (int i = 18; i < 28; i++)
-            {
-                sfvesion += Convert.ToChar(buffer[i]);   //軟件版本    
-            }
-            PrinterModule.Content = moudle + "  " + sfvesion;
-            Console.WriteLine("VER:" + sfvesion);
-            for (int i = 28; i < 44; i++)
+            //(0~7)前8個是無意義資料
+            for (int i = 8; i < 24; i++)
             {
                 sn += Convert.ToChar(buffer[i]);      //機器序列號
             }
-            PrinterSN.Text = sn;
-            Console.WriteLine("SN:" + sn);
+            Console.WriteLine("sn:" + sn);
+            for (int i = 24; i < 34; i++)
+            {
+                moudle += Convert.ToChar(buffer[i]);    //機器型號
+            }
+            if (moudle.Substring(0,1)=="_") { //移除機器型號開頭的底線
+                moudle=moudle.Remove(0, 1);
+            }
+            for (int i = 34; i < 44; i++)
+            {
+                sfvesion += Convert.ToChar(buffer[i]);   //軟件版本    
+            }
+
+            for (int i = 44; i < 54; i++)
+            {
+                date += Convert.ToChar(buffer[i]);    //多傳了一次軟件版本
+            }
+
+            PrinterSNFacTxt.Text = sn;
+            PrinterSNTxt.Text = sn;
+            PrinterModuleFac.Content = moudle + sfvesion + "：" + date;
+            PrinterModule.Content = moudle + sfvesion + "：" + date;
 
         }
         #endregion
@@ -1047,6 +1089,19 @@ namespace PirnterUtility
         }
         #endregion
 
+        #region 讀取機器序列號(通訊)按鈕事件
+        private void ReadSNBtn_Click(object sender, RoutedEventArgs e)
+        {
+            RoadPrinterSN();
+        }
+        #endregion
+
+        #region 設置機器序列號(通訊)按鈕事件
+        private void SetSNBtn_Click(object sender, RoutedEventArgs e)
+        {
+            SetPrinterSN("communication");
+        }
+        #endregion
         #region 讀取所有參數設定
         private void ReadAllBtn_Click(object sender, RoutedEventArgs e)
         {
@@ -1377,6 +1432,27 @@ namespace PirnterUtility
         private void CutTimesBtn_Click(object sender, RoutedEventArgs e)
         {
             CutTimes();
+        }
+        #endregion
+
+        #region 指令測試按鈕事件
+        private void CMDTestBtn_Click(object sender, RoutedEventArgs e)
+        {
+            CMDTest("factory");
+        }
+        #endregion
+
+        #region 讀取機器序列號(工廠)按鈕事件
+        private void RoadPrinterSNFacBtn_Click(object sender, RoutedEventArgs e)
+        {
+            RoadPrinterSN();
+        }
+        #endregion
+
+        #region 設置機器序列號(工廠)按鈕事件
+        private void SetPrinterSNFacBtn_Click(object sender, RoutedEventArgs e)
+        {
+            SetPrinterSN("factory");
         }
         #endregion
         //========================參數設置每個寫入命令功能=================
@@ -1825,11 +1901,11 @@ namespace PirnterUtility
             {
                 byte[] sendArray = null;
 
-                if (DirectionCombox.SelectedIndex == 0)
+                if (DirectionCombox.SelectedIndex == 1)
                 {
                     sendArray = StringToByteArray(Command.DIRECTION_H80250N_SETTING);
                 }
-                else if (DirectionCombox.SelectedIndex == 1)
+                else if (DirectionCombox.SelectedIndex == 0)
                 {
                     sendArray = StringToByteArray(Command.DIRECTION_80250N_SETTING);
                 }
@@ -2432,7 +2508,6 @@ namespace PirnterUtility
         }
         #endregion
 
-
         #region 蜂鳴器測試
         private void BeepTest()
         {
@@ -2451,20 +2526,97 @@ namespace PirnterUtility
 
         #region 連續切紙
         private void CutTimes()
-        {   int result;
+        {
+            int result;
             string times = CutTimesTxt.Text;
             if (times == "" || !Int32.TryParse(times, out result))
             {
                 MessageBox.Show(FindResource("ErrorFormat") as string);
             }
-            else {
+            else
+            {
                 int contiunue = Int32.Parse(times);
                 byte[] sendArray = StringToByteArray(Command.CUT_TIMES);
-                for (int i = 0; i < contiunue; i++) {
+                for (int i = 0; i < contiunue; i++)
+                {
                     SendCmd(sendArray, "BeepOrSetting", 0);
                 }
             }
 
+        }
+        #endregion
+
+        #region 指令測試
+        private void CMDTest(string functionClass)
+        {
+            switch (functionClass)
+            {
+                case "factory":
+                    IsFactortyChecked();
+                    if (Config.isCMDQRCodeChecked)
+                    {
+                        byte[] qrcode = Command.CMD_TEST_QRCODE;
+                        SendCmd(qrcode, "BeepOrSetting", 0);
+                    }
+
+                    if (Config.isCMDGeneralChecked)
+                    {
+                        byte[] general = Command.CMD_TEST_GENERAL;
+                        SendCmd(general, "BeepOrSetting", 0);
+                    }
+
+                    if (Config.isCMDPageChecked)
+                    {
+                        byte[] page = Command.CMD_TEST_PAGEMODE;
+                        SendCmd(page, "BeepOrSetting", 0);
+                    }
+                    break;
+                case "maintain":
+                    break;
+            }
+        }
+        #endregion
+
+        #region 讀取機器序列號
+        private void RoadPrinterSN()
+        {
+            byte[] sendArray = StringToByteArray(Command.DEVICE_INFO_READING);
+            SendCmd(sendArray, "ReadSN", 54);
+
+        }
+        #endregion
+
+        #region 設置機器序列號
+        private void SetPrinterSN(string functionClass)
+        {
+            string sn = null;
+            switch (functionClass)
+            {
+                case "factory":
+                    sn = PrinterSNFacTxt.Text;
+                    break;
+                case "communication":
+                    sn = PrinterSNTxt.Text;
+                    break;
+
+            }
+            if (sn != "" && sn.Length == 16)
+            {
+                byte[] snArray = Encoding.Default.GetBytes(sn);
+                byte[] sendArray = StringToByteArray(Command.SN_SETTING_HEADER);
+                int sendLen = sendArray.Length;
+                int snLen = snArray.Length;
+                Array.Resize(ref sendArray, sendLen + snLen);
+                for (int i = sendLen; i < sendLen + snLen; i++)
+                {
+                    sendArray[i] = snArray[i - sendLen];
+                }
+                SendCmd(sendArray, "BeepOrSetting", 0);
+            }
+            else if (sn.Length < 16 || sn.Length > 16)
+            {
+                MessageBox.Show(FindResource("LessLength") as string);
+            }
         }
         #endregion
         //========================RS232的設定/傳送與接收===========================
@@ -2522,15 +2674,20 @@ namespace PirnterUtility
                             bool isReceiveData = RS232Connect.SerialPortSendCMD("NeedReceive", data, null, receiveLength);
                             while (!isReceiveData)
                             {
-
                                 if (RS232Connect.mRecevieData != null)
                                 {
-                                    switch (dataType)
-                                    {
-                                        case "ReadPara":
-                                            setParaColumn(RS232Connect.mRecevieData);
-                                            break;
-                                    }
+                                    setParaColumn(RS232Connect.mRecevieData);
+                                    break;
+                                }
+                            }
+                            break;
+                        case "ReadSN":
+                            bool isReceiveSN = RS232Connect.SerialPortSendCMD("NeedReceive", data, null, receiveLength);
+                            while (!isReceiveSN)
+                            {
+                                if (RS232Connect.mRecevieData != null)
+                                {
+                                    SetPrinterInfo(RS232Connect.mRecevieData);
                                     break;
                                 }
                             }
@@ -2897,12 +3054,12 @@ namespace PirnterUtility
 
             byte[] sendArray = null;
 
-            sendArray = StringToByteArray("1F 1B 1F 53 5A 4A 42 5A 46 31 35 01");
+            sendArray = StringToByteArray("1F 1B 1F 53 5A 4A 42 5A 46 12 01 01");
 
             switch (DeviceType)
             {
                 case "RS232":
-                    SerialPortConnect("ReadPara", sendArray, 0);
+                    SerialPortConnect("ReadPara", sendArray, 54);
                     break;
                 case "USB":
 
@@ -2914,21 +3071,6 @@ namespace PirnterUtility
 
         }
 
-        public string convetBytetoString(byte[] data)
-        {
 
-            string result1 = null;
-            BitArray ba = new BitArray(data);
-
-            for (int i = 0; i < ba.Length; i++)
-            {
-                result1 += (ba.Get(i) + " ");
-            }
-
-            return result1;
-
-        }
-
-       
     }
 }

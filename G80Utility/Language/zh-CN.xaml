@@ -268,6 +268,7 @@
     <sys:String x:Key="NotSettingComport">尚未设定串口</sys:String>
     <sys:String x:Key="NotReadParameterYet">读取不到参数</sys:String>
     <sys:String x:Key="ErrorFormat">字段输入错误，请重新输入</sys:String>
+    <sys:String x:Key="LessLength">序号长度需为16个字长</sys:String>
 
     <!--button-->
     <sys:String x:Key="Load">读取</sys:String>

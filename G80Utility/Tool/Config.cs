@@ -37,5 +37,9 @@ namespace G80Utility.Tool
         public static bool isLogoPrintControlhecked;
         public static bool isDIPSwitchChecked;
 
+        public static bool isCMDQRCodeChecked;
+        public static bool isCMDGeneralChecked;
+        public static bool isCMDPageChecked;
+
     }
 }
