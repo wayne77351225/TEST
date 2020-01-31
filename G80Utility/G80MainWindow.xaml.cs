@@ -978,7 +978,7 @@ namespace PirnterUtility
             {
                 if (isSubtractOne)
                 { //index 從1開始者
-                    if (byteToIntForOneByte(data) >= 1 && byteToIntForOneByte(data) <= itemFinalNo )
+                    if (byteToIntForOneByte(data) >= 1 && byteToIntForOneByte(data) <= itemFinalNo)
                     {
                         SelectedCom.SelectedIndex = byteToIntForOneByte(data) - 1;
                     }
@@ -1338,7 +1338,47 @@ namespace PirnterUtility
         }
         #endregion
 
+        #region 打印自檢頁(短)按鈕事件
+        private void PrintTest_S_Click(object sender, RoutedEventArgs e)
+        {
+            PrintTest("short");
+        }
+        #endregion
 
+        #region 打印自檢頁(長)按鈕事件
+        private void PrintTest_L_Click(object sender, RoutedEventArgs e)
+        {
+            PrintTest("long");
+        }
+        #endregion
+
+        #region 打印均勻測試按鈕事件
+        private void PrintTest_EVEN_Click(object sender, RoutedEventArgs e)
+        {
+            PrintEvenTest();
+        }
+        #endregion
+
+        #region 蜂鳴器測試按鈕事件
+        private void BeepTestBtn_Click(object sender, RoutedEventArgs e)
+        {
+            BeepTest();
+        }
+        #endregion
+
+        #region 下踢錢箱按鈕事件
+        private void OpenCashBoxBtn_Click(object sender, RoutedEventArgs e)
+        {
+            OpenCashBox();
+        }
+        #endregion
+
+        #region 連續切紙按鈕事件
+        private void CutTimesBtn_Click(object sender, RoutedEventArgs e)
+        {
+            CutTimes();
+        }
+        #endregion
         //========================參數設置每個寫入命令功能=================
 
         #region 設定IP Address
@@ -2365,6 +2405,68 @@ namespace PirnterUtility
         }
         #endregion
 
+        //========================工廠生產功能=================
+        #region 打印自檢頁
+        private void PrintTest(string printType)
+        {
+            byte[] sendArray = null;
+
+            if (printType == "short")
+            {
+                sendArray = StringToByteArray(Command.PRINT_TEST_SHORT);
+            }
+            else if (printType == "long")
+            {
+                sendArray = StringToByteArray(Command.PRINT_TEST_LONG);
+            }
+            SendCmd(sendArray, "BeepOrSetting", 0);
+
+        }
+        #endregion
+
+        #region 打印均勻測試
+        private void PrintEvenTest()
+        {
+            byte[] eventest = Command.PRINT_EVEN_TEST;
+            SendCmd(eventest, "BeepOrSetting", 0);
+        }
+        #endregion
+
+
+        #region 蜂鳴器測試
+        private void BeepTest()
+        {
+            byte[] sendArray = StringToByteArray(Command.BEEP_TEST);
+            SendCmd(sendArray, "BeepOrSetting", 0);
+        }
+        #endregion
+
+        #region 下踢錢箱
+        private void OpenCashBox()
+        {
+            byte[] sendArray = StringToByteArray(Command.OPEN_CASHBOX_TEST);
+            SendCmd(sendArray, "BeepOrSetting", 0);
+        }
+        #endregion
+
+        #region 連續切紙
+        private void CutTimes()
+        {   int result;
+            string times = CutTimesTxt.Text;
+            if (times == "" || !Int32.TryParse(times, out result))
+            {
+                MessageBox.Show(FindResource("ErrorFormat") as string);
+            }
+            else {
+                int contiunue = Int32.Parse(times);
+                byte[] sendArray = StringToByteArray(Command.CUT_TIMES);
+                for (int i = 0; i < contiunue; i++) {
+                    SendCmd(sendArray, "BeepOrSetting", 0);
+                }
+            }
+
+        }
+        #endregion
         //========================RS232的設定/傳送與接收===========================
 
         #region RS232 Port設定
@@ -2827,6 +2929,6 @@ namespace PirnterUtility
 
         }
 
-
+       
     }
 }

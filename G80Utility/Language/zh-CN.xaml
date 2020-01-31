@@ -251,7 +251,6 @@
     <!--message box-->
     <sys:String x:Key="GNSettingComplete">写入完成</sys:String>
     <sys:String x:Key="TransferTimeout">传输逾时</sys:String>
-    <sys:String x:Key="ErrorFormat">部分栏位格式错误，请输入数字</sys:String>
     <sys:String x:Key="ColumnEmpty">栏位空白，请输入内容</sys:String>
     <sys:String x:Key="wifisetOK">WIFI模块设定成功</sys:String>
     <sys:String x:Key="wifisetFail">WIFI模块设定失败</sys:String>
@@ -268,7 +267,8 @@
     <sys:String x:Key="CannotOpenComport">无法开启串口</sys:String>
     <sys:String x:Key="NotSettingComport">尚未设定串口</sys:String>
     <sys:String x:Key="NotReadParameterYet">读取不到参数</sys:String>
-    
+    <sys:String x:Key="ErrorFormat">字段输入错误，请重新输入</sys:String>
+
     <!--button-->
     <sys:String x:Key="Load">读取</sys:String>
     <sys:String x:Key="Set">设定</sys:String>

@@ -676,15 +676,15 @@
                             <!--测试-->
                             <GroupBox Header="测试" Margin="10,0,0,5" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14">
                                 <StackPanel>
-                                    <Button  Margin="10,15,10,5" Content="自检页(短)" Padding="5" FontSize="14" Width="180"  />
-                                    <Button  Margin="10,5,10,5" Content="自检页(长)" Padding="5" FontSize="14" Width="180" />
-                                    <Button  Margin="10,5,10,5" Content="打印均匀测试" Padding="5" FontSize="14" Width="180" />
+                                    <Button  Margin="10,15,10,5" Name="PrintTest_S" Click="PrintTest_S_Click" Content="自检页(短)" Padding="5" FontSize="14" Width="180"  />
+                                    <Button  Margin="10,5,10,5" Name="PrintTest_L" Click="PrintTest_L_Click" Content="自检页(长)" Padding="5" FontSize="14" Width="180" />
+                                    <Button  Margin="10,5,10,5" Name="PrintTest_EVEN" Click="PrintTest_EVEN_Click" Content="打印均匀测试" Padding="5" FontSize="14" Width="180" />
                                     <StackPanel   Margin="10,5,10,5" Orientation="Horizontal" HorizontalAlignment="Center" >
-                                        <TextBox  FontSize="14" Width="70"/>
-                                        <Button  Margin="10,0,0,0"   Content="连续切纸" Padding="5" FontSize="14"  Width="100"/>
+                                        <TextBox  FontSize="14" Width="70" Name="CutTimesTxt"/>
+                                        <Button  Margin="10,0,0,0" Name="CutTimesBtn" Click="CutTimesBtn_Click" Content="连续切纸" Padding="5" FontSize="14"  Width="100"/>
                                     </StackPanel>
-                                    <Button  Margin="10,5,10,5" Content="蜂鸣器测试" Padding="5" FontSize="14" Width="180" />
-                                    <Button  Margin="10,5,10,5" Content="打开钱箱" Padding="5" FontSize="14" Width="180" />
+                                    <Button  Margin="10,5,10,5" Name="BeepTestBtn" Click="BeepTestBtn_Click" Content="蜂鸣器测试" Padding="5" FontSize="14" Width="180" />
+                                    <Button  Margin="10,5,10,5" Name="OpenCashBoxBtn" Click="OpenCashBoxBtn_Click" Content="打开钱箱" Padding="5" FontSize="14" Width="180" />
                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="5,10,0,10">
                                         <StackPanel Margin="0,0,7,0" >
                                             <CheckBox Content="二维码" FontSize="14" Padding="5,0,0,0" Margin="0,0,0,10" />
