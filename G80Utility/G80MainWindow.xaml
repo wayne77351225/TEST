@@ -227,8 +227,8 @@
                                     </StackPanel>
                                     <StackPanel  Margin="0,0,0,6" Orientation="Horizontal">
                                         <ComboBox Name="USBModeCom" Margin="0,0,5,0" Width="117" Height="26" Foreground="#BDBDBD">
-                                            <ComboBoxItem>UTP</ComboBoxItem>
                                             <ComboBoxItem>VCOM</ComboBoxItem>
+                                            <ComboBoxItem>UTP</ComboBoxItem>
                                         </ComboBox>
                                         <Button  Margin="0,0,5,0" Name="USBModeBtn" Click="USBModeBtn_Click" Content="USB模式" Padding="10,5,10,5" Width="110"/>
                                         <CheckBox VerticalAlignment="Center" IsChecked="True" Name="USBModeCheckbox"/>
