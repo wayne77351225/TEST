@@ -252,7 +252,7 @@ namespace G80Utility.Tool
 
         #region 維護維修
         //清除打印機所有信息
-        public static string CLEAR_ALL_PRINTINFO = "1F 1B 1F 53 5A 4A 42 5A 46 41 30 02";
+        public static string CLEAN_ALL_PRINTINFO = "1F 1B 1F 53 5A 4A 42 5A 46 41 30 02";
 
         //讀取打印機統計信息
         public static string READ_PRINTINFO = "1F 1B 41 31 01";

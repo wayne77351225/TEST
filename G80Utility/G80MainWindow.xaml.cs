@@ -1460,7 +1460,7 @@ namespace PirnterUtility
         private void FactoryDefaultBtn_Click(object sender, RoutedEventArgs e)
         {
             //清除所有的打印机统计信息
-            clearPrinterInfo();
+            cleanPrinterInfo();
 
             //根据参数设置界面的复选框进行所有参数的下载
             IsParaSettingChecked();
@@ -2500,11 +2500,12 @@ namespace PirnterUtility
         //========================維護維修功能=================
 
         #region 清除打印機所有統計信息
-        private void clearPrinterInfo() {
-            byte[] sendArray = StringToByteArray(Command.CLEAR_ALL_PRINTINFO);
+        private void cleanPrinterInfo() {
+            byte[] sendArray = StringToByteArray(Command.CLEAN_ALL_PRINTINFO);
             SendCmd(sendArray, "BeepOrSetting", 0);
         }
         #endregion
+        
         //========================工廠生產功能=================
         #region 打印自檢頁
         private void PrintTest(string printType)
@@ -2701,7 +2702,6 @@ namespace PirnterUtility
             return (string)lastSN;
         }
         #endregion
-
 
         //========================RS232的設定/傳送與接收===========================
 
@@ -3138,12 +3138,12 @@ namespace PirnterUtility
 
             byte[] sendArray = null;
 
-            sendArray = StringToByteArray("1F 1B 1F 53 5A 4A 42 5A 46 12 01 01");
+            sendArray = StringToByteArray("1F 1B 41 31 01");
 
             switch (DeviceType)
             {
                 case "RS232":
-                    SerialPortConnect("ReadPara", sendArray, 54);
+                    SerialPortConnect("ReadPara", sendArray, 28);
                     break;
                 case "USB":
 
