@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace PirnterUtility.Tool
+namespace G80Utility.Tool
 {
     class RS232Connect
     {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace PirnterUtility.Tool
+namespace G80Utility.Tool
 {
     class Kernel32
     {

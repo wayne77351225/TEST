@@ -1,8 +1,7 @@
-﻿using G80Utility.Tool;
+﻿using G80Utility.Models;
+using G80Utility.Tool;
+using G80Utility.ViewModels;
 using Microsoft.Win32;
-using PirnterUtility.Models;
-using PirnterUtility.Tool;
-using PirnterUtility.ViewModels;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -19,7 +18,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
 
-namespace PirnterUtility
+namespace G80Utility
 {
     /// <summary>
     /// Window1.xaml 的互動邏輯
@@ -45,6 +44,7 @@ namespace PirnterUtility
 
         //property 
         DeviceViewModel viewmodel { get; set; }
+
 
         //usb是否結束讀取
         bool isUSBFinishReceiveData;
@@ -82,8 +82,9 @@ namespace PirnterUtility
 
             //combobox databinding
             viewmodel = new DeviceViewModel();
-            DataContext = viewmodel;
 
+            DataContext = viewmodel;
+            
             //BaudRate預設
             BaudRateCom.SelectedIndex = 2;
             App.Current.Properties["BaudRateSetting"] = 38400;
@@ -3098,6 +3099,7 @@ namespace PirnterUtility
                     }
                 }
                 Device device = new Device() { DeviceType = "rs232", RS232PortName = ports[i] };
+                //RS232 device = new RS232() { RS232PortName = ports[i] };
                 deviceList.Add(device);
 
                 viewmodel.addDevice(device);
@@ -3335,7 +3337,8 @@ namespace PirnterUtility
                     deviceList.Clear(); //清空避免重複
                     getUSBInfoandUpdateView();
                     viewmodel.getDeviceObserve("usb");
-                    DeviceSelectUSB.SelectedIndex = viewmodel.Device.Count - 1;//設定選取
+                    //DeviceSelectUSB.SelectedIndex = viewmodel.Device.Count - 1;//設定選取
+
                 }
                 else if (EhernetRadio.IsChecked == true)
                 {
@@ -3360,10 +3363,9 @@ namespace PirnterUtility
                     deviceList.Clear(); //清空避免重複
                     getSerialPort();
                     viewmodel.getDeviceObserve("rs232");
-                    DeviceSelectRS232.SelectedIndex = viewmodel.Device.Count - 1;
+                    //DeviceSelectRS232.SelectedIndex = viewmodel.Device.Count - 1;
 
                 }
-
             }
             handled = false;
             return IntPtr.Zero;
@@ -3382,7 +3384,7 @@ namespace PirnterUtility
                 deviceList.Clear(); //清空避免重複
                 getUSBInfoandUpdateView();
                 viewmodel.getDeviceObserve("usb");
-                DeviceSelectUSB.SelectedIndex = viewmodel.Device.Count - 1;//設定選取第一筆
+                //DeviceSelectUSB.SelectedIndex = viewmodel.Device.Count - 1;//設定選取第一筆
 
             }
             else if (EhernetRadio.IsChecked == true)
@@ -3406,8 +3408,11 @@ namespace PirnterUtility
                 DeviceType = "RS232";
                 deviceList.Clear(); //清空避免重複
                 getSerialPort();
+                getUSBInfoandUpdateView();
                 viewmodel.getDeviceObserve("rs232");
-                DeviceSelectRS232.SelectedIndex = viewmodel.Device.Count - 1;
+                DeviceSelectRS232.SelectedIndex = viewmodel.RS232Device.Count - 1;
+                viewmodel.getDeviceObserve("usb");
+                DeviceSelectUSB.SelectedIndex = viewmodel.USBDevice.Count - 1;//設定選取第一筆
             }
 
         }

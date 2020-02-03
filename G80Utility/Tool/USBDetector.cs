@@ -1,7 +1,7 @@
 ﻿using System.Runtime.InteropServices;
 using System;
 
-namespace PirnterUtility.Tool
+namespace G80Utility.Tool
 {
     /// <summary>
     /// To get USBBroadcastinterface

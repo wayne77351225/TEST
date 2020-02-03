@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace PirnterUtility.Models
+namespace G80Utility.Models
 {
     class Device
     {
@@ -38,7 +38,7 @@ namespace PirnterUtility.Models
                     case "wifi"://目前沒有
                         display = WIFIIP; //$"{WIFIIP}:{WIFIPort}
                         break;
-                    case "rs232"://目前沒有
+                    case "rs232":
                         display = RS232PortName;
                         break;
                     default:
