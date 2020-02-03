@@ -93,6 +93,7 @@
     <Compile Include="Tool\Config.cs" />
     <Compile Include="Tool\Kernel32.cs" />
     <Compile Include="Tool\RS232Connect.cs" />
+    <Compile Include="Tool\USBConnect.cs" />
     <Compile Include="Tool\USBDetector.cs" />
     <Compile Include="ViewModels\DeviceViewModel.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
@@ -147,10 +148,6 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\about.png" />
-    <Resource Include="Images\exit.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="logo.ico" />

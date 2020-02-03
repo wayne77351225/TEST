@@ -30,7 +30,8 @@ namespace PirnterUtility.Models
                         {
                             //display = $"{USBPortName} [{USBPortDescritption} SN:{USBSN}] Linked";
                             //display = $"{USBPortDescritption} [{USBPortName}]";
-                            display = USBPortDescritption+" ["+USBPortName+"]";
+                            //display = USBPortDescritption+" ["+USBPortName+"]";
+                            display = USBPortName;
                         }
                        
                         break;

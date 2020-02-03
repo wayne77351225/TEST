@@ -247,16 +247,12 @@
     <sys:String x:Key="GNSettingComplete">寫入完成</sys:String>
     <sys:String x:Key="TransferTimeout">傳輸逾時</sys:String>
     <sys:String x:Key="ColumnEmpty">欄位空白，請輸入內容</sys:String>
-    <sys:String x:Key="wifisetOK">WIFI模塊設定成功</sys:String>
-    <sys:String x:Key="wifisetFail">WIFI模塊設定失敗</sys:String>
-    <sys:String x:Key="wifiresetOK">WIFI模塊重啟成功</sys:String>
-    <sys:String x:Key="wifiresetFail">WIFI模塊重啟失敗</sys:String>
     <sys:String x:Key="NotFoundSettingFile">找不到設定檔，讀取設定檔失敗!</sys:String>
-    <sys:String x:Key="CommandEmpty">尚未輸入指令</sys:String>
     <sys:String x:Key="ConnectTimeout">連線逾時</sys:String>
-    <sys:String x:Key="NoDPIError">尚未取得印表機dpi資訊，部分欄位將無法正常計算，請先更新印表機資訊</sys:String>
     <sys:String x:Key="NOFramework4.0">請先安裝.Net Framework4.0方可正常執行此程式</sys:String>
     <sys:String x:Key="GNSettingEmpty">上次儲存印表機設定有誤，儲存檔為空白，請重新儲存檔案!</sys:String>
+    
+    
     <sys:String x:Key="FailedSend">傳送失敗:</sys:String>
     <sys:String x:Key="ComportSetError">串列埠設定錯誤!</sys:String>
     <sys:String x:Key="CannotOpenComport">無法開啟通訊埠</sys:String>
@@ -264,7 +260,9 @@
     <sys:String x:Key="NotReadParameterYet">读取不到参数</sys:String>
     <sys:String x:Key="ErrorFormat">欄位輸入錯誤，請重新輸入</sys:String>
     <sys:String x:Key="LessLength">序號長度需為16個字長</sys:String>
-
+    <sys:String x:Key="NotSettingUSBport">連接USB設備失敗</sys:String>
+    <sys:String x:Key="USBNotRegistYet">Printer尚未註冊</sys:String>
+    
     <!--button-->
     <sys:String x:Key="Load">讀取</sys:String>
     <sys:String x:Key="Set">設定</sys:String>

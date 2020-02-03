@@ -46,9 +46,8 @@ namespace PirnterUtility
         //property 
         DeviceViewModel viewmodel { get; set; }
 
-        //SerialPort
-        string recieved_data;
-
+        //usb是否結束讀取
+        bool isUSBFinishReceiveData;
 
 
         #endregion
@@ -1063,7 +1062,10 @@ namespace PirnterUtility
             {
                 SerialPortConnect("CommunicationTest", sendArray, 0);
             }
-
+            if ((bool)USBCheckbox.IsChecked)
+            {
+                USBConnectAndSendCmd("Default", sendArray, 0);
+            }
         }
         #endregion
 
@@ -2500,12 +2502,13 @@ namespace PirnterUtility
         //========================維護維修功能=================
 
         #region 清除打印機所有統計信息
-        private void cleanPrinterInfo() {
+        private void cleanPrinterInfo()
+        {
             byte[] sendArray = StringToByteArray(Command.CLEAN_ALL_PRINTINFO);
             SendCmd(sendArray, "BeepOrSetting", 0);
         }
         #endregion
-        
+
         //========================工廠生產功能=================
         #region 打印自檢頁
         private void PrintTest(string printType)
@@ -2607,7 +2610,6 @@ namespace PirnterUtility
         {
             byte[] sendArray = StringToByteArray(Command.DEVICE_INFO_READING);
             SendCmd(sendArray, "ReadSN", 54);
-
         }
         #endregion
 
@@ -2631,18 +2633,21 @@ namespace PirnterUtility
                         break;
                 }
             }
-            else { //已經有紀錄，抓取最後一次序號值
-                sn=getSNRegistry();               
-                string number=sn.Substring(10, 6); 
-                sn=sn.Remove(10, 6);
+            else
+            { //已經有紀錄，抓取最後一次序號值
+                sn = getSNRegistry();
+                string number = sn.Substring(10, 6);
+                sn = sn.Remove(10, 6);
                 int lastNumber = Int32.Parse(number);
-                lastNumber+= 1; //sn每次加1
+                lastNumber += 1; //sn每次加1
                 number = lastNumber.ToString();
-                if (number.Length < 6) {
+                if (number.Length < 6)
+                {
                     //不能直接使用nubmer.Length，因為在迴圈的過程中length會越來越大
                     int nLen = number.Length;
-                    for (int i = 1; i <= 6- nLen; i++) { //不足6位前面要補0
-                        number= "0" + number;
+                    for (int i = 1; i <= 6 - nLen; i++)
+                    { //不足6位前面要補0
+                        number = "0" + number;
                     }
                 }
                 sn = sn + number;
@@ -2679,10 +2684,11 @@ namespace PirnterUtility
         {
             RegistryKey registryKey = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\ZLPPT");
             //判斷是否有ZLPPT目錄
-            if (registryKey == null) {
+            if (registryKey == null)
+            {
                 registryKey = Registry.LocalMachine.CreateSubKey(@"SOFTWARE\ZLPPT");
                 registryKey.SetValue("Path", "C:\\");
-            }                    
+            }
         }
         #endregion
 
@@ -2811,6 +2817,143 @@ namespace PirnterUtility
         }
         #endregion
 
+        //===================USB 傳送指令==================
+
+        private void USBConnectAndSendCmd(string dataType, byte[] data, int receiveLength)
+        {
+            if (USBpath != null)
+            {
+                int result = USBConnect.ConnectUSBDevice(USBpath);
+
+                if (result == 1)
+                {
+                    //byte[] sendArray;
+                    //if (dataType == "SetGN")
+                    //{
+                    //    //sendArray = ConvertGNColumntoArray("U");
+                    //    /* 
+                    //     *USBSendCMD parameter:
+                    //     *1:data type
+                    //     *2:size or defualt btye array sent
+                    //     *3:data command
+                    //     *4.complete message
+                    //    */
+                    //    isUSBFinishReceiveData = USBConnect.USBSendCMD("Set", sendArray, null, FindResource("GNSettingComplete") as string);
+                    //    while (!isUSBFinishReceiveData)
+                    //    {
+                    //        if (USBConnect.isSettingOK)
+                    //        {
+                    //            EnableOrDisableBtn(true);
+                    //            break;
+                    //        }
+                    //    }
+                    //}
+                    //else if (dataType == "SetSensor")
+                    //{
+                    //    sendArray = ConvertSensorColumntoArray("U");
+                    //    isUSBFinishReceiveData = USBConnect.USBSendCMD("Set", sendArray, null, FindResource("GNSettingComplete") as string);
+                    //    while (!isUSBFinishReceiveData)
+                    //    {
+                    //        if (USBConnect.isSettingOK)
+                    //        {
+                    //            EnableOrDisableBtn(true);
+                    //            break;
+                    //        }
+                    //    }
+                    //}
+                    //else if (dataType == "SetWifi")
+                    //{
+                    //    sendArray = Encoding.Default.GetBytes(sizeCmd);
+                    //    isUSBFinishReceiveData = USBConnect.USBSendCMD("Set", sendArray, null, null);
+                    //    while (!isUSBFinishReceiveData)
+                    //    {
+                    //        if (USBConnect.isSettingOK)
+                    //        {
+                    //            EnableOrDisableBtn(true);
+                    //            WIFIModuleResultUI(USBConnect.WifiSettingResult);
+                    //            break;
+                    //        }
+                    //    }
+                    //}
+                    //else if (dataType == "Default")
+                    //{
+                    //if (sizeCmd.Contains(",U,"))
+                    //{ //判斷使用USB通道的時候才啟動FLAG
+                    //    USBConnect.isCMDPass = true;
+                    //    if (sizeCmd.Contains("SET"))
+                    //    {
+                    //        USBConnect.receiveTimes = 1;
+                    //    }
+                    //    else if (sizeCmd.Contains("GET"))
+                    //    {
+                    //        USBConnect.receiveTimes = 3;
+                    //    }
+                    //}
+                    //else if (sizeCmd.Contains("DEFAULT") || sizeCmd.Contains("TESTPRINT"))
+                    //{
+                    //    USBConnect.receiveTimes = 0;
+                    //}
+                    //sendArray = Encoding.Default.GetBytes(sizeCmd);
+                    USBConnect.USBSendCMD("Default", data,null, receiveLength);
+                }
+                //else if (dataType == "File")
+                //{
+                //    string cmd = Encoding.Default.GetString(binData);
+                //    if (cmd.Contains(",U,"))
+                //    { //判斷使用USB通道的時候才啟動FLAG
+                //        USBConnect.isCMDPass = true;
+                //        if (cmd.Contains("SET"))
+                //        {
+                //            USBConnect.receiveTimes = 1;
+                //        }
+                //        else if (cmd.Contains("GET"))
+                //        {
+                //            USBConnect.receiveTimes = 3;
+                //        }
+                //    }
+                //    else if (cmd.Contains("DEFAULT") || cmd.Contains("TESTPRINT"))
+                //    {
+                //        USBConnect.receiveTimes = 0;
+                //    }
+                //    USBConnect.USBSendCMD("Default", binData, null, null);
+                //}
+                //else
+                //{
+                //    sendArray = Encoding.Default.GetBytes(sizeCmd);
+                //    USBConnect.USBSendCMD("Size", sendArray, dataCmd, null);
+                //    isUSBFinishReceiveData = USBConnect.isReceiveData;
+                //    while (!isUSBFinishReceiveData)
+                //    {
+                //        if (USBConnect.isTimeout)
+                //        {
+                //            //Dispatcher.Invoke(DispatcherPriority.Background, new MessageBoxUIUpdateDelegate(MessageBoxUIUpdate), FindResource("TransferTimeout") as string);
+                //            //Dispatcher.Invoke(DispatcherPriority.Background, new EnableOrDisableBtnDelegate(EnableOrDisableBtn), true);
+                //            break;
+                //        }
+
+                //        if (USBConnect.mRecevieData != null)
+                //        {
+                //            Console.WriteLine("result:" + Encoding.Default.GetString(USBConnect.mRecevieData));
+
+                //        }
+                //    }
+                //}
+                //    }
+                //    else
+                //    {
+                //        isUSBFinishReceiveData = true; //如果不設為true前端會一直收資料              
+
+                //        MessageBox.Show(FindResource("NotSettingUSBport") as string);
+                //        USBConnect.closeHandle();
+                //    }
+            }
+            else
+            {
+                MessageBox.Show(FindResource("NotSettingUSBport") as string);
+                USBConnect.closeHandle();
+            }
+        }
+
         //============================各種資料類型的轉換=============================
 
         #region hex string to byte array
@@ -2920,6 +3063,210 @@ namespace PirnterUtility
         }
         #endregion
 
+        //=========================USB port search/get=====================
+
+        #region 取得usb sn and port description
+        public void getUSBSNandDescription()
+        {
+            RegistryKey rkUsbPrint = rkLocalMachine.OpenSubKey("SYSTEM\\CurrentControlSet\\Control\\DeviceClasses\\{28d78fad-5a12-11d1-ae5b-0000f803a8c2}");
+            if (rkUsbPrint != null)
+            {
+                foreach (String usbTypePath in rkUsbPrint.GetSubKeyNames())
+                {
+                    //取得device instance
+                    string deviceinstance = (string)rkUsbPrint.OpenSubKey(usbTypePath).GetValue("DeviceInstance");
+                    //deviceinstance:USB\VID_0471&PID_0055\0003D0000000
+                    // deviceinstance: USB\VID_0471 & PID_8E00\001
+                    //要把vid和pid取出來，後面開usb要用
+                    string sn = null;
+                    string vidpid = null;
+                    vidpid = deviceinstance.Split('\\')[1];
+                    sn = deviceinstance.Split('\\')[2];
+                    RegistryKey Device = rkUsbPrint.OpenSubKey(usbTypePath + "\\#\\Device Parameters");
+                    string portdescription = null;
+
+                    //取得port number 
+                    //win10沒有連線時會沒有portNumber，此數字會=0
+                    int portnumber = 0;
+                    if (Device.GetValue("Port Number") != null)
+                    {
+                        portnumber = (int)Device.GetValue("Port Number");
+
+                    }
+
+                    //for winxp
+                    bool isLinked = false;
+                    if (OSVersion == "5.1")
+                    {
+                        RegistryKey Linked = rkUsbPrint.OpenSubKey(usbTypePath + "\\#\\Control");
+                        if (Linked != null) //沒有抓到usb時會沒#\\Control
+                        {
+                            if (Linked.GetValue("Linked").ToString() == "1")
+                            {
+                                isLinked = true;
+                            }
+                            else
+                            {
+                                isLinked = false;
+                            }
+                            portdescription = (string)Device.GetValue("Port Description");//取得port description
+                            Device device = new Device() { DeviceType = "usb", USBSN = sn, USBPortDescritption = portdescription, USBDeviceInstance = deviceinstance, USBVIDPID = vidpid, USBisLinked = isLinked, USBPortName = "USB" + portnumber.ToString("D3") };
+                            deviceList.Add(device);
+                        }
+                        else
+                        {
+                            MessageBox.Show(FindResource("USBNotRegistYet") as string);
+                        }
+                    }
+                    else
+                    {
+                        //判斷如果註冊碼資料中"Port Description"不加入此項資料
+                        // win7的註冊碼中沒有這項資料
+                        if (Device.GetValue("Port Description") + "" == "")
+                        {   //win7
+                            //ToString("D3")，代表這是三位數的格式不到三位數者自動補0.
+                            Device device = new Device() { DeviceType = "usb", USBSN = sn, USBDeviceInstance = deviceinstance, USBVIDPID = vidpid, USBPortName = "USB" + portnumber.ToString("D3") };
+                            deviceList.Add(device);
+                        }
+                        else
+                        {
+                            portdescription = (string)Device.GetValue("Port Description");//取得port description
+                            Device device = new Device() { DeviceType = "usb", USBSN = sn, USBPortDescritption = portdescription, USBDeviceInstance = deviceinstance, USBVIDPID = vidpid, USBPortName = "USB" + portnumber.ToString("D3") };
+                            deviceList.Add(device);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                MessageBox.Show(FindResource("USBNotRegistYet") as string);
+            }
+        }
+        #endregion
+
+        #region 取得usb port name
+        public void getUSBPortName()
+        {
+            RegistryKey rkUSBPRINT = rkLocalMachine.OpenSubKey("SYSTEM\\CurrentControlSet\\Enum\\USBPRINT");
+            foreach (string typeName in rkUSBPRINT.GetSubKeyNames())
+            {
+                RegistryKey rkDevice = rkUSBPRINT.OpenSubKey(typeName);
+                foreach (string portInfo in rkDevice.GetSubKeyNames())
+                {
+                    RegistryKey rkDevicePara = rkDevice.OpenSubKey(portInfo + "\\Device Parameters");
+
+                    //SBARCO T4ep2  SBARCO_T4ep2_ 
+                    //Gprinter GP-1624T Gprinter_GP-1624T
+                    foreach (Device device in deviceList)
+                    {
+                        //portDescription中的空白會在typename中用_代替
+                        string tmp = device.USBPortDescritption.Replace(" ", "_");
+                        if (tmp.Contains(typeName))
+                        {
+                            device.USBPortName = (string)rkDevicePara.GetValue("PortName");
+                        }
+                    }
+                }
+
+            }
+
+        }
+        #endregion
+
+        #region 判斷usb printer是否連線
+        public void getUSBConnectStatus()
+        {
+            RegistryKey rkUsbPrint = rkLocalMachine.OpenSubKey("SYSTEM\\CurrentControlSet\\Services\\usbprint\\Enum");
+            if (rkUsbPrint != null && (int)rkUsbPrint.GetValue("Count") != 0)
+            {
+
+                for (int i = 0; i < (int)rkUsbPrint.GetValue("Count"); i++)
+                { //當Count>0代表有usb印表機連線
+                    //rkUsbPrint.GetValue($"{i}")取得的資料格式為USB\VID_0999&PID_0011\001180400307 及deviceInstance的資料
+                    Console.WriteLine(rkUsbPrint.GetValue(i.ToString()));
+                    foreach (Device device in deviceList)
+                    {
+
+                        if (device.USBDeviceInstance == (string)rkUsbPrint.GetValue(i.ToString()))
+                        {
+                            device.USBisLinked = true;
+                        }
+                    }
+                }
+            }
+        }
+        #endregion
+
+        #region 取得usb device所有資訊並設定選取item
+        public void getUSBInfoandUpdateView()
+        {
+
+            getUSBSNandDescription();
+            if (OSVersion != "5.1")
+            {
+                getUSBConnectStatus();
+            }
+            //getUSBPortName();
+
+            foreach (Device device in deviceList)
+            {
+                if (device.USBisLinked)
+                {
+                    //如果要預設放第一筆要另外加判斷
+                    try
+                    {
+                        //if (usbConnection.SelectedIndex == -1 && OSVersion == "5.1") //避免在XP中程式CRASH
+                        //{
+                        //    MessageBox.Show("USB裝置搜尋中請稍後");
+                        //}
+
+                        viewmodel.addDevice(device);
+
+                    }
+                    catch (Exception)
+                    {
+
+                        //MessageBox.Show(e.ToString());
+                    }
+
+                }
+            }
+        }
+        #endregion
+
+        #region 選取usb裝置
+        private void DeviceSelectUSB_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            Device seletedItem = DeviceSelectUSB.SelectedItem as Device;
+            string usbpath = null;
+            RegistryKey rkUsbPrint = rkLocalMachine.OpenSubKey("SYSTEM\\CurrentControlSet\\Control\\DeviceClasses\\{28d78fad-5a12-11d1-ae5b-0000f803a8c2}");
+            //要取得資訊： ##?#USB#VID_0A5F&PID_00C1#11J192301494#{28d78fad-5a12-11d1-ae5b-0000f803a8c2}
+            if (rkUsbPrint != null)
+            {
+                foreach (String usbTypePath in rkUsbPrint.GetSubKeyNames())
+                {
+                    //seletedItem!=null,要加判斷選取項目不為null不然找不到時會出現錯誤
+                    //因為rkUsbPrint.GetSubKeyNames()撈出來的資料是所有有註冊的印表機資料，要比對選取項目的sn
+                    //因為傳送路徑時前面##?#要改為\\?\，並且除了sn全部小寫
+                    if (seletedItem != null && usbTypePath.Contains(seletedItem.USBVIDPID))
+                    {
+                        usbpath = "\\\\?\\" + usbTypePath.ToLower().Substring(4);
+                        break;
+                    }
+                }
+                if (usbpath != null)
+                {
+                    //將sn恢復為大小寫正常顯示
+                    USBpath = usbpath.Replace(seletedItem.USBSN.ToLower(), seletedItem.USBSN);
+                    //USBConnect.USBpath = USBpath;
+                }
+            }
+            else
+            {
+                MessageBox.Show(FindResource("USBNotRegistYet") as string);
+            }
+        }
+        #endregion
         //===========================USB and RS232裝置插拔偵測=============================
 
         #region register usbdetect notify
@@ -2943,20 +3290,11 @@ namespace PirnterUtility
             {
                 if (USBRadio.IsChecked == true)
                 {
-                    //viewmodel.removePort(deviceList);
-                    //deviceList.Clear(); //清空避免重複
-                    //getUSBInfoandUpdateView();
-                    //viewmodel.getDeviceObserve("usb");
-                    //DeviceSelect.SelectedIndex = viewmodel.Device.Count - 1;//設定選取
-                    //                                                        //因為在usb狀態下開關，不會跑選擇usb device那段，就會少判斷一次
-                    //if (viewmodel.Device.Count - 1 != -1)
-                    //{
-                    //    isPrinterConnected = true;
-                    //}
-                    //else
-                    //{
-                    //    isPrinterConnected = false;
-                    //}
+                    viewmodel.removePort(deviceList);
+                    deviceList.Clear(); //清空避免重複
+                    getUSBInfoandUpdateView();
+                    viewmodel.getDeviceObserve("usb");
+                    DeviceSelectUSB.SelectedIndex = viewmodel.Device.Count - 1;//設定選取
                 }
                 else if (EhernetRadio.IsChecked == true)
                 {
@@ -2975,15 +3313,15 @@ namespace PirnterUtility
                     //        break;
                     //}
                 }
-                //else if (RS232Radio.IsChecked == true)
-                //{                   
-                viewmodel.removePort(deviceList);
-                deviceList.Clear(); //清空避免重複
-                getSerialPort();
-                viewmodel.getDeviceObserve("rs232");
-                DeviceSelectRS232.SelectedIndex = viewmodel.Device.Count - 1;
+                else if (RS232Radio.IsChecked == true)
+                {
+                    viewmodel.removePort(deviceList);
+                    deviceList.Clear(); //清空避免重複
+                    getSerialPort();
+                    viewmodel.getDeviceObserve("rs232");
+                    DeviceSelectRS232.SelectedIndex = viewmodel.Device.Count - 1;
 
-                //}
+                }
 
             }
             handled = false;
@@ -2992,6 +3330,7 @@ namespace PirnterUtility
         #endregion
 
         //=======================================裝置的選取==================================
+
         #region 選取傳輸通道
         private void ConnectType_SelectionChanged(object sender, RoutedEventArgs e)
         {
@@ -2999,18 +3338,11 @@ namespace PirnterUtility
             if (USBRadio.IsChecked == true)
             {
                 DeviceType = "USB";
-                //deviceList.Clear(); //清空避免重複
-                //getUSBInfoandUpdateView();
-                //viewmodel.getDeviceObserve("usb");
-                //DeviceSelect.SelectedIndex = viewmodel.Device.Count - 1;//設定選取第一筆
-                //if (viewmodel.Device.Count - 1 != -1)
-                //{
-                //    isPrinterConnected = true;
-                //}
-                //else
-                //{
-                //    isPrinterConnected = false;
-                //}
+                deviceList.Clear(); //清空避免重複
+                getUSBInfoandUpdateView();
+                viewmodel.getDeviceObserve("usb");
+                DeviceSelectUSB.SelectedIndex = viewmodel.Device.Count - 1;//設定選取第一筆
+
             }
             else if (EhernetRadio.IsChecked == true)
             {
@@ -3155,5 +3487,6 @@ namespace PirnterUtility
 
         }
 
+       
     }
 }
