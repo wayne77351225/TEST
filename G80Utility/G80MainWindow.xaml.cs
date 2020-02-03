@@ -1057,14 +1057,16 @@ namespace PirnterUtility
         #region 通讯接口测试按鈕事件
         private void ConnectTest_Click(object sender, RoutedEventArgs e)
         {
-            byte[] sendArray = StringToByteArray(Command.RS232_COMMUNICATION_TEST);
+            byte[] sendArray ;
             if ((bool)rs232Checkbox.IsChecked)
             {
+                sendArray = StringToByteArray(Command.RS232_COMMUNICATION_TEST);
                 SerialPortConnect("CommunicationTest", sendArray, 0);
             }
             if ((bool)USBCheckbox.IsChecked)
             {
-                USBConnectAndSendCmd("Default", sendArray, 0);
+                sendArray = StringToByteArray(Command.USB_COMMUNICATION_TEST);
+                USBConnectAndSendCmd("CommunicationTest", sendArray, 8);
             }
         }
         #endregion
@@ -2827,6 +2829,39 @@ namespace PirnterUtility
 
                 if (result == 1)
                 {
+                    USBConnectImage.Source = new BitmapImage(new Uri("Images/green_circle.png", UriKind.Relative));
+                    switch (dataType)
+                    {
+                        //case "ReadPara":
+                        //    bool isReceiveData = RS232Connect.SerialPortSendCMD("NeedReceive", data, null, receiveLength);
+                        //    while (!isReceiveData)
+                        //    {
+                        //        if (RS232Connect.mRecevieData != null)
+                        //        {
+                        //            setParaColumn(RS232Connect.mRecevieData);
+                        //            break;
+                        //        }
+                        //    }
+                        //    break;
+                        //case "ReadSN":
+                        //    bool isReceiveSN = RS232Connect.SerialPortSendCMD("NeedReceive", data, null, receiveLength);
+                        //    while (!isReceiveSN)
+                        //    {
+                        //        if (RS232Connect.mRecevieData != null)
+                        //        {
+                        //            SetPrinterInfo(RS232Connect.mRecevieData);
+                        //            break;
+                        //        }
+                        //    }
+                        //    break;
+                        case "CommunicationTest": //通訊測試
+                            USBConnect.USBSendCMD("NeedReceive", data, FindResource("GNSettingComplete") as string, receiveLength);
+                            break;
+                        case "BeepOrSetting":
+                            RS232Connect.SerialPortSendCMD("NoReceive", data, null, 0);
+                            RS232Connect.CloseSerialPort(); //沒立刻關閉有時會漏收命令
+                            break;
+                    }
                     //byte[] sendArray;
                     //if (dataType == "SetGN")
                     //{
@@ -2894,7 +2929,7 @@ namespace PirnterUtility
                     //    USBConnect.receiveTimes = 0;
                     //}
                     //sendArray = Encoding.Default.GetBytes(sizeCmd);
-                    USBConnect.USBSendCMD("Default", data,null, receiveLength);
+                   // USBConnect.USBSendCMD("Default", data, null, receiveLength);
                 }
                 //else if (dataType == "File")
                 //{
@@ -2946,11 +2981,18 @@ namespace PirnterUtility
                 //        MessageBox.Show(FindResource("NotSettingUSBport") as string);
                 //        USBConnect.closeHandle();
                 //    }
+                else
+                {
+                    MessageBox.Show(FindResource("NotSettingUSBport") as string);
+                    USBConnect.closeHandle();
+                    USBConnectImage.Source = new BitmapImage(new Uri("Images/red_circle.png", UriKind.Relative)); //連線失敗時
+                }
             }
             else
             {
                 MessageBox.Show(FindResource("NotSettingUSBport") as string);
                 USBConnect.closeHandle();
+                USBConnectImage.Source = new BitmapImage(new Uri("Images/red_circle.png", UriKind.Relative)); //連線失敗時
             }
         }
 
@@ -3030,7 +3072,7 @@ namespace PirnterUtility
                     SerialPortConnect(sendType, sendArray, length);
                     break;
                 case "USB":
-
+                    USBConnectAndSendCmd(sendType, sendArray, length);
                     break;
                 case "Ethernet":
 
@@ -3240,7 +3282,6 @@ namespace PirnterUtility
             Device seletedItem = DeviceSelectUSB.SelectedItem as Device;
             string usbpath = null;
             RegistryKey rkUsbPrint = rkLocalMachine.OpenSubKey("SYSTEM\\CurrentControlSet\\Control\\DeviceClasses\\{28d78fad-5a12-11d1-ae5b-0000f803a8c2}");
-            //要取得資訊： ##?#USB#VID_0A5F&PID_00C1#11J192301494#{28d78fad-5a12-11d1-ae5b-0000f803a8c2}
             if (rkUsbPrint != null)
             {
                 foreach (String usbTypePath in rkUsbPrint.GetSubKeyNames())
@@ -3487,6 +3528,6 @@ namespace PirnterUtility
 
         }
 
-       
+
     }
 }

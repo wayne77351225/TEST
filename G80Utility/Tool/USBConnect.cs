@@ -28,6 +28,7 @@ namespace G80Utility.Tool
         public const uint FILE_SHARE_WRITE = 0x00000002;
         public const int OPEN_EXISTING = 3;
         public const int OVERLAPPED = 0x40000000;
+        public const int NO_OVERLAPPED = 0;
 
         //usb 寫入pending error code
         public static int ERROR_IO_PENDING = 997;
@@ -129,9 +130,8 @@ namespace G80Utility.Tool
             //讀取設備
             while (nReadLen < size)
             {
-
                 bool re = Kernel32.ReadFile((IntPtr)USBHandle, buffer, (uint)size, ref dwRead, ref overlap);
-                Console.WriteLine("原始資料" + Encoding.Default.GetString(buffer));
+                Console.WriteLine("原始資料" + BitConverter.ToString(buffer));
                 if (!re && Marshal.GetLastWin32Error() == ERROR_IO_PENDING)
                 {
                     waitResutl = Kernel32.WaitForSingleObject(overlap.hEvent, 2000);
@@ -157,34 +157,12 @@ namespace G80Utility.Tool
                 nReadLen += (int)dwRead;
                 //isTimeout = false;
             }
-
-            if (waitResutl != 258)
-            {
-                byte[] final = new byte[2];
-                uint finRead = 0;
-                bool fin = Kernel32.ReadFile((IntPtr)USBHandle, final, 2, ref finRead, ref overlap); //把\r\n收完，不然在收別的東西會先收到\r\n
-                if (!fin && Marshal.GetLastWin32Error() == ERROR_IO_PENDING)
-                {
-
-                    Kernel32.GetOverlappedResult((IntPtr)USBHandle, ref overlap, ref finRead, true);
-                    Console.WriteLine("readPIf..." + finRead);
-                }
-
-            }
-            else if (waitResutl == 258)
-            {
-                Console.WriteLine("usbtool..." + "timeout");
-                isReceiveData = true;
-                isTimeout = true;
-            }
+          
             closeHandle();
-            Console.WriteLine(USBHandle);
 
-            //讀取會分三段fb:dwRead==3/ data  dwRead==92/0a0d dwRead==2
-            //讀取到完整data時dwRead==92 
             if (dwRead == size)
             {
-                Console.WriteLine("接收資料" + Encoding.Default.GetString(buffer));
+                Console.WriteLine("接收資料" + BitConverter.ToString(buffer));
                 mRecevieData = buffer;
             }
         }
@@ -210,7 +188,7 @@ namespace G80Utility.Tool
                 {
                     isTimeout = true;
                     isSettingOK = true;
-                    Write0D0A2Times(); //目前設定2個 
+                    //Write0D0A2Times(); //目前設定2個 
                     closeHandle();
                 }
                 else
