@@ -1456,6 +1456,21 @@ namespace PirnterUtility
         }
         #endregion
 
+        #region 出廠設置按鈕事件
+        private void FactoryDefaultBtn_Click(object sender, RoutedEventArgs e)
+        {
+            //清除所有的打印机统计信息
+            clearPrinterInfo();
+
+            //根据参数设置界面的复选框进行所有参数的下载
+            IsParaSettingChecked();
+            sendALL();
+
+            //发送打印自检页（长）命令
+            PrintTest("long");
+        }
+        #endregion
+
         //========================參數設置每個寫入命令功能=================
 
         #region 設定IP Address
@@ -2482,6 +2497,14 @@ namespace PirnterUtility
         }
         #endregion
 
+        //========================維護維修功能=================
+
+        #region 清除打印機所有統計信息
+        private void clearPrinterInfo() {
+            byte[] sendArray = StringToByteArray(Command.CLEAR_ALL_PRINTINFO);
+            SendCmd(sendArray, "BeepOrSetting", 0);
+        }
+        #endregion
         //========================工廠生產功能=================
         #region 打印自檢頁
         private void PrintTest(string printType)
@@ -2591,7 +2614,7 @@ namespace PirnterUtility
         private void SetPrinterSN(string functionClass)
         {
             string sn = null;
-
+            //建立註冊機碼目錄
             createSNRegistry();
 
             //初次未記錄,抓取user輸入值
@@ -3131,7 +3154,6 @@ namespace PirnterUtility
             }
 
         }
-
 
     }
 }

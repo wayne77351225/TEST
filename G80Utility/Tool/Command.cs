@@ -250,6 +250,15 @@ namespace G80Utility.Tool
         //收到dip值的命令分類
         public static string RE_DIPVALUE_CLASSFY = "31-35";
 
+        #region 維護維修
+        //清除打印機所有信息
+        public static string CLEAR_ALL_PRINTINFO = "1F 1B 1F 53 5A 4A 42 5A 46 41 30 02";
+
+        //讀取打印機統計信息
+        public static string READ_PRINTINFO = "1F 1B 41 31 01";
+
+        #endregion
+
         #region 工廠生產
         //打印自检页(短)
         public static string PRINT_TEST_SHORT = "1F 1B 1F 53 5A 4A 42 5A 46 43 11 00";

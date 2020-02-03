@@ -708,7 +708,7 @@
                                         </StackPanel>
                                     </StackPanel>
                                 </GroupBox>
-                                <Button Margin="20,0,0,0" Content="出厂设置" Padding="5" FontSize="14" Height="40" />
+                                <Button Margin="20,0,0,0" Name="FactoryDefaultBtn" Click="FactoryDefaultBtn_Click" Content="出厂设置" Padding="5" FontSize="14" Height="40" />
                             </StackPanel>
                         </Grid>
                     </StackPanel>
