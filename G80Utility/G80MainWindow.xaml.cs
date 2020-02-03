@@ -3331,41 +3331,15 @@ namespace G80Utility
         {
             if (msg == USBDetector.UsbDevicechange)
             {
-                if (USBRadio.IsChecked == true)
-                {
-                    viewmodel.removePort(deviceList);
-                    deviceList.Clear(); //清空避免重複
-                    getUSBInfoandUpdateView();
-                    viewmodel.getDeviceObserve("usb");
-                    //DeviceSelectUSB.SelectedIndex = viewmodel.Device.Count - 1;//設定選取
+                viewmodel.removePort(deviceList);
+                deviceList.Clear(); //清空避免重複
+                getSerialPort();
+                getUSBInfoandUpdateView();
+                viewmodel.getDeviceObserve("rs232");
+                DeviceSelectRS232.SelectedIndex = viewmodel.RS232Device.Count - 1;
+                viewmodel.getDeviceObserve("usb");
+                DeviceSelectUSB.SelectedIndex = viewmodel.USBDevice.Count - 1;//設定選取第一筆
 
-                }
-                else if (EhernetRadio.IsChecked == true)
-                {
-                    //switch ((int)wparam) //因為wifi arp會記錄連線成功的ip，所以關機也會抓地到ip
-                    //{
-                    //    case USBDetector.UsbDeviceRemoved: //wifi arp
-                    //        viewmodel.removePort(deviceList);
-                    //        deviceList.Clear(); //清空避免重複
-                    //        break;
-                    //    case USBDetector.NewUsbDeviceConnected:
-                    //        viewmodel.removePort(deviceList);
-                    //        deviceList.Clear(); //清空避免重複
-                    //        getWIFIIP();
-                    //        viewmodel.getDeviceObserve("wifi");
-                    //        DeviceSelect.SelectedIndex = viewmodel.Device.Count - 1;
-                    //        break;
-                    //}
-                }
-                else if (RS232Radio.IsChecked == true)
-                {
-                    viewmodel.removePort(deviceList);
-                    deviceList.Clear(); //清空避免重複
-                    getSerialPort();
-                    viewmodel.getDeviceObserve("rs232");
-                    //DeviceSelectRS232.SelectedIndex = viewmodel.Device.Count - 1;
-
-                }
             }
             handled = false;
             return IntPtr.Zero;
@@ -3377,42 +3351,29 @@ namespace G80Utility
         #region 選取傳輸通道
         private void ConnectType_SelectionChanged(object sender, RoutedEventArgs e)
         {
+            //因為通訊測試所以全部傳輸通道要一次設定好
+            viewmodel.removePort(deviceList);
+            deviceList.Clear(); //清空避免重複
+            getSerialPort();
+            getUSBInfoandUpdateView();
+            viewmodel.getDeviceObserve("rs232");
+            DeviceSelectRS232.SelectedIndex = viewmodel.RS232Device.Count - 1;
+            viewmodel.getDeviceObserve("usb");
+            DeviceSelectUSB.SelectedIndex = viewmodel.USBDevice.Count - 1;//設定選取第一筆
 
             if (USBRadio.IsChecked == true)
             {
                 DeviceType = "USB";
-                deviceList.Clear(); //清空避免重複
-                getUSBInfoandUpdateView();
-                viewmodel.getDeviceObserve("usb");
-                //DeviceSelectUSB.SelectedIndex = viewmodel.Device.Count - 1;//設定選取第一筆
 
             }
             else if (EhernetRadio.IsChecked == true)
             {
                 DeviceType = "Ethernet";
-                //if (isPrinterConnected)
-                //{
-                //    deviceList.Clear(); //清空避免重複
-                //    getWIFIIP();
-                //    viewmodel.getDeviceObserve("wifi");
-                //    DeviceSelect.SelectedIndex = viewmodel.Device.Count - 1;
-                //}
-                //else
-                //{//因為wifi arp會記錄連線成功的ip，所以關機也會抓地到ip，透過usb是否連線來判斷是否關機
-                //    viewmodel.removePort(deviceList);
-                //    deviceList.Clear(); //清空避免重複
-                //}
+
             }
             else if (RS232Radio.IsChecked == true)
             {
-                DeviceType = "RS232";
-                deviceList.Clear(); //清空避免重複
-                getSerialPort();
-                getUSBInfoandUpdateView();
-                viewmodel.getDeviceObserve("rs232");
-                DeviceSelectRS232.SelectedIndex = viewmodel.RS232Device.Count - 1;
-                viewmodel.getDeviceObserve("usb");
-                DeviceSelectUSB.SelectedIndex = viewmodel.USBDevice.Count - 1;//設定選取第一筆
+                DeviceType = "RS232";             
             }
 
         }

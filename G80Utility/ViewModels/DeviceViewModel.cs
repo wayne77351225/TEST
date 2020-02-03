@@ -80,30 +80,6 @@ namespace G80Utility.ViewModels
                     if (device.DeviceType != "rs232") RS232DeviceObserve.Remove(device);
                 }
             }
-            //switch (type)
-            //{
-            //    case "usb":
-            //        foreach (Device device in deviceObserve.ToArray()) //在這邊使用toArray避免在remove時出現excepiton
-            //        {
-            //            if (device.DeviceType != "usb") deviceObserve.Remove(device);
-            //        }              
-            //        break;
-
-            //    case "ethernet":
-            //        foreach (Device device in deviceObserve.ToArray())
-            //        {
-            //            if (device.DeviceType != "ethernet") deviceObserve.Remove(device);
-            //        }
-            //        break;
-            //    case "rs232":
-            //        foreach (Device device in deviceObserve.ToArray())
-            //        {
-            //            if (device.DeviceType != "rs232") deviceObserve.Remove(device);
-            //        }
-            //        break;
-
-            //}
-
         }
 
         //移除combobox所有usb資料
@@ -115,6 +91,11 @@ namespace G80Utility.ViewModels
                 if (RS232DeviceObserve.Contains(device))
                 {
                     RS232DeviceObserve.Remove(device);
+                }
+
+                if (USBDeviceObserve.Contains(device))
+                {
+                    USBDeviceObserve.Remove(device);
                 }
             }
         }
