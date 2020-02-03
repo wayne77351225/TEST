@@ -153,30 +153,10 @@
     <Resource Include="Images\exit.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\PrinterUtility.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="logo.ico" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="icon.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\logo.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\logo2.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\ic_factory.png" />
-    <Resource Include="Images\ic_rtc.png" />
-    <Resource Include="Images\ic_testprint.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\ic_command.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\ic_sendfile.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\g80_logo.ico" />
