@@ -724,8 +724,9 @@ namespace PirnterUtility
             {
                 moudle += Convert.ToChar(buffer[i]);    //機器型號
             }
-            if (moudle.Substring(0,1)=="_") { //移除機器型號開頭的底線
-                moudle=moudle.Remove(0, 1);
+            if (moudle.Substring(0, 1) == "_")
+            { //移除機器型號開頭的底線
+                moudle = moudle.Remove(0, 1);
             }
             for (int i = 34; i < 44; i++)
             {
@@ -886,7 +887,6 @@ namespace PirnterUtility
 
             if (receiveData.Contains(Command.RE_PRINT_SPEED_CLASSFY))
             {
-                //checkIsGetData(null, PrintSpeedCom, data, "马达加速", false, 1);
                 string speed = hexStringToInt(receiveData).ToString();
                 switch (speed)
                 {
@@ -909,7 +909,6 @@ namespace PirnterUtility
             if (receiveData.Contains(Command.RE_DENSITY_MODE_CLASSFY))
             {
                 checkIsGetData(null, DensityModeCom, data, "浓度模式", false, 1);
-
             }
 
             if (receiveData.Contains(Command.RE_DENSITY_CLASSFY))
@@ -1102,6 +1101,7 @@ namespace PirnterUtility
             SetPrinterSN("communication");
         }
         #endregion
+
         #region 讀取所有參數設定
         private void ReadAllBtn_Click(object sender, RoutedEventArgs e)
         {
@@ -1455,6 +1455,7 @@ namespace PirnterUtility
             SetPrinterSN("factory");
         }
         #endregion
+
         //========================參數設置每個寫入命令功能=================
 
         #region 設定IP Address
@@ -1700,11 +1701,11 @@ namespace PirnterUtility
                 byte[] sendArray = null;
                 if (USBModeCom.SelectedIndex == 0)
                 {
-                    sendArray = StringToByteArray(Command.USB_UTP_SETTING);
+                    sendArray = StringToByteArray(Command.USB_VCOM_SETTING);
                 }
                 else if (USBModeCom.SelectedIndex == 1)
                 {
-                    sendArray = StringToByteArray(Command.USB_VCOM_SETTING);
+                    sendArray = StringToByteArray(Command.USB_UTP_SETTING);
                 }
                 switch (DeviceType)
                 {
@@ -2590,17 +2591,40 @@ namespace PirnterUtility
         private void SetPrinterSN(string functionClass)
         {
             string sn = null;
-            switch (functionClass)
-            {
-                case "factory":
-                    sn = PrinterSNFacTxt.Text;
-                    break;
-                case "communication":
-                    sn = PrinterSNTxt.Text;
-                    break;
 
+            createSNRegistry();
+
+            //初次未記錄,抓取user輸入值
+            if (getSNRegistry() == null)
+            {
+                switch (functionClass)
+                {
+                    case "factory":
+                        sn = PrinterSNFacTxt.Text;
+                        break;
+                    case "communication":
+                        sn = PrinterSNTxt.Text;
+                        break;
+                }
             }
-            if (sn != "" && sn.Length == 16)
+            else { //已經有紀錄，抓取最後一次序號值
+                sn=getSNRegistry();               
+                string number=sn.Substring(10, 6); 
+                sn=sn.Remove(10, 6);
+                int lastNumber = Int32.Parse(number);
+                lastNumber+= 1; //sn每次加1
+                number = lastNumber.ToString();
+                if (number.Length < 6) {
+                    //不能直接使用nubmer.Length，因為在迴圈的過程中length會越來越大
+                    int nLen = number.Length;
+                    for (int i = 1; i <= 6- nLen; i++) { //不足6位前面要補0
+                        number= "0" + number;
+                    }
+                }
+                sn = sn + number;
+            }
+
+            if (sn != "" && sn.Length == 16) //寫入序號到打印機
             {
                 byte[] snArray = Encoding.Default.GetBytes(sn);
                 byte[] sendArray = StringToByteArray(Command.SN_SETTING_HEADER);
@@ -2612,6 +2636,10 @@ namespace PirnterUtility
                     sendArray[i] = snArray[i - sendLen];
                 }
                 SendCmd(sendArray, "BeepOrSetting", 0);
+                setSNRegistry(sn); //寫入序號到註冊機碼
+                //寫入序號到畫面
+                PrinterSNFacTxt.Text = sn;
+                PrinterSNTxt.Text = sn;
             }
             else if (sn.Length < 16 || sn.Length > 16)
             {
@@ -2619,6 +2647,39 @@ namespace PirnterUtility
             }
         }
         #endregion
+
+        //==========================註冊機碼的寫入與讀取===========================
+
+        #region 註冊機碼位置的產生
+        private void createSNRegistry()
+        {
+            RegistryKey registryKey = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\ZLPPT");
+            //判斷是否有ZLPPT目錄
+            if (registryKey == null) {
+                registryKey = Registry.LocalMachine.CreateSubKey(@"SOFTWARE\ZLPPT");
+                registryKey.SetValue("Path", "C:\\");
+            }                    
+        }
+        #endregion
+
+        #region 註冊機碼sn的寫入
+        private void setSNRegistry(string sn)
+        {
+            RegistryKey registryKey = Registry.LocalMachine.CreateSubKey(@"SOFTWARE\ZLPPT"); //修改也要使用create不能用open
+            registryKey.SetValue("SN", sn);
+        }
+        #endregion
+
+        #region 註冊機碼sn的讀取
+        private string getSNRegistry()
+        {
+            var lastSN = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\ZLPPT").GetValue("SN");
+
+            return (string)lastSN;
+        }
+        #endregion
+
+
         //========================RS232的設定/傳送與接收===========================
 
         #region RS232 Port設定
