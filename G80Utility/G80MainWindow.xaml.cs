@@ -84,7 +84,7 @@ namespace G80Utility
             viewmodel = new DeviceViewModel();
 
             DataContext = viewmodel;
-            
+
             //BaudRate預設
             BaudRateCom.SelectedIndex = 2;
             App.Current.Properties["BaudRateSetting"] = 38400;
@@ -385,322 +385,6 @@ namespace G80Utility
             {
                 Config.isCMDPageChecked = false;
             }
-        }
-        #endregion
-
-        #region 傳送所有讀取指令
-        private void readALL()
-        {
-            byte[] sendArray = null;
-            if (Config.isSetIPChecked)
-            {
-                sendArray = StringToByteArray(Command.READ_ALL_HEADER + "30 10 01");
-                SendCmd(sendArray, "ReadPara", 12);
-
-            }
-
-            if (Config.isSetGatewayChecked)
-            {
-                sendArray = StringToByteArray(Command.READ_ALL_HEADER + "30 11 01");
-                SendCmd(sendArray, "ReadPara", 12);
-            }
-
-            if (Config.isSetMacChecked)
-            {
-                sendArray = StringToByteArray(Command.READ_ALL_HEADER + "30 12 01");
-                SendCmd(sendArray, "ReadPara", 14);
-            }
-
-            if (Config.isAutoDisconnectChecked)
-            {
-                sendArray = StringToByteArray(Command.READ_ALL_HEADER + "30 13 01");
-                SendCmd(sendArray, "ReadPara", 9);
-            }
-
-            if (Config.isConnectClientChecked)
-            {
-                sendArray = StringToByteArray(Command.READ_ALL_HEADER + "30 14 01");
-                SendCmd(sendArray, "ReadPara", 9);
-            }
-
-            if (Config.isEthernetSpeedChecked)
-            {
-                sendArray = StringToByteArray(Command.READ_ALL_HEADER + "30 15 01");
-                SendCmd(sendArray, "ReadPara", 9);
-            }
-
-            if (Config.isDHCPModeChecked)
-            {
-                sendArray = StringToByteArray(Command.READ_ALL_HEADER + "30 16 01");
-                SendCmd(sendArray, "ReadPara", 9);
-            }
-
-            if (Config.isUSBModeChecked)
-            {
-                sendArray = StringToByteArray(Command.READ_ALL_HEADER + "30 17 01");
-                SendCmd(sendArray, "ReadPara", 9);
-            }
-
-            if (Config.isUSBFixedChecked)
-            {
-                sendArray = StringToByteArray(Command.READ_ALL_HEADER + "30 18 01");
-                SendCmd(sendArray, "ReadPara", 9);
-            }
-
-            if (Config.isCodePageSetChecked)
-            {
-                sendArray = StringToByteArray(Command.READ_ALL_HEADER + "31 36 01");
-                SendCmd(sendArray, "ReadPara", 9);
-            }
-
-            if (Config.isLanguageSetChecked)
-            {
-                sendArray = StringToByteArray(Command.READ_ALL_HEADER + "31 28 01");
-                SendCmd(sendArray, "ReadPara", 9);
-            }
-
-            if (Config.isFontBSettingChecked)
-            {
-                sendArray = StringToByteArray(Command.READ_ALL_HEADER + "31 23 01");
-                SendCmd(sendArray, "ReadPara", 9);
-            }
-
-            if (Config.isCustomziedFontChecked)
-            {
-                sendArray = StringToByteArray(Command.READ_ALL_HEADER + "31 29 01");
-                SendCmd(sendArray, "ReadPara", 9);
-            }
-
-            if (Config.isDirectionChecked)
-            {
-                sendArray = StringToByteArray(Command.READ_ALL_HEADER + "31 13 01");
-                SendCmd(sendArray, "ReadPara", 9);
-            }
-
-            if (Config.isMotorAccControlChecked)
-            {
-                sendArray = StringToByteArray(Command.READ_ALL_HEADER + "31 14 01");
-                SendCmd(sendArray, "ReadPara", 9);
-            }
-
-            if (Config.isAccMotorChecked)
-            {
-                sendArray = StringToByteArray(Command.READ_ALL_HEADER + "31 15 01");
-                SendCmd(sendArray, "ReadPara", 9);
-            }
-
-            if (Config.isPrintSpeedChecked)
-            {
-                sendArray = StringToByteArray(Command.READ_ALL_HEADER + "31 31 01");
-                SendCmd(sendArray, "ReadPara", 10);
-            }
-
-            if (Config.isDensityModeChecked)
-            {
-                sendArray = StringToByteArray(Command.READ_ALL_HEADER + "31 26 01");
-                SendCmd(sendArray, "ReadPara", 9);
-            }
-
-            if (Config.isDensityChecked)
-            {
-                sendArray = StringToByteArray(Command.READ_ALL_HEADER + "31 27 01");
-                SendCmd(sendArray, "ReadPara", 9);
-            }
-
-            if (Config.isPaperOutReprintChecked)
-            {
-                sendArray = StringToByteArray(Command.READ_ALL_HEADER + "31 21 01");
-                SendCmd(sendArray, "ReadPara", 9);
-            }
-
-            if (Config.isPaperWidthChecked)
-            {
-                sendArray = StringToByteArray(Command.READ_ALL_HEADER + "31 30 01");
-                SendCmd(sendArray, "ReadPara", 9);
-            }
-
-            if (Config.isHeadCloseCutChecked)
-            {
-                sendArray = StringToByteArray(Command.READ_ALL_HEADER + "31 17 01");
-                SendCmd(sendArray, "ReadPara", 9);
-            }
-
-            if (Config.isYOffsetChecked)
-            {
-                sendArray = StringToByteArray(Command.READ_ALL_HEADER + "31 18 01");
-                SendCmd(sendArray, "ReadPara", 9);
-            }
-
-            if (Config.isMACShowChecked)
-            {
-                sendArray = StringToByteArray(Command.READ_ALL_HEADER + "31 24 01");
-                SendCmd(sendArray, "ReadPara", 9);
-            }
-
-            if (Config.isQRCodeChecked)
-            {
-                sendArray = StringToByteArray(Command.READ_ALL_HEADER + "31 25 01");
-                SendCmd(sendArray, "ReadPara", 9);
-            }
-
-            if (Config.isLogoPrintControlhecked)
-            {
-                sendArray = StringToByteArray(Command.READ_ALL_HEADER + "31 20 01");
-                SendCmd(sendArray, "ReadPara", 9);
-            }
-
-            if (Config.isDIPSwitchChecked)
-            {
-                sendArray = StringToByteArray(Command.READ_ALL_HEADER + "31 34 01");
-                SendCmd(sendArray, "ReadPara", 9);
-            }
-
-            //最後發送DIP值讀取命令
-            sendArray = StringToByteArray(Command.READ_ALL_HEADER + "31 35 01");
-            SendCmd(sendArray, "ReadPara", 9);
-
-        }
-        #endregion
-
-        #region 傳送所有寫入指令
-        private void sendALL()
-        {
-            if (Config.isSetIPChecked)
-            {
-                SetIP();
-            }
-
-            if (Config.isSetGatewayChecked)
-            {
-                SetGateway();
-            }
-
-            if (Config.isSetMacChecked)
-            {
-                SetMAC();
-            }
-
-            if (Config.isAutoDisconnectChecked)
-            {
-                AutoDisconnect();
-            }
-
-            if (Config.isConnectClientChecked)
-            {
-                ConnectClient();
-            }
-
-            if (Config.isEthernetSpeedChecked)
-            {
-                EthernetSpeed();
-            }
-
-            if (Config.isDHCPModeChecked)
-            {
-                DHCPMode();
-            }
-
-            if (Config.isUSBModeChecked)
-            {
-                USBMode();
-            }
-
-            if (Config.isUSBFixedChecked)
-            {
-                USBFixed();
-            }
-
-            if (Config.isCodePageSetChecked)
-            {
-                CodePageSet();
-            }
-
-            if (Config.isLanguageSetChecked)
-            {
-                LanguageSet();
-            }
-
-            if (Config.isFontBSettingChecked)
-            {
-                FontBSetting();
-            }
-
-            if (Config.isCustomziedFontChecked)
-            {
-                CustomziedFont();
-            }
-
-            if (Config.isDirectionChecked)
-            {
-                SetDirection();
-            }
-
-            if (Config.isMotorAccControlChecked)
-            {
-                MotorAccControl();
-            }
-
-            if (Config.isAccMotorChecked)
-            {
-                AccMotor();
-            }
-
-            if (Config.isPrintSpeedChecked)
-            {
-                PrintSpeed();
-            }
-
-            if (Config.isDensityModeChecked)
-            {
-                DensityMode();
-            }
-
-            if (Config.isDensityChecked)
-            {
-                Density();
-            }
-
-            if (Config.isPaperOutReprintChecked)
-            {
-                PaperOutReprint();
-            }
-
-            if (Config.isPaperWidthChecked)
-            {
-                PaperWidth();
-            }
-
-            if (Config.isHeadCloseCutChecked)
-            {
-                HeadCloseCut();
-            }
-
-            if (Config.isYOffsetChecked)
-            {
-                YOffset();
-            }
-
-            if (Config.isMACShowChecked)
-            {
-                MACShow();
-            }
-
-            if (Config.isQRCodeChecked)
-            {
-                QRCode();
-            }
-
-            if (Config.isLogoPrintControlhecked)
-            {
-                LogoPrintControl();
-            }
-
-            if (Config.isDIPSwitchChecked)
-            {
-                DIPSwitch();
-            }
-
-            DIPSetting();
         }
         #endregion
 
@@ -1058,11 +742,11 @@ namespace G80Utility
         #region 通讯接口测试按鈕事件
         private void ConnectTest_Click(object sender, RoutedEventArgs e)
         {
-            byte[] sendArray ;
+            byte[] sendArray;
             if ((bool)rs232Checkbox.IsChecked)
             {
                 sendArray = StringToByteArray(Command.RS232_COMMUNICATION_TEST);
-                SerialPortConnect("CommunicationTest", sendArray, 0);
+                SerialPortConnect("CommunicationTest", sendArray, 8);
             }
             if ((bool)USBCheckbox.IsChecked)
             {
@@ -1083,7 +767,7 @@ namespace G80Utility
                     SerialPortConnect("BeepOrSetting", sendArray, 0);
                     break;
                 case "USB":
-
+                    USBConnectAndSendCmd("BeepOrSetting", sendArray, 0);
                     break;
                 case "Ethernet":
 
@@ -1254,18 +938,7 @@ namespace G80Utility
                     codePage.Add(char2[i]);
                 }
                 byte[] sendArray = codePage.ToArray();
-                switch (DeviceType)
-                {
-                    case "RS232":
-                        SerialPortConnect("BeepOrSetting", sendArray, 0);
-                        break;
-                    case "USB":
-
-                        break;
-                    case "Ethernet":
-
-                        break;
-                }
+                SendCmd(sendArray, "BeepOrSetting", 0);
             }
             else { MessageBox.Show(FindResource("ColumnEmpty") as string); }
 
@@ -1487,18 +1160,7 @@ namespace G80Utility
                 var address = SetIPText.Text;
                 String result = String.Concat(address.Split('.').Select(x => int.Parse(x).ToString("X2")));
                 sendArray = StringToByteArray(Command.IP_SETTING_HEADER + result);
-                switch (DeviceType)
-                {
-                    case "RS232":
-                        SerialPortConnect("BeepOrSetting", sendArray, 0);
-                        break;
-                    case "USB":
-
-                        break;
-                    case "Ethernet":
-
-                        break;
-                }
+                SendCmd(sendArray,"BeepOrSetting", 0);               
             }
             else
             {
@@ -1516,18 +1178,7 @@ namespace G80Utility
                 var gateway = SetGatewayText.Text;
                 String result = String.Concat(gateway.Split('.').Select(x => int.Parse(x).ToString("X2")));
                 sendArray = StringToByteArray(Command.GATEWAY_SETTING_HEADER + result);
-                switch (DeviceType)
-                {
-                    case "RS232":
-                        SerialPortConnect("BeepOrSetting", sendArray, 0);
-                        break;
-                    case "USB":
-
-                        break;
-                    case "Ethernet":
-
-                        break;
-                }
+                SendCmd(sendArray, "BeepOrSetting", 0);
             }
             else
             {
@@ -1553,18 +1204,7 @@ namespace G80Utility
             //寫入MAC Address
             sendArray = StringToByteArray(Command.MAC_ADDRESS_SETTING_HEADER + "00 47 50" + hexMac4 + hexMac5 + hexMac6);
             SetMACText.Text = "00:47:50:" + hexMac4 + ":" + hexMac5 + ":" + hexMac6;
-            switch (DeviceType)
-            {
-                case "RS232":
-                    SerialPortConnect("BeepOrSetting", sendArray, 0);
-                    break;
-                case "USB":
-
-                    break;
-                case "Ethernet":
-
-                    break;
-            }
+            SendCmd(sendArray, "BeepOrSetting", 0);
         }
         #endregion
 
@@ -1595,18 +1235,7 @@ namespace G80Utility
                         sendArray = StringToByteArray(Command.NETWORK_AUTODICONNECTED_SETTING_HEADER + "33 05");
                         break;
                 }
-                switch (DeviceType)
-                {
-                    case "RS232":
-                        SerialPortConnect("BeepOrSetting", sendArray, 0);
-                        break;
-                    case "USB":
-
-                        break;
-                    case "Ethernet":
-
-                        break;
-                }
+                SendCmd(sendArray, "BeepOrSetting", 0);
             }
             else { MessageBox.Show(FindResource("ColumnEmpty") as string); }
         }
@@ -1626,18 +1255,7 @@ namespace G80Utility
                 {
                     sendArray = StringToByteArray(Command.CONNECT_CLIENT_2_SETTING);
                 }
-                switch (DeviceType)
-                {
-                    case "RS232":
-                        SerialPortConnect("BeepOrSetting", sendArray, 0);
-                        break;
-                    case "USB":
-
-                        break;
-                    case "Ethernet":
-
-                        break;
-                }
+                SendCmd(sendArray, "BeepOrSetting", 0);
             }
             else { MessageBox.Show(FindResource("ColumnEmpty") as string); }
         }
@@ -1657,18 +1275,7 @@ namespace G80Utility
                 {
                     sendArray = StringToByteArray(Command.ETHERNET_SPEED_SETTING_100MHZ);
                 }
-                switch (DeviceType)
-                {
-                    case "RS232":
-                        SerialPortConnect("BeepOrSetting", sendArray, 0);
-                        break;
-                    case "USB":
-
-                        break;
-                    case "Ethernet":
-
-                        break;
-                }
+                SendCmd(sendArray, "BeepOrSetting", 0);
             }
             else { MessageBox.Show(FindResource("ColumnEmpty") as string); }
         }
@@ -1696,18 +1303,7 @@ namespace G80Utility
                         sendArray = StringToByteArray(Command.DHCP_MODE_SETTING_HEADER + "44");
                         break;
                 }
-                switch (DeviceType)
-                {
-                    case "RS232":
-                        SerialPortConnect("BeepOrSetting", sendArray, 0);
-                        break;
-                    case "USB":
-
-                        break;
-                    case "Ethernet":
-
-                        break;
-                }
+                SendCmd(sendArray, "BeepOrSetting", 0);
             }
             else { MessageBox.Show(FindResource("ColumnEmpty") as string); }
         }
@@ -1727,18 +1323,7 @@ namespace G80Utility
                 {
                     sendArray = StringToByteArray(Command.USB_UTP_SETTING);
                 }
-                switch (DeviceType)
-                {
-                    case "RS232":
-                        SerialPortConnect("BeepOrSetting", sendArray, 0);
-                        break;
-                    case "USB":
-
-                        break;
-                    case "Ethernet":
-
-                        break;
-                }
+                SendCmd(sendArray, "BeepOrSetting", 0);
             }
             else { MessageBox.Show(FindResource("ColumnEmpty") as string); }
         }
@@ -1759,18 +1344,7 @@ namespace G80Utility
                 {
                     sendArray = StringToByteArray(Command.USB_FIXED_SETTING);
                 }
-                switch (DeviceType)
-                {
-                    case "RS232":
-                        SerialPortConnect("BeepOrSetting", sendArray, 0);
-                        break;
-                    case "USB":
-
-                        break;
-                    case "Ethernet":
-
-                        break;
-                }
+                SendCmd(sendArray, "BeepOrSetting", 0);
             }
             else { MessageBox.Show(FindResource("ColumnEmpty") as string); }
         }
@@ -1789,18 +1363,7 @@ namespace G80Utility
                     HexCode = "0" + HexCode;
                 }
                 byte[] sendArray = StringToByteArray(Command.CODEPAGE_SETTING_HEADER + HexCode);
-                switch (DeviceType)
-                {
-                    case "RS232":
-                        SerialPortConnect("BeepOrSetting", sendArray, 0);
-                        break;
-                    case "USB":
-
-                        break;
-                    case "Ethernet":
-
-                        break;
-                }
+                SendCmd(sendArray, "BeepOrSetting", 0);
             }
             else { MessageBox.Show(FindResource("ColumnEmpty") as string); }
         }
@@ -1834,18 +1397,7 @@ namespace G80Utility
                         sendArray = StringToByteArray(Command.LANGUAGE_SETTING_JIS);
                         break;
                 }
-                switch (DeviceType)
-                {
-                    case "RS232":
-                        SerialPortConnect("BeepOrSetting", sendArray, 0);
-                        break;
-                    case "USB":
-
-                        break;
-                    case "Ethernet":
-
-                        break;
-                }
+                SendCmd(sendArray, "BeepOrSetting", 0);
             }
             else { MessageBox.Show(FindResource("ColumnEmpty") as string); }
         }
@@ -1866,18 +1418,7 @@ namespace G80Utility
                 {
                     sendArray = StringToByteArray(Command.FONTB_ON_SETTING);
                 }
-                switch (DeviceType)
-                {
-                    case "RS232":
-                        SerialPortConnect("BeepOrSetting", sendArray, 0);
-                        break;
-                    case "USB":
-
-                        break;
-                    case "Ethernet":
-
-                        break;
-                }
+                SendCmd(sendArray, "BeepOrSetting", 0);
             }
             else { MessageBox.Show(FindResource("ColumnEmpty") as string); }
         }
@@ -1898,18 +1439,7 @@ namespace G80Utility
                 {
                     sendArray = StringToByteArray(Command.CUSTOMIZED_FONT_ON_SETTING);
                 }
-                switch (DeviceType)
-                {
-                    case "RS232":
-                        SerialPortConnect("BeepOrSetting", sendArray, 0);
-                        break;
-                    case "USB":
-
-                        break;
-                    case "Ethernet":
-
-                        break;
-                }
+                SendCmd(sendArray, "BeepOrSetting", 0);
             }
             else { MessageBox.Show(FindResource("ColumnEmpty") as string); }
         }
@@ -1930,18 +1460,7 @@ namespace G80Utility
                 {
                     sendArray = StringToByteArray(Command.DIRECTION_80250N_SETTING);
                 }
-                switch (DeviceType)
-                {
-                    case "RS232":
-                        SerialPortConnect("BeepOrSetting", sendArray, 0);
-                        break;
-                    case "USB":
-
-                        break;
-                    case "Ethernet":
-
-                        break;
-                }
+                SendCmd(sendArray, "BeepOrSetting", 0);
             }
             else { MessageBox.Show(FindResource("ColumnEmpty") as string); }
         }
@@ -1962,18 +1481,7 @@ namespace G80Utility
                 {
                     sendArray = StringToByteArray(Command.ACCELERATION_OF_MOTOR_ON_SETTING);
                 }
-                switch (DeviceType)
-                {
-                    case "RS232":
-                        SerialPortConnect("BeepOrSetting", sendArray, 0);
-                        break;
-                    case "USB":
-
-                        break;
-                    case "Ethernet":
-
-                        break;
-                }
+                SendCmd(sendArray, "BeepOrSetting", 0);
             }
             else { MessageBox.Show(FindResource("ColumnEmpty") as string); }
         }
@@ -2004,18 +1512,7 @@ namespace G80Utility
                         sendArray = StringToByteArray(Command.ACCELERATION_OF_MOTOR_SETTING + "05");
                         break;
                 }
-                switch (DeviceType)
-                {
-                    case "RS232":
-                        SerialPortConnect("BeepOrSetting", sendArray, 0);
-                        break;
-                    case "USB":
-
-                        break;
-                    case "Ethernet":
-
-                        break;
-                }
+                SendCmd(sendArray, "BeepOrSetting", 0);
             }
             else { MessageBox.Show(FindResource("ColumnEmpty") as string); }
         }
@@ -2039,19 +1536,8 @@ namespace G80Utility
                         sendArray = StringToByteArray(Command.PRINT_SPEED_300_SETTING);
                         break;
                 }
-                switch (DeviceType)
-                {
-                    case "RS232":
-                        SerialPortConnect("BeepOrSetting", sendArray, 0);
-                        break;
-                    case "USB":
-
-                        break;
-                    case "Ethernet":
-
-                        break;
-                }
-            }
+                SendCmd(sendArray, "BeepOrSetting", 0);
+            }           
             else { MessageBox.Show(FindResource("ColumnEmpty") as string); }
         }
         #endregion
@@ -2071,18 +1557,7 @@ namespace G80Utility
                 {
                     sendArray = StringToByteArray(Command.DENSITY_MODE_HIGH_SETTING);
                 }
-                switch (DeviceType)
-                {
-                    case "RS232":
-                        SerialPortConnect("BeepOrSetting", sendArray, 0);
-                        break;
-                    case "USB":
-
-                        break;
-                    case "Ethernet":
-
-                        break;
-                }
+                SendCmd(sendArray, "BeepOrSetting", 0);
             }
             else { MessageBox.Show(FindResource("ColumnEmpty") as string); }
         }
@@ -2128,18 +1603,7 @@ namespace G80Utility
                         sendArray = StringToByteArray(Command.DENSITY_SETTING_HEADER + "08");
                         break;
                 }
-                switch (DeviceType)
-                {
-                    case "RS232":
-                        SerialPortConnect("BeepOrSetting", sendArray, 0);
-                        break;
-                    case "USB":
-
-                        break;
-                    case "Ethernet":
-
-                        break;
-                }
+                SendCmd(sendArray, "BeepOrSetting", 0);
             }
             else { MessageBox.Show(FindResource("ColumnEmpty") as string); }
         }
@@ -2159,18 +1623,7 @@ namespace G80Utility
                 {
                     sendArray = StringToByteArray(Command.PAPEROUT_REPRINT_ON_SETTING);
                 }
-                switch (DeviceType)
-                {
-                    case "RS232":
-                        SerialPortConnect("BeepOrSetting", sendArray, 0);
-                        break;
-                    case "USB":
-
-                        break;
-                    case "Ethernet":
-
-                        break;
-                }
+                SendCmd(sendArray, "BeepOrSetting", 0);
             }
             else { MessageBox.Show(FindResource("ColumnEmpty") as string); }
         }
@@ -2191,18 +1644,7 @@ namespace G80Utility
                 {
                     sendArray = StringToByteArray(Command.PAPER_WIDTH_80MM_SETTING);
                 }
-                switch (DeviceType)
-                {
-                    case "RS232":
-                        SerialPortConnect("BeepOrSetting", sendArray, 0);
-                        break;
-                    case "USB":
-
-                        break;
-                    case "Ethernet":
-
-                        break;
-                }
+                SendCmd(sendArray, "BeepOrSetting", 0);
             }
             else { MessageBox.Show(FindResource("ColumnEmpty") as string); }
         }
@@ -2223,18 +1665,7 @@ namespace G80Utility
                 {
                     sendArray = StringToByteArray(Command.HEADCLOSE_AUTOCUT_ON_SETTING);
                 }
-                switch (DeviceType)
-                {
-                    case "RS232":
-                        SerialPortConnect("BeepOrSetting", sendArray, 0);
-                        break;
-                    case "USB":
-
-                        break;
-                    case "Ethernet":
-
-                        break;
-                }
+                SendCmd(sendArray, "BeepOrSetting", 0);
             }
             else { MessageBox.Show(FindResource("ColumnEmpty") as string); }
         }
@@ -2255,18 +1686,7 @@ namespace G80Utility
                 {
                     sendArray = StringToByteArray(Command.Y_OFFSET_05_SETTING);
                 }
-                switch (DeviceType)
-                {
-                    case "RS232":
-                        SerialPortConnect("BeepOrSetting", sendArray, 0);
-                        break;
-                    case "USB":
-
-                        break;
-                    case "Ethernet":
-
-                        break;
-                }
+                SendCmd(sendArray, "BeepOrSetting", 0);
             }
             else { MessageBox.Show(FindResource("ColumnEmpty") as string); }
         }
@@ -2287,18 +1707,7 @@ namespace G80Utility
                 {
                     sendArray = StringToByteArray(Command.MAC_SHOW_HEX_SETTING);
                 }
-                switch (DeviceType)
-                {
-                    case "RS232":
-                        SerialPortConnect("BeepOrSetting", sendArray, 0);
-                        break;
-                    case "USB":
-
-                        break;
-                    case "Ethernet":
-
-                        break;
-                }
+                SendCmd(sendArray, "BeepOrSetting", 0);
             }
             else { MessageBox.Show(FindResource("ColumnEmpty") as string); }
         }
@@ -2319,18 +1728,7 @@ namespace G80Utility
                 {
                     sendArray = StringToByteArray(Command.QRCODE_ON_SETTING);
                 }
-                switch (DeviceType)
-                {
-                    case "RS232":
-                        SerialPortConnect("BeepOrSetting", sendArray, 0);
-                        break;
-                    case "USB":
-
-                        break;
-                    case "Ethernet":
-
-                        break;
-                }
+                SendCmd(sendArray, "BeepOrSetting", 0);
             }
             else { MessageBox.Show(FindResource("ColumnEmpty") as string); }
         }
@@ -2351,18 +1749,7 @@ namespace G80Utility
                 {
                     sendArray = StringToByteArray(Command.LOGO_PRINT_ON_SETTING);
                 }
-                switch (DeviceType)
-                {
-                    case "RS232":
-                        SerialPortConnect("BeepOrSetting", sendArray, 0);
-                        break;
-                    case "USB":
-
-                        break;
-                    case "Ethernet":
-
-                        break;
-                }
+                SendCmd(sendArray, "BeepOrSetting", 0);
             }
             else { MessageBox.Show(FindResource("ColumnEmpty") as string); }
         }
@@ -2383,18 +1770,7 @@ namespace G80Utility
                 {
                     sendArray = StringToByteArray(Command.DIP_ON_SETTING);
                 }
-                switch (DeviceType)
-                {
-                    case "RS232":
-                        SerialPortConnect("BeepOrSetting", sendArray, 0);
-                        break;
-                    case "USB":
-
-                        break;
-                    case "Ethernet":
-
-                        break;
-                }
+                SendCmd(sendArray, "BeepOrSetting", 0);
             }
             else { MessageBox.Show(FindResource("ColumnEmpty") as string); }
         }
@@ -2486,19 +1862,323 @@ namespace G80Utility
             sendArray = StringToByteArray(Command.DIP_VALUE_SETTING_HEADER);
             Array.Resize(ref sendArray, sendArray.Length + 1);
             sendArray[sendArray.Length - 1] = bytes[0];
-            switch (DeviceType)
+            SendCmd(sendArray, "BeepOrSetting", 0);
+        }
+        #endregion
+
+        #region 傳送所有讀取指令
+        private void readALL()
+        {
+            byte[] sendArray = null;
+            if (Config.isSetIPChecked)
             {
-                case "RS232":
-                    SerialPortConnect("BeepOrSetting", sendArray, 0);
-                    break;
-                case "USB":
+                sendArray = StringToByteArray(Command.READ_ALL_HEADER + "30 10 01");
+                SendCmd(sendArray, "ReadPara", 12);
 
-                    break;
-                case "Ethernet":
-
-                    break;
             }
 
+            if (Config.isSetGatewayChecked)
+            {
+                sendArray = StringToByteArray(Command.READ_ALL_HEADER + "30 11 01");
+                SendCmd(sendArray, "ReadPara", 12);
+            }
+
+            if (Config.isSetMacChecked)
+            {
+                sendArray = StringToByteArray(Command.READ_ALL_HEADER + "30 12 01");
+                SendCmd(sendArray, "ReadPara", 14);
+            }
+
+            if (Config.isAutoDisconnectChecked)
+            {
+                sendArray = StringToByteArray(Command.READ_ALL_HEADER + "30 13 01");
+                SendCmd(sendArray, "ReadPara", 9);
+            }
+
+            if (Config.isConnectClientChecked)
+            {
+                sendArray = StringToByteArray(Command.READ_ALL_HEADER + "30 14 01");
+                SendCmd(sendArray, "ReadPara", 9);
+            }
+
+            if (Config.isEthernetSpeedChecked)
+            {
+                sendArray = StringToByteArray(Command.READ_ALL_HEADER + "30 15 01");
+                SendCmd(sendArray, "ReadPara", 9);
+            }
+
+            if (Config.isDHCPModeChecked)
+            {
+                sendArray = StringToByteArray(Command.READ_ALL_HEADER + "30 16 01");
+                SendCmd(sendArray, "ReadPara", 9);
+            }
+
+            if (Config.isUSBModeChecked)
+            {
+                sendArray = StringToByteArray(Command.READ_ALL_HEADER + "30 17 01");
+                SendCmd(sendArray, "ReadPara", 9);
+            }
+
+            if (Config.isUSBFixedChecked)
+            {
+                sendArray = StringToByteArray(Command.READ_ALL_HEADER + "30 18 01");
+                SendCmd(sendArray, "ReadPara", 9);
+            }
+
+            if (Config.isCodePageSetChecked)
+            {
+                sendArray = StringToByteArray(Command.READ_ALL_HEADER + "31 36 01");
+                SendCmd(sendArray, "ReadPara", 9);
+            }
+
+            if (Config.isLanguageSetChecked)
+            {
+                sendArray = StringToByteArray(Command.READ_ALL_HEADER + "31 28 01");
+                SendCmd(sendArray, "ReadPara", 9);
+            }
+
+            if (Config.isFontBSettingChecked)
+            {
+                sendArray = StringToByteArray(Command.READ_ALL_HEADER + "31 23 01");
+                SendCmd(sendArray, "ReadPara", 9);
+            }
+
+            if (Config.isCustomziedFontChecked)
+            {
+                sendArray = StringToByteArray(Command.READ_ALL_HEADER + "31 29 01");
+                SendCmd(sendArray, "ReadPara", 9);
+            }
+
+            if (Config.isDirectionChecked)
+            {
+                sendArray = StringToByteArray(Command.READ_ALL_HEADER + "31 13 01");
+                SendCmd(sendArray, "ReadPara", 9);
+            }
+
+            if (Config.isMotorAccControlChecked)
+            {
+                sendArray = StringToByteArray(Command.READ_ALL_HEADER + "31 14 01");
+                SendCmd(sendArray, "ReadPara", 9);
+            }
+
+            if (Config.isAccMotorChecked)
+            {
+                sendArray = StringToByteArray(Command.READ_ALL_HEADER + "31 15 01");
+                SendCmd(sendArray, "ReadPara", 9);
+            }
+
+            if (Config.isPrintSpeedChecked)
+            {
+                sendArray = StringToByteArray(Command.READ_ALL_HEADER + "31 31 01");
+                SendCmd(sendArray, "ReadPara", 10);
+            }
+
+            if (Config.isDensityModeChecked)
+            {
+                sendArray = StringToByteArray(Command.READ_ALL_HEADER + "31 26 01");
+                SendCmd(sendArray, "ReadPara", 9);
+            }
+
+            if (Config.isDensityChecked)
+            {
+                sendArray = StringToByteArray(Command.READ_ALL_HEADER + "31 27 01");
+                SendCmd(sendArray, "ReadPara", 9);
+            }
+
+            if (Config.isPaperOutReprintChecked)
+            {
+                sendArray = StringToByteArray(Command.READ_ALL_HEADER + "31 21 01");
+                SendCmd(sendArray, "ReadPara", 9);
+            }
+
+            if (Config.isPaperWidthChecked)
+            {
+                sendArray = StringToByteArray(Command.READ_ALL_HEADER + "31 30 01");
+                SendCmd(sendArray, "ReadPara", 9);
+            }
+
+            if (Config.isHeadCloseCutChecked)
+            {
+                sendArray = StringToByteArray(Command.READ_ALL_HEADER + "31 17 01");
+                SendCmd(sendArray, "ReadPara", 9);
+            }
+
+            if (Config.isYOffsetChecked)
+            {
+                sendArray = StringToByteArray(Command.READ_ALL_HEADER + "31 18 01");
+                SendCmd(sendArray, "ReadPara", 9);
+            }
+
+            if (Config.isMACShowChecked)
+            {
+                sendArray = StringToByteArray(Command.READ_ALL_HEADER + "31 24 01");
+                SendCmd(sendArray, "ReadPara", 9);
+            }
+
+            if (Config.isQRCodeChecked)
+            {
+                sendArray = StringToByteArray(Command.READ_ALL_HEADER + "31 25 01");
+                SendCmd(sendArray, "ReadPara", 9);
+            }
+
+            if (Config.isLogoPrintControlhecked)
+            {
+                sendArray = StringToByteArray(Command.READ_ALL_HEADER + "31 20 01");
+                SendCmd(sendArray, "ReadPara", 9);
+            }
+
+            if (Config.isDIPSwitchChecked)
+            {
+                sendArray = StringToByteArray(Command.READ_ALL_HEADER + "31 34 01");
+                SendCmd(sendArray, "ReadPara", 9);
+            }
+
+            //最後發送DIP值讀取命令
+            sendArray = StringToByteArray(Command.READ_ALL_HEADER + "31 35 01");
+            SendCmd(sendArray, "ReadPara", 9);
+
+        }
+        #endregion
+
+        #region 傳送所有寫入指令
+        private void sendALL()
+        {
+            if (Config.isSetIPChecked)
+            {
+                SetIP();
+            }
+
+            if (Config.isSetGatewayChecked)
+            {
+                SetGateway();
+            }
+
+            if (Config.isSetMacChecked)
+            {
+                SetMAC();
+            }
+
+            if (Config.isAutoDisconnectChecked)
+            {
+                AutoDisconnect();
+            }
+
+            if (Config.isConnectClientChecked)
+            {
+                ConnectClient();
+            }
+
+            if (Config.isEthernetSpeedChecked)
+            {
+                EthernetSpeed();
+            }
+
+            if (Config.isDHCPModeChecked)
+            {
+                DHCPMode();
+            }
+
+            if (Config.isUSBModeChecked)
+            {
+                USBMode();
+            }
+
+            if (Config.isUSBFixedChecked)
+            {
+                USBFixed();
+            }
+
+            if (Config.isCodePageSetChecked)
+            {
+                CodePageSet();
+            }
+
+            if (Config.isLanguageSetChecked)
+            {
+                LanguageSet();
+            }
+
+            if (Config.isFontBSettingChecked)
+            {
+                FontBSetting();
+            }
+
+            if (Config.isCustomziedFontChecked)
+            {
+                CustomziedFont();
+            }
+
+            if (Config.isDirectionChecked)
+            {
+                SetDirection();
+            }
+
+            if (Config.isMotorAccControlChecked)
+            {
+                MotorAccControl();
+            }
+
+            if (Config.isAccMotorChecked)
+            {
+                AccMotor();
+            }
+
+            if (Config.isPrintSpeedChecked)
+            {
+                PrintSpeed();
+            }
+
+            if (Config.isDensityModeChecked)
+            {
+                DensityMode();
+            }
+
+            if (Config.isDensityChecked)
+            {
+                Density();
+            }
+
+            if (Config.isPaperOutReprintChecked)
+            {
+                PaperOutReprint();
+            }
+
+            if (Config.isPaperWidthChecked)
+            {
+                PaperWidth();
+            }
+
+            if (Config.isHeadCloseCutChecked)
+            {
+                HeadCloseCut();
+            }
+
+            if (Config.isYOffsetChecked)
+            {
+                YOffset();
+            }
+
+            if (Config.isMACShowChecked)
+            {
+                MACShow();
+            }
+
+            if (Config.isQRCodeChecked)
+            {
+                QRCode();
+            }
+
+            if (Config.isLogoPrintControlhecked)
+            {
+                LogoPrintControl();
+            }
+
+            if (Config.isDIPSwitchChecked)
+            {
+                DIPSwitch();
+            }
+
+            DIPSetting();
         }
         #endregion
 
@@ -2859,129 +2539,10 @@ namespace G80Utility
                             USBConnect.USBSendCMD("NeedReceive", data, FindResource("GNSettingComplete") as string, receiveLength);
                             break;
                         case "BeepOrSetting":
-                            RS232Connect.SerialPortSendCMD("NoReceive", data, null, 0);
-                            RS232Connect.CloseSerialPort(); //沒立刻關閉有時會漏收命令
+                            USBConnect.USBSendCMD("NoReceive", data, null, 0);
                             break;
                     }
-                    //byte[] sendArray;
-                    //if (dataType == "SetGN")
-                    //{
-                    //    //sendArray = ConvertGNColumntoArray("U");
-                    //    /* 
-                    //     *USBSendCMD parameter:
-                    //     *1:data type
-                    //     *2:size or defualt btye array sent
-                    //     *3:data command
-                    //     *4.complete message
-                    //    */
-                    //    isUSBFinishReceiveData = USBConnect.USBSendCMD("Set", sendArray, null, FindResource("GNSettingComplete") as string);
-                    //    while (!isUSBFinishReceiveData)
-                    //    {
-                    //        if (USBConnect.isSettingOK)
-                    //        {
-                    //            EnableOrDisableBtn(true);
-                    //            break;
-                    //        }
-                    //    }
-                    //}
-                    //else if (dataType == "SetSensor")
-                    //{
-                    //    sendArray = ConvertSensorColumntoArray("U");
-                    //    isUSBFinishReceiveData = USBConnect.USBSendCMD("Set", sendArray, null, FindResource("GNSettingComplete") as string);
-                    //    while (!isUSBFinishReceiveData)
-                    //    {
-                    //        if (USBConnect.isSettingOK)
-                    //        {
-                    //            EnableOrDisableBtn(true);
-                    //            break;
-                    //        }
-                    //    }
-                    //}
-                    //else if (dataType == "SetWifi")
-                    //{
-                    //    sendArray = Encoding.Default.GetBytes(sizeCmd);
-                    //    isUSBFinishReceiveData = USBConnect.USBSendCMD("Set", sendArray, null, null);
-                    //    while (!isUSBFinishReceiveData)
-                    //    {
-                    //        if (USBConnect.isSettingOK)
-                    //        {
-                    //            EnableOrDisableBtn(true);
-                    //            WIFIModuleResultUI(USBConnect.WifiSettingResult);
-                    //            break;
-                    //        }
-                    //    }
-                    //}
-                    //else if (dataType == "Default")
-                    //{
-                    //if (sizeCmd.Contains(",U,"))
-                    //{ //判斷使用USB通道的時候才啟動FLAG
-                    //    USBConnect.isCMDPass = true;
-                    //    if (sizeCmd.Contains("SET"))
-                    //    {
-                    //        USBConnect.receiveTimes = 1;
-                    //    }
-                    //    else if (sizeCmd.Contains("GET"))
-                    //    {
-                    //        USBConnect.receiveTimes = 3;
-                    //    }
-                    //}
-                    //else if (sizeCmd.Contains("DEFAULT") || sizeCmd.Contains("TESTPRINT"))
-                    //{
-                    //    USBConnect.receiveTimes = 0;
-                    //}
-                    //sendArray = Encoding.Default.GetBytes(sizeCmd);
-                   // USBConnect.USBSendCMD("Default", data, null, receiveLength);
                 }
-                //else if (dataType == "File")
-                //{
-                //    string cmd = Encoding.Default.GetString(binData);
-                //    if (cmd.Contains(",U,"))
-                //    { //判斷使用USB通道的時候才啟動FLAG
-                //        USBConnect.isCMDPass = true;
-                //        if (cmd.Contains("SET"))
-                //        {
-                //            USBConnect.receiveTimes = 1;
-                //        }
-                //        else if (cmd.Contains("GET"))
-                //        {
-                //            USBConnect.receiveTimes = 3;
-                //        }
-                //    }
-                //    else if (cmd.Contains("DEFAULT") || cmd.Contains("TESTPRINT"))
-                //    {
-                //        USBConnect.receiveTimes = 0;
-                //    }
-                //    USBConnect.USBSendCMD("Default", binData, null, null);
-                //}
-                //else
-                //{
-                //    sendArray = Encoding.Default.GetBytes(sizeCmd);
-                //    USBConnect.USBSendCMD("Size", sendArray, dataCmd, null);
-                //    isUSBFinishReceiveData = USBConnect.isReceiveData;
-                //    while (!isUSBFinishReceiveData)
-                //    {
-                //        if (USBConnect.isTimeout)
-                //        {
-                //            //Dispatcher.Invoke(DispatcherPriority.Background, new MessageBoxUIUpdateDelegate(MessageBoxUIUpdate), FindResource("TransferTimeout") as string);
-                //            //Dispatcher.Invoke(DispatcherPriority.Background, new EnableOrDisableBtnDelegate(EnableOrDisableBtn), true);
-                //            break;
-                //        }
-
-                //        if (USBConnect.mRecevieData != null)
-                //        {
-                //            Console.WriteLine("result:" + Encoding.Default.GetString(USBConnect.mRecevieData));
-
-                //        }
-                //    }
-                //}
-                //    }
-                //    else
-                //    {
-                //        isUSBFinishReceiveData = true; //如果不設為true前端會一直收資料              
-
-                //        MessageBox.Show(FindResource("NotSettingUSBport") as string);
-                //        USBConnect.closeHandle();
-                //    }
                 else
                 {
                     MessageBox.Show(FindResource("NotSettingUSBport") as string);
@@ -3226,7 +2787,7 @@ namespace G80Utility
 
                 for (int i = 0; i < (int)rkUsbPrint.GetValue("Count"); i++)
                 { //當Count>0代表有usb印表機連線
-                    //rkUsbPrint.GetValue($"{i}")取得的資料格式為USB\VID_0999&PID_0011\001180400307 及deviceInstance的資料
+                  //rkUsbPrint.GetValue($"{i}")取得的資料格式為USB\VID_0999&PID_0011\001180400307 及deviceInstance的資料
                     Console.WriteLine(rkUsbPrint.GetValue(i.ToString()));
                     foreach (Device device in deviceList)
                     {
@@ -3373,7 +2934,7 @@ namespace G80Utility
             }
             else if (RS232Radio.IsChecked == true)
             {
-                DeviceType = "RS232";             
+                DeviceType = "RS232";
             }
 
         }
@@ -3477,7 +3038,7 @@ namespace G80Utility
 
             byte[] sendArray = null;
 
-            sendArray = StringToByteArray("1F 1B 41 31 01");
+            sendArray = StringToByteArray("1F 1B 1F 53 5A 4A 42 5A 46 43 11 00");
 
             switch (DeviceType)
             {
@@ -3485,7 +3046,7 @@ namespace G80Utility
                     SerialPortConnect("ReadPara", sendArray, 28);
                     break;
                 case "USB":
-
+                    USBConnectAndSendCmd("CommunicationTest", sendArray, 8);
                     break;
                 case "Ethernet":
 
