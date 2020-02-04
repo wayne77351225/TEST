@@ -11,6 +11,7 @@ using System.IO.Ports;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Interop;
@@ -32,6 +33,7 @@ namespace G80Utility
         //device path
         string USBpath;
         string RS232PortName;
+        string EthernetIPAddress;
 
         //作業系統版本
         string OSVersion;
@@ -737,6 +739,10 @@ namespace G80Utility
 
         #endregion
 
+        //#region 
+
+        //public void setConectImage()
+
         //========================Btn點擊事件===========================
 
         #region 通讯接口测试按鈕事件
@@ -753,6 +759,15 @@ namespace G80Utility
                 sendArray = StringToByteArray(Command.USB_COMMUNICATION_TEST);
                 USBConnectAndSendCmd("CommunicationTest", sendArray, 8);
             }
+            if ((bool)EthernetCheckbox.IsChecked)
+            {
+                bool isOK = chekckEthernetIPText();
+                if (isOK)
+                {
+                    sendArray = StringToByteArray(Command.ETHERNET_COMMUNICATION_TEST);
+                    EthernetConnectAndSendCmd("CommunicationTest", sendArray, 8);
+                }
+            }
         }
         #endregion
 
@@ -760,20 +775,7 @@ namespace G80Utility
         private void Restart_Click(object sender, RoutedEventArgs e)
         {
             byte[] sendArray = StringToByteArray(Command.RESTART);
-            switch (DeviceType)
-            {
-
-                case "RS232":
-                    SerialPortConnect("BeepOrSetting", sendArray, 0);
-                    break;
-                case "USB":
-                    USBConnectAndSendCmd("BeepOrSetting", sendArray, 0);
-                    break;
-                case "Ethernet":
-
-                    break;
-            }
-
+            SendCmd(sendArray, "BeepOrSetting", 0);
         }
         #endregion
 
@@ -1160,7 +1162,7 @@ namespace G80Utility
                 var address = SetIPText.Text;
                 String result = String.Concat(address.Split('.').Select(x => int.Parse(x).ToString("X2")));
                 sendArray = StringToByteArray(Command.IP_SETTING_HEADER + result);
-                SendCmd(sendArray,"BeepOrSetting", 0);               
+                SendCmd(sendArray, "BeepOrSetting", 0);
             }
             else
             {
@@ -1537,7 +1539,7 @@ namespace G80Utility
                         break;
                 }
                 SendCmd(sendArray, "BeepOrSetting", 0);
-            }           
+            }
             else { MessageBox.Show(FindResource("ColumnEmpty") as string); }
         }
         #endregion
@@ -2558,6 +2560,89 @@ namespace G80Utility
             }
         }
 
+        //===================Ethernet 傳送指令==================
+
+        private void EthernetConnectAndSendCmd(string dataType, byte[] data, int receiveLength)
+        {
+            bool isConnect = EthernetConnect.connectToPrinter();
+            if (isConnect) {
+                switch (dataType)
+                {
+                    case "ReadPara":
+                        bool isReceiveData = EthernetConnect.EthernetSendCmd("NeedReceive", data, null, receiveLength);
+                        while (!isReceiveData)
+                        {
+                            if (EthernetConnect.mRecevieData != null)
+                            {
+                                setParaColumn(EthernetConnect.mRecevieData);
+                                EthernetConnect.disconnect();
+                                break;
+                            }
+                        }
+                        break;
+                    case "ReadSN":
+                        bool isReceiveSN = EthernetConnect.EthernetSendCmd("NeedReceive", data, null, receiveLength);
+                        while (!isReceiveSN)
+                        {
+                            if (EthernetConnect.mRecevieData != null)
+                            {
+                                SetPrinterInfo(EthernetConnect.mRecevieData);
+                                EthernetConnect.disconnect();
+                                break;
+                            }
+                        }
+                        break;
+                    case "CommunicationTest": //通訊測試
+                        EthernetConnect.EthernetSendCmd("NeedReceive", data, FindResource("GNSettingComplete") as string, receiveLength);
+                        EthernetConnect.disconnect();
+                        break;
+                    case "BeepOrSetting":
+                        EthernetConnect.EthernetSendCmd("NoReceive", data, null, 0);
+                        EthernetConnect.disconnect();
+                        break;
+                }
+            }        
+        }
+
+        #region 網口欄位是否輸入檢查
+        private bool chekckEthernetIPText()
+        {
+            bool isOK = false;
+            if (EhternetIPTxt.Text != "")
+            {
+                EthernetIPAddress = EhternetIPTxt.Text;
+                if (checkIPFormat(EthernetIPAddress))
+                {
+                    EthernetConnect.EthernetIPAddress = EthernetIPAddress;
+                    isOK = true;
+                }
+                else
+                {
+                    EthernetIPAddress = null;
+                    MessageBox.Show(FindResource("ErrorFormat") as string);
+                }
+            }
+            else
+            {
+                MessageBox.Show(FindResource("ColumnEmpty") as string);
+            }
+            return isOK;
+        }
+        #endregion
+
+
+        #region ip格式檢查
+        private bool checkIPFormat(string ipString)
+        {
+
+            //create our Regular Expression object
+            string pattern = @"^([1-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(\.([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])){3}$";
+            Regex check = new Regex(pattern);
+            bool isCorrect = check.IsMatch(ipString, 0);
+
+            return isCorrect;
+        }
+        #endregion
         //============================各種資料類型的轉換=============================
 
         #region hex string to byte array
@@ -2637,7 +2722,11 @@ namespace G80Utility
                     USBConnectAndSendCmd(sendType, sendArray, length);
                     break;
                 case "Ethernet":
-
+                    bool isOK = chekckEthernetIPText(); //避免開啟預設空欄位不放在一開始檢查
+                    if (isOK)
+                    {
+                        EthernetConnectAndSendCmd(sendType, sendArray, length);
+                    }
                     break;
             }
         }
@@ -2920,17 +3009,14 @@ namespace G80Utility
             viewmodel.getDeviceObserve("rs232");
             DeviceSelectRS232.SelectedIndex = viewmodel.RS232Device.Count - 1;
             viewmodel.getDeviceObserve("usb");
-            DeviceSelectUSB.SelectedIndex = viewmodel.USBDevice.Count - 1;//設定選取第一筆
-
+            DeviceSelectUSB.SelectedIndex = viewmodel.USBDevice.Count - 1;//設定選取第一筆      
             if (USBRadio.IsChecked == true)
             {
                 DeviceType = "USB";
-
             }
             else if (EhernetRadio.IsChecked == true)
             {
                 DeviceType = "Ethernet";
-
             }
             else if (RS232Radio.IsChecked == true)
             {

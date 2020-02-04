@@ -13,7 +13,6 @@ namespace G80Utility.Tool
         public static SerialPort mSerialPort = new SerialPort();
         public static bool isReceiveData;
         public static byte[] mRecevieData;
-        public static int mLength;
         public static bool IsConnect;
 
         //開啟SerialPort

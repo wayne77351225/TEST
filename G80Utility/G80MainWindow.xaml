@@ -50,7 +50,7 @@
                                 <RadioButton FontSize="14" Name="EhernetRadio" GroupName="connection" Content="{DynamicResource Ethernet}" VerticalAlignment="Center"  Checked="ConnectType_SelectionChanged"/>
                                 <Image  Margin="52,0,0,0"   Source="Images/grey_circle.png" Width="12" Name="EthernetConnectImage"/>
                             </StackPanel>
-                            <TextBox Margin="10,0,10,0"  FontSize="14"  Height="30"  Width="110" Foreground="#BDBDBD" Padding="5"/>
+                            <TextBox Margin="10,0,10,0" Name="EhternetIPTxt" FontSize="14"  Height="30"  Width="110" Foreground="#BDBDBD" Padding="5"/>
                         </StackPanel>
                         <!--通訊測試-->
                         <StackPanel Margin="10,0,10,0" VerticalAlignment="Center">
