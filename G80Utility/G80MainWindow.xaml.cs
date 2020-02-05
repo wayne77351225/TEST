@@ -692,37 +692,49 @@ namespace G80Utility
         {
             byte[] bytes = new byte[1];
             bytes[0] = data[data.Length - 1];
-            BitArray diparray = new BitArray(bytes); //取得最後一個byte的bitarray 
-            StringBuilder status=null;
-            if (diparray[0]) //bit0 开盖
+            BitArray bitarray = new BitArray(bytes); //取得最後一個byte的bitarray 
+            StringBuilder status=new StringBuilder();
+            if (!bitarray[0]) //bit0 开盖
             {
-                status.Append("；");
+                status.Append("开盖；");
                 StatusMonitorLabel.Content = status;
             }
-            if (diparray[1]) // bit1 缺纸
+            if (!bitarray[1]) // bit1 缺纸
             {
-                status.Append("；");
+                status.Append("缺纸；");
                 StatusMonitorLabel.Content = status;
             }
-            if (diparray[2]) // bit2 切刀错误
+            if (!bitarray[2]) // bit2 切刀错误
             {
-                status.Append("；");
+                status.Append("切刀错误；");
                 StatusMonitorLabel.Content = status;
             }
-            if (diparray[3]) //钱箱状态
+            if (!bitarray[3]) //钱箱状态
             {
-                status.Append("；");
+                status.Append("钱箱打开；");
                 StatusMonitorLabel.Content = status;
             }
-            if (diparray[4]) //打印头超温
+            if (!bitarray[4]) //打印头超温
             {
-                status.Append("；");
+                status.Append("打印头超温；");
                 StatusMonitorLabel.Content = status;
             }
-            if (diparray[5]) //已发生错误
+            if (!bitarray[5]) //已发生错误
             {
-                status.Append("；");
+                status.Append("已发生错误；");
                 StatusMonitorLabel.Content = status;
+            }
+            int count = 0;
+            for (int i = 0;i < 6; i++){
+                if (bitarray[i]) {
+                    count++;
+                }
+                if (count == 6) {
+                    status.Append("就绪");
+                    StatusMonitorLabel.Content = status;
+                    break;
+                }
+                
             }
         }
         #endregion
@@ -3220,8 +3232,11 @@ namespace G80Utility
 
         private void Test_Click(object sender, RoutedEventArgs e)
         {
-            PrinterStatus();
+            //PrinterStatus();
+            byte[] test = { 0x78 };
+            showPrinterStatus(test);
         }
+
 
 
     }
