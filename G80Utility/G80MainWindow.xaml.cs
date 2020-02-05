@@ -392,7 +392,7 @@ namespace G80Utility
 
         //========================取得資料後設定UI=================
 
-        #region 取得打印機型號/軟件版本/機器序號
+        #region 顯示打印機型號/軟件版本/機器序號
         private void SetPrinterInfo(byte[] buffer)
         {
             string sn = null;
@@ -432,7 +432,7 @@ namespace G80Utility
         }
         #endregion
 
-        #region 參數設置所有欄位設定內容
+        #region 顯示參數設置所有欄位設定內容
         public void setParaColumn(byte[] data)
         {
             string receiveData = BitConverter.ToString(data);
@@ -687,6 +687,47 @@ namespace G80Utility
         }
         #endregion
 
+        #region 判斷並顯示打印機實時狀態
+        private void showPrinterStatus(byte[] data)
+        {
+
+            byte[] bytes = new byte[1];
+            bytes[0] = data[data.Length - 1];
+            BitArray diparray = new BitArray(bytes); //取得最後一個byte的bitarray 
+            StringBuilder status=null;
+            if (diparray[0]) //bit0 开盖
+            {
+                status.Append("；");
+                StatusMonitorLabel.Content = status;
+            }
+            if (diparray[1]) // bit1 缺纸
+            {
+                status.Append("；");
+                StatusMonitorLabel.Content = status;
+            }
+            if (diparray[2]) // bit2 切刀错误
+            {
+                status.Append("；");
+                StatusMonitorLabel.Content = status;
+            }
+            if (diparray[3]) //钱箱状态
+            {
+                status.Append("；");
+                StatusMonitorLabel.Content = status;
+            }
+            if (diparray[4]) //打印头超温
+            {
+                status.Append("；");
+                StatusMonitorLabel.Content = status;
+            }
+            if (diparray[5]) //已发生错误
+            {
+                status.Append("；");
+                StatusMonitorLabel.Content = status;
+            }
+        }
+        #endregion
+
         #region 判斷參數設定欄位是否取得資料
         private void checkIsGetData(TextBox SelectedText, ComboBox SelectedCom, byte[] data, string msg, bool isSubtractOne, int itemFinalNo)
         {
@@ -738,10 +779,6 @@ namespace G80Utility
         }
 
         #endregion
-
-        //#region 
-
-        //public void setConectImage()
 
         //========================Btn點擊事件===========================
 
@@ -2184,7 +2221,7 @@ namespace G80Utility
         }
         #endregion
 
-        //========================維護維修功能=================
+        //=============================維護維修功能=============================
 
         #region 清除打印機所有統計信息
         private void cleanPrinterInfo()
@@ -2194,7 +2231,7 @@ namespace G80Utility
         }
         #endregion
 
-        //========================工廠生產功能=================
+        //==============================工廠生產功能=============================
         #region 打印自檢頁
         private void PrintTest(string printType)
         {
@@ -2362,6 +2399,17 @@ namespace G80Utility
         }
         #endregion
 
+        //==============================打印及時實狀態============================
+
+        #region 打印機即時狀態
+        private void PrinterStatus()
+        {
+            byte[] sendArray = StringToByteArray(Command.STATUS_MONITOR);
+            SendCmd(sendArray, "ReadStatus", 9);
+        }
+        #endregion
+
+
         //==========================註冊機碼的寫入與讀取===========================
 
         #region 註冊機碼位置的產生
@@ -2467,6 +2515,17 @@ namespace G80Utility
                                 }
                             }
                             break;
+                        case "ReadStatus":
+                            bool isReceiveStatus = RS232Connect.SerialPortSendCMD("NeedReceive", data, null, receiveLength);
+                            while (!isReceiveStatus)
+                            {
+                                if (RS232Connect.mRecevieData != null)
+                                {
+                                    showPrinterStatus(RS232Connect.mRecevieData);
+                                    break;
+                                }
+                            }
+                            break;
                         case "CommunicationTest": //通訊測試
                             RS232Connect.SerialPortSendCMD("NeedReceive", data, null, 0);
                             RS232ConnectImage.Source = new BitmapImage(new Uri("Images/green_circle.png", UriKind.Relative));
@@ -2515,28 +2574,39 @@ namespace G80Utility
                     USBConnectImage.Source = new BitmapImage(new Uri("Images/green_circle.png", UriKind.Relative));
                     switch (dataType)
                     {
-                        //case "ReadPara":
-                        //    bool isReceiveData = RS232Connect.SerialPortSendCMD("NeedReceive", data, null, receiveLength);
-                        //    while (!isReceiveData)
+                        case "ReadPara":
+                        //bool isReceiveData = RS232Connect.SerialPortSendCMD("NeedReceive", data, null, receiveLength);
+                        //while (!isReceiveData)
+                        //{
+                        //    if (RS232Connect.mRecevieData != null)
                         //    {
-                        //        if (RS232Connect.mRecevieData != null)
-                        //        {
-                        //            setParaColumn(RS232Connect.mRecevieData);
-                        //            break;
-                        //        }
+                        //        setParaColumn(RS232Connect.mRecevieData);
+                        //        break;
                         //    }
-                        //    break;
-                        //case "ReadSN":
-                        //    bool isReceiveSN = RS232Connect.SerialPortSendCMD("NeedReceive", data, null, receiveLength);
-                        //    while (!isReceiveSN)
-                        //    {
-                        //        if (RS232Connect.mRecevieData != null)
-                        //        {
-                        //            SetPrinterInfo(RS232Connect.mRecevieData);
-                        //            break;
-                        //        }
-                        //    }
-                        //    break;
+                        //}
+                        //break;
+                        case "ReadSN":
+                            //bool isReceiveSN = RS232Connect.SerialPortSendCMD("NeedReceive", data, null, receiveLength);
+                            //while (!isReceiveSN)
+                            //{
+                            //    if (RS232Connect.mRecevieData != null)
+                            //    {
+                            //        SetPrinterInfo(RS232Connect.mRecevieData);
+                            //        break;
+                            //    }
+                            //}
+                            break;
+                        case "ReadStatus":
+                            //bool isReceiveStatus = RS232Connect.SerialPortSendCMD("NeedReceive", data, null, receiveLength);
+                            //while (!isReceiveStatus)
+                            //{
+                            //    if (RS232Connect.mRecevieData != null)
+                            //    {
+                            //showPrinterStatus(RS232Connect.mRecevieData);
+                            //        break;
+                            //    }
+                            //}
+                            break;
                         case "CommunicationTest": //通訊測試
                             USBConnect.USBSendCMD("NeedReceive", data, FindResource("GNSettingComplete") as string, receiveLength);
                             break;
@@ -2565,7 +2635,8 @@ namespace G80Utility
         private void EthernetConnectAndSendCmd(string dataType, byte[] data, int receiveLength)
         {
             bool isConnect = EthernetConnect.connectToPrinter();
-            if (isConnect) {
+            if (isConnect)
+            {
                 switch (dataType)
                 {
                     case "ReadPara":
@@ -2592,6 +2663,18 @@ namespace G80Utility
                             }
                         }
                         break;
+                    case "ReadStatus":
+                        bool isReceiveStatus = EthernetConnect.EthernetSendCmd("NeedReceive", data, null, receiveLength);
+                        while (!isReceiveStatus)
+                        {
+                            if (EthernetConnect.mRecevieData != null)
+                            {
+                                showPrinterStatus(EthernetConnect.mRecevieData);
+                                EthernetConnect.disconnect();
+                                break;
+                            }
+                        }
+                        break;
                     case "CommunicationTest": //通訊測試
                         EthernetConnect.EthernetSendCmd("NeedReceive", data, FindResource("GNSettingComplete") as string, receiveLength);
                         EthernetConnect.disconnect();
@@ -2601,7 +2684,7 @@ namespace G80Utility
                         EthernetConnect.disconnect();
                         break;
                 }
-            }        
+            }
         }
 
         #region 網口欄位是否輸入檢查
@@ -3121,24 +3204,7 @@ namespace G80Utility
 
         private void Test_Click(object sender, RoutedEventArgs e)
         {
-
-            byte[] sendArray = null;
-
-            sendArray = StringToByteArray("1F 1B 1F 53 5A 4A 42 5A 46 43 11 00");
-
-            switch (DeviceType)
-            {
-                case "RS232":
-                    SerialPortConnect("ReadPara", sendArray, 28);
-                    break;
-                case "USB":
-                    USBConnectAndSendCmd("CommunicationTest", sendArray, 8);
-                    break;
-                case "Ethernet":
-
-                    break;
-            }
-
+            PrinterStatus();
         }
 
 

@@ -31,6 +31,7 @@ namespace G80Utility.Tool
         //重啟打印機
         public static string RESTART = "1F 1B 1F 53 5A 4A 42 5A 46 11 00 00";
 
+
         //設定ip address HEADER
         public static string IP_SETTING_HEADER = "1F 1B 1F 91 00 49 50";
 

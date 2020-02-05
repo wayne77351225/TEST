@@ -723,8 +723,8 @@
                 <Label Content="状态信息：" Height="25" FontSize="14" Margin="5,0,0,0" />
                 <TextBox Width="500" Margin="0,10,10,10"  Padding="5,5,0,0" Height="25" FontSize="14"  Name="SysStatusText" Text="参数读取完成！" Foreground="#BDBDBD" IsEnabled="False"/>
                 <Label Content="打印机实时状态："  Height="25" FontSize="14" Margin="30,0,0,0" />
-                <Label Content="开盖；缺纸；过温" Height="25" FontSize="14"  />
-                <Button Name="Test" Content="測試BAUD和狀態" Click="Test_Click"/>
+                <Label Name="StatusMonitorLable"  Content="开盖；缺纸；过温" Height="25" FontSize="14"  />
+                <Button Margin="35,8,0,8" Name="Test" Padding="10,0,10,0" Content="查詢实时状态" Click="Test_Click"  FontSize="14"/>
             </StackPanel>
         </Border>
     </StackPanel>
