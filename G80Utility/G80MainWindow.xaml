@@ -525,27 +525,25 @@
                 </StackPanel>
             </TabItem>
 
-            <!--打印機操作-->
+            <!--维修维护-->
             <TabItem Header="{DynamicResource PrinterAction}"  FontSize="14">
                 <Border CornerRadius="5" Background="#595959" Margin="0,0,1,2">
                     <StackPanel Height="445">
-                        <Label Content="{DynamicResource PrinterAction}" FontSize="14"/>
-                        <Grid>
+                        <Grid Margin="15">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="22*"/>
                                 <ColumnDefinition Width="20*"/>
-                                <ColumnDefinition Width="24*"/>
                                 <ColumnDefinition Width="20*"/>
+                                <ColumnDefinition Width="20*"/>
+                                <ColumnDefinition Width="18*"/>
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
                                 <RowDefinition/>
                                 <RowDefinition/>
-                                <RowDefinition/>
                             </Grid.RowDefinitions>
                             <!--打印机统计信息-->
-                            <GroupBox Header="打印机统计信息" Grid.RowSpan="2" Margin="10,0,5,5" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14">
+                            <GroupBox Header="打印机统计信息" Grid.RowSpan="2" Margin="0,10,5,0" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14">
                                 <StackPanel>
-                                    <StackPanel  Margin="10,5,0,5" Orientation="Horizontal">
+                                    <StackPanel  Margin="10,15,0,5" Orientation="Horizontal">
                                         <Label Content="走纸总行数：" FontSize="14" />
                                         <TextBox Width="50" IsEnabled="False"/>
                                         <Label Content="行" FontSize="14"/>
@@ -581,82 +579,63 @@
                                         <Label Content="次" FontSize="14"/>
                                         <CheckBox VerticalAlignment="Center" Margin="20,0,0,0"/>
                                     </StackPanel>
-                                    <StackPanel  Margin="10,5,0,5"  Orientation="Horizontal">
-                                        <Label Content="开机次数：" FontSize="14"  Margin="0,0,12,0"/>
-                                        <TextBox Width="50" IsEnabled="False"/>
-                                        <Label Content="次" FontSize="14"/>
-                                        <CheckBox VerticalAlignment="Center" Margin="20,0,0,0"/>
-                                    </StackPanel>
+                                    <Button HorizontalAlignment="Center" Margin="10,10,10,5" Content="读取" Padding="5" FontSize="14"  Width="190" Height="35"/>
                                     <StackPanel  Margin="0,5,0,5"  Orientation="Horizontal" HorizontalAlignment="Center">
-                                        <Button  Margin="10,5,10,5"  Content="全选" Padding="5" Width="50" FontSize="14"/>
-                                        <Button  Margin="10,5,10,5"  Content="清除" Padding="5"  Width="50"  FontSize="14"/>
+                                        <Button  Margin="10,5,10,5"  Content="全选" Padding="5" Width="85" FontSize="14" Height="35"/>
+                                        <Button  Margin="10,5,10,5"  Content="清除" Padding="5"  Width="85"  FontSize="14" Height="35"/>
                                     </StackPanel>
-                                </StackPanel>
-                            </GroupBox>
-                            <!--组合命令测试-->
-                            <GroupBox Grid.Column="1" Grid.RowSpan="2" Header="组合命令测试" Margin="5,0,5,5" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14">
-                                <StackPanel>
-                                    <Button  Margin="10,15,10,5" Content="打印自检页" Padding="5" FontSize="14" Width="180"  />
-                                    <Button  Margin="10,5,10,5" Content="电源测试" Padding="5" FontSize="14" Width="180" />
-                                    <Button  Margin="10,5,10,5" Content="打开钱箱" Padding="5" FontSize="14" Width="180" />
-                                    <Button  Margin="10,5,10,5" Content="打印均匀测试" Padding="5" FontSize="14" Width="180" />
-                                    <Button  Margin="10,5,10,5" Content="联机测试" Padding="5" FontSize="14" Width="180"  />
-                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="5,10,0,10">
-                                        <StackPanel Margin="0,0,7,0" >
-                                            <CheckBox Content="二维码" FontSize="14" Padding="5,0,0,0" Margin="0,0,0,10" />
-                                            <CheckBox Content="通用指令" FontSize="14" Padding="5,0,0,0" Margin="0,0,0,10"/>
-                                            <CheckBox Content="页模式" FontSize="14" Padding="5,0,0,0"/>
-                                        </StackPanel>
-                                        <Button  Margin="10,0,0,0" Content="指令测试" Padding="5" FontSize="14" Width="90"  Height="70"/>
-                                    </StackPanel>
-                                </StackPanel>
-                            </GroupBox>
-                            <!--单项硬件测试-->
-                            <GroupBox Grid.Column="2" Grid.RowSpan="2" Header="单项硬件测试" Margin="5,0,5,5" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14">
-                                <StackPanel>
-                                    <StackPanel Orientation="Horizontal" Margin="10" >
-                                        <Button  Content="LED测试" Padding="5" FontSize="14"  Width="110"/>
-                                        <Button  Margin="10,0,0,0"  Content="蜂鸣器测试" Padding="5" FontSize="14" Width="110"/>
-                                    </StackPanel>
-                                    <StackPanel Orientation="Horizontal" Margin="10" >
-                                        <Button  Content="切刀测试" Padding="5" FontSize="14"  Width="110"/>
-                                        <Button  Margin="10,0,0,0"  Content="钱箱测试" Padding="5" FontSize="14" Width="110"/>
-                                    </StackPanel>
-                                    <Button HorizontalAlignment="Left" Margin="10,5,10,5" Content="步进电机测试" Padding="5" FontSize="14"  Width="110"/>
-                                    <StackPanel Orientation="Horizontal" Margin="10" >
-                                        <Button  Content="SDRAM测试" Padding="5" FontSize="14"  Width="110"/>
-                                        <Button  Margin="10,0,0,0"  Content="FLASH测试" Padding="5" FontSize="14" Width="110"/>
-                                    </StackPanel>
-                                    <TextBlock Text="测试SDRAM和FLASH时，如果测试成功则蜂鸣器鸣叫" TextWrapping="Wrap" LineHeight="20" Margin="10,50,10,0"/>
-                                </StackPanel>
-                            </GroupBox>
-                            <!--通用测试-->
-                            <GroupBox Grid.Column="3" Header="通用测试" Margin="5,0,5,5" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14">
-                                <StackPanel>
-                                    <StackPanel Orientation="Horizontal" Margin="10" >
-                                        <Button  Content="连续切纸" Padding="5" FontSize="14"  Width="100"/>
-                                        <TextBox  Margin="10,0,0,0"   FontSize="14" Width="80"/>
-                                    </StackPanel>
-                                    <Button HorizontalAlignment="Left" Margin="10,5,10,5" Content="自检测试(长)" Padding="5" FontSize="14"  Width="100"/>
                                 </StackPanel>
                             </GroupBox>
                             <!--打印机状态信息-->
-                            <GroupBox Grid.Column="3" Grid.Row="1" Header="打印机状态信息" Margin="5,0,5,5" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14">
-                                <StackPanel>
-                                    <TextBlock Text="打印机状态：就绪" Margin="10"/>
-                                    <StackPanel Orientation="Horizontal" Margin="10,0,10,10">
+                            <GroupBox Grid.Column="1" Grid.RowSpan="2" Header="打印机状态信息" Margin="10,10,5,0" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14">
+                                <StackPanel Margin="15,15,0,0">
+                                    <TextBlock Text="打印机状态：就绪" Margin="0,0,0,20"/>
+                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
                                         <TextBlock Text="电源电压：" VerticalAlignment="Center" />
-                                        <TextBox  Margin="17,0,0,0" IsEnabled="False"  FontSize="14" Width="80" Height="22"/>
+                                        <TextBox  Margin="17,0,2,0" IsEnabled="False"  FontSize="14" Width="80" Height="22"/>
                                         <TextBlock Text="V" Margin="5,0,0,0" VerticalAlignment="Center"/>
                                     </StackPanel>
-                                    <StackPanel Orientation="Horizontal" Margin="10,0,10,10">
+                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
                                         <TextBlock Text="打印头温度：" VerticalAlignment="Center" />
-                                        <TextBox  Margin="3,0,0,0" IsEnabled="False"  FontSize="14" Width="80" Height="22"/>
+                                        <TextBox  Margin="3,0,2,0" IsEnabled="False"  FontSize="14" Width="80" Height="22"/>
                                         <TextBlock Text="度" Margin="5,0,0,0" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                    <Button HorizontalAlignment="Left" Margin="0,10,0,0" Content="读取" Padding="5" FontSize="14"  Width="190" Height="35"/>
+                                </StackPanel>
+                            </GroupBox>
+                            <!--测试-->
+                            <GroupBox Grid.Column="2" Grid.RowSpan="2" Header="测试" Margin="10,10,5,0" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14">
+                                <StackPanel>
+                                    <Button  Margin="10,15,10,5" Name="PrintTest_S_Maintanin" Click="PrintTest_S_Maintanin_Click" Content="自检页(短)" Padding="5" FontSize="14" Width="180"  />
+                                    <Button  Margin="10,5,10,5" Name="PrintTest_L_Maintanin" Click="PrintTest_L_Maintanin_Click" Content="自检页(长)" Padding="5" FontSize="14" Width="180" />
+                                    <Button  Margin="10,5,10,5" Name="PrintTest_EVEN_Maintanin" Click="PrintTest_EVEN_Maintanin_Click" Content="打印均匀测试" Padding="5" FontSize="14" Width="180" />
+                                    <StackPanel   Margin="10,5,10,5" Orientation="Horizontal" HorizontalAlignment="Center" >
+                                        <TextBox  FontSize="14" Width="70" Name="CutTimes_Maintanin_Txt"/>
+                                        <Button  Margin="10,0,0,0" Name="CutTimes_Maintanin_Btn" Click="CutTimes_Maintanin_Btn_Click" Content="连续切纸" Padding="5" FontSize="14"  Width="100"/>
+                                    </StackPanel>
+                                    <Button  Margin="10,5,10,5" Name="BeepTest_Maintanin_Btn" Click="BeepTest_Maintanin_Btn_Click" Content="蜂鸣器测试" Padding="5" FontSize="14" Width="180" />
+                                    <Button  Margin="10,5,10,5" Name="OpenCashBox_Maintanin_Btn" Click="OpenCashBox_Maintanin_Btn_Click" Content="打开钱箱" Padding="5" FontSize="14" Width="180" />
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="5,10,0,10">
+                                        <StackPanel Margin="0,0,7,0" >
+                                            <CheckBox Content="二维码" Name="CMDQRCode_Maintanin_Checkbox" FontSize="14" Padding="5,0,0,0" Margin="0,0,0,10" />
+                                            <CheckBox Content="通用指令" Name="CMDGeneral_Maintanin_Checkbox" FontSize="14" Padding="5,0,0,0" Margin="0,0,0,10"/>
+                                            <CheckBox Content="页模式" Name="CMDPage_Maintanin_Checkbox" FontSize="14" Padding="5,0,0,0"/>
+                                        </StackPanel>
+                                        <Button  Margin="10,0,0,0" Name="CMDTest_Maintanin_Btn" Click="CMDTest_Maintanin_Btn_Click" Content="指令测试" Padding="5" FontSize="14" Width="90"  Height="70"/>
                                     </StackPanel>
                                 </StackPanel>
                             </GroupBox>
-                            <Button Grid.ColumnSpan="4" Grid.Row="2" HorizontalAlignment="Center" Margin="10,10,10,5" Content="读取所有数据" Padding="5" FontSize="14"  Width="120" Height="35"/>
+                            <!--高级测试-->
+                            <GroupBox Grid.Column="3" Grid.RowSpan="2" Header="高级测试" Margin="10,10,0,0" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14">
+                                <StackPanel HorizontalAlignment="Center" >
+                                    <Button Margin="0,15,0,20" Content="SDRAM测试" Padding="5" FontSize="14"  Width="110"/>
+                                    <Button  Margin="0,0,0,40"  Content="FLASH测试" Padding="5" FontSize="14" Width="110"/>
+                                    <Label Margin="0,0,0,10" Content="测试成功：蜂鸣器鸣叫一声"/>
+                                    <Label  Content="测试失败：蜂鸣器鸣叫三声"/>
+                                </StackPanel>
+                            </GroupBox>
+                       
+                         
                         </Grid>
                     </StackPanel>
                 </Border>

@@ -358,7 +358,7 @@ namespace G80Utility
         }
         #endregion
 
-        #region 工廠生產核取框是否勾選檢查
+        #region 維護維修核取框是否勾選檢查
         private void IsFactortyChecked()
         {
             if (CMDQRCodeCheckbox.IsChecked == true)
@@ -389,6 +389,40 @@ namespace G80Utility
             }
         }
         #endregion
+
+        #region 維護維修核取框是否勾選檢查
+        private void IsMaintainChecked()
+        {
+            if (CMDQRCode_Maintanin_Checkbox.IsChecked == true)
+            {
+                Config.isCMDQRCodeMaintainChecked = true;
+            }
+            else
+            {
+                Config.isCMDQRCodeMaintainChecked = false;
+            }
+
+            if (CMDGeneral_Maintanin_Checkbox.IsChecked == true)
+            {
+                Config.isCMDGeneralMaintainChecked = true;
+            }
+            else
+            {
+                Config.isCMDGeneralMaintainChecked = false;
+            }
+
+            if (CMDPage_Maintanin_Checkbox.IsChecked == true)
+            {
+                Config.isCMDPageMaintainChecked = true;
+            }
+            else
+            {
+                Config.isCMDPageMaintainChecked = false;
+            }
+        }
+        #endregion
+
+
 
         //========================取得資料後設定UI=================
 
@@ -793,6 +827,7 @@ namespace G80Utility
 
         //========================Btn點擊事件===========================
 
+        //通訊介面按鈕
         #region 通讯接口测试按鈕事件
         private void ConnectTest_Click(object sender, RoutedEventArgs e)
         {
@@ -1121,52 +1156,103 @@ namespace G80Utility
         }
         #endregion
 
-        #region 打印自檢頁(短)按鈕事件
+        //維護維修按鈕
+        #region 打印自檢頁(短)-維護-按鈕事件
+        private void PrintTest_S_Maintanin_Click(object sender, RoutedEventArgs e)
+        {
+            PrintTest("short");
+        }
+        #endregion
+
+        #region 打印自檢頁(長)-維護-按鈕事件
+        private void PrintTest_L_Maintanin_Click(object sender, RoutedEventArgs e)
+        {
+            PrintTest("long");
+        }
+        #endregion
+
+        #region 打印均勻測試-維護-按鈕事件
+        private void PrintTest_EVEN_Maintanin_Click(object sender, RoutedEventArgs e)
+        {
+            PrintEvenTest();
+        }
+        #endregion
+
+        #region 蜂鳴器測試-維護-按鈕事件
+        private void BeepTest_Maintanin_Btn_Click(object sender, RoutedEventArgs e)
+        {
+            BeepTest();
+        }
+        #endregion
+
+        #region 下踢錢箱-維護-按鈕事件
+        private void OpenCashBox_Maintanin_Btn_Click(object sender, RoutedEventArgs e)
+        {
+            OpenCashBox();
+        }
+        #endregion
+
+        #region 連續切紙-維護-按鈕事件
+        private void CutTimes_Maintanin_Btn_Click(object sender, RoutedEventArgs e)
+        {
+            CutTimes("maintain");
+        }
+        #endregion
+
+        #region 指令測試-維護-按鈕事件
+        private void CMDTest_Maintanin_Btn_Click(object sender, RoutedEventArgs e)
+        {
+            CMDTest("factory");
+        }
+        #endregion
+
+        //工廠生產按鈕
+        #region 打印自檢頁(短)-工廠-按鈕事件
         private void PrintTest_S_Click(object sender, RoutedEventArgs e)
         {
             PrintTest("short");
         }
         #endregion
 
-        #region 打印自檢頁(長)按鈕事件
+        #region 打印自檢頁(長)-工廠-按鈕事件
         private void PrintTest_L_Click(object sender, RoutedEventArgs e)
         {
             PrintTest("long");
         }
         #endregion
 
-        #region 打印均勻測試按鈕事件
+        #region 打印均勻測試-工廠-按鈕事件
         private void PrintTest_EVEN_Click(object sender, RoutedEventArgs e)
         {
             PrintEvenTest();
         }
         #endregion
 
-        #region 蜂鳴器測試按鈕事件
+        #region 蜂鳴器測試-工廠-按鈕事件
         private void BeepTestBtn_Click(object sender, RoutedEventArgs e)
         {
             BeepTest();
         }
         #endregion
 
-        #region 下踢錢箱按鈕事件
+        #region 下踢錢箱-工廠-按鈕事件
         private void OpenCashBoxBtn_Click(object sender, RoutedEventArgs e)
         {
             OpenCashBox();
         }
         #endregion
 
-        #region 連續切紙按鈕事件
+        #region 連續切紙-工廠-按鈕事件
         private void CutTimesBtn_Click(object sender, RoutedEventArgs e)
         {
-            CutTimes();
+            CutTimes("factory");
         }
         #endregion
 
-        #region 指令測試按鈕事件
+        #region 指令測試-工廠-按鈕事件
         private void CMDTestBtn_Click(object sender, RoutedEventArgs e)
         {
-            CMDTest("factory");
+            CMDTest("maintain");
         }
         #endregion
 
@@ -2260,6 +2346,7 @@ namespace G80Utility
         }
         #endregion
 
+
         //==============================工廠生產功能=============================
         #region 打印自檢頁
         private void PrintTest(string printType)
@@ -2304,10 +2391,20 @@ namespace G80Utility
         #endregion
 
         #region 連續切紙
-        private void CutTimes()
+        private void CutTimes(string type)
         {
             int result;
-            string times = CutTimesTxt.Text;
+            string times=null;
+            if (type == "factory")
+            {
+                times = CutTimesTxt.Text;
+            }
+            else if (type == "maintain")
+            {
+
+                times = CutTimes_Maintanin_Txt.Text;
+            }
+            
             if (times == "" || !Int32.TryParse(times, out result))
             {
                 MessageBox.Show(FindResource("ErrorFormat") as string);
@@ -2351,6 +2448,24 @@ namespace G80Utility
                     }
                     break;
                 case "maintain":
+                    IsMaintainChecked();
+                    if (Config.isCMDQRCodeMaintainChecked)
+                    {
+                        byte[] qrcode = Command.CMD_TEST_QRCODE;
+                        SendCmd(qrcode, "BeepOrSetting", 0);
+                    }
+
+                    if (Config.isCMDGeneralMaintainChecked)
+                    {
+                        byte[] general = Command.CMD_TEST_GENERAL;
+                        SendCmd(general, "BeepOrSetting", 0);
+                    }
+
+                    if (Config.isCMDPageMaintainChecked)
+                    {
+                        byte[] page = Command.CMD_TEST_PAGEMODE;
+                        SendCmd(page, "BeepOrSetting", 0);
+                    }
                     break;
             }
         }
@@ -3237,7 +3352,6 @@ namespace G80Utility
             showPrinterStatus(test);
         }
 
-
-
+   
     }
 }
