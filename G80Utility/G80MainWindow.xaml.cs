@@ -690,7 +690,6 @@ namespace G80Utility
         #region 判斷並顯示打印機實時狀態
         private void showPrinterStatus(byte[] data)
         {
-
             byte[] bytes = new byte[1];
             bytes[0] = data[data.Length - 1];
             BitArray diparray = new BitArray(bytes); //取得最後一個byte的bitarray 
@@ -1192,14 +1191,23 @@ namespace G80Utility
 
         #region 設定IP Address
         private void SetIP()
-        {
+        {          
             byte[] sendArray = null;
+            string ip;
             if (SetIPText.Text != "")
             {
-                var address = SetIPText.Text;
-                String result = String.Concat(address.Split('.').Select(x => int.Parse(x).ToString("X2")));
-                sendArray = StringToByteArray(Command.IP_SETTING_HEADER + result);
-                SendCmd(sendArray, "BeepOrSetting", 0);
+                ip  = SetIPText.Text;
+                if (checkIPFormat(ip))
+                {                    
+                    String result = String.Concat(ip.Split('.').Select(x => int.Parse(x).ToString("X2")));
+                    sendArray = StringToByteArray(Command.IP_SETTING_HEADER + result);
+                    SendCmd(sendArray, "BeepOrSetting", 0);
+                }
+                else
+                {
+                    ip = null;
+                    MessageBox.Show(FindResource("ErrorFormat") as string);
+                }          
             }
             else
             {
@@ -1212,12 +1220,21 @@ namespace G80Utility
         private void SetGateway()
         {
             byte[] sendArray = null;
+            string gateway=null;
             if (SetGatewayText.Text != "")
             {
-                var gateway = SetGatewayText.Text;
-                String result = String.Concat(gateway.Split('.').Select(x => int.Parse(x).ToString("X2")));
-                sendArray = StringToByteArray(Command.GATEWAY_SETTING_HEADER + result);
-                SendCmd(sendArray, "BeepOrSetting", 0);
+                gateway = SetGatewayText.Text;
+                if (checkIPFormat(gateway))
+                {
+                   String result = String.Concat(gateway.Split('.').Select(x => int.Parse(x).ToString("X2")));
+                    sendArray = StringToByteArray(Command.GATEWAY_SETTING_HEADER + result);
+                    SendCmd(sendArray, "BeepOrSetting", 0);
+                }
+                else
+                {
+                    gateway = null;
+                    MessageBox.Show(FindResource("ErrorFormat") as string);
+                }              
             }
             else
             {
@@ -2717,7 +2734,6 @@ namespace G80Utility
         #region ip格式檢查
         private bool checkIPFormat(string ipString)
         {
-
             //create our Regular Expression object
             string pattern = @"^([1-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(\.([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])){3}$";
             Regex check = new Regex(pattern);
