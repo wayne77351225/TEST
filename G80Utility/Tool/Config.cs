@@ -41,6 +41,12 @@ namespace G80Utility.Tool
         public static bool isCMDQRCodeMaintainChecked;
         public static bool isCMDGeneralMaintainChecked;
         public static bool isCMDPageMaintainChecked;
+        public static bool isFeedLinesChecked;
+        public static bool isPrintedLinesChecked;
+        public static bool isCutPaperTimesChecked;
+        public static bool isHeadOpenTimesChecked;
+        public static bool isPaperOutTimesChecked;
+        public static bool iErrorTimesChecked;
 
         //for factory
         public static bool isCMDQRCodeChecked;

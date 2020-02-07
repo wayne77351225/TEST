@@ -358,7 +358,7 @@ namespace G80Utility
         }
         #endregion
 
-        #region 維護維修核取框是否勾選檢查
+        #region 工廠生產核取框是否勾選檢查
         private void IsFactortyChecked()
         {
             if (CMDQRCodeCheckbox.IsChecked == true)
@@ -390,8 +390,64 @@ namespace G80Utility
         }
         #endregion
 
-        #region 維護維修核取框是否勾選檢查
-        private void IsMaintainChecked()
+        #region 維護維修核打印機信息取框是否勾選檢查
+        private void IsPrinterInfoChecked()
+        {
+            if (FeedLinesCheckbox.IsChecked == true)
+            {
+                Config.isFeedLinesChecked = true;
+            }
+            else
+            {
+                Config.isFeedLinesChecked = false;
+            }
+
+            if (PrintedLinesCheckbox.IsChecked == true)
+            {
+                Config.isPrintedLinesChecked = true;
+            }
+            else
+            {
+                Config.isPrintedLinesChecked = false;
+            }
+
+            if (CutPaperTimesCheckbox.IsChecked == true)
+            {
+                Config.isCutPaperTimesChecked = true;
+            }
+            else
+            {
+                Config.isCutPaperTimesChecked = false;
+            }
+            if (HeadOpenTimesCheckbox.IsChecked == true)
+            {
+                Config.isHeadOpenTimesChecked = true;
+            }
+            else
+            {
+                Config.isHeadOpenTimesChecked = false;
+            }
+            if (PaperOutTimesCheckbox.IsChecked == true)
+            {
+                Config.isPaperOutTimesChecked = true;
+            }
+            else
+            {
+                Config.isPaperOutTimesChecked = false;
+            }
+            if (ErrorTimesCheckbox.IsChecked == true)
+            {
+                Config.iErrorTimesChecked = true;
+            }
+            else
+            {
+                Config.iErrorTimesChecked = false;
+            }
+        }
+        #endregion
+
+        #region 維護維修核指令測試取框是否勾選檢查
+        private void IsMaintainTestChecked()
         {
             if (CMDQRCode_Maintanin_Checkbox.IsChecked == true)
             {
@@ -920,16 +976,10 @@ namespace G80Utility
 
         #endregion
 
-        private int byteArraytoHexStringtoInt(byte[] data) {
-            int result = 0;
-            string hexString = BitConverter.ToString(data).Replace("-", "");
-            result = Convert.ToInt32(hexString, 16);
-            return result;
-        }
-
         //========================Btn點擊事件===========================
 
         //通訊介面按鈕
+
         #region 通讯接口测试按鈕事件
         private void ConnectTest_Click(object sender, RoutedEventArgs e)
         {
@@ -1270,6 +1320,35 @@ namespace G80Utility
         #region 打印機全選按鈕事件
         private void SelectAllBtn_Click(object sender, RoutedEventArgs e)
         {
+            IsPrinterInfoChecked();
+            if (!Config.isFeedLinesChecked)
+            {
+                FeedLinesCheckbox.IsChecked = true;
+            }
+
+            if (!Config.isPrintedLinesChecked)
+            {
+                PrintedLinesCheckbox.IsChecked = true;
+            }
+
+            if (!Config.isCutPaperTimesChecked)
+            {
+                CutPaperTimesCheckbox.IsChecked = true;
+            }
+
+            if (!Config.isHeadOpenTimesChecked)
+            {
+                HeadOpenTimesCheckbox.IsChecked = true;
+            }
+
+            if (!Config.isPaperOutTimesChecked)
+            {
+                PaperOutTimesCheckbox.IsChecked = true;
+            }
+            if (!Config.iErrorTimesChecked)
+            {
+                ErrorTimesCheckbox.IsChecked = true;
+            }
 
         }
         #endregion
@@ -2611,7 +2690,7 @@ namespace G80Utility
                     }
                     break;
                 case "maintain":
-                    IsMaintainChecked();
+                    IsMaintainTestChecked();
                     if (Config.isCMDQRCodeMaintainChecked)
                     {
                         byte[] qrcode = Command.CMD_TEST_QRCODE;
@@ -3128,7 +3207,7 @@ namespace G80Utility
         }
         #endregion
 
-        #region byte array to hex string
+        #region byte array to hex string(須設定startIndex)
         public string byteArraytoHexString(byte[] data, int startindex)
         {
             byte[] hexArray = new byte[6];
@@ -3165,6 +3244,15 @@ namespace G80Utility
         }
         #endregion
 
+        #region byte array to hex string then to int
+        private int byteArraytoHexStringtoInt(byte[] data)
+        {
+            int result = 0;
+            string hexString = BitConverter.ToString(data).Replace("-", "");
+            result = Convert.ToInt32(hexString, 16);
+            return result;
+        }
+        #endregion
         //========================不同通道傳送命令===========================
 
         #region 不同通道傳送命令

@@ -546,37 +546,37 @@
                                         <Label Content="走纸总行数：" FontSize="14" />
                                         <TextBox Width="50" IsEnabled="False" Name="FeedLinesTxt" />
                                         <Label Content="行" FontSize="14"/>
-                                        <CheckBox VerticalAlignment="Center" Margin="20,0,0,0"/>
+                                        <CheckBox VerticalAlignment="Center" Name="FeedLinesCheckbox"  Margin="20,0,0,0"/>
                                     </StackPanel>
                                     <StackPanel  Margin="10,5,0,5"  Orientation="Horizontal">
                                         <Label Content="打印行数：" FontSize="14" Margin="0,0,12,0"/>
                                         <TextBox Width="50" IsEnabled="False"  Name="PrintedLinesTxt" />
                                         <Label Content="行" FontSize="14"/>
-                                        <CheckBox VerticalAlignment="Center" Margin="20,0,0,0"/>
+                                        <CheckBox VerticalAlignment="Center" Name="PrintedLinesCheckbox"  Margin="20,0,0,0"/>
                                     </StackPanel>
                                     <StackPanel  Margin="10,5,0,5"  Orientation="Horizontal">
                                         <Label Content="切纸次数：" FontSize="14"   Margin="0,0,12,0"/>
                                         <TextBox Width="50" IsEnabled="False" Name="CutPaperTimesTxt"/>
                                         <Label Content="次" FontSize="14"/>
-                                        <CheckBox VerticalAlignment="Center" Margin="20,0,0,0"/>
+                                        <CheckBox VerticalAlignment="Center" Name="CutPaperTimesCheckbox" Margin="20,0,0,0"/>
                                     </StackPanel>
                                     <StackPanel  Margin="10,5,0,5"  Orientation="Horizontal">
                                         <Label Content="开盖次数：" FontSize="14"  Margin="0,0,12,0"/>
                                         <TextBox Width="50" IsEnabled="False" Name="HeadOpenTimesTxt"/>
                                         <Label Content="次" FontSize="14"/>
-                                        <CheckBox VerticalAlignment="Center" Margin="20,0,0,0"/>
+                                        <CheckBox VerticalAlignment="Center" Name="HeadOpenTimesCheckbox" Margin="20,0,0,0"/>
                                     </StackPanel>
                                     <StackPanel  Margin="10,5,0,5"  Orientation="Horizontal">
                                         <Label Content="缺纸次数：" FontSize="14"  Margin="0,0,12,0"/>
                                         <TextBox Width="50" IsEnabled="False" Name="PaperOutTimesTxt"/>
                                         <Label Content="次" FontSize="14"/>
-                                        <CheckBox VerticalAlignment="Center" Margin="20,0,0,0"/>
+                                        <CheckBox VerticalAlignment="Center" Name="PaperOutTimesCheckbox" Margin="20,0,0,0"/>
                                     </StackPanel>
                                     <StackPanel  Margin="10,5,0,5"  Orientation="Horizontal">
                                         <Label Content="故障次数：" FontSize="14"  Margin="0,0,12,0"/>
                                         <TextBox Width="50" IsEnabled="False"  Name="ErrorTimesTxt"/>
                                         <Label Content="次" FontSize="14"/>
-                                        <CheckBox VerticalAlignment="Center" Margin="20,0,0,0"/>
+                                        <CheckBox VerticalAlignment="Center" Name="ErrorTimesCheckbox" Margin="20,0,0,0"/>
                                     </StackPanel>
                                     <Button HorizontalAlignment="Center" Name="PrinterInfoReadBtn" Click="PrinterInfoReadBtn_Click" Margin="10,10,10,5" Content="读取" Padding="5" FontSize="14"  Width="190" Height="35"/>
                                     <StackPanel  Margin="0,5,0,5"  Orientation="Horizontal" HorizontalAlignment="Center">
