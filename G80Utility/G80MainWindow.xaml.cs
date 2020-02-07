@@ -1309,6 +1309,13 @@ namespace G80Utility
         #endregion
 
         //維護維修按鈕
+        #region 打印機維護維修tab按鈕事件
+        private void MaintainTab_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            PrinterInfoRead();
+            queryPrinterStatus();
+        }
+        #endregion
 
         #region 打印機信息查詢按鈕事件
         private void PrinterInfoReadBtn_Click(object sender, RoutedEventArgs e)
@@ -3167,7 +3174,6 @@ namespace G80Utility
         }
         #endregion
 
-
         #region ip格式檢查
         private bool checkIPFormat(string ipString)
         {
@@ -3179,6 +3185,7 @@ namespace G80Utility
             return isCorrect;
         }
         #endregion
+
         //============================各種資料類型的轉換=============================
 
         #region hex string to byte array
@@ -3671,6 +3678,5 @@ namespace G80Utility
             showPrinteNowStatus(test);
         }
 
-      
     }
 }
