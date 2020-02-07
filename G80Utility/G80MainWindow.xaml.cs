@@ -738,76 +738,25 @@ namespace G80Utility
             bytes[0] = data[8];
             setPrinterStatustoUI(bytes, PrinterStatusText);
 
-            byte[] voltageArray= new byte[2];
+            byte[] voltageArray = new byte[2];
             byte[] temperatureArray = new byte[2];
-            for (int i = 9; i < 11; i++) {
+            for (int i = 9; i < 11; i++)
+            {
                 voltageArray[i - 9] = data[i];
             }
-            for (int i =11; i < 13; i++)
+            for (int i = 11; i < 13; i++)
             {
                 temperatureArray[i - 11] = data[i];
             }
             //電壓(字節2~3是電壓)        
             string voltageHex = BitConverter.ToString(voltageArray).Replace("-", "");
-            double voltageInt = Convert.ToInt32(voltageHex,16) / 1000.000; //1伏特=1000毫伏
-            voltageTxt.Text = voltageInt.ToString();
+            double voltageDoule = Convert.ToInt32(voltageHex, 16) / 1000.000; //1伏特=1000毫伏
+            voltageTxt.Text = voltageDoule.ToString();
+            
             //溫度(字節4~5是溫度)    
-            string temperatureHex = BitConverter.ToString(temperatureArray).Replace("-", "");
-            int temperatureInt = Convert.ToInt32(temperatureHex, 16);
+            int temperatureInt = byteArraytoHexStringtoInt(temperatureArray);
             temperatureTxt.Text = temperatureInt.ToString();
         }
-        #endregion
-
-        #region 判斷參數設定欄位是否取得資料
-        private void checkIsGetData(TextBox SelectedText, ComboBox SelectedCom, byte[] data, string msg, bool isSubtractOne, int itemFinalNo)
-        {
-            if (SelectedText != null) //判斷ip和gateway是否讀取到資料
-            {
-                if (byteArraytoIPV4(data, 8) != "")
-                {
-                    SelectedText.Text = byteArraytoIPV4(data, 8);
-                }
-                else
-                {
-                    setSysStatusColorAndText(msg + FindResource("NotReadParameterYet") as string, "#FFEF7171");
-                }
-            }
-            else if (SelectedCom != null) //判斷combobox是否讀取到資料
-            {
-                if (isSubtractOne)
-                { //index 從1開始者
-                    if (byteToIntForOneByte(data) >= 1 && byteToIntForOneByte(data) <= itemFinalNo)
-                    {
-                        SelectedCom.SelectedIndex = byteToIntForOneByte(data) - 1;
-                    }
-                    else
-                    {
-                        setSysStatusColorAndText(msg + FindResource("NotReadParameterYet") as string, "#FFEF7171");
-                    }
-
-                }
-                else
-                {//index 從0開始者
-                    if (byteToIntForOneByte(data) >= 0 && byteToIntForOneByte(data) <= itemFinalNo)
-                    {
-                        SelectedCom.SelectedIndex = byteToIntForOneByte(data);
-                    }
-                    else
-                    {
-                        setSysStatusColorAndText(msg + FindResource("NotReadParameterYet") as string, "#FFEF7171");
-                    }
-                }
-            }
-        }
-        #endregion
-
-        #region 狀態列設定文字與顏色
-        private void setSysStatusColorAndText(string msg, string color)
-        {
-            SysStatusText.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString(color));
-            SysStatusText.Text = msg;
-        }
-
         #endregion
 
         #region 打印機狀態設定至畫面功能
@@ -873,6 +822,111 @@ namespace G80Utility
 
         #endregion
 
+        #region 打印機信息設定至畫面功能
+        private void setPrinterInfotoUI(byte[] data)
+        {
+            //(0~7)前8個是無意義資料
+            byte[] receiveArray4Bytes = new byte[4];
+            byte[] receiveArray2Bytes = new byte[2];
+            int receiveInt = 0;
+            for (int i = 8; i < 12; i++) //走紙行數
+            {
+                receiveArray4Bytes[i - 8] = data[i];
+            }
+            receiveInt= byteArraytoHexStringtoInt(receiveArray4Bytes);
+            FeedLinesTxt.Text = receiveInt.ToString();
+            for (int i = 12; i < 15; i++) //打印行數
+            {
+                receiveArray4Bytes[i - 12] = data[i];
+            }
+            receiveInt = byteArraytoHexStringtoInt(receiveArray4Bytes);
+            PrintedLinesTxt.Text = receiveInt.ToString();
+            for (int i = 15; i < 17; i++) //切紙次數
+            {
+                receiveArray2Bytes[i - 15] = data[i];
+            }
+            receiveInt = byteArraytoHexStringtoInt(receiveArray2Bytes);
+            CutPaperTimesTxt.Text = receiveInt.ToString();
+            for (int i = 17; i < 19; i++) //開蓋次數
+            {
+                receiveArray2Bytes[i - 17] = data[i];
+            }
+            receiveInt = byteArraytoHexStringtoInt(receiveArray2Bytes);
+            HeadOpenTimesTxt.Text = receiveInt.ToString();
+            for (int i = 19; i < 21; i++) //缺紙次數
+            {
+                receiveArray2Bytes[i - 19] = data[i];
+            }
+            receiveInt = byteArraytoHexStringtoInt(receiveArray2Bytes);
+            PaperOutTimesTxt.Text = receiveInt.ToString();
+            for (int i = 21; i < 23; i++) //故障次數
+            {
+                receiveArray2Bytes[i - 21] = data[i];
+            }
+            receiveInt = byteArraytoHexStringtoInt(receiveArray2Bytes);
+            ErrorTimesTxt.Text = receiveInt.ToString();
+        }
+        #endregion
+
+        #region 判斷參數設定欄位是否取得資料
+        private void checkIsGetData(TextBox SelectedText, ComboBox SelectedCom, byte[] data, string msg, bool isSubtractOne, int itemFinalNo)
+        {
+            if (SelectedText != null) //判斷ip和gateway是否讀取到資料
+            {
+                if (byteArraytoIPV4(data, 8) != "")
+                {
+                    SelectedText.Text = byteArraytoIPV4(data, 8);
+                }
+                else
+                {
+                    setSysStatusColorAndText(msg + FindResource("NotReadParameterYet") as string, "#FFEF7171");
+                }
+            }
+            else if (SelectedCom != null) //判斷combobox是否讀取到資料
+            {
+                if (isSubtractOne)
+                { //index 從1開始者
+                    if (byteToIntForOneByte(data) >= 1 && byteToIntForOneByte(data) <= itemFinalNo)
+                    {
+                        SelectedCom.SelectedIndex = byteToIntForOneByte(data) - 1;
+                    }
+                    else
+                    {
+                        setSysStatusColorAndText(msg + FindResource("NotReadParameterYet") as string, "#FFEF7171");
+                    }
+
+                }
+                else
+                {//index 從0開始者
+                    if (byteToIntForOneByte(data) >= 0 && byteToIntForOneByte(data) <= itemFinalNo)
+                    {
+                        SelectedCom.SelectedIndex = byteToIntForOneByte(data);
+                    }
+                    else
+                    {
+                        setSysStatusColorAndText(msg + FindResource("NotReadParameterYet") as string, "#FFEF7171");
+                    }
+                }
+            }
+        }
+        #endregion
+
+        #region 狀態列設定文字與顏色
+        private void setSysStatusColorAndText(string msg, string color)
+        {
+            SysStatusText.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString(color));
+            SysStatusText.Text = msg;
+        }
+
+        #endregion
+
+        private int byteArraytoHexStringtoInt(byte[] data) {
+            int result = 0;
+            string hexString = BitConverter.ToString(data).Replace("-", "");
+            result = Convert.ToInt32(hexString, 16);
+            return result;
+        }
+
         //========================Btn點擊事件===========================
 
         //通訊介面按鈕
@@ -883,12 +937,12 @@ namespace G80Utility
             if ((bool)rs232Checkbox.IsChecked)
             {
                 sendArray = StringToByteArray(Command.RS232_COMMUNICATION_TEST);
-                SerialPortConnect("CommunicationTest", sendArray, 8);
+                SerialPortConnect("CommunicationTest", sendArray, 0);
             }
             if ((bool)USBCheckbox.IsChecked)
             {
                 sendArray = StringToByteArray(Command.USB_COMMUNICATION_TEST);
-                USBConnectAndSendCmd("CommunicationTest", sendArray, 8);
+                USBConnectAndSendCmd("CommunicationTest", sendArray, 0);
             }
             if ((bool)EthernetCheckbox.IsChecked)
             {
@@ -896,7 +950,7 @@ namespace G80Utility
                 if (isOK)
                 {
                     sendArray = StringToByteArray(Command.ETHERNET_COMMUNICATION_TEST);
-                    EthernetConnectAndSendCmd("CommunicationTest", sendArray, 8);
+                    EthernetConnectAndSendCmd("CommunicationTest", sendArray, 0);
                 }
             }
         }
@@ -1205,6 +1259,31 @@ namespace G80Utility
         #endregion
 
         //維護維修按鈕
+
+        #region 打印機信息查詢按鈕事件
+        private void PrinterInfoReadBtn_Click(object sender, RoutedEventArgs e)
+        {
+            PrinterInfoRead();
+        }
+        #endregion
+
+        #region 打印機全選按鈕事件
+        private void SelectAllBtn_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+        #endregion
+        
+        #region 打印機清除所有信息按鈕事件
+        private void CLeanPrinterInfoBtn_Click(object sender, RoutedEventArgs e)
+        {
+            //清除所有的打印机统计信息
+            cleanPrinterInfo();
+            //打印機信息查詢
+            PrinterInfoRead();
+        }
+        #endregion
+
         #region 打印機狀態信息查詢按鈕事件
         private void PrinterStatusQueryBtn_Click(object sender, RoutedEventArgs e)
         {
@@ -1276,6 +1355,7 @@ namespace G80Utility
             SendCmd(sendArray, "BeepOrSetting", 0);
         }
         #endregion
+
         //工廠生產按鈕
         #region 打印自檢頁(短)-工廠-按鈕事件
         private void PrintTest_S_Click(object sender, RoutedEventArgs e)
@@ -2407,6 +2487,13 @@ namespace G80Utility
         #endregion
 
         //=============================維護維修功能=============================
+        #region 讀取打印機所有統計信息
+        private void PrinterInfoRead()
+        {
+            byte[] sendArray = StringToByteArray(Command.READ_PRINTINFO);
+            SendCmd(sendArray, "ReadPrinterInfo", 28);
+        }
+        #endregion
 
         #region 清除打印機所有統計信息
         private void cleanPrinterInfo()
@@ -2423,6 +2510,7 @@ namespace G80Utility
             SendCmd(sendArray, "ReadStatus", 13);
         }
         #endregion
+
         //==============================工廠生產功能=============================
         #region 打印自檢頁
         private void PrintTest(string printType)
@@ -2734,6 +2822,17 @@ namespace G80Utility
                                 }
                             }
                             break;
+                        case "ReadPrinterInfo": //打印機統計信息
+                            bool isReceivePI = RS232Connect.SerialPortSendCMD("NeedReceive", data, null, receiveLength);
+                            while (!isReceivePI)
+                            {
+                                if (RS232Connect.mRecevieData != null)
+                                {
+                                    setPrinterInfotoUI(RS232Connect.mRecevieData);
+                                    break;
+                                }
+                            }
+                            break;
                         case "ReadStatus": //打印機溫度電壓等狀態
                             bool isReceiveStatus = RS232Connect.SerialPortSendCMD("NeedReceive", data, null, receiveLength);
                             while (!isReceiveStatus)
@@ -2825,8 +2924,19 @@ namespace G80Utility
                         //        break;
                         //    }
                         //}
-                        //    break;
-                        //case "ReadStatus": //打印機溫度電壓等狀態
+                            break;
+                        case "ReadPrinterInfo": //打印機統計信息
+                            //bool isReceivePI = RS232Connect.SerialPortSendCMD("NeedReceive", data, null, receiveLength);
+                            //while (!isReceivePI)
+                            //{
+                            //    if (RS232Connect.mRecevieData != null)
+                            //    {
+                            //        setPrinterInfotoUI(RS232Connect.mRecevieData);
+                            //        break;
+                            //    }
+                            //}
+                            break;
+                        case "ReadStatus": //打印機溫度電壓等狀態
                         //    bool isReceiveStatus = RS232Connect.SerialPortSendCMD("NeedReceive", data, null, receiveLength);
                         //    while (!isReceiveStatus)
                         //    {
@@ -2836,7 +2946,7 @@ namespace G80Utility
                         //            break;
                         //        }
                         //    }
-                        //    break;
+                            break;
                         case "ReadNowStatus":
                             //bool isReceiveNowStatus = RS232Connect.SerialPortSendCMD("NeedReceive", data, null, receiveLength);
                             //while (!isReceiveNowStatus)
@@ -2849,7 +2959,7 @@ namespace G80Utility
                             //}
                             break;
                         case "CommunicationTest": //通訊測試
-                            USBConnect.USBSendCMD("NeedReceive", data,null, receiveLength);
+                            USBConnect.USBSendCMD("NeedReceive", data, null, receiveLength);
                             break;
                         case "BeepOrSetting":
                             USBConnect.USBSendCMD("NoReceive", data, null, 0);
@@ -2899,6 +3009,18 @@ namespace G80Utility
                             if (EthernetConnect.mRecevieData != null)
                             {
                                 SetPrinterInfo(EthernetConnect.mRecevieData);
+                                EthernetConnect.disconnect();
+                                break;
+                            }
+                        }
+                        break;
+                    case "ReadPrinterInfo": //打印機統計信息
+                        bool isReceivePI = EthernetConnect.EthernetSendCmd("NeedReceive", data, null, receiveLength);
+                        while (!isReceivePI)
+                        {
+                            if (EthernetConnect.mRecevieData != null)
+                            {
+                                setPrinterInfotoUI(EthernetConnect.mRecevieData);
                                 EthernetConnect.disconnect();
                                 break;
                             }
@@ -3461,5 +3583,6 @@ namespace G80Utility
             showPrinteNowStatus(test);
         }
 
+      
     }
 }
