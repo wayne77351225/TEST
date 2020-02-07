@@ -31,7 +31,6 @@
                                 <ComboBoxItem Content="115200"/>
                             </ComboBox>
                         </StackPanel>
-
                         <!--USB-->
                         <StackPanel>
                             <StackPanel  Margin="10" Orientation="Horizontal">
@@ -589,18 +588,19 @@
                             <!--打印机状态信息-->
                             <GroupBox Grid.Column="1" Grid.RowSpan="2" Header="打印机状态信息" Margin="10,10,5,0" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14">
                                 <StackPanel Margin="15,15,0,0">
-                                    <TextBlock Text="打印机状态：就绪" Margin="0,0,0,20"/>
+                                    <Label Content="打印机状态：" Padding="0,5,0,0" Margin="0,0,0,10"/>
+                                    <TextBox VerticalScrollBarVisibility="Auto" Text="就绪"  Width="190" Height="40" Margin="0,0,0,20" IsEnabled="False" TextWrapping="Wrap" Name="PrinterStatusText" VerticalAlignment="Center"  HorizontalAlignment="Left"/>
                                     <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
                                         <TextBlock Text="电源电压：" VerticalAlignment="Center" />
-                                        <TextBox  Margin="17,0,2,0" IsEnabled="False"  FontSize="14" Width="80" Height="22"/>
+                                        <TextBox Name="voltageTxt"  Margin="17,0,2,0" IsEnabled="False"  FontSize="14" Width="80" Height="22"/>
                                         <TextBlock Text="V" Margin="5,0,0,0" VerticalAlignment="Center"/>
                                     </StackPanel>
                                     <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
                                         <TextBlock Text="打印头温度：" VerticalAlignment="Center" />
-                                        <TextBox  Margin="3,0,2,0" IsEnabled="False"  FontSize="14" Width="80" Height="22"/>
+                                        <TextBox Name="temperatureTxt" Margin="3,0,2,0" IsEnabled="False"  FontSize="14" Width="80" Height="22"/>
                                         <TextBlock Text="度" Margin="5,0,0,0" VerticalAlignment="Center"/>
                                     </StackPanel>
-                                    <Button HorizontalAlignment="Left" Margin="0,10,0,0" Content="读取" Padding="5" FontSize="14"  Width="190" Height="35"/>
+                                    <Button Name="PrinterStatusQueryBtn" Click="PrinterStatusQueryBtn_Click" HorizontalAlignment="Left" Content="读取" Padding="5" FontSize="14"  Width="190" Height="35"/>
                                 </StackPanel>
                             </GroupBox>
                             <!--测试-->
@@ -628,14 +628,14 @@
                             <!--高级测试-->
                             <GroupBox Grid.Column="3" Grid.RowSpan="2" Header="高级测试" Margin="10,10,0,0" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14">
                                 <StackPanel HorizontalAlignment="Center" >
-                                    <Button Margin="0,15,0,20" Content="SDRAM测试" Padding="5" FontSize="14"  Width="110"/>
-                                    <Button  Margin="0,0,0,40"  Content="FLASH测试" Padding="5" FontSize="14" Width="110"/>
+                                    <Button Margin="0,15,0,20" Name="SDRAMTestBtn" Click="SDRAMTestBtn_Click" Content="SDRAM测试" Padding="5" FontSize="14"  Width="110"/>
+                                    <Button  Margin="0,0,0,40" Name="FlashTestBtn" Click="FlashTestBtn_Click"   Content="FLASH测试" Padding="5" FontSize="14" Width="110"/>
                                     <Label Margin="0,0,0,10" Content="测试成功：蜂鸣器鸣叫一声"/>
                                     <Label  Content="测试失败：蜂鸣器鸣叫三声"/>
                                 </StackPanel>
                             </GroupBox>
-                       
-                         
+
+
                         </Grid>
                     </StackPanel>
                 </Border>

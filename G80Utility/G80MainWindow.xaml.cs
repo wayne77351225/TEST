@@ -423,7 +423,6 @@ namespace G80Utility
         #endregion
 
 
-
         //========================取得資料後設定UI=================
 
         #region 顯示打印機型號/軟件版本/機器序號
@@ -722,54 +721,40 @@ namespace G80Utility
         #endregion
 
         #region 判斷並顯示打印機實時狀態
-        private void showPrinterStatus(byte[] data)
+        private void showPrinteNowStatus(byte[] data)
         {
             byte[] bytes = new byte[1];
             bytes[0] = data[data.Length - 1];
-            BitArray bitarray = new BitArray(bytes); //取得最後一個byte的bitarray 
-            StringBuilder status=new StringBuilder();
-            if (!bitarray[0]) //bit0 开盖
+            setPrinterStatustoUI(bytes, StatusMonitorLabel);
+        }
+        #endregion
+
+        #region 取得並設定打印機狀態(溫度/電壓)
+        private void setPrinterStatus(byte[] data)
+        {
+            //(0~7)前8個是無意義資料
+            //字節1是狀態
+            byte[] bytes = new byte[1];
+            bytes[0] = data[8];
+            setPrinterStatustoUI(bytes, PrinterStatusText);
+
+            byte[] voltageArray= new byte[2];
+            byte[] temperatureArray = new byte[2];
+            for (int i = 9; i < 11; i++) {
+                voltageArray[i - 9] = data[i];
+            }
+            for (int i =11; i < 13; i++)
             {
-                status.Append("开盖；");
-                StatusMonitorLabel.Content = status;
+                temperatureArray[i - 11] = data[i];
             }
-            if (!bitarray[1]) // bit1 缺纸
-            {
-                status.Append("缺纸；");
-                StatusMonitorLabel.Content = status;
-            }
-            if (!bitarray[2]) // bit2 切刀错误
-            {
-                status.Append("切刀错误；");
-                StatusMonitorLabel.Content = status;
-            }
-            if (!bitarray[3]) //钱箱状态
-            {
-                status.Append("钱箱打开；");
-                StatusMonitorLabel.Content = status;
-            }
-            if (!bitarray[4]) //打印头超温
-            {
-                status.Append("打印头超温；");
-                StatusMonitorLabel.Content = status;
-            }
-            if (!bitarray[5]) //已发生错误
-            {
-                status.Append("已发生错误；");
-                StatusMonitorLabel.Content = status;
-            }
-            int count = 0;
-            for (int i = 0;i < 6; i++){
-                if (bitarray[i]) {
-                    count++;
-                }
-                if (count == 6) {
-                    status.Append("就绪");
-                    StatusMonitorLabel.Content = status;
-                    break;
-                }
-                
-            }
+            //電壓(字節2~3是電壓)        
+            string voltageHex = BitConverter.ToString(voltageArray).Replace("-", "");
+            double voltageInt = Convert.ToInt32(voltageHex,16) / 1000.000; //1伏特=1000毫伏
+            voltageTxt.Text = voltageInt.ToString();
+            //溫度(字節4~5是溫度)    
+            string temperatureHex = BitConverter.ToString(temperatureArray).Replace("-", "");
+            int temperatureInt = Convert.ToInt32(temperatureHex, 16);
+            temperatureTxt.Text = temperatureInt.ToString();
         }
         #endregion
 
@@ -821,6 +806,69 @@ namespace G80Utility
         {
             SysStatusText.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString(color));
             SysStatusText.Text = msg;
+        }
+
+        #endregion
+
+        #region 打印機狀態設定至畫面功能
+        private void setPrinterStatustoUI(byte[] data, UIElement uiContent)
+        {
+
+            BitArray bitarray = new BitArray(data); //取得最後一個byte的bitarray 
+            StringBuilder status = new StringBuilder();
+            if (!bitarray[0]) //bit0 开盖
+            {
+                status.Append("开盖；");
+            }
+            if (!bitarray[1]) // bit1 缺纸
+            {
+                status.Append("缺纸；");
+
+            }
+            if (!bitarray[2]) // bit2 切刀错误
+            {
+                status.Append("切刀错误；");
+
+            }
+            if (!bitarray[3]) //钱箱状态
+            {
+                status.Append("钱箱打开；");
+            }
+            if (!bitarray[4]) //打印头超温
+            {
+                status.Append("打印头超温；");
+
+            }
+            if (!bitarray[5]) //已发生错误
+            {
+                status.Append("已发生错误；");
+
+            }
+            int count = 0;
+            for (int i = 0; i < 6; i++)
+            {
+                if (bitarray[i])
+                {
+                    count++;
+                }
+                if (count == 6)
+                {
+                    status.Append("就绪");
+                    break;
+                }
+            }
+
+            switch (uiContent.GetType().Name)
+            {
+                case "Label":
+                    Label lable = (Label)uiContent;
+                    lable.Content = status;
+                    break;
+                case "TextBox":
+                    TextBox textbox = (TextBox)uiContent;
+                    textbox.Text = status.ToString();
+                    break;
+            }
         }
 
         #endregion
@@ -1157,6 +1205,13 @@ namespace G80Utility
         #endregion
 
         //維護維修按鈕
+        #region 打印機狀態信息查詢按鈕事件
+        private void PrinterStatusQueryBtn_Click(object sender, RoutedEventArgs e)
+        {
+            queryPrinterStatus();
+        }
+        #endregion
+
         #region 打印自檢頁(短)-維護-按鈕事件
         private void PrintTest_S_Maintanin_Click(object sender, RoutedEventArgs e)
         {
@@ -1206,6 +1261,21 @@ namespace G80Utility
         }
         #endregion
 
+        #region SDRAM測試按鈕事件
+        private void SDRAMTestBtn_Click(object sender, RoutedEventArgs e)
+        {
+            byte[] sendArray = StringToByteArray(Command.SDRAM_TEST);
+            SendCmd(sendArray, "BeepOrSetting", 0);
+        }
+        #endregion
+
+        #region Flash測試按鈕事件
+        private void FlashTestBtn_Click(object sender, RoutedEventArgs e)
+        {
+            byte[] sendArray = StringToByteArray(Command.FLASH_TEST);
+            SendCmd(sendArray, "BeepOrSetting", 0);
+        }
+        #endregion
         //工廠生產按鈕
         #region 打印自檢頁(短)-工廠-按鈕事件
         private void PrintTest_S_Click(object sender, RoutedEventArgs e)
@@ -1289,14 +1359,14 @@ namespace G80Utility
 
         #region 設定IP Address
         private void SetIP()
-        {          
+        {
             byte[] sendArray = null;
             string ip;
             if (SetIPText.Text != "")
             {
-                ip  = SetIPText.Text;
+                ip = SetIPText.Text;
                 if (checkIPFormat(ip))
-                {                    
+                {
                     String result = String.Concat(ip.Split('.').Select(x => int.Parse(x).ToString("X2")));
                     sendArray = StringToByteArray(Command.IP_SETTING_HEADER + result);
                     SendCmd(sendArray, "BeepOrSetting", 0);
@@ -1305,7 +1375,7 @@ namespace G80Utility
                 {
                     ip = null;
                     MessageBox.Show(FindResource("ErrorFormat") as string);
-                }          
+                }
             }
             else
             {
@@ -1318,13 +1388,13 @@ namespace G80Utility
         private void SetGateway()
         {
             byte[] sendArray = null;
-            string gateway=null;
+            string gateway = null;
             if (SetGatewayText.Text != "")
             {
                 gateway = SetGatewayText.Text;
                 if (checkIPFormat(gateway))
                 {
-                   String result = String.Concat(gateway.Split('.').Select(x => int.Parse(x).ToString("X2")));
+                    String result = String.Concat(gateway.Split('.').Select(x => int.Parse(x).ToString("X2")));
                     sendArray = StringToByteArray(Command.GATEWAY_SETTING_HEADER + result);
                     SendCmd(sendArray, "BeepOrSetting", 0);
                 }
@@ -1332,7 +1402,7 @@ namespace G80Utility
                 {
                     gateway = null;
                     MessageBox.Show(FindResource("ErrorFormat") as string);
-                }              
+                }
             }
             else
             {
@@ -2346,7 +2416,13 @@ namespace G80Utility
         }
         #endregion
 
-
+        #region  打印機狀態(電壓/溫度...)查詢
+        private void queryPrinterStatus()
+        {
+            byte[] sendArray = StringToByteArray(Command.READ_PRINTERSTATUS);
+            SendCmd(sendArray, "ReadStatus", 13);
+        }
+        #endregion
         //==============================工廠生產功能=============================
         #region 打印自檢頁
         private void PrintTest(string printType)
@@ -2373,7 +2449,6 @@ namespace G80Utility
             SendCmd(eventest, "BeepOrSetting", 0);
         }
         #endregion
-
         #region 蜂鳴器測試
         private void BeepTest()
         {
@@ -2394,7 +2469,7 @@ namespace G80Utility
         private void CutTimes(string type)
         {
             int result;
-            string times=null;
+            string times = null;
             if (type == "factory")
             {
                 times = CutTimesTxt.Text;
@@ -2404,7 +2479,7 @@ namespace G80Utility
 
                 times = CutTimes_Maintanin_Txt.Text;
             }
-            
+
             if (times == "" || !Int32.TryParse(times, out result))
             {
                 MessageBox.Show(FindResource("ErrorFormat") as string);
@@ -2543,13 +2618,13 @@ namespace G80Utility
         }
         #endregion
 
-        //==============================打印及時實狀態============================
+        //==============================打印機即時狀態============================
 
         #region 打印機即時狀態
-        private void PrinterStatus()
+        private void PrinterNowStatus()
         {
             byte[] sendArray = StringToByteArray(Command.STATUS_MONITOR);
-            SendCmd(sendArray, "ReadStatus", 9);
+            SendCmd(sendArray, "ReadNowStatus", 9);
         }
         #endregion
 
@@ -2659,19 +2734,30 @@ namespace G80Utility
                                 }
                             }
                             break;
-                        case "ReadStatus":
+                        case "ReadStatus": //打印機溫度電壓等狀態
                             bool isReceiveStatus = RS232Connect.SerialPortSendCMD("NeedReceive", data, null, receiveLength);
                             while (!isReceiveStatus)
                             {
                                 if (RS232Connect.mRecevieData != null)
                                 {
-                                    showPrinterStatus(RS232Connect.mRecevieData);
+                                    setPrinterStatus(RS232Connect.mRecevieData);
+                                    break;
+                                }
+                            }
+                            break;
+                        case "ReadNowStatus": //即時狀態
+                            bool isReceiveNowStatus = RS232Connect.SerialPortSendCMD("NeedReceive", data, null, receiveLength);
+                            while (!isReceiveNowStatus)
+                            {
+                                if (RS232Connect.mRecevieData != null)
+                                {
+                                    showPrinteNowStatus(RS232Connect.mRecevieData);
                                     break;
                                 }
                             }
                             break;
                         case "CommunicationTest": //通訊測試
-                            RS232Connect.SerialPortSendCMD("NeedReceive", data, null, 0);
+                            RS232Connect.SerialPortSendCMD("NeedReceive", data, null, receiveLength);
                             RS232ConnectImage.Source = new BitmapImage(new Uri("Images/green_circle.png", UriKind.Relative));
                             RS232Connect.CloseSerialPort(); //沒立刻關閉有時會漏收命令
                             break;
@@ -2730,29 +2816,40 @@ namespace G80Utility
                         //}
                         //break;
                         case "ReadSN":
-                            //bool isReceiveSN = RS232Connect.SerialPortSendCMD("NeedReceive", data, null, receiveLength);
-                            //while (!isReceiveSN)
+                        //bool isReceiveSN = RS232Connect.SerialPortSendCMD("NeedReceive", data, null, receiveLength);
+                        //while (!isReceiveSN)
+                        //{
+                        //    if (RS232Connect.mRecevieData != null)
+                        //    {
+                        //        SetPrinterInfo(RS232Connect.mRecevieData);
+                        //        break;
+                        //    }
+                        //}
+                        //    break;
+                        //case "ReadStatus": //打印機溫度電壓等狀態
+                        //    bool isReceiveStatus = RS232Connect.SerialPortSendCMD("NeedReceive", data, null, receiveLength);
+                        //    while (!isReceiveStatus)
+                        //    {
+                        //        if (RS232Connect.mRecevieData != null)
+                        //        {
+                        //            setPrinterStatus(RS232Connect.mRecevieData);
+                        //            break;
+                        //        }
+                        //    }
+                        //    break;
+                        case "ReadNowStatus":
+                            //bool isReceiveNowStatus = RS232Connect.SerialPortSendCMD("NeedReceive", data, null, receiveLength);
+                            //while (!isReceiveNowStatus)
                             //{
                             //    if (RS232Connect.mRecevieData != null)
                             //    {
-                            //        SetPrinterInfo(RS232Connect.mRecevieData);
-                            //        break;
-                            //    }
-                            //}
-                            break;
-                        case "ReadStatus":
-                            //bool isReceiveStatus = RS232Connect.SerialPortSendCMD("NeedReceive", data, null, receiveLength);
-                            //while (!isReceiveStatus)
-                            //{
-                            //    if (RS232Connect.mRecevieData != null)
-                            //    {
-                            //showPrinterStatus(RS232Connect.mRecevieData);
+                            //showPrinteNowStatus(RS232Connect.mRecevieData);
                             //        break;
                             //    }
                             //}
                             break;
                         case "CommunicationTest": //通訊測試
-                            USBConnect.USBSendCMD("NeedReceive", data, FindResource("GNSettingComplete") as string, receiveLength);
+                            USBConnect.USBSendCMD("NeedReceive", data,null, receiveLength);
                             break;
                         case "BeepOrSetting":
                             USBConnect.USBSendCMD("NoReceive", data, null, 0);
@@ -2807,13 +2904,25 @@ namespace G80Utility
                             }
                         }
                         break;
-                    case "ReadStatus":
+                    case "ReadStatus": //打印機溫度電壓等狀態
                         bool isReceiveStatus = EthernetConnect.EthernetSendCmd("NeedReceive", data, null, receiveLength);
                         while (!isReceiveStatus)
                         {
                             if (EthernetConnect.mRecevieData != null)
                             {
-                                showPrinterStatus(EthernetConnect.mRecevieData);
+                                setPrinterStatus(EthernetConnect.mRecevieData);
+                                EthernetConnect.disconnect();
+                                break;
+                            }
+                        }
+                        break;
+                    case "ReadNowStatus":
+                        bool isReceiveNowStatus = EthernetConnect.EthernetSendCmd("NeedReceive", data, null, receiveLength);
+                        while (!isReceiveNowStatus)
+                        {
+                            if (EthernetConnect.mRecevieData != null)
+                            {
+                                showPrinteNowStatus(EthernetConnect.mRecevieData);
                                 EthernetConnect.disconnect();
                                 break;
                             }
@@ -3347,11 +3456,10 @@ namespace G80Utility
 
         private void Test_Click(object sender, RoutedEventArgs e)
         {
-            //PrinterStatus();
+            //PrinterNowStatus();
             byte[] test = { 0x78 };
-            showPrinterStatus(test);
+            showPrinteNowStatus(test);
         }
 
-   
     }
 }

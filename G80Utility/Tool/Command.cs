@@ -258,6 +258,14 @@ namespace G80Utility.Tool
         //讀取打印機統計信息
         public static string READ_PRINTINFO = "1F 1B 41 31 01";
 
+        //讀取打印機狀態信息
+        public static string READ_PRINTERSTATUS = "1F 1B 42 01 01";
+
+        //SDRAM測試
+        public static string SDRAM_TEST = "1F 1B 1F 53 5A 4A 42 5A 46 44 10 00";
+
+        //FALSH測試
+        public static string FLASH_TEST = "1F 1B 1F 53 5A 4A 42 5A 46 44 11 00";
         #endregion
 
         #region 工廠生產
