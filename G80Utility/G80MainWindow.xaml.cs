@@ -48,9 +48,8 @@ namespace G80Utility
         DeviceViewModel viewmodel { get; set; }
 
 
-        //usb是否結束讀取
-        bool isUSBFinishReceiveData;
-
+        //打印機實時狀態查詢位置
+        string QueryNowStatusPosition;
 
         #endregion
 
@@ -795,11 +794,11 @@ namespace G80Utility
         #endregion
 
         #region 判斷並顯示打印機實時狀態
-        private void showPrinteNowStatus(byte[] data)
+        private void showPrinteNowStatus(byte[] data, UIElement uiContent)
         {
             byte[] bytes = new byte[1];
             bytes[0] = data[data.Length - 1];
-            setPrinterStatustoUI(bytes, StatusMonitorLabel);
+            setPrinterStatustoUI(bytes, uiContent);
         }
         #endregion
 
@@ -1329,7 +1328,9 @@ namespace G80Utility
         #region 打印機維護維修tab按鈕事件
         private void MaintainTab_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
+            QueryNowStatusPosition = "maintain";
             PrinterInfoRead();
+            PrinterNowStatus();
             queryPrinterStatus();
         }
         #endregion
@@ -1432,6 +1433,8 @@ namespace G80Utility
         #region 打印機狀態信息查詢按鈕事件
         private void PrinterStatusQueryBtn_Click(object sender, RoutedEventArgs e)
         {
+            QueryNowStatusPosition = "maintain";
+            PrinterNowStatus();
             queryPrinterStatus();
         }
         #endregion
@@ -2682,6 +2685,7 @@ namespace G80Utility
             SendCmd(eventest, "BeepOrSetting", 0);
         }
         #endregion
+
         #region 蜂鳴器測試
         private void BeepTest()
         {
@@ -2857,7 +2861,7 @@ namespace G80Utility
         private void PrinterNowStatus()
         {
             byte[] sendArray = StringToByteArray(Command.STATUS_MONITOR);
-            SendCmd(sendArray, "ReadNowStatus", 9);
+            SendCmd(sendArray, "ReadNowStatus", 8);
         }
         #endregion
 
@@ -2995,7 +2999,15 @@ namespace G80Utility
                             {
                                 if (RS232Connect.mRecevieData != null)
                                 {
-                                    showPrinteNowStatus(RS232Connect.mRecevieData);
+                                    switch (QueryNowStatusPosition) {
+                                        case "bottom":
+                                            showPrinteNowStatus(RS232Connect.mRecevieData, StatusMonitorLabel);
+                                            break;
+                                        case "maintain":
+                                            showPrinteNowStatus(RS232Connect.mRecevieData, PrinterStatusText);
+                                            break;
+                                    }
+                                    
                                     break;
                                 }
                             }
@@ -3098,7 +3110,15 @@ namespace G80Utility
                             //{
                             //    if (RS232Connect.mRecevieData != null)
                             //    {
-                            //showPrinteNowStatus(RS232Connect.mRecevieData);
+                            //switch (QueryNowStatusPosition)
+                            //{
+                            //    case "bottom":
+                            //        showPrinteNowStatus(RS232Connect.mRecevieData, StatusMonitorLabel);
+                            //        break;
+                            //    case "maintain":
+                            //        showPrinteNowStatus(RS232Connect.mRecevieData, PrinterStatusText);
+                            //        break;
+                            //}
                             //        break;
                             //    }
                             //}
@@ -3189,7 +3209,15 @@ namespace G80Utility
                         {
                             if (EthernetConnect.mRecevieData != null)
                             {
-                                showPrinteNowStatus(EthernetConnect.mRecevieData);
+                                switch (QueryNowStatusPosition)
+                                {
+                                    case "bottom":
+                                        showPrinteNowStatus(EthernetConnect.mRecevieData, StatusMonitorLabel);
+                                        break;
+                                    case "maintain":
+                                        showPrinteNowStatus(EthernetConnect.mRecevieData, PrinterStatusText);
+                                        break;
+                                }
                                 EthernetConnect.disconnect();
                                 break;
                             }
@@ -3732,9 +3760,8 @@ namespace G80Utility
 
         private void Test_Click(object sender, RoutedEventArgs e)
         {
-            //PrinterNowStatus();
-            byte[] test = { 0x78 };
-            showPrinteNowStatus(test);
+            QueryNowStatusPosition = "bottom";
+            PrinterNowStatus();   
         }
 
     }
