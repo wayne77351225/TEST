@@ -495,7 +495,6 @@ namespace G80Utility
         }
         #endregion
 
-
         //========================取得資料後設定UI=================
 
         #region 顯示打印機型號/軟件版本/機器序號
@@ -1385,8 +1384,6 @@ namespace G80Utility
             {
                 //清除所有的打印机统计信息
                 cleanPrinterInfo();
-                //打印機信息查詢
-                PrinterInfoRead();
             }
             else {
                 IsPrinterInfoChecked();//先確認選取狀態
@@ -1426,7 +1423,9 @@ namespace G80Utility
                 }
 
             }
-
+            
+            //清除完就要讀取打印機信息
+            PrinterInfoRead();
         }
         #endregion
 
@@ -2861,7 +2860,7 @@ namespace G80Utility
         private void PrinterNowStatus()
         {
             byte[] sendArray = StringToByteArray(Command.STATUS_MONITOR);
-            SendCmd(sendArray, "ReadNowStatus", 8);
+            SendCmd(sendArray, "ReadNowStatus", 9);
         }
         #endregion
 

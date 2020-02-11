@@ -106,7 +106,7 @@ namespace G80Utility.Tool
             {
                 ((G80MainWindow)Application.Current.MainWindow).EthernetConnectImage.Source = new BitmapImage(new Uri("Images/red_circle.png", UriKind.Relative)); //連線失敗時
                 MessageBox.Show(Application.Current.FindResource("ConnectTimeout") as string);
-                disconnect();
+                //disconnect();
             }          
             return isReceiveData;
         }
