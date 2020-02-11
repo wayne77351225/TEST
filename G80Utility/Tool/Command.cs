@@ -258,23 +258,23 @@ namespace G80Utility.Tool
         //讀取打印機統計信息
         public static string READ_PRINTINFO = "1F 1B 41 31 01";
 
-        //設定打印機走紙總行數
-        public static string SET_PRINTINFO_FEED_LINES = "1F 1B 1F 53 5A 4A 42 5A 46 41 11 02";
+        //清除打印機走紙總行數
+        public static string CLEAN_PRINTINFO_FEED_LINES = "1F 1B 1F 53 5A 4A 42 5A 46 41 11 02";
 
-        //設定打印機打印總行數
-        public static string SET_PRINTINFO_PRINTED_LINES = "1F 1B 1F 53 5A 4A 42 5A 46 41 12 02";
+        //清除打印機打印總行數
+        public static string CLEAN_PRINTINFO_PRINTED_LINES = "1F 1B 1F 53 5A 4A 42 5A 46 41 12 02";
 
-        //設定打印機切紙次數
-        public static string SET_PRINTINFO_CUTPAPER_TIMES = "1F 1B 1F 53 5A 4A 42 5A 46 41 13 02";
+        //清除打印機切紙次數
+        public static string CLEAN_PRINTINFO_CUTPAPER_TIMES = "1F 1B 1F 53 5A 4A 42 5A 46 41 13 02";
 
-        //設定打印機開蓋次數
-        public static string SET_PRINTINFO_HEADOPEN_TIMES = "1F 1B 1F 53 5A 4A 42 5A 46 41 14 02";
+        //清除打印機開蓋次數
+        public static string CLEAN_PRINTINFO_HEADOPEN_TIMES = "1F 1B 1F 53 5A 4A 42 5A 46 41 14 02";
 
-        //設定打印機缺紙次數
-        public static string SET_PRINTINFO_PAPEROUT_TIMES = "1F 1B 1F 53 5A 4A 42 5A 46 41 15 02";
+        //清除打印機缺紙次數
+        public static string CLEAN_PRINTINFO_PAPEROUT_TIMES = "1F 1B 1F 53 5A 4A 42 5A 46 41 15 02";
 
-        //設定打印機故障次數
-        public static string SET_PRINTINFO_ERROR_TIMES = "1F 1B 1F 53 5A 4A 42 5A 46 41 16 02";
+        //清除打印機故障次數
+        public static string CLEAN_PRINTINFO_ERROR_TIMES = "1F 1B 1F 53 5A 4A 42 5A 46 41 16 02";
 
         //讀取打印機狀態信息
         public static string READ_PRINTERSTATUS = "1F 1B 42 01 01";

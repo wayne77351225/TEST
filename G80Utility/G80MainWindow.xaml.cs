@@ -446,6 +446,24 @@ namespace G80Utility
         }
         #endregion
 
+        #region 維護維修核打印機信息取框是否全部勾選
+        private bool IsPrinterInfoAllChecked()
+        {
+            bool isAllChecked = false;
+            if (Config.isFeedLinesChecked 
+                && Config.isPrintedLinesChecked 
+                && Config.isCutPaperTimesChecked
+                && Config.isHeadOpenTimesChecked
+                && Config.isPaperOutTimesChecked
+                && Config.iErrorTimesChecked)
+            {
+                isAllChecked = true;
+            }
+           
+            return isAllChecked;
+        }
+        #endregion
+
         #region 維護維修核指令測試取框是否勾選檢查
         private void IsMaintainTestChecked()
         {
@@ -610,7 +628,7 @@ namespace G80Utility
 
             if (receiveData.Contains(Command.RE_LANGUAGES_CLASSFY))
             {
-                checkIsGetData(null, EthernetSpeedCom, data, "语言设置", true, 6);
+                checkIsGetData(null, LanguageSetCom, data, "语言设置", true, 6);
             }
 
             if (receiveData.Contains(Command.RE_FONTB_CLASSFY))
@@ -979,7 +997,6 @@ namespace G80Utility
         //========================Btn點擊事件===========================
 
         //通訊介面按鈕
-
         #region 通讯接口测试按鈕事件
         private void ConnectTest_Click(object sender, RoutedEventArgs e)
         {
@@ -1363,10 +1380,52 @@ namespace G80Utility
         #region 打印機清除所有信息按鈕事件
         private void CLeanPrinterInfoBtn_Click(object sender, RoutedEventArgs e)
         {
-            //清除所有的打印机统计信息
-            cleanPrinterInfo();
-            //打印機信息查詢
-            PrinterInfoRead();
+            if (IsPrinterInfoAllChecked())
+            {
+                //清除所有的打印机统计信息
+                cleanPrinterInfo();
+                //打印機信息查詢
+                PrinterInfoRead();
+            }
+            else {
+                IsPrinterInfoChecked();//先確認選取狀態
+                if (Config.isFeedLinesChecked)
+                {
+                    byte[] sendArray = StringToByteArray(Command.CLEAN_PRINTINFO_FEED_LINES);
+                    SendCmd(sendArray, "BeepOrSetting", 0);
+                }
+
+                if (Config.isPrintedLinesChecked)
+                {
+                    byte[] sendArray = StringToByteArray(Command.CLEAN_PRINTINFO_PRINTED_LINES);
+                    SendCmd(sendArray, "BeepOrSetting", 0);
+                }
+
+                if (Config.isCutPaperTimesChecked)
+                {
+                    byte[] sendArray = StringToByteArray(Command.CLEAN_PRINTINFO_CUTPAPER_TIMES);
+                    SendCmd(sendArray, "BeepOrSetting", 0);
+                }
+
+                if (Config.isHeadOpenTimesChecked)
+                {
+                    byte[] sendArray = StringToByteArray(Command.CLEAN_PRINTINFO_HEADOPEN_TIMES);
+                    SendCmd(sendArray, "BeepOrSetting", 0);
+                }
+
+                if (Config.isPaperOutTimesChecked)
+                {
+                    byte[] sendArray = StringToByteArray(Command.CLEAN_PRINTINFO_PAPEROUT_TIMES);
+                    SendCmd(sendArray, "BeepOrSetting", 0);
+                }
+                if (Config.iErrorTimesChecked)
+                {
+                    byte[] sendArray = StringToByteArray(Command.CLEAN_PRINTINFO_ERROR_TIMES);
+                    SendCmd(sendArray, "BeepOrSetting", 0);
+                }
+
+            }
+
         }
         #endregion
 
