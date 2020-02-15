@@ -2301,5 +2301,13 @@ namespace G80Utility.Tool
                                                     0x41, 0x41, 0x0c, 0x1d, 0x56, 0x41, 0x00
                                                      };
         #endregion
+
+        #region NV Logo
+        //打印LOGO HEADER
+        public static string PRINT_LOGOS_HEADER = "1C 70";
+
+        //清除打印機的LOGO
+        public static string CLEAN_LOGOS_INPRINTER = "1C 71 01 01 00 01 00 00 00 00 00 00 00 00 01";
+        #endregion
     }
 }

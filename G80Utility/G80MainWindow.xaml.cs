@@ -47,10 +47,13 @@ namespace G80Utility
         //property 
         DeviceViewModel viewmodel { get; set; }
 
-
         //打印機實時狀態查詢位置
         string QueryNowStatusPosition;
 
+        //nv logo 放大倍率參數m
+        string nvLogo_m_hex; 
+        //nv logo 打印張數參數n，default打印1張
+        string nvLogo_n_hex="01"; 
         #endregion
 
         public G80MainWindow()
@@ -495,6 +498,27 @@ namespace G80Utility
         }
         #endregion
 
+        #region nvLogo radio button選取確認
+        private void nvLogoRadioBtnChecked() {
+
+            if (SingleWidthandHeightRadio.IsChecked == true)
+            {
+                nvLogo_m_hex = "00";
+            }
+            else if (DoubleWidthRadio.IsChecked == true)
+            {
+                nvLogo_m_hex = "01";
+            }
+            else if (DoubleHeightRadio.IsChecked == true)
+            {
+                nvLogo_m_hex = "02";
+            }
+            else if (DoubleWidthandHeightRadio.IsChecked == true) {
+                nvLogo_m_hex = "03";
+            }
+        }
+        #endregion
+
         //========================取得資料後設定UI=================
 
         #region 顯示打印機型號/軟件版本/機器序號
@@ -834,7 +858,6 @@ namespace G80Utility
         #region 打印機狀態設定至畫面功能
         private void setPrinterStatustoUI(byte[] data, UIElement uiContent)
         {
-
             BitArray bitarray = new BitArray(data); //取得最後一個byte的bitarray 
             StringBuilder status = new StringBuilder();
             if (!bitarray[0]) //bit0 开盖
@@ -1579,6 +1602,24 @@ namespace G80Utility
 
             //发送打印自检页（长）命令
             PrintTest("long");
+        }
+        #endregion
+
+        //NVLogo按鈕
+        #region 打印logo
+        private void PrintLogoBtn_Click(object sender, RoutedEventArgs e)
+        {
+            nvLogoRadioBtnChecked();
+            byte[] sendArray = StringToByteArray(Command.PRINT_LOGOS_HEADER+ nvLogo_n_hex + nvLogo_m_hex);
+            SendCmd(sendArray, "BeepOrSetting", 0);
+        }
+        #endregion
+
+        #region 清除logo
+        private void ClearLogoBtn_Click(object sender, RoutedEventArgs e)
+        {
+            byte[] sendArray = StringToByteArray(Command.CLEAN_LOGOS_INPRINTER);
+            SendCmd(sendArray, "BeepOrSetting", 0);
         }
         #endregion
 
