@@ -1671,29 +1671,34 @@ namespace G80Utility
                     //img.Source = BitmapToBitmapImage(gray);
                     img.Source = bmp;
 
-                    
+                    text.FontSize = 16;
                     text.Text = FindResource("Ordinal") as string + (i + 1) + FindResource("piece") as string; //第x張
-                    text.Height = 20;
+                    text.Height = 25;
                     int PaddingTop = 30;
                     int TextMargin = 15;                    
                     if (bmp.Width == bmp.Height) //square
                     {
                         img.Width = 100;
                         img.Height = 100;
+                        Canvas.SetLeft(img, 20); //img 左邊起點
+                        Canvas.SetLeft(text, 20); //txt 左邊起點
                     }
                     else if (bmp.Width < bmp.Height) //vertical rec
                     {
                         img.Width = 100;
                         img.Height = 200;
+                        Canvas.SetLeft(img, 20); //img 左邊起點
+                        Canvas.SetLeft(text, 20); //txt 左邊起點
                     }
                     else
                     { //horizontal rec
                         img.Width = 200;
                         img.Height = 100;
+                        Canvas.SetLeft(img, 20); //img 左邊起點
+                        Canvas.SetLeft(text, 20); //txt 左邊起點
                     }
 
-                    Canvas.SetLeft(img, 20); //img 左邊起點
-                    Canvas.SetLeft(text, 100); //txt 左邊起點
+                   
 
                     if (i == 0)
                     {

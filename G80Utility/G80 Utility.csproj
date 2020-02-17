@@ -89,7 +89,7 @@
     <Compile Include="Models\Device.cs" />
     <Compile Include="Themes\LeftMarginMultiplierConverter.cs" />
     <Compile Include="Themes\TreeViewItemExtensions.cs" />
-    <Compile Include="Tool\BitmapHandle.cs" />
+    <Compile Include="Tool\BitmapTool.cs" />
     <Compile Include="Tool\CodePage.cs" />
     <Compile Include="Tool\Command.cs" />
     <Compile Include="Tool\Config.cs" />
