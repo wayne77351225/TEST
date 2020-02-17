@@ -450,16 +450,16 @@
                 <StackPanel Height="415" Orientation="Horizontal">
                     <StackPanel>
                         <StackPanel Orientation="Horizontal" Margin="10" >
-                            <Button Content="打开图片集"  Padding="10,5,10,5" Width="110" Margin="0,0,10,0" FontSize="14"/>
+                            <Button Content="打开图片集" Name="OpenImgFileBtn" Click="OpenImgFileBtn_Click" Padding="10,5,10,5" Width="110" Margin="0,0,10,0" FontSize="14"/>
                             <Label Content="已打开 " VerticalAlignment="Center" FontSize="14" />
-                            <TextBox Width="50" Height="22" FontSize="14" IsEnabled="False"/>
+                            <TextBox Width="50" Name="OpenImgNoTxt" Height="22" FontSize="14" IsEnabled="False"/>
                             <Label Content="张图片 " VerticalAlignment="Center" Margin="0,0,10,0" FontSize="14"/>
-                            <Button Content="清空图片集" Padding="10,5,10,5" Width="110" FontSize="14" />
+                            <Button Content="清空图片集" Name="CleanGalleryBtn" Click="CleanGalleryBtn_Click"  Padding="10,5,10,5" Width="110" FontSize="14" />
                         </StackPanel>
 
-                        <GroupBox Header="{DynamicResource ShowPic}"  Margin="10,0,10,5" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14" Width="425" Height="325">
-                            <ScrollViewer >
-                                <Image Name="NVlogoImg"/>
+                        <GroupBox Header="{DynamicResource ShowPic}"  Margin="10,0,10,5" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14" >
+                            <ScrollViewer Width="425" Height="325" VerticalScrollBarVisibility="Auto">
+                                <Canvas Name="NVlogoImg" Width="410" Height="5000"/>
                             </ScrollViewer>
 
                         </GroupBox>

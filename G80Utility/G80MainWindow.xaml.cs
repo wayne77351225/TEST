@@ -51,9 +51,12 @@ namespace G80Utility
         string QueryNowStatusPosition;
 
         //nv logo 放大倍率參數m
-        string nvLogo_m_hex; 
+        string nvLogo_m_hex;
         //nv logo 打印張數參數n，default打印1張
-        string nvLogo_n_hex="01"; 
+        string nvLogo_n_hex = "01";
+        //nv logo圖片集檔案路徑
+        string[] fileNameArray;
+
         #endregion
 
         public G80MainWindow()
@@ -71,6 +74,7 @@ namespace G80Utility
 
             //頁面內容產生後註冊usb device plugin notify
             this.ContentRendered += WindowThd_ContentRendered;
+
 
         }
 
@@ -452,8 +456,8 @@ namespace G80Utility
         private bool IsPrinterInfoAllChecked()
         {
             bool isAllChecked = false;
-            if (Config.isFeedLinesChecked 
-                && Config.isPrintedLinesChecked 
+            if (Config.isFeedLinesChecked
+                && Config.isPrintedLinesChecked
                 && Config.isCutPaperTimesChecked
                 && Config.isHeadOpenTimesChecked
                 && Config.isPaperOutTimesChecked
@@ -461,7 +465,7 @@ namespace G80Utility
             {
                 isAllChecked = true;
             }
-           
+
             return isAllChecked;
         }
         #endregion
@@ -499,7 +503,8 @@ namespace G80Utility
         #endregion
 
         #region nvLogo radio button選取確認
-        private void nvLogoRadioBtnChecked() {
+        private void nvLogoRadioBtnChecked()
+        {
 
             if (SingleWidthandHeightRadio.IsChecked == true)
             {
@@ -513,7 +518,8 @@ namespace G80Utility
             {
                 nvLogo_m_hex = "02";
             }
-            else if (DoubleWidthandHeightRadio.IsChecked == true) {
+            else if (DoubleWidthandHeightRadio.IsChecked == true)
+            {
                 nvLogo_m_hex = "03";
             }
         }
@@ -848,7 +854,7 @@ namespace G80Utility
             string voltageHex = BitConverter.ToString(voltageArray).Replace("-", "");
             double voltageDoule = Convert.ToInt32(voltageHex, 16) / 1000.000; //1伏特=1000毫伏
             voltageTxt.Text = voltageDoule.ToString();
-            
+
             //溫度(字節4~5是溫度)    
             int temperatureInt = byteArraytoHexStringtoInt(temperatureArray);
             temperatureTxt.Text = temperatureInt.ToString();
@@ -928,7 +934,7 @@ namespace G80Utility
             {
                 receiveArray4Bytes[i - 8] = data[i];
             }
-            receiveInt= byteArraytoHexStringtoInt(receiveArray4Bytes);
+            receiveInt = byteArraytoHexStringtoInt(receiveArray4Bytes);
             FeedLinesTxt.Text = receiveInt.ToString();
             for (int i = 12; i < 15; i++) //打印行數
             {
@@ -1399,7 +1405,7 @@ namespace G80Utility
 
         }
         #endregion
-        
+
         #region 打印機清除所有信息按鈕事件
         private void CLeanPrinterInfoBtn_Click(object sender, RoutedEventArgs e)
         {
@@ -1408,7 +1414,8 @@ namespace G80Utility
                 //清除所有的打印机统计信息
                 cleanPrinterInfo();
             }
-            else {
+            else
+            {
                 IsPrinterInfoChecked();//先確認選取狀態
                 if (Config.isFeedLinesChecked)
                 {
@@ -1446,7 +1453,7 @@ namespace G80Utility
                 }
 
             }
-            
+
             //清除完就要讀取打印機信息
             PrinterInfoRead();
         }
@@ -1606,20 +1613,244 @@ namespace G80Utility
         #endregion
 
         //NVLogo按鈕
-        #region 打印logo
+        #region 打印logo按鈕事件
         private void PrintLogoBtn_Click(object sender, RoutedEventArgs e)
         {
             nvLogoRadioBtnChecked();
-            byte[] sendArray = StringToByteArray(Command.PRINT_LOGOS_HEADER+ nvLogo_n_hex + nvLogo_m_hex);
+            byte[] sendArray = StringToByteArray(Command.PRINT_LOGOS_HEADER + nvLogo_n_hex + nvLogo_m_hex);
             SendCmd(sendArray, "BeepOrSetting", 0);
         }
         #endregion
 
-        #region 清除logo
+        #region 清除logo下載按鈕事件
         private void ClearLogoBtn_Click(object sender, RoutedEventArgs e)
         {
             byte[] sendArray = StringToByteArray(Command.CLEAN_LOGOS_INPRINTER);
             SendCmd(sendArray, "BeepOrSetting", 0);
+        }
+        #endregion
+
+        #region 打開檔案增加圖片集按鈕事件
+        private void OpenImgFileBtn_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Bitmap Image|*.bmp|JPeg Image|*.jpg|Gif Image|*.gif|Png Image|*.png|All files (*.*)|*.*";
+            openFileDialog.FilterIndex = 1;
+            //record last directory
+            openFileDialog.RestoreDirectory = true;
+            openFileDialog.Multiselect = true;
+
+            if ((bool)openFileDialog.ShowDialog())
+            {
+                if (fileNameArray == null) //第一次開啟
+                {
+                    fileNameArray = openFileDialog.FileNames;
+                }
+                else
+                { //未清除再開啟
+                    int oldArrayLen = fileNameArray.Length;
+                    int newArrayLen = openFileDialog.FileNames.Length;
+                    Array.Resize(ref fileNameArray, oldArrayLen + newArrayLen);
+                    for (int i = oldArrayLen; i < oldArrayLen + newArrayLen; i++)
+                    {
+                        fileNameArray[i] = openFileDialog.FileNames[i - oldArrayLen];
+                    }
+                }
+                OpenImgNoTxt.Text = fileNameArray.Length.ToString();
+                double calHeight = 0;
+
+                for (int i = 0; i < fileNameArray.Length; i++)
+                {
+                    Uri url = new Uri(fileNameArray[i]);
+                    BitmapImage bmp = new BitmapImage(url);
+
+                    Image img = new Image();
+                    img.Stretch = Stretch.Fill;
+                    img.StretchDirection = StretchDirection.Both;
+                    TextBlock text = new TextBlock();
+                    //img.Source = BitmapToBitmapImage(gray);
+                    img.Source = bmp;
+
+                    
+                    text.Text = FindResource("Ordinal") as string + (i + 1) + FindResource("piece") as string; //第x張
+                    text.Height = 20;
+                    int PaddingTop = 30;
+                    int TextMargin = 15;                    
+                    if (bmp.Width == bmp.Height) //square
+                    {
+                        img.Width = 100;
+                        img.Height = 100;
+                       
+                        //Canvas.SetLeft(img, 20);
+                        ////Canvas.SetTop(img, (TextMargin *2+text.Height+ img.Height) * i+ PaddingTop);
+                        ////Canvas.SetTop(img, PaddingTop+(TextMargin * 2 + text.Height )* i+ calHeight  );
+                        //Canvas.SetLeft(text, 100);
+                        //if (i == 0)
+                        //{
+                        //    Canvas.SetTop(img, PaddingTop + (TextMargin * 2 + text.Height) * i );
+                        //    Canvas.SetTop(text, PaddingTop+ TextMargin + img.Height);
+                        //    calHeight += img.Height;
+                        //}
+                        //else
+                        //{
+                            
+                        //    Canvas.SetTop(img, PaddingTop + (TextMargin * 2 + text.Height) * i + calHeight);
+                        //    Canvas.SetTop(text, PaddingTop + (TextMargin * 2 + text.Height ) * i + calHeight   + TextMargin + img.Height);
+                        //    calHeight += img.Height;
+                        //    //Canvas.SetTop(text, (TextMargin * 2 + text.Height + img.Height) * i + PaddingTop + TextMargin +img.Height);
+                        //}
+                    }
+                    else if (bmp.Width < bmp.Height) //vertical rec
+                    {
+                        img.Width = 100;
+                        img.Height = 200;
+                        //Canvas.SetLeft(img, 20);
+                        ////Canvas.SetTop(img, (TextMargin * 2 + text.Height) * i + calHeight + PaddingTop);
+                        //Canvas.SetLeft(text, 100);
+                        //if (i == 0)
+                        //{
+                        //    Canvas.SetTop(text, PaddingTop + TextMargin + img.Height);
+                        //}
+                        //else
+                        //{
+                        //    Canvas.SetTop(text, (TextMargin * 2 + text.Height + img.Height) * i + PaddingTop + TextMargin + img.Height);
+                        //}
+                        //if (i == 0)
+                        //{
+                        //    Canvas.SetTop(img, PaddingTop + (TextMargin * 2 + text.Height) * i);
+                        //    Canvas.SetTop(text, PaddingTop + TextMargin + img.Height);
+                        //    calHeight += img.Height;
+                        //}
+                        //else
+                        //{
+                            
+                        //    Canvas.SetTop(img, PaddingTop + (TextMargin * 2 + text.Height) * i + calHeight );
+                        //    Canvas.SetTop(text, PaddingTop + (TextMargin * 2 + text.Height) * i + calHeight + TextMargin + img.Height);
+                        //    calHeight += img.Height;
+                        //    //Canvas.SetTop(text, (TextMargin * 2 + text.Height + img.Height) * i + PaddingTop + TextMargin +img.Height);
+                        //}
+                    }
+                    else
+                    { //horizontal rec
+                        img.Width = 200;
+                        img.Height = 100;
+                        //Canvas.SetLeft(img, 20);
+                        ////Canvas.SetTop(img, (TextMargin * 2 + text.Height) * i + calHeight + PaddingTop);
+                        //Canvas.SetLeft(text, 100);
+                        //if (i == 0)
+                        //{
+                        //    Canvas.SetTop(text, PaddingTop + TextMargin + img.Height);
+                        //}
+                        //else {
+                        //    Canvas.SetTop(text, (TextMargin * 2 + text.Height + img.Height) * i + PaddingTop + TextMargin + img.Height);
+                        //}
+                        //if (i == 0)
+                        //{
+                        //    Canvas.SetTop(img, PaddingTop + (TextMargin * 2 + text.Height) * i);
+                        //    Canvas.SetTop(text, PaddingTop + TextMargin + img.Height);
+                        //    calHeight += img.Height;
+                        //}
+                        //else
+                        //{
+                          
+                        //    Canvas.SetTop(img, PaddingTop + (TextMargin * 2 + text.Height) * i + calHeight);
+                        //    Canvas.SetTop(text, PaddingTop + (TextMargin * 2 + text.Height) * i + calHeight  +TextMargin + img.Height);
+                        //    calHeight += img.Height;
+                        //    //Canvas.SetTop(text, (TextMargin * 2 + text.Height + img.Height) * i + PaddingTop + TextMargin +img.Height);
+                        //}
+
+                    }
+
+                    //Canvas.SetLeft(img, 20);
+                    //Canvas.SetTop(img, 120 * i + 30);
+                    //Canvas.SetLeft(text, 100);
+                    //Canvas.SetTop(text, 120 * (i + 1) + 10);
+                    Canvas.SetLeft(img, 20);
+                    Canvas.SetLeft(text, 100);
+                    if (i == 0)
+                    {
+                        Canvas.SetTop(img, PaddingTop + (TextMargin * 2 + text.Height) * i);
+                        Canvas.SetTop(text, PaddingTop + TextMargin + img.Height);
+                        calHeight += img.Height;
+                    }
+                    else
+                    {
+
+                        Canvas.SetTop(img, PaddingTop + (TextMargin * 2 + text.Height) * i + calHeight);
+                        Canvas.SetTop(text, PaddingTop + (TextMargin * 2 + text.Height) * i + calHeight + TextMargin + img.Height);
+                        calHeight += img.Height;
+                        //Canvas.SetTop(text, (TextMargin * 2 + text.Height + img.Height) * i + PaddingTop + TextMargin +img.Height);
+                    }
+
+                    NVlogoImg.Children.Add(img);
+                    NVlogoImg.Children.Add(text);
+
+                }
+            }
+        }
+        #endregion
+
+        #region 設定正方形圖片呈現方式
+        private void setSquareInGallery(Canvas canvas, int Index, BitmapImage bmp)
+        {
+            Image img = new Image();
+            img.Stretch = Stretch.Fill;
+            img.StretchDirection = StretchDirection.Both;
+            TextBlock text = new TextBlock();
+            //img.Source = BitmapToBitmapImage(gray);
+            img.Source = bmp;
+
+            img.Width = 100;
+            img.Height = 100;
+            text.Text = FindResource("Ordinal") as string + (Index + 1) + FindResource("piece") as string; //第x張
+            text.Height = 22;
+            Canvas.SetLeft(img, 20);
+            Canvas.SetTop(img, 120 * Index + 30);
+            Canvas.SetLeft(text, 100);
+            Canvas.SetTop(text, 120 * (Index + 1) + 10);
+            canvas.Children.Add(img);
+            canvas.Children.Add(text);
+        }
+        #endregion
+
+        #region 設定長方形圖片呈現方式
+        private void setRectangleInGalleryH(Canvas canvas, int Index, string type, BitmapImage bmp)
+        {
+            Image img = new Image();
+            img.Stretch = Stretch.Fill;
+            img.StretchDirection = StretchDirection.Both;
+            TextBlock text = new TextBlock();
+            //img.Source = BitmapToBitmapImage(gray);
+            img.Source = bmp;
+            if (type == "horizotal")
+            {
+                img.Width = 200;
+                img.Height = 100;
+                text.Text = FindResource("Ordinal") as string + (Index + 1) + FindResource("piece") as string; //第x張
+                text.Height = 22;
+                Canvas.SetLeft(img, 20);
+                Canvas.SetTop(img, 120 * Index + 30);
+                Canvas.SetLeft(text, 100);
+                Canvas.SetTop(text, 120 * (Index + 1) + 10);
+            }
+            else
+            {
+
+
+
+            }
+
+            canvas.Children.Add(img);
+            canvas.Children.Add(text);
+        }
+        #endregion
+
+        #region 清除圖片集按鈕事件
+        private void CleanGalleryBtn_Click(object sender, RoutedEventArgs e)
+        {
+            NVlogoImg.Children.Clear();
+            fileNameArray = null;
+            OpenImgNoTxt.Text="";
         }
         #endregion
 
@@ -3039,7 +3270,8 @@ namespace G80Utility
                             {
                                 if (RS232Connect.mRecevieData != null)
                                 {
-                                    switch (QueryNowStatusPosition) {
+                                    switch (QueryNowStatusPosition)
+                                    {
                                         case "bottom":
                                             showPrinteNowStatus(RS232Connect.mRecevieData, StatusMonitorLabel);
                                             break;
@@ -3047,7 +3279,7 @@ namespace G80Utility
                                             showPrinteNowStatus(RS232Connect.mRecevieData, PrinterStatusText);
                                             break;
                                     }
-                                    
+
                                     break;
                                 }
                             }
@@ -3112,15 +3344,15 @@ namespace G80Utility
                         //}
                         //break;
                         case "ReadSN":
-                        //bool isReceiveSN = RS232Connect.SerialPortSendCMD("NeedReceive", data, null, receiveLength);
-                        //while (!isReceiveSN)
-                        //{
-                        //    if (RS232Connect.mRecevieData != null)
-                        //    {
-                        //        SetPrinterInfo(RS232Connect.mRecevieData);
-                        //        break;
-                        //    }
-                        //}
+                            //bool isReceiveSN = RS232Connect.SerialPortSendCMD("NeedReceive", data, null, receiveLength);
+                            //while (!isReceiveSN)
+                            //{
+                            //    if (RS232Connect.mRecevieData != null)
+                            //    {
+                            //        SetPrinterInfo(RS232Connect.mRecevieData);
+                            //        break;
+                            //    }
+                            //}
                             break;
                         case "ReadPrinterInfo": //打印機統計信息
                             //bool isReceivePI = RS232Connect.SerialPortSendCMD("NeedReceive", data, null, receiveLength);
@@ -3134,15 +3366,15 @@ namespace G80Utility
                             //}
                             break;
                         case "ReadStatus": //打印機溫度電壓等狀態
-                        //    bool isReceiveStatus = RS232Connect.SerialPortSendCMD("NeedReceive", data, null, receiveLength);
-                        //    while (!isReceiveStatus)
-                        //    {
-                        //        if (RS232Connect.mRecevieData != null)
-                        //        {
-                        //            setPrinterStatus(RS232Connect.mRecevieData);
-                        //            break;
-                        //        }
-                        //    }
+                                           //    bool isReceiveStatus = RS232Connect.SerialPortSendCMD("NeedReceive", data, null, receiveLength);
+                                           //    while (!isReceiveStatus)
+                                           //    {
+                                           //        if (RS232Connect.mRecevieData != null)
+                                           //        {
+                                           //            setPrinterStatus(RS232Connect.mRecevieData);
+                                           //            break;
+                                           //        }
+                                           //    }
                             break;
                         case "ReadNowStatus":
                             //bool isReceiveNowStatus = RS232Connect.SerialPortSendCMD("NeedReceive", data, null, receiveLength);
@@ -3801,7 +4033,7 @@ namespace G80Utility
         private void Test_Click(object sender, RoutedEventArgs e)
         {
             QueryNowStatusPosition = "bottom";
-            PrinterNowStatus();   
+            PrinterNowStatus();
         }
 
     }
