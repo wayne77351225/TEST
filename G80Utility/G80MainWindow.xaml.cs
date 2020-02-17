@@ -1680,93 +1680,21 @@ namespace G80Utility
                     {
                         img.Width = 100;
                         img.Height = 100;
-                       
-                        //Canvas.SetLeft(img, 20);
-                        ////Canvas.SetTop(img, (TextMargin *2+text.Height+ img.Height) * i+ PaddingTop);
-                        ////Canvas.SetTop(img, PaddingTop+(TextMargin * 2 + text.Height )* i+ calHeight  );
-                        //Canvas.SetLeft(text, 100);
-                        //if (i == 0)
-                        //{
-                        //    Canvas.SetTop(img, PaddingTop + (TextMargin * 2 + text.Height) * i );
-                        //    Canvas.SetTop(text, PaddingTop+ TextMargin + img.Height);
-                        //    calHeight += img.Height;
-                        //}
-                        //else
-                        //{
-                            
-                        //    Canvas.SetTop(img, PaddingTop + (TextMargin * 2 + text.Height) * i + calHeight);
-                        //    Canvas.SetTop(text, PaddingTop + (TextMargin * 2 + text.Height ) * i + calHeight   + TextMargin + img.Height);
-                        //    calHeight += img.Height;
-                        //    //Canvas.SetTop(text, (TextMargin * 2 + text.Height + img.Height) * i + PaddingTop + TextMargin +img.Height);
-                        //}
                     }
                     else if (bmp.Width < bmp.Height) //vertical rec
                     {
                         img.Width = 100;
                         img.Height = 200;
-                        //Canvas.SetLeft(img, 20);
-                        ////Canvas.SetTop(img, (TextMargin * 2 + text.Height) * i + calHeight + PaddingTop);
-                        //Canvas.SetLeft(text, 100);
-                        //if (i == 0)
-                        //{
-                        //    Canvas.SetTop(text, PaddingTop + TextMargin + img.Height);
-                        //}
-                        //else
-                        //{
-                        //    Canvas.SetTop(text, (TextMargin * 2 + text.Height + img.Height) * i + PaddingTop + TextMargin + img.Height);
-                        //}
-                        //if (i == 0)
-                        //{
-                        //    Canvas.SetTop(img, PaddingTop + (TextMargin * 2 + text.Height) * i);
-                        //    Canvas.SetTop(text, PaddingTop + TextMargin + img.Height);
-                        //    calHeight += img.Height;
-                        //}
-                        //else
-                        //{
-                            
-                        //    Canvas.SetTop(img, PaddingTop + (TextMargin * 2 + text.Height) * i + calHeight );
-                        //    Canvas.SetTop(text, PaddingTop + (TextMargin * 2 + text.Height) * i + calHeight + TextMargin + img.Height);
-                        //    calHeight += img.Height;
-                        //    //Canvas.SetTop(text, (TextMargin * 2 + text.Height + img.Height) * i + PaddingTop + TextMargin +img.Height);
-                        //}
                     }
                     else
                     { //horizontal rec
                         img.Width = 200;
                         img.Height = 100;
-                        //Canvas.SetLeft(img, 20);
-                        ////Canvas.SetTop(img, (TextMargin * 2 + text.Height) * i + calHeight + PaddingTop);
-                        //Canvas.SetLeft(text, 100);
-                        //if (i == 0)
-                        //{
-                        //    Canvas.SetTop(text, PaddingTop + TextMargin + img.Height);
-                        //}
-                        //else {
-                        //    Canvas.SetTop(text, (TextMargin * 2 + text.Height + img.Height) * i + PaddingTop + TextMargin + img.Height);
-                        //}
-                        //if (i == 0)
-                        //{
-                        //    Canvas.SetTop(img, PaddingTop + (TextMargin * 2 + text.Height) * i);
-                        //    Canvas.SetTop(text, PaddingTop + TextMargin + img.Height);
-                        //    calHeight += img.Height;
-                        //}
-                        //else
-                        //{
-                          
-                        //    Canvas.SetTop(img, PaddingTop + (TextMargin * 2 + text.Height) * i + calHeight);
-                        //    Canvas.SetTop(text, PaddingTop + (TextMargin * 2 + text.Height) * i + calHeight  +TextMargin + img.Height);
-                        //    calHeight += img.Height;
-                        //    //Canvas.SetTop(text, (TextMargin * 2 + text.Height + img.Height) * i + PaddingTop + TextMargin +img.Height);
-                        //}
-
                     }
 
-                    //Canvas.SetLeft(img, 20);
-                    //Canvas.SetTop(img, 120 * i + 30);
-                    //Canvas.SetLeft(text, 100);
-                    //Canvas.SetTop(text, 120 * (i + 1) + 10);
-                    Canvas.SetLeft(img, 20);
-                    Canvas.SetLeft(text, 100);
+                    Canvas.SetLeft(img, 20); //img 左邊起點
+                    Canvas.SetLeft(text, 100); //txt 左邊起點
+
                     if (i == 0)
                     {
                         Canvas.SetTop(img, PaddingTop + (TextMargin * 2 + text.Height) * i);
@@ -1775,73 +1703,15 @@ namespace G80Utility
                     }
                     else
                     {
-
                         Canvas.SetTop(img, PaddingTop + (TextMargin * 2 + text.Height) * i + calHeight);
                         Canvas.SetTop(text, PaddingTop + (TextMargin * 2 + text.Height) * i + calHeight + TextMargin + img.Height);
                         calHeight += img.Height;
-                        //Canvas.SetTop(text, (TextMargin * 2 + text.Height + img.Height) * i + PaddingTop + TextMargin +img.Height);
                     }
 
                     NVlogoImg.Children.Add(img);
                     NVlogoImg.Children.Add(text);
-
                 }
             }
-        }
-        #endregion
-
-        #region 設定正方形圖片呈現方式
-        private void setSquareInGallery(Canvas canvas, int Index, BitmapImage bmp)
-        {
-            Image img = new Image();
-            img.Stretch = Stretch.Fill;
-            img.StretchDirection = StretchDirection.Both;
-            TextBlock text = new TextBlock();
-            //img.Source = BitmapToBitmapImage(gray);
-            img.Source = bmp;
-
-            img.Width = 100;
-            img.Height = 100;
-            text.Text = FindResource("Ordinal") as string + (Index + 1) + FindResource("piece") as string; //第x張
-            text.Height = 22;
-            Canvas.SetLeft(img, 20);
-            Canvas.SetTop(img, 120 * Index + 30);
-            Canvas.SetLeft(text, 100);
-            Canvas.SetTop(text, 120 * (Index + 1) + 10);
-            canvas.Children.Add(img);
-            canvas.Children.Add(text);
-        }
-        #endregion
-
-        #region 設定長方形圖片呈現方式
-        private void setRectangleInGalleryH(Canvas canvas, int Index, string type, BitmapImage bmp)
-        {
-            Image img = new Image();
-            img.Stretch = Stretch.Fill;
-            img.StretchDirection = StretchDirection.Both;
-            TextBlock text = new TextBlock();
-            //img.Source = BitmapToBitmapImage(gray);
-            img.Source = bmp;
-            if (type == "horizotal")
-            {
-                img.Width = 200;
-                img.Height = 100;
-                text.Text = FindResource("Ordinal") as string + (Index + 1) + FindResource("piece") as string; //第x張
-                text.Height = 22;
-                Canvas.SetLeft(img, 20);
-                Canvas.SetTop(img, 120 * Index + 30);
-                Canvas.SetLeft(text, 100);
-                Canvas.SetTop(text, 120 * (Index + 1) + 10);
-            }
-            else
-            {
-
-
-
-            }
-
-            canvas.Children.Add(img);
-            canvas.Children.Add(text);
         }
         #endregion
 
