@@ -6,6 +6,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.Globalization;
 using System.IO.Ports;
 using System.Linq;
@@ -17,7 +18,8 @@ using System.Windows.Controls;
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-
+using Color = System.Windows.Media.Color;
+using ColorConverter = System.Windows.Media.ColorConverter;
 
 namespace G80Utility
 {
@@ -1662,20 +1664,33 @@ namespace G80Utility
                 for (int i = 0; i < fileNameArray.Length; i++)
                 {
                     Uri url = new Uri(fileNameArray[i]);
-                    BitmapImage bmp = new BitmapImage(url);
+                    BitmapImage bmpImg = new BitmapImage(url);
 
-                    Image img = new Image();
+                    System.Windows.Controls.Image img = new System.Windows.Controls.Image();
                     img.Stretch = Stretch.Fill;
                     img.StretchDirection = StretchDirection.Both;
                     TextBlock text = new TextBlock();
                     //img.Source = BitmapToBitmapImage(gray);
-                    img.Source = bmp;
+                    Bitmap bmp = BitmapTool.BitmapImageToBitmap(bmpImg);                   
 
+                    if (!BitmapTool.isBlackWhite(bmp))
+                    {
+                        bmp = BitmapTool.Thresholding(bmp);
+                        img.Source = BitmapTool.BitmapToBitmapImage(bmp);
+                        Console.WriteLine("hex:" + BitmapTool.bitmapToHexString(bmp));
+                    }
+                    else {
+                        Console.WriteLine("hex:" + BitmapTool.bitmapToHexString(bmp));
+                        img.Source = bmpImg;
+                    }
+                    
+                    //圖片呈現在畫面上
                     text.FontSize = 16;
                     text.Text = FindResource("Ordinal") as string + (i + 1) + FindResource("piece") as string; //第x張
                     text.Height = 25;
                     int PaddingTop = 30;
-                    int TextMargin = 15;                    
+                    int TextMargin = 15;        
+                    //判斷圖片形狀
                     if (bmp.Width == bmp.Height) //square
                     {
                         img.Width = 100;
@@ -1696,15 +1711,13 @@ namespace G80Utility
                         img.Height = 100;
                         Canvas.SetLeft(img, 20); //img 左邊起點
                         Canvas.SetLeft(text, 20); //txt 左邊起點
-                    }
-
-                   
+                    }                   
 
                     if (i == 0)
                     {
                         Canvas.SetTop(img, PaddingTop + (TextMargin * 2 + text.Height) * i);
                         Canvas.SetTop(text, PaddingTop + TextMargin + img.Height);
-                        calHeight += img.Height;
+                        calHeight += img.Height; //放在後面家才不會重複算
                     }
                     else
                     {
@@ -3494,6 +3507,8 @@ namespace G80Utility
             return result;
         }
         #endregion
+
+       
         //========================不同通道傳送命令===========================
 
         #region 不同通道傳送命令
