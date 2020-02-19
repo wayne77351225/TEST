@@ -78,8 +78,6 @@ namespace G80Utility
 
             //頁面內容產生後註冊usb device plugin notify
             this.ContentRendered += WindowThd_ContentRendered;
-
-
         }
 
         private void WindowThd_ContentRendered(object sender, EventArgs e)
@@ -1647,12 +1645,11 @@ namespace G80Utility
         private void OpenImgFileBtn_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Filter = "Png Image|*.png|Bitmap Image|*.bmp|JPeg Image|*.jpg|Gif Image|*.gif|Png Image|*.png";
+            openFileDialog.Filter = "Bitmap Image|*.bmp|JPeg Image|*.jpg|Gif Image|*.gif|Png Image|*.png|TIFF Image|*.tif";
             openFileDialog.FilterIndex = 1;
             //record last directory
             openFileDialog.RestoreDirectory = true;
             openFileDialog.Multiselect = true;
-
 
             if ((bool)openFileDialog.ShowDialog())
             {
@@ -1660,7 +1657,6 @@ namespace G80Utility
                 {
                     fileNameArray = openFileDialog.FileNames;                 
                     nvLogo_full_hex.Append("1C71");
-
                 }
                 else 
                 { //未清除再開啟
@@ -1678,7 +1674,7 @@ namespace G80Utility
                     }
                 }
                 for (int i = 0; i < fileNameArray.Length; i++)
-                {
+                {               
                     Uri url = new Uri(fileNameArray[i]);
                     BitmapImage bmpImg = new BitmapImage(url);
                     Bitmap bmp = BitmapTool.BitmapImageToBitmap(bmpImg);
