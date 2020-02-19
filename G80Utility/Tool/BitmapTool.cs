@@ -1,31 +1,62 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
-using System.Linq;
 using System.Text;
+using System.Windows;
 using System.Windows.Media.Imaging;
 
 namespace G80Utility.Tool
 {
-    class BitmapTool
+    partial class BitmapTool
     {
-        #region 取得bitmap的xL/xH/yL/yH
-        public string getBmpLighandLowByte(int width,int height) {
-            string hexResult = null;
-
-
+        #region 取得bitmap的xL/xH/yL/yH HexString
+        public static string getBmpHighandLowHex(int bmpWidth, int bmpHeight)
+        {
+            int widthDot = bmpWidth / 8;
+            int heightDot = bmpHeight / 8;
+            byte[] data = new byte[4];
+            data[0] = (byte)(widthDot & 0xFF);
+            data[1] = (byte)((widthDot >> 8) & 0xff);
+            data[2] = (byte)(heightDot & 0xFF);
+            data[3] = (byte)((heightDot >> 8) & 0xff);
+            string hexResult = BitConverter.ToString(data).Replace("-", "");
             return hexResult;
-        
         }
-
         #endregion
 
+        #region 判斷bitmap範圍 
+        //80mm的紙寬，200dpi的解析度=>1mm=8 dots=>max width=80*8=640
+        public static bool checkBitmapRange(string filename ,int bmpWidth, int bmpHeight)
+        {
+            if (bmpHeight > 288 * 8)
+            { //高超過 
+              // 高 = (yL + yH × 256)*8 ,   (yL + yH × 256)≤288  => 高 ≤288*8
+                MessageBox.Show(Application.Current.FindResource("ExceedMaxHeight") as string);
+                return false;
+            }
+            if (bmpWidth > 640)
+            { //寬超過
+                MessageBox.Show(Application.Current.FindResource("ExceedMaxWidth") as string);
+                return false;
+            }
+            FileInfo fi = new FileInfo(filename);
+            if (fi.Length > 8000) { //檔案大小超過
+                MessageBox.Show(Application.Current.FindResource("ExceedMaxSize") as string);
+                return false;
+            }
+
+            return true;
+        }
+        #endregion
+
+       
+
         #region bitmap換算成hex string
-        public static string bitmapToHexString(Bitmap bmp) {
+        public static string bitmapToHexString(Bitmap bmp)
+        {
             //epson command 公式:k=(xL+xH*256)*(yL+yH*256)*8
-            int length = ((bmp.Width + 7) / 8) * ((bmp.Height + 7) / 8) * 8; 
+            int length = ((bmp.Width + 7) / 8) * ((bmp.Height + 7) / 8) * 8;
             int height = (bmp.Height + 7) / 8;
             string[] data = new string[length];
 
@@ -67,8 +98,8 @@ namespace G80Utility.Tool
             {
                 if (data[i] == null)
                 {
-                    data[i] = "00";
-                    //sb.Append(data[i] + " ");
+                    data[i] = "00 ";
+                    sb.Append(data[i] );
                 }
                 else
                 {
@@ -76,6 +107,54 @@ namespace G80Utility.Tool
                 }
             }
             return sb.ToString();
+        }
+        #endregion
+
+        #region 彩色圖片轉灰階
+        public static Bitmap ToGray(Bitmap bmp, int mode)
+        {
+            if (bmp == null)
+            {
+                return null;
+            }
+            int w = bmp.Width;
+            int h = bmp.Height;
+            try
+            {
+                byte newColor = 0;
+                BitmapData srcData = bmp.LockBits(new System.Drawing.Rectangle(0, 0, w, h), ImageLockMode.ReadWrite, PixelFormat.Format24bppRgb);
+                unsafe
+                {
+                    byte* p = (byte*)srcData.Scan0.ToPointer();
+                    for (int y = 0; y < h; y++)
+                    {
+                        for (int x = 0; x < w; x++)
+                        {
+
+                            if (mode == 0) // 加權平均
+                            {
+                                newColor = (byte)((float)p[0] * 0.114f + (float)p[1] * 0.587f + (float)p[2] * 0.299f);
+                            }
+                            else// 算數平均
+                            {
+                                newColor = (byte)((float)(p[0] + p[1] + p[2]) / 3.0f);
+                            }
+                            p[0] = newColor;
+                            p[1] = newColor;
+                            p[2] = newColor;
+
+                            p += 3;
+                        }
+                        p += srcData.Stride - w * 3;
+                    }
+                    bmp.UnlockBits(srcData);
+                    return bmp;
+                }
+            }
+            catch
+            {
+                return null;
+            }
         }
         #endregion
 
@@ -111,13 +190,31 @@ namespace G80Utility.Tool
                     lP1 += histogram[i] * i;
                     lS1 += histogram[i];
                 }
-                int mean1GrayValue = (lP1 / lS1);
+                // int mean1GrayValue = (lP1 / lS1);
+                int mean1GrayValue = 0;
+                if (lP1 != 0)
+                {
+                    mean1GrayValue = (lP1 / lS1);
+                }
+                else
+                {
+                    mean1GrayValue = 20;
+                }
                 for (int i = threshold + 1; i < maxGrayValue; i++)
                 {
                     lP2 += histogram[i] * i;
                     lS2 += histogram[i];
                 }
-                int mean2GrayValue = (lP2 / lS2);
+                //int mean2GrayValue = (lP2 / lS2);
+                int mean2GrayValue = 0;
+                if (lP2 != 0)
+                {
+                    mean2GrayValue = (lP2 / lS2);
+                }
+                else
+                {
+                    mean2GrayValue = 180;
+                }
                 newThreshold = (mean1GrayValue + mean2GrayValue) / 2;
             }
             //計算二值化

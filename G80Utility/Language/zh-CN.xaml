@@ -270,6 +270,12 @@
     <sys:String x:Key="USBNotRegistYet">打印机尚未注册</sys:String>
     <sys:String x:Key="ErrorFormat">栏位格式错误</sys:String>
     <sys:String x:Key="NotSettingEthernetport">连接网口失败</sys:String>
+    <sys:String x:Key="ExceedMaxHeight">图片长度超过打印范围(2034)，请缩小后再行下载</sys:String>
+    <sys:String x:Key="ExceedMaxWidth">图片宽度超过打印范围(640)，请缩小后再行下载</sys:String>
+    <sys:String x:Key="ExceedMaxSize">图片大小不可超过8KB，请调整后再行下载</sys:String>
+    <sys:String x:Key="ExceedMaxNumber">图片集不可超过255张</sys:String>
+    <sys:String x:Key="GalleryEmpty">图片集空白</sys:String>
+    <sys:String x:Key="PrintPieceEmpty">未输入打印张数</sys:String>
     
     <!--button-->
     <sys:String x:Key="Load">读取</sys:String>

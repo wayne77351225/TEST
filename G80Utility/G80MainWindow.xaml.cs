@@ -55,9 +55,11 @@ namespace G80Utility
         //nv logo 放大倍率參數m
         string nvLogo_m_hex;
         //nv logo 打印張數參數n，default打印1張
-        string nvLogo_n_hex = "01";
+        string nvLogo_n_hex;
         //nv logo圖片集檔案路徑
         string[] fileNameArray;
+        //nv logo 打印下載hex碼
+        StringBuilder nvLogo_full_hex=new StringBuilder();
 
         #endregion
 
@@ -573,7 +575,7 @@ namespace G80Utility
         public void setParaColumn(byte[] data)
         {
             string receiveData = BitConverter.ToString(data);
-            Console.WriteLine(receiveData);
+            //Console.WriteLine(receiveData);
 
             if (receiveData.Contains(Command.RE_IP_CLASSFY))
             {
@@ -1619,8 +1621,17 @@ namespace G80Utility
         private void PrintLogoBtn_Click(object sender, RoutedEventArgs e)
         {
             nvLogoRadioBtnChecked();
-            byte[] sendArray = StringToByteArray(Command.PRINT_LOGOS_HEADER + nvLogo_n_hex + nvLogo_m_hex);
-            SendCmd(sendArray, "BeepOrSetting", 0);
+            int number;
+            if (NVLogoPieceTXT.Text != null && Int32.TryParse(NVLogoPieceTXT.Text, out number))
+            {
+                string numberHex = number.ToString("X2");
+                byte[] sendArray = StringToByteArray(Command.PRINT_LOGOS_HEADER + numberHex + nvLogo_m_hex);
+                SendCmd(sendArray, "BeepOrSetting", 0);
+            }
+            else {
+                MessageBox.Show(FindResource("PrintPieceEmpty") as string);
+            }
+            
         }
         #endregion
 
@@ -1636,19 +1647,22 @@ namespace G80Utility
         private void OpenImgFileBtn_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Filter = "Bitmap Image|*.bmp|JPeg Image|*.jpg|Gif Image|*.gif|Png Image|*.png|All files (*.*)|*.*";
+            openFileDialog.Filter = "Png Image|*.png|Bitmap Image|*.bmp|JPeg Image|*.jpg|Gif Image|*.gif|Png Image|*.png";
             openFileDialog.FilterIndex = 1;
             //record last directory
             openFileDialog.RestoreDirectory = true;
             openFileDialog.Multiselect = true;
 
+
             if ((bool)openFileDialog.ShowDialog())
             {
                 if (fileNameArray == null) //第一次開啟
                 {
-                    fileNameArray = openFileDialog.FileNames;
+                    fileNameArray = openFileDialog.FileNames;                 
+                    nvLogo_full_hex.Append("1C71");
+
                 }
-                else
+                else 
                 { //未清除再開啟
                     int oldArrayLen = fileNameArray.Length;
                     int newArrayLen = openFileDialog.FileNames.Length;
@@ -1657,77 +1671,96 @@ namespace G80Utility
                     {
                         fileNameArray[i] = openFileDialog.FileNames[i - oldArrayLen];
                     }
+                    if (fileNameArray.Length > 255)
+                    {
+                        MessageBox.Show(FindResource("ExceedMaxNumber") as string);
+                        return;
+                    }
                 }
-                OpenImgNoTxt.Text = fileNameArray.Length.ToString();
-                double calHeight = 0;
-
                 for (int i = 0; i < fileNameArray.Length; i++)
                 {
                     Uri url = new Uri(fileNameArray[i]);
                     BitmapImage bmpImg = new BitmapImage(url);
-
-                    System.Windows.Controls.Image img = new System.Windows.Controls.Image();
-                    img.Stretch = Stretch.Fill;
-                    img.StretchDirection = StretchDirection.Both;
-                    TextBlock text = new TextBlock();
-                    //img.Source = BitmapToBitmapImage(gray);
-                    Bitmap bmp = BitmapTool.BitmapImageToBitmap(bmpImg);                   
-
-                    if (!BitmapTool.isBlackWhite(bmp))
+                    Bitmap bmp = BitmapTool.BitmapImageToBitmap(bmpImg);
+                    if (!BitmapTool.checkBitmapRange(fileNameArray[i], bmp.Width, bmp.Height)) //判斷寬高是否超過標準
                     {
-                        bmp = BitmapTool.Thresholding(bmp);
-                        img.Source = BitmapTool.BitmapToBitmapImage(bmp);
-                        Console.WriteLine("hex:" + BitmapTool.bitmapToHexString(bmp));
+                        fileNameArray = Array.FindAll(fileNameArray, val => val != fileNameArray[i]).ToArray();
                     }
-                    else {
-                        Console.WriteLine("hex:" + BitmapTool.bitmapToHexString(bmp));
-                        img.Source = bmpImg;
-                    }
+                }
+
+                //取得圖片集張數
+                OpenImgNoTxt.Text = fileNameArray.Length.ToString();
+
+                double calHeight = 0;
+                for (int i = 0; i < fileNameArray.Length; i++)
+                {
+                    Uri url = new Uri(fileNameArray[i]);
+                    BitmapImage bmpImg = new BitmapImage(url);
+                    Bitmap bmp = BitmapTool.ToGray(BitmapTool.BitmapImageToBitmap(bmpImg),1);
                     
-                    //圖片呈現在畫面上
-                    text.FontSize = 16;
-                    text.Text = FindResource("Ordinal") as string + (i + 1) + FindResource("piece") as string; //第x張
-                    text.Height = 25;
-                    int PaddingTop = 30;
-                    int TextMargin = 15;        
-                    //判斷圖片形狀
-                    if (bmp.Width == bmp.Height) //square
-                    {
-                        img.Width = 100;
-                        img.Height = 100;
-                        Canvas.SetLeft(img, 20); //img 左邊起點
-                        Canvas.SetLeft(text, 20); //txt 左邊起點
-                    }
-                    else if (bmp.Width < bmp.Height) //vertical rec
-                    {
-                        img.Width = 100;
-                        img.Height = 200;
-                        Canvas.SetLeft(img, 20); //img 左邊起點
-                        Canvas.SetLeft(text, 20); //txt 左邊起點
-                    }
-                    else
-                    { //horizontal rec
-                        img.Width = 200;
-                        img.Height = 100;
-                        Canvas.SetLeft(img, 20); //img 左邊起點
-                        Canvas.SetLeft(text, 20); //txt 左邊起點
-                    }                   
+                        System.Windows.Controls.Image img = new System.Windows.Controls.Image();
+                        img.Stretch = Stretch.Fill;
+                        img.StretchDirection = StretchDirection.Both;
+                        TextBlock text = new TextBlock();
 
-                    if (i == 0)
-                    {
-                        Canvas.SetTop(img, PaddingTop + (TextMargin * 2 + text.Height) * i);
-                        Canvas.SetTop(text, PaddingTop + TextMargin + img.Height);
-                        calHeight += img.Height; //放在後面家才不會重複算
-                    }
-                    else
-                    {
-                        Canvas.SetTop(img, PaddingTop + (TextMargin * 2 + text.Height) * i + calHeight);
-                        Canvas.SetTop(text, PaddingTop + (TextMargin * 2 + text.Height) * i + calHeight + TextMargin + img.Height);
-                        calHeight += img.Height;
-                    }
+                        if (!BitmapTool.isBlackWhite(bmp)) //彩色圖片
+                        {
+                            bmp = BitmapTool.Thresholding(bmp);
+                            img.Source = BitmapTool.BitmapToBitmapImage(bmp);
+                            nvLogo_full_hex.Append(BitmapTool.getBmpHighandLowHex(bmp.Width, bmp.Height));
+                            nvLogo_full_hex.Append(BitmapTool.bitmapToHexString(bmp));
+                        }
+                        else
+                        { //黑白圖片
+                            nvLogo_full_hex.Append(BitmapTool.getBmpHighandLowHex(bmp.Width, bmp.Height));
+                            nvLogo_full_hex.Append(BitmapTool.bitmapToHexString(bmp));
+                             img.Source = bmpImg;
+                        }
 
-                    NVlogoImg.Children.Add(img);
-                    NVlogoImg.Children.Add(text);
+                        //圖片呈現在畫面上
+                        text.FontSize = 16;
+                        text.Text = FindResource("Ordinal") as string + (i + 1) + FindResource("piece") as string; //第x張
+                        text.Height = 25;
+                        int PaddingTop = 30;
+                        int TextMargin = 15;
+                        //判斷圖片形狀
+                        if (bmp.Width == bmp.Height) //square
+                        {
+                            img.Width = 100;
+                            img.Height = 100;
+                            Canvas.SetLeft(img, 20); //img 左邊起點
+                            Canvas.SetLeft(text, 20); //txt 左邊起點
+                        }
+                        else if (bmp.Width < bmp.Height) //vertical rec
+                        {
+                            img.Width = 100;
+                            img.Height = 200;
+                            Canvas.SetLeft(img, 20); //img 左邊起點
+                            Canvas.SetLeft(text, 20); //txt 左邊起點
+                        }
+                        else
+                        { //horizontal rec
+                            img.Width = 200;
+                            img.Height = 100;
+                            Canvas.SetLeft(img, 20); //img 左邊起點
+                            Canvas.SetLeft(text, 20); //txt 左邊起點
+                        }
+
+                        if (i == 0)
+                        {
+                            Canvas.SetTop(img, PaddingTop + (TextMargin * 2 + text.Height) * i);
+                            Canvas.SetTop(text, PaddingTop + TextMargin + img.Height);
+                            calHeight += img.Height; //放在後面家才不會重複算
+                        }
+                        else
+                        {
+                            Canvas.SetTop(img, PaddingTop + (TextMargin * 2 + text.Height) * i + calHeight);
+                            Canvas.SetTop(text, PaddingTop + (TextMargin * 2 + text.Height) * i + calHeight + TextMargin + img.Height);
+                            calHeight += img.Height;
+                        }
+
+                        NVlogoImg.Children.Add(img);
+                        NVlogoImg.Children.Add(text);      
                 }
             }
         }
@@ -1737,11 +1770,29 @@ namespace G80Utility
         private void CleanGalleryBtn_Click(object sender, RoutedEventArgs e)
         {
             NVlogoImg.Children.Clear();
+            nvLogo_full_hex.Clear();
             fileNameArray = null;
             OpenImgNoTxt.Text="";
         }
         #endregion
 
+        #region 下載圖片集按鈕事件
+        private void DonwaldLogoBtn_Click(object sender, RoutedEventArgs e)
+        {
+            if (nvLogo_full_hex.Length == 0)
+            {
+                MessageBox.Show(FindResource("GalleryEmpty") as string);
+            }
+            else {
+                nvLogo_n_hex = fileNameArray.Length.ToString("X2");
+                //因為hex碼是兩個string,1c71長度佔去4，index插入要=4
+                nvLogo_full_hex.Insert(4,nvLogo_n_hex);
+                byte[]  sendArray = StringToByteArray(nvLogo_full_hex.ToString());
+                Console.WriteLine(nvLogo_full_hex.ToString());
+                SendCmd(sendArray, "BeepOrSetting", 0);
+            }
+        }
+        #endregion
         //========================參數設置每個寫入命令功能=================
 
         #region 設定IP Address
@@ -3507,8 +3558,7 @@ namespace G80Utility
             return result;
         }
         #endregion
-
-       
+      
         //========================不同通道傳送命令===========================
 
         #region 不同通道傳送命令
