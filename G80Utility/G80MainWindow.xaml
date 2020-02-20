@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:G80Utility"
         mc:Ignorable="d"
-        ResizeMode="NoResize"
+        ResizeMode="CanMinimize"
         Title="G80 Utility(Factory)" Height="740" Width="1035">
     <StackPanel  Background="#333333">
         <!--Top 通訊-->
