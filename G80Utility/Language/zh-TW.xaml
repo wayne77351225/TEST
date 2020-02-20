@@ -226,9 +226,11 @@
 
     <!--**********************************************************************底部功能*********************************************************************-->
     <!--for Bottom Button-->
-    <sys:String x:Key="AboutButton">關於</sys:String>
+    <!--<sys:String x:Key="AboutButton">關於</sys:String>
     <sys:String x:Key="PrinterParameterQuery">參數查詢</sys:String>
-    <sys:String x:Key="ExitButton">關閉視窗</sys:String>
+    <sys:String x:Key="ExitButton">關閉視窗</sys:String>-->
+    <sys:String x:Key="StartStatusMonitor">開啟實時狀態查詢</sys:String>
+    <sys:String x:Key="StopStatusMonitor">關閉實時狀態查詢</sys:String>
 
     <!--Language Selection-->
     <sys:String x:Key="SelectLanguage">語系切換：</sys:String>

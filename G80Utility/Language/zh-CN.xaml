@@ -231,9 +231,10 @@
     
     <!--**********************************************************************底部功能*********************************************************************-->
     <!--for Bottom Button-->
-    <sys:String x:Key="AboutButton">关於(_A)</sys:String>
-    <sys:String x:Key="PrinterParameterQuery">参数查询</sys:String>
-    <sys:String x:Key="ExitButton">关闭窗口</sys:String>
+    <sys:String x:Key="StartStatusMonitor">启动实时状态查询</sys:String>
+    <sys:String x:Key="StopStatusMonitor">关闭实时状态查询</sys:String>
+    <!--<sys:String x:Key="PrinterParameterQuery">参数查询</sys:String>
+    <sys:String x:Key="ExitButton">关闭窗口</sys:String>-->
 
     <!--Language Selection-->
     <sys:String x:Key="SelectLanguage">语系切换：</sys:String>
@@ -242,10 +243,10 @@
     <sys:String x:Key="enUS">英文(美)</sys:String>
 
     <!--about content-->
-    <sys:String x:Key="ToolVerison">打印机工具 版本 Beta v2.1</sys:String>
+    <!--<sys:String x:Key="ToolVerison">打印机工具 版本 Beta v2.1</sys:String>
     <sys:String x:Key="CopyrightTop">Copyright(C) Ganinscha Network Inc.</sys:String>
     <sys:String x:Key="CopyrightBottom">2019 All rights reserved.</sys:String>
-    <sys:String x:Key="CloseButton">关闭</sys:String>
+    <sys:String x:Key="CloseButton">关闭</sys:String>-->
 
     <!--**********************************************************************共用功能*********************************************************************-->
     <!--message box-->

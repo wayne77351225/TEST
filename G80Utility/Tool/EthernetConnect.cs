@@ -6,6 +6,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Windows;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
 namespace G80Utility.Tool
@@ -35,7 +36,7 @@ namespace G80Utility.Tool
         {
             TimeoutObject.Reset();
             int port = 9100;
-            bool isConnect;
+            bool isConnect=false;
 
             if (EthernetIPAddress != null)
             {
@@ -44,16 +45,28 @@ namespace G80Utility.Tool
                     IPAddress ip = IPAddress.Parse(EthernetIPAddress);
                     IPEndPoint ipe = new IPEndPoint(ip, port);
                     SocketClient = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                    SocketClient.BeginConnect(ipe, CallBackMethod, SocketClient);
-                    isConnect = true;
+                    IAsyncResult ConnectResult=SocketClient.BeginConnect(ipe, CallBackMethod, SocketClient);
+                    bool success = ConnectResult.AsyncWaitHandle.WaitOne(1000, true);
+                    if (success) {
+                        isConnect = true;
+                    }
+                    else
+                    {
+                        isConnect = false;
+                        ((G80MainWindow)Application.Current.MainWindow).EthernetConnectImage.Source = new BitmapImage(new Uri("Images/red_circle.png", UriKind.Relative)); //連線失敗時
+                        MessageBox.Show(Application.Current.FindResource("ConnectTimeout") as string);
+                        setSysStatusColorAndText(Application.Current.FindResource("ConnectTimeout") as string, "#FFEF7171");
+                        disconnect();
+                    }
+                   
                 }
                 catch (Exception e)
                 {
                     isConnect = false;
                     Console.WriteLine("連線失敗！\r\n" + e.ToString());
                     ((G80MainWindow)Application.Current.MainWindow).EthernetConnectImage.Source = new BitmapImage(new Uri("Images/red_circle.png", UriKind.Relative)); //連線失敗時
-                    MessageBox.Show(Application.Current.FindResource("NotSettingEthernetport") as string);              
-                    disconnect();
+                    MessageBox.Show(Application.Current.FindResource("NotSettingEthernetport") as string);
+                    setSysStatusColorAndText(Application.Current.FindResource("NotSettingEthernetport") as string, "#FFEF7171");
                 }
             }
             else
@@ -61,6 +74,8 @@ namespace G80Utility.Tool
                 isConnect = false;
                 ((G80MainWindow)Application.Current.MainWindow).EthernetConnectImage.Source = new BitmapImage(new Uri("Images/red_circle.png", UriKind.Relative)); //連線失敗時
                 MessageBox.Show(Application.Current.FindResource("NotSettingEthernetport") as string);
+                setSysStatusColorAndText(Application.Current.FindResource("NotSettingEthernetport") as string, "#FFEF7171");
+
             }
             return isConnect;
         }
@@ -69,7 +84,7 @@ namespace G80Utility.Tool
         #region 關閉socket連線
         public static void disconnect()
         {
-            if (ThreadClient.IsAlive)
+            if (ThreadClient != null && ThreadClient.IsAlive )
             {
                 ThreadClient.Abort();
             }
@@ -106,31 +121,40 @@ namespace G80Utility.Tool
             {
                 ((G80MainWindow)Application.Current.MainWindow).EthernetConnectImage.Source = new BitmapImage(new Uri("Images/red_circle.png", UriKind.Relative)); //連線失敗時
                 MessageBox.Show(Application.Current.FindResource("ConnectTimeout") as string);
-                //disconnect();
-            }          
+                setSysStatusColorAndText(Application.Current.FindResource("ConnectTimeout") as string, "#FFEF7171");
+                disconnect();
+            }
             return isReceiveData;
         }
-    #endregion
+        #endregion
 
-    #region 接收資料
-    public static void EthernetReceive()
-    {
-        try
+        #region 接收資料
+        public static void EthernetReceive()
         {
-            byte[] buffer = new byte[Receive_Size];
-            //將客戶端套接字接收到的資料存入記憶體緩衝區，並獲取長度  
-            int length = SocketClient.Receive(buffer);
-            mRecevieData = buffer;
-            int ReadLen = 0;
+            try
+            {
+                byte[] buffer = new byte[Receive_Size];
+                //將客戶端套接字接收到的資料存入記憶體緩衝區，並獲取長度  
+                int length = SocketClient.Receive(buffer);
+                mRecevieData = buffer;
 
+            }
+            catch (Exception ex)
+            {
+                //這邊會收到中斷執行緒的exception所以不特別做ui處理
+                Console.WriteLine(ex.Message + "\r\n");
+                isReceiveData = true;
+            }
         }
-        catch (Exception ex)
+        #endregion
+
+        #region 狀態列設定文字與顏色
+        public static void setSysStatusColorAndText(string msg, string color)
         {
-            //這邊會收到中斷執行緒的exception所以不特別做ui處理
-            Console.WriteLine(ex.Message + "\r\n");
-            isReceiveData = true;
+            ((G80MainWindow)Application.Current.MainWindow).SysStatusText.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString(color));
+            ((G80MainWindow)Application.Current.MainWindow).SysStatusText.Text = msg;
         }
+
+        #endregion
     }
-    #endregion
-}
 }

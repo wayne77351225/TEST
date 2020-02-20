@@ -13,6 +13,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Interop;
@@ -60,7 +61,9 @@ namespace G80Utility
         string[] fileNameArray;
         //nv logo 打印下載hex碼
         StringBuilder nvLogo_full_hex=new StringBuilder();
-
+        
+        //打印機實時狀態計時器
+        Timer statusMonitorTimer;
         #endregion
 
         public G80MainWindow()
@@ -1023,9 +1026,27 @@ namespace G80Utility
 
         #endregion
 
+        //========================參數設定的讀取與寫入=================
+
+        #region 讀取所有參數設定
+        private void ReadAllBtn_Click(object sender, RoutedEventArgs e)
+        {
+            IsParaSettingChecked();
+            readALL();
+        }
+        #endregion
+
+        #region 寫入所有參數設定
+        private void WriteAllBtn_Click(object sender, RoutedEventArgs e)
+        {
+            IsParaSettingChecked();
+            sendALL();
+        }
+        #endregion
+
         //========================Btn點擊事件===========================
 
-        //通訊介面按鈕
+        //通訊介面與實時查詢按鈕
         #region 通讯接口测试按鈕事件
         private void ConnectTest_Click(object sender, RoutedEventArgs e)
         {
@@ -1074,22 +1095,20 @@ namespace G80Utility
         }
         #endregion
 
-        #region 讀取所有參數設定
-        private void ReadAllBtn_Click(object sender, RoutedEventArgs e)
+        #region 查詢實時狀態按鈕事件
+        private void StatusMonitorBtn_Click(object sender, RoutedEventArgs e)
         {
-            IsParaSettingChecked();
-            readALL();
+            string btnName = StatusMonitorBtn.Content.ToString();
+            if (btnName.Contains("启动") || btnName.Contains("開啟")){
+                startStatusMonitorTimer();
+            }
+            else {
+                stopStatusMonitorTimer();
+            }       
         }
         #endregion
 
-        #region 寫入所有參數設定
-        private void WriteAllBtn_Click(object sender, RoutedEventArgs e)
-        {
-            IsParaSettingChecked();
-            sendALL();
-        }
-        #endregion
-
+        //參數設置按鈕
         #region 設定IP Address按鈕事件
         private void SetIPBtn_Click(object sender, RoutedEventArgs e)
         {
@@ -3061,7 +3080,7 @@ namespace G80Utility
         }
         #endregion
 
-        //==============================打印機即時狀態============================
+        //==============================打印機實時狀態============================
 
         #region 打印機即時狀態
         private void PrinterNowStatus()
@@ -3071,6 +3090,40 @@ namespace G80Utility
         }
         #endregion
 
+        //===============================實時狀態timer功能===========================
+
+        #region 啟動實時狀態查詢
+        private void startStatusMonitorTimer()
+        {
+            statusMonitorTimer = new Timer();
+            statusMonitorTimer.Interval = 1000;
+            statusMonitorTimer.Elapsed += timer_Elapsed;
+            statusMonitorTimer.Start();
+            QueryNowStatusPosition = "bottom";
+            StatusMonitorBtn.Content = FindResource("StopStatusMonitor") as string;
+        }
+        #endregion
+
+        #region timer的ui處理
+        private void timer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            Dispatcher.BeginInvoke(new Action(() =>
+            {
+                PrinterNowStatus();
+            }), null);
+        }
+        #endregion
+
+        #region 關閉實時狀態查詢
+        private void stopStatusMonitorTimer()
+        {
+            if (statusMonitorTimer != null)
+            {
+                statusMonitorTimer.Dispose();
+                StatusMonitorBtn.Content = FindResource("StartStatusMonitor") as string;
+            }
+        }
+        #endregion
 
         //==========================註冊機碼的寫入與讀取===========================
 
@@ -3143,7 +3196,7 @@ namespace G80Utility
         }
         #endregion
 
-        #region RS232傳送資料
+        #region RS232接收資料
         private void SerialPortConnect(string dataType, byte[] data, int receiveLength)
         {
             RS232Connect.CloseSerialPort();
@@ -3229,9 +3282,11 @@ namespace G80Utility
                             RS232Connect.CloseSerialPort(); //沒立刻關閉有時會漏收命令
                             break;
                     }
+                    //startTimer();
                     if (!RS232Connect.IsConnect)
                     {
                         RS232ConnectImage.Source = new BitmapImage(new Uri("Images/red_circle.png", UriKind.Relative)); //連線失敗時
+                        setSysStatusColorAndText(FindResource("CannotOpenComport") as string, "#FFEF7171");
                     }
 
                 }
@@ -3337,12 +3392,14 @@ namespace G80Utility
                             USBConnect.USBSendCMD("NoReceive", data, null, 0);
                             break;
                     }
+                    //startTimer();
                 }
                 else
                 {
                     MessageBox.Show(FindResource("NotSettingUSBport") as string);
                     USBConnect.closeHandle();
                     USBConnectImage.Source = new BitmapImage(new Uri("Images/red_circle.png", UriKind.Relative)); //連線失敗時
+                    setSysStatusColorAndText(FindResource("NotSettingUSBport") as string, "#FFEF7171");
                 }
             }
             else
@@ -3350,6 +3407,7 @@ namespace G80Utility
                 MessageBox.Show(FindResource("NotSettingUSBport") as string);
                 USBConnect.closeHandle();
                 USBConnectImage.Source = new BitmapImage(new Uri("Images/red_circle.png", UriKind.Relative)); //連線失敗時
+                setSysStatusColorAndText(FindResource("NotSettingUSBport") as string, "#FFEF7171");
             }
         }
 
@@ -3432,7 +3490,7 @@ namespace G80Utility
                         break;
                     case "CommunicationTest": //通訊測試
                         EthernetConnect.EthernetSendCmd("NeedReceive", data, FindResource("GNSettingComplete") as string, receiveLength);
-                        EthernetConnect.disconnect();
+                        //EthernetConnect.disconnect();
                         break;
                     case "BeepOrSetting":
                         EthernetConnect.EthernetSendCmd("NoReceive", data, null, 0);
@@ -3440,6 +3498,7 @@ namespace G80Utility
                         break;
                 }
             }
+            //startTimer();
         }
 
         #region 網口欄位是否輸入檢查
@@ -3560,6 +3619,7 @@ namespace G80Utility
         #region 不同通道傳送命令
         public void SendCmd(byte[] sendArray, string sendType, int length)
         {
+            //stopTimer();
             switch (DeviceType)
             {
                 case "RS232":
@@ -3964,13 +4024,8 @@ namespace G80Utility
         #endregion
 
 
-        //===============================測試完可刪===========================
 
-        private void Test_Click(object sender, RoutedEventArgs e)
-        {
-            QueryNowStatusPosition = "bottom";
-            PrinterNowStatus();
-        }
 
+       
     }
 }
