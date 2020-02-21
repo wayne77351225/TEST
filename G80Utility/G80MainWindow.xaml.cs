@@ -60,8 +60,8 @@ namespace G80Utility
         //nv logo圖片集檔案路徑
         string[] fileNameArray;
         //nv logo 打印下載hex碼
-        StringBuilder nvLogo_full_hex=new StringBuilder();
-        
+        StringBuilder nvLogo_full_hex = new StringBuilder();
+
         //打印機實時狀態計時器
         Timer statusMonitorTimer;
         #endregion
@@ -1099,12 +1099,83 @@ namespace G80Utility
         private void StatusMonitorBtn_Click(object sender, RoutedEventArgs e)
         {
             string btnName = StatusMonitorBtn.Content.ToString();
-            if (btnName.Contains("启动") || btnName.Contains("開啟")){
+            if (btnName.Contains("启动") || btnName.Contains("開啟"))
+            {
                 startStatusMonitorTimer();
             }
-            else {
+            else
+            {
                 stopStatusMonitorTimer();
-            }       
+            }
+        }
+        #endregion
+
+        //數據傳輸按鈕
+        #region 發送命令按鈕事件
+        private void SendCmdBtn_Click(object sender, RoutedEventArgs e)
+        {
+            String dataString = CmdContentTxt.Text;
+            if (CmdContentTxt.Text == "")
+            {
+                MessageBox.Show(FindResource("CommandEmpty") as string);
+            }
+            else
+            {
+                byte[] sendArray = null;
+                if (HexModeCheckbox.IsChecked == true)
+                {                  
+                    sendArray = StringToByteArray(dataString);
+                }
+                else
+                {
+                    sendArray = Encoding.UTF8.GetBytes(dataString);
+                }
+                SendCmd(sendArray, "BeepOrSetting", 0);
+
+            }
+        }
+        #endregion
+
+        #region 發送命令按鈕事件
+        private void HexModeCheckbox_Checked(object sender, RoutedEventArgs e)
+        {           
+            String dataString = CmdContentTxt.Text;           
+            dataString = ConvertStringToHex(dataString, Encoding.UTF8);
+            CmdContentTxt.Text = dataString;
+
+        }
+        #endregion
+        
+        #region 發送命令按鈕事件
+        private void HexModeCheckbox_Unchecked(object sender, RoutedEventArgs e)
+        {
+
+            String dataString = CmdContentTxt.Text;
+            dataString = Encoding.UTF8.GetString(StringToByteArray(dataString));
+            CmdContentTxt.Text = dataString;
+
+        }
+        #endregion
+
+        #region 發送換行命令按鈕事件
+        private void SendEnterBtn_Click(object sender, RoutedEventArgs e)
+        {
+            byte[] sendArray = { 0x0a };
+            SendCmd(sendArray, "BeepOrSetting", 0);
+        }
+        #endregion
+
+        #region 清空命令按鈕事件
+        private void ClearCmdBtn_Click(object sender, RoutedEventArgs e)
+        {
+            CmdContentTxt.Text = "";
+        }
+        #endregion
+
+        #region 打開文件按鈕事件
+        private void OepnFileBtn_Click(object sender, RoutedEventArgs e)
+        {
+
         }
         #endregion
 
@@ -1645,10 +1716,11 @@ namespace G80Utility
                 byte[] sendArray = StringToByteArray(Command.PRINT_LOGOS_HEADER + numberHex + nvLogo_m_hex);
                 SendCmd(sendArray, "BeepOrSetting", 0);
             }
-            else {
+            else
+            {
                 MessageBox.Show(FindResource("PrintPieceEmpty") as string);
             }
-            
+
         }
         #endregion
 
@@ -1674,10 +1746,10 @@ namespace G80Utility
             {
                 if (fileNameArray == null) //第一次開啟
                 {
-                    fileNameArray = openFileDialog.FileNames;                 
+                    fileNameArray = openFileDialog.FileNames;
                     nvLogo_full_hex.Append("1C71");
                 }
-                else 
+                else
                 { //未清除再開啟
                     int oldArrayLen = fileNameArray.Length;
                     int newArrayLen = openFileDialog.FileNames.Length;
@@ -1693,7 +1765,7 @@ namespace G80Utility
                     }
                 }
                 for (int i = 0; i < fileNameArray.Length; i++)
-                {               
+                {
                     Uri url = new Uri(fileNameArray[i]);
                     BitmapImage bmpImg = new BitmapImage(url);
                     Bitmap bmp = BitmapTool.BitmapImageToBitmap(bmpImg);
@@ -1711,71 +1783,71 @@ namespace G80Utility
                 {
                     Uri url = new Uri(fileNameArray[i]);
                     BitmapImage bmpImg = new BitmapImage(url);
-                    Bitmap bmp = BitmapTool.ToGray(BitmapTool.BitmapImageToBitmap(bmpImg),1);
-                    
-                        System.Windows.Controls.Image img = new System.Windows.Controls.Image();
-                        img.Stretch = Stretch.Fill;
-                        img.StretchDirection = StretchDirection.Both;
-                        TextBlock text = new TextBlock();
+                    Bitmap bmp = BitmapTool.ToGray(BitmapTool.BitmapImageToBitmap(bmpImg), 1);
 
-                        if (!BitmapTool.isBlackWhite(bmp)) //彩色圖片
-                        {
-                            bmp = BitmapTool.Thresholding(bmp);
-                            img.Source = BitmapTool.BitmapToBitmapImage(bmp);
-                            nvLogo_full_hex.Append(BitmapTool.getBmpHighandLowHex(bmp.Width, bmp.Height));
-                            nvLogo_full_hex.Append(BitmapTool.bitmapToHexString(bmp));
-                        }
-                        else
-                        { //黑白圖片
-                            nvLogo_full_hex.Append(BitmapTool.getBmpHighandLowHex(bmp.Width, bmp.Height));
-                            nvLogo_full_hex.Append(BitmapTool.bitmapToHexString(bmp));
-                             img.Source = bmpImg;
-                        }
+                    System.Windows.Controls.Image img = new System.Windows.Controls.Image();
+                    img.Stretch = Stretch.Fill;
+                    img.StretchDirection = StretchDirection.Both;
+                    TextBlock text = new TextBlock();
 
-                        //圖片呈現在畫面上
-                        text.FontSize = 16;
-                        text.Text = FindResource("Ordinal") as string + (i + 1) + FindResource("piece") as string; //第x張
-                        text.Height = 25;
-                        int PaddingTop = 30;
-                        int TextMargin = 15;
-                        //判斷圖片形狀
-                        if (bmp.Width == bmp.Height) //square
-                        {
-                            img.Width = 100;
-                            img.Height = 100;
-                            Canvas.SetLeft(img, 20); //img 左邊起點
-                            Canvas.SetLeft(text, 20); //txt 左邊起點
-                        }
-                        else if (bmp.Width < bmp.Height) //vertical rec
-                        {
-                            img.Width = 100;
-                            img.Height = 200;
-                            Canvas.SetLeft(img, 20); //img 左邊起點
-                            Canvas.SetLeft(text, 20); //txt 左邊起點
-                        }
-                        else
-                        { //horizontal rec
-                            img.Width = 200;
-                            img.Height = 100;
-                            Canvas.SetLeft(img, 20); //img 左邊起點
-                            Canvas.SetLeft(text, 20); //txt 左邊起點
-                        }
+                    if (!BitmapTool.isBlackWhite(bmp)) //彩色圖片
+                    {
+                        bmp = BitmapTool.Thresholding(bmp);
+                        img.Source = BitmapTool.BitmapToBitmapImage(bmp);
+                        nvLogo_full_hex.Append(BitmapTool.getBmpHighandLowHex(bmp.Width, bmp.Height));
+                        nvLogo_full_hex.Append(BitmapTool.bitmapToHexString(bmp));
+                    }
+                    else
+                    { //黑白圖片
+                        nvLogo_full_hex.Append(BitmapTool.getBmpHighandLowHex(bmp.Width, bmp.Height));
+                        nvLogo_full_hex.Append(BitmapTool.bitmapToHexString(bmp));
+                        img.Source = bmpImg;
+                    }
 
-                        if (i == 0)
-                        {
-                            Canvas.SetTop(img, PaddingTop + (TextMargin * 2 + text.Height) * i);
-                            Canvas.SetTop(text, PaddingTop + TextMargin + img.Height);
-                            calHeight += img.Height; //放在後面家才不會重複算
-                        }
-                        else
-                        {
-                            Canvas.SetTop(img, PaddingTop + (TextMargin * 2 + text.Height) * i + calHeight);
-                            Canvas.SetTop(text, PaddingTop + (TextMargin * 2 + text.Height) * i + calHeight + TextMargin + img.Height);
-                            calHeight += img.Height;
-                        }
+                    //圖片呈現在畫面上
+                    text.FontSize = 16;
+                    text.Text = FindResource("Ordinal") as string + (i + 1) + FindResource("piece") as string; //第x張
+                    text.Height = 25;
+                    int PaddingTop = 30;
+                    int TextMargin = 15;
+                    //判斷圖片形狀
+                    if (bmp.Width == bmp.Height) //square
+                    {
+                        img.Width = 100;
+                        img.Height = 100;
+                        Canvas.SetLeft(img, 20); //img 左邊起點
+                        Canvas.SetLeft(text, 20); //txt 左邊起點
+                    }
+                    else if (bmp.Width < bmp.Height) //vertical rec
+                    {
+                        img.Width = 100;
+                        img.Height = 200;
+                        Canvas.SetLeft(img, 20); //img 左邊起點
+                        Canvas.SetLeft(text, 20); //txt 左邊起點
+                    }
+                    else
+                    { //horizontal rec
+                        img.Width = 200;
+                        img.Height = 100;
+                        Canvas.SetLeft(img, 20); //img 左邊起點
+                        Canvas.SetLeft(text, 20); //txt 左邊起點
+                    }
 
-                        NVlogoImg.Children.Add(img);
-                        NVlogoImg.Children.Add(text);      
+                    if (i == 0)
+                    {
+                        Canvas.SetTop(img, PaddingTop + (TextMargin * 2 + text.Height) * i);
+                        Canvas.SetTop(text, PaddingTop + TextMargin + img.Height);
+                        calHeight += img.Height; //放在後面家才不會重複算
+                    }
+                    else
+                    {
+                        Canvas.SetTop(img, PaddingTop + (TextMargin * 2 + text.Height) * i + calHeight);
+                        Canvas.SetTop(text, PaddingTop + (TextMargin * 2 + text.Height) * i + calHeight + TextMargin + img.Height);
+                        calHeight += img.Height;
+                    }
+
+                    NVlogoImg.Children.Add(img);
+                    NVlogoImg.Children.Add(text);
                 }
             }
         }
@@ -1787,7 +1859,7 @@ namespace G80Utility
             NVlogoImg.Children.Clear();
             nvLogo_full_hex.Clear();
             fileNameArray = null;
-            OpenImgNoTxt.Text="";
+            OpenImgNoTxt.Text = "";
         }
         #endregion
 
@@ -1798,11 +1870,12 @@ namespace G80Utility
             {
                 MessageBox.Show(FindResource("GalleryEmpty") as string);
             }
-            else {
+            else
+            {
                 nvLogo_n_hex = fileNameArray.Length.ToString("X2");
                 //因為hex碼是兩個string,1c71長度佔去4，index插入要=4
-                nvLogo_full_hex.Insert(4,nvLogo_n_hex);
-                byte[]  sendArray = StringToByteArray(nvLogo_full_hex.ToString());
+                nvLogo_full_hex.Insert(4, nvLogo_n_hex);
+                byte[] sendArray = StringToByteArray(nvLogo_full_hex.ToString());
                 Console.WriteLine(nvLogo_full_hex.ToString());
                 SendCmd(sendArray, "BeepOrSetting", 0);
             }
@@ -3542,13 +3615,20 @@ namespace G80Utility
         //============================各種資料類型的轉換=============================
 
         #region hex string to byte array
-        public static byte[] StringToByteArray(string hex)
+        public byte[] StringToByteArray(string hex)
         {
             string afterConvert = hex.Replace(" ", "");
-            return Enumerable.Range(0, afterConvert.Length)
-                             .Where(x => x % 2 == 0)
-                             .Select(x => Convert.ToByte(afterConvert.Substring(x, 2), 16))
-                             .ToArray();
+            byte[] data = null;
+            try {
+               data = Enumerable.Range(0, afterConvert.Length)
+                                 .Where(x => x % 2 == 0)
+                                 .Select(x => Convert.ToByte(afterConvert.Substring(x, 2), 16))
+                                 .ToArray();
+            }
+            catch (Exception){
+                MessageBox.Show(FindResource("HexStringError") as string);
+            }
+            return data;
         }
         #endregion
 
@@ -3613,7 +3693,21 @@ namespace G80Utility
             return result;
         }
         #endregion
-      
+
+        #region string to hex string
+        public string ConvertStringToHex(String input, Encoding encoding)
+        {
+            Byte[] stringBytes = encoding.GetBytes(input);
+            StringBuilder sbBytes = new StringBuilder(stringBytes.Length * 2);
+            foreach (byte b in stringBytes)
+            {
+                sbBytes.AppendFormat("{0:X2}", b);
+            }
+            return sbBytes.ToString();
+        }
+        #endregion
+
+        
         //========================不同通道傳送命令===========================
 
         #region 不同通道傳送命令
@@ -4015,17 +4109,6 @@ namespace G80Utility
             }
 
         }
-
-
-
-
-
-
         #endregion
-
-
-
-
-       
     }
 }

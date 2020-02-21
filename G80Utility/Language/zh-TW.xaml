@@ -272,6 +272,7 @@
     <sys:String x:Key="ExceedMaxNumber">圖片集不可超過255張</sys:String>
     <sys:String x:Key="GalleryEmpty">圖片集空白</sys:String>
     <sys:String x:Key="PrintPieceEmpty">未輸入打印張數</sys:String>
+    <sys:String x:Key="HexStringError">16進位資料錯誤</sys:String>
     
     <!--button-->
     <sys:String x:Key="Load">讀取</sys:String>
