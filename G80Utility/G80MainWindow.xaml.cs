@@ -1916,6 +1916,31 @@ namespace G80Utility
         }
         #endregion
 
+        //升級程序按鈕
+        #region 開啟FW檔案按鈕事件
+        private void OpenFWfileBtn_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDlg = new OpenFileDialog();
+            openFileDlg.Multiselect = false;//该值确定是否可以选择多个文件
+            openFileDlg.Title = "请选择文件夹";
+            openFileDlg.Filter = "所有文件(*.hex)|*.hex";
+            Nullable<bool> openDlgResult = openFileDlg.ShowDialog();
+            string filepath;
+            if (openDlgResult == true)
+            {
+                filepath = openFileDlg.FileName;
+              
+            }
+        }
+        #endregion
+
+        #region 更新FW程序按鈕事件
+        private void DownloadFWBtn_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+        #endregion
+
         //=========================數據傳輸發送命令功能===================
         public void SendCmd()
         {
@@ -4227,14 +4252,5 @@ namespace G80Utility
 
         #endregion
 
-        private void OpenFWfileBtn_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void DownloadFWBtn_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
     }
 }

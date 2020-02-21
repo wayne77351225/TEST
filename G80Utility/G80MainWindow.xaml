@@ -711,7 +711,7 @@
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
                             <TextBox  Name="FilePathTxt" Width="280" Height="25"/>
                             <Button  Name="OpenFWfileBtn" Click="OpenFWfileBtn_Click" Margin="5" Content="打开文件" Padding="5" FontSize="14" Width="100"/>
-                            <Button Name="DownloadFWBtn" Click="" Margin="5" Content="下载程序" Padding="5" FontSize="14" Width="100"/>
+                            <Button Name="DownloadFWBtn" Click="DownloadFWBtn_Click" Margin="5" Content="下载程序" Padding="5" FontSize="14" Width="100"/>
                         </StackPanel>
                         <!--状态-->
                         <GroupBox  Header="状态" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14" Height="150" Width="500" HorizontalAlignment="Left">
