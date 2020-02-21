@@ -18,6 +18,7 @@
     <sys:String x:Key="PrinterConfig">參數設定</sys:String>
     <sys:String x:Key="BLineSetting">黑標設定</sys:String>
     <sys:String x:Key="NVLogo">NV Logo</sys:String>
+    <sys:String x:Key="FWUpdate">韌體更新</sys:String>
 
 
     <!--數據傳輸-->

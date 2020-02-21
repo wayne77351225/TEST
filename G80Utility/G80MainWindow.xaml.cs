@@ -4224,8 +4224,17 @@ namespace G80Utility
 
         }
 
+
         #endregion
 
+        private void OpenFWfileBtn_Click(object sender, RoutedEventArgs e)
+        {
 
+        }
+
+        private void DownloadFWBtn_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

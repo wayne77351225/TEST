@@ -100,7 +100,7 @@
 
         <!--Tap分頁-->
         <TabControl Height="470" TabStripPlacement="Top" Margin="5,3,5,0" >
-           <!--數據傳輸-->      
+            <!--數據傳輸-->
             <TabItem Header="{DynamicResource PrintTest}"  FontSize="14" >
                 <Border Margin="5,5,5,1"  >
                     <StackPanel  Height="445" Margin="10,0,0,0" >
@@ -696,6 +696,27 @@
                                 <Button Margin="20,0,0,0" Name="FactoryDefaultBtn" Click="FactoryDefaultBtn_Click" Content="出厂设置" Padding="5" FontSize="14" Height="40" />
                             </StackPanel>
                         </Grid>
+                    </StackPanel>
+                </Border>
+            </TabItem>
+
+            <!--升級程序-->
+            <TabItem Header="{DynamicResource FWUpdate}"  FontSize="14">
+                <Border CornerRadius="5" Background="#595959" Margin="0,0,1,2">
+                    <StackPanel  Margin="0,40,0,0" HorizontalAlignment="Center" >
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
+                            <Label Content="下载地址" Margin="0,0,5,0"/>
+                            <TextBox Name="DownloadAddTxt" Width="210" Height="25"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
+                            <TextBox  Name="FilePathTxt" Width="280" Height="25"/>
+                            <Button  Name="OpenFWfileBtn" Click="OpenFWfileBtn_Click" Margin="5" Content="打开文件" Padding="5" FontSize="14" Width="100"/>
+                            <Button Name="DownloadFWBtn" Click="" Margin="5" Content="下载程序" Padding="5" FontSize="14" Width="100"/>
+                        </StackPanel>
+                        <!--状态-->
+                        <GroupBox  Header="状态" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14" Height="150" Width="500" HorizontalAlignment="Left">
+                            <TextBox Name="FWUpdateStatusTxt" Width="500" Height="150"  TextWrapping="Wrap"  VerticalScrollBarVisibility="Auto"/>
+                        </GroupBox>
                     </StackPanel>
                 </Border>
             </TabItem>
