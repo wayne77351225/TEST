@@ -64,6 +64,9 @@ namespace G80Utility
 
         //打印機實時狀態計時器
         Timer statusMonitorTimer;
+
+        //定時發送命另計時器
+        Timer sendCmdTimer;
         #endregion
 
         public G80MainWindow()
@@ -88,6 +91,7 @@ namespace G80Utility
             registerUSBdetect();
         }
 
+        //======================UI的控制與狀態取得=================
 
         #region UI初始化
         private void UIInitial()
@@ -527,6 +531,37 @@ namespace G80Utility
             {
                 nvLogo_m_hex = "03";
             }
+        }
+        #endregion
+
+        #region textbox只能輸入數字
+        private void NumberValidationTextBox(object sender, System.Windows.Input.TextCompositionEventArgs e)
+        {
+            Regex regex = new Regex("[^0-9]+");
+            e.Handled = regex.IsMatch(e.Text);
+        }
+        #endregion
+
+        #region 16進制有勾選時textbox內容轉換
+        private void HexModeCheckbox_Checked(object sender, RoutedEventArgs e)
+        {
+            String dataString = CmdContentTxt.Text;
+            Encoding result = convertEncoding();
+            dataString = ConvertStringToHex(dataString, result);
+            CmdContentTxt.Text = dataString;
+
+        }
+        #endregion
+
+        #region  16進制沒有勾選時textbox內容轉換
+        private void HexModeCheckbox_Unchecked(object sender, RoutedEventArgs e)
+        {
+            String dataString = CmdContentTxt.Text;
+            if (StringToByteArray(dataString) == null) return;//hex string中包含錯誤返回
+            Encoding result = convertEncoding();
+            dataString = result.GetString(StringToByteArray(dataString));
+            CmdContentTxt.Text = dataString;
+
         }
         #endregion
 
@@ -1114,46 +1149,7 @@ namespace G80Utility
         #region 發送命令按鈕事件
         private void SendCmdBtn_Click(object sender, RoutedEventArgs e)
         {
-            String dataString = CmdContentTxt.Text;
-            if (CmdContentTxt.Text == "")
-            {
-                MessageBox.Show(FindResource("CommandEmpty") as string);
-            }
-            else
-            {
-                byte[] sendArray = null;
-                if (HexModeCheckbox.IsChecked == true)
-                {                  
-                    sendArray = StringToByteArray(dataString);
-                }
-                else
-                {
-                    sendArray = Encoding.UTF8.GetBytes(dataString);
-                }
-                SendCmd(sendArray, "BeepOrSetting", 0);
-
-            }
-        }
-        #endregion
-
-        #region 發送命令按鈕事件
-        private void HexModeCheckbox_Checked(object sender, RoutedEventArgs e)
-        {           
-            String dataString = CmdContentTxt.Text;           
-            dataString = ConvertStringToHex(dataString, Encoding.UTF8);
-            CmdContentTxt.Text = dataString;
-
-        }
-        #endregion
-        
-        #region 發送命令按鈕事件
-        private void HexModeCheckbox_Unchecked(object sender, RoutedEventArgs e)
-        {
-
-            String dataString = CmdContentTxt.Text;
-            dataString = Encoding.UTF8.GetString(StringToByteArray(dataString));
-            CmdContentTxt.Text = dataString;
-
+            SendCmd();
         }
         #endregion
 
@@ -1175,6 +1171,44 @@ namespace G80Utility
         #region 打開文件按鈕事件
         private void OepnFileBtn_Click(object sender, RoutedEventArgs e)
         {
+            OpenFileDialog openFileDlg = new OpenFileDialog();
+            openFileDlg.Multiselect = false;//该值确定是否可以选择多个文件
+            openFileDlg.Title = "请选择文件夹";
+            openFileDlg.Filter = "所有文件(*.txt)|*.txt";
+            Nullable<bool> openDlgResult = openFileDlg.ShowDialog();
+            string filepath;
+            if (openDlgResult == true)
+            {
+                filepath = openFileDlg.FileName;
+                CmdContentTxt.Text = filepath;
+                CmdContentTxt.Text = System.IO.File.ReadAllText(filepath);
+            }
+
+        }
+        #endregion
+
+        #region 定時發送按鈕事件
+        private void SendCmdItervalBtn_Click(object sender, RoutedEventArgs e)
+        {
+            string btnName = SendCmdItervalBtn.Content.ToString();
+            int interval;
+
+            if (SendCmdItervalTxt.Text == "")
+            {
+                interval = 0;
+            }
+            else
+            {
+                interval = Int32.Parse(SendCmdItervalTxt.Text);
+            }
+            if (btnName.Contains("开始") || btnName.Contains("開始"))
+            {
+                startSendCmdTimer(interval);
+            }
+            else
+            {
+                stopSendCmdTimer();
+            }
 
         }
         #endregion
@@ -1881,6 +1915,30 @@ namespace G80Utility
             }
         }
         #endregion
+
+        //=========================數據傳輸發送命令功能===================
+        public void SendCmd()
+        {
+            String dataString = CmdContentTxt.Text;
+            if (CmdContentTxt.Text == "")
+            {
+                CmdContentTxt.Text= dataString = FindResource("DefaultText") as string;
+            }
+
+            byte[] sendArray = null;
+            if (HexModeCheckbox.IsChecked == true)
+            {
+                if (StringToByteArray(dataString) == null) return;//hex string中包含錯誤返回
+                sendArray = StringToByteArray(dataString);
+            }
+            else
+            {
+                Encoding result = convertEncoding();
+                sendArray = result.GetBytes(dataString);
+            }
+            SendCmd(sendArray, "BeepOrSetting", 0);
+
+        }
         //========================參數設置每個寫入命令功能=================
 
         #region 設定IP Address
@@ -3198,6 +3256,40 @@ namespace G80Utility
         }
         #endregion
 
+        //===============================實時狀態timer功能===========================
+
+        #region 啟動定時發送命令
+        private void startSendCmdTimer(int intervel)
+        {
+            sendCmdTimer = new Timer();
+            sendCmdTimer.Interval = intervel;
+            sendCmdTimer.Elapsed += timer_Send;
+            sendCmdTimer.Start();
+            SendCmdItervalBtn.Content = FindResource("StopSendCmd") as string;
+        }
+        #endregion
+
+        #region timer的ui處理
+        private void timer_Send(object sender, ElapsedEventArgs e)
+        {          
+            Dispatcher.BeginInvoke(new Action(() =>
+            {
+                SendCmd();
+            }), null);
+        }
+        #endregion
+
+        #region 關閉定時發送命令
+        private void stopSendCmdTimer()
+        {
+            if (sendCmdTimer != null)
+            {
+                sendCmdTimer.Dispose();
+                SendCmdItervalBtn.Content = FindResource("StartSendCmd") as string;
+            }
+        }
+        #endregion
+
         //==========================註冊機碼的寫入與讀取===========================
 
         #region 註冊機碼位置的產生
@@ -3619,13 +3711,15 @@ namespace G80Utility
         {
             string afterConvert = hex.Replace(" ", "");
             byte[] data = null;
-            try {
-               data = Enumerable.Range(0, afterConvert.Length)
-                                 .Where(x => x % 2 == 0)
-                                 .Select(x => Convert.ToByte(afterConvert.Substring(x, 2), 16))
-                                 .ToArray();
+            try
+            {
+                data = Enumerable.Range(0, afterConvert.Length)
+                                  .Where(x => x % 2 == 0)
+                                  .Select(x => Convert.ToByte(afterConvert.Substring(x, 2), 16))
+                                  .ToArray();
             }
-            catch (Exception){
+            catch (Exception)
+            {
                 MessageBox.Show(FindResource("HexStringError") as string);
             }
             return data;
@@ -3707,7 +3801,27 @@ namespace G80Utility
         }
         #endregion
 
-        
+        #region 編碼轉換
+        public Encoding convertEncoding()
+        {   //編碼  
+            Encoding result;
+            switch (LanguageSetCom.SelectedIndex)
+            {
+                case 0:
+                    result = Encoding.GetEncoding("gb18030");
+                    break;
+                case 1:
+                    result = Encoding.GetEncoding("big5");
+                    break;
+                default: //預設沒有讀取打印機參數時，編碼為gb18030
+                    result = Encoding.GetEncoding("gb18030");
+                    break;
+
+            }
+            return result;
+        }
+        #endregion
+
         //========================不同通道傳送命令===========================
 
         #region 不同通道傳送命令
@@ -4109,6 +4223,9 @@ namespace G80Utility
             }
 
         }
+
         #endregion
+
+
     }
 }

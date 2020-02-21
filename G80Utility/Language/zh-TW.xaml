@@ -19,6 +19,12 @@
     <sys:String x:Key="BLineSetting">黑標設定</sys:String>
     <sys:String x:Key="NVLogo">NV Logo</sys:String>
 
+
+    <!--數據傳輸-->
+    <sys:String x:Key="StartSendCmd">開始定時</sys:String>
+    <sys:String x:Key="StopSendCmd">停止定時</sys:String>
+    <sys:String x:Key="DefaultText">輸入需要列印的資料，輸入完成後，點擊發送按鍵"</sys:String>
+
     <!--印表機操作-->
     <sys:String x:Key="CutSetting">裁切設定</sys:String>
     <sys:String x:Key="CutNumber">裁切次數(100以內)</sys:String>
