@@ -19,9 +19,11 @@ using System.Text.RegularExpressions;
 using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Threading;
 using Color = System.Windows.Media.Color;
 using ColorConverter = System.Windows.Media.ColorConverter;
 
@@ -70,11 +72,24 @@ namespace G80Utility
 
         //定時發送命另計時器
         Timer sendCmdTimer;
+
+        //app閒置Timer
+        DispatcherTimer idleTimer = new DispatcherTimer();
+        DateTime? lostFocusTime;
+
+        //判斷admin是否已登入
+        bool isLoginAdmin;
+
+        //判斷SN是否已登入
+        bool isLoginSN;
         #endregion
 
         public G80MainWindow()
         {
             InitializeComponent();
+
+            //預設參數設定與導入參數等不可使用
+            isParaSettingBtnEnabled(false);
 
             //語系選單default設定
             setDefaultLanguage();
@@ -87,6 +102,7 @@ namespace G80Utility
 
             //頁面內容產生後註冊usb device plugin notify
             this.ContentRendered += WindowThd_ContentRendered;
+            
         }
 
         private void WindowThd_ContentRendered(object sender, EventArgs e)
@@ -94,6 +110,17 @@ namespace G80Utility
             registerUSBdetect();
         }
 
+        override protected void OnDeactivated(EventArgs e)
+        {
+            lostFocusTime = DateTime.Now;
+            base.OnDeactivated(e);
+        }
+
+        protected override void OnActivated(EventArgs e)
+        {
+            lostFocusTime = null;
+            base.OnActivated(e);
+        }
         //======================UI的控制與狀態取得=================
 
         #region UI初始化
@@ -564,6 +591,142 @@ namespace G80Utility
             Encoding result = convertEncoding();
             dataString = result.GetString(StringToByteArray(dataString));
             CmdContentTxt.Text = dataString;
+
+        }
+        #endregion
+
+        #region 檢查輸入的欄位是否為空白
+
+        //檢查textbox設定空白
+        private bool CheckTextBoxEmpty()
+        {
+            bool isEmpty = false;
+
+            //先取得StackPanel下的所有UIElement
+            foreach (StackPanel child in CommunicatePanel.Children) //因為包了兩層，所以要迴圈兩次
+            {
+                foreach (UIElement grandChild in child.Children)
+                {
+                    if (grandChild.GetType().ToString().Contains("TextBox") && ((TextBox)grandChild).Text == "")
+                    {
+                        isEmpty = true;
+                        break;
+                    }
+                }
+            }
+            return isEmpty;
+        }
+
+        //檢查combobox設定空白
+        private bool CheckComboBoxEmpty()
+        {
+            bool isEmpty = false;
+
+            //先取得StackPanel下的所有UIElement
+            foreach (StackPanel child in CommunicatePanel.Children)
+            {   //沒有選擇時，Combobox的SelectedIndex=-1
+                foreach (UIElement grandChild in child.Children)
+                {
+                    if (grandChild.GetType().ToString().Contains("ComboBox") && ((ComboBox)grandChild).Text == "")
+                    {
+                        isEmpty = true;
+                        break;
+                    }
+                }
+            }
+            foreach (StackPanel child in PropertyColumn1.Children)
+            {
+                foreach (UIElement grandChild in child.Children)
+                {
+                    if (grandChild.GetType().ToString().Contains("ComboBox") && ((ComboBox)grandChild).Text == "")
+                    {
+                        isEmpty = true;
+                        break;
+                    }
+                }
+
+            }
+            foreach (StackPanel child in PropertyColumn2.Children)
+            {
+                foreach (UIElement grandChild in child.Children)
+                {
+                    if (grandChild.GetType().ToString().Contains("ComboBox") && ((ComboBox)grandChild).Text == "")
+                    {
+                        isEmpty = true;
+                        break;
+                    }
+                }
+
+            }
+
+            if (CodePageCom.SelectedIndex == -1 || DIPSwitchCom.SelectedIndex == -1)
+                isEmpty = true;
+
+            return isEmpty;
+        }
+        #endregion
+
+        #region 參數設定的btn開關控制
+        public void isParaSettingBtnEnabled(bool isEnabled)
+        {
+
+            //導入與保存參數tn
+            LoadParaSettingFIleBtn.IsEnabled = isEnabled;
+            WriteParaSettingFIleBtn.IsEnabled = isEnabled;
+
+            //代碼頁btn
+            CodePageSetBtn.IsEnabled = isEnabled;
+            CodePagePrintBtn.IsEnabled = isEnabled;
+
+            //硬/軟體dip開關btn
+            DIPSwitchBtn.IsEnabled = isEnabled;
+
+            //軟體dip設定btn
+            DIPSettingBtn.IsEnabled = isEnabled;
+
+            //全局操作btn
+            foreach (UIElement child in AllSetAndRead.Children)
+            {
+                ((Button)child).IsEnabled = isEnabled;
+            }
+
+            //通讯参数btn
+            foreach (StackPanel child in CommunicatePanel.Children)
+            {
+                foreach (UIElement grandChild in child.Children)
+                {
+                    if (grandChild.GetType().ToString().Contains("Button"))
+                    {
+                        ((Button)grandChild).IsEnabled = isEnabled;
+                    }
+                }
+            }
+
+            //打印机属性设置Column1btn
+            foreach (StackPanel child in PropertyColumn1.Children)
+            {
+                foreach (UIElement grandChild in child.Children)
+                {
+                    if (grandChild.GetType().ToString().Contains("Button"))
+                    {
+                        ((Button)grandChild).IsEnabled = isEnabled;
+                    }
+                }
+
+            }
+
+            //打印机属性设置Column2btn
+            foreach (StackPanel child in PropertyColumn2.Children)
+            {
+                foreach (UIElement grandChild in child.Children)
+                {
+                    if (grandChild.GetType().ToString().Contains("Button"))
+                    {
+                        ((Button)grandChild).IsEnabled = isEnabled;
+                    }
+                }
+
+            }
 
         }
         #endregion
@@ -1101,6 +1264,22 @@ namespace G80Utility
         }
         #endregion
 
+        #region 查詢實時狀態按鈕事件
+        private void StatusMonitorBtn_Click(object sender, RoutedEventArgs e)
+        {
+            string btnName = StatusMonitorBtn.Content.ToString();
+            if (btnName.Contains("启动") || btnName.Contains("開啟"))
+            {
+                startStatusMonitorTimer();
+            }
+            else
+            {
+                stopStatusMonitorTimer();
+            }
+        }
+        #endregion
+
+        //機器序列號(通訊)
         #region 讀取機器序列號(通訊)按鈕事件
         private void ReadSNBtn_Click(object sender, RoutedEventArgs e)
         {
@@ -1111,12 +1290,12 @@ namespace G80Utility
         #region 設置機器序列號(通訊)按鈕事件
         private void SetSNBtn_Click(object sender, RoutedEventArgs e)
         {
-            SetPrinterSN("communication");
+            editSNAuthority("communication");
         }
         #endregion
 
+        //管理員介面
         #region 導入參數按鈕事件
-
         private void LoadParaSettingFIleBtn_Click(object sender, RoutedEventArgs e)
         {
             IFormatter formatter = new BinaryFormatter();
@@ -1127,7 +1306,6 @@ namespace G80Utility
                 //判斷檔案是否為空
                 if (stream.Length != 0)
                 {
-                 
                     ParaSettings parasetting = (ParaSettings)formatter.Deserialize(stream);
                     stream.Close();
                     readParafromFile(parasetting);
@@ -1149,32 +1327,46 @@ namespace G80Utility
         #region 儲存參數按鈕事件
         private void WriteParaSettingFIleBtn_Click(object sender, RoutedEventArgs e)
         {
-            //if (!isTxtEmpty && !isComEmpty) //isFormatok && 
-            //{
-            IFormatter formatter = new BinaryFormatter();
-            //default儲存位置在跟exe檔同目錄夾
-            Stream stream = new FileStream("SettingPara.sp", FileMode.Create, FileAccess.Write, FileShare.None);
-            formatter.Serialize(stream, saveParatoFile());
-            stream.Close();
-            //}
-            //else if (isTxtEmpty || isComEmpty)
-            //{
-            //    MessageBox.Show(FindResource("ColumnEmpty") as string);
-            //}
+            bool isTxtEmpty = CheckTextBoxEmpty();
+            bool isComEmpty = CheckComboBoxEmpty();
+            if (!isTxtEmpty && !isComEmpty) //isFormatok && 
+            {
+                IFormatter formatter = new BinaryFormatter();
+                //default儲存位置在跟exe檔同目錄夾
+                Stream stream = new FileStream("SettingPara.sp", FileMode.Create, FileAccess.Write, FileShare.None);
+                formatter.Serialize(stream, saveParatoFile());
+                stream.Close();
+            }
+            else if (isTxtEmpty || isComEmpty)
+            {
+                MessageBox.Show(FindResource("ColumnEmpty") as string);
+            }
         }
         #endregion
 
-        #region 查詢實時狀態按鈕事件
-        private void StatusMonitorBtn_Click(object sender, RoutedEventArgs e)
+        #region 管理員登入按鈕事件
+        private void AdminLoginBtn_Click(object sender, RoutedEventArgs e)
         {
-            string btnName = StatusMonitorBtn.Content.ToString();
-            if (btnName.Contains("启动") || btnName.Contains("開啟"))
+            if (!isLoginAdmin)
             {
-                startStatusMonitorTimer();
-            }
-            else
-            {
-                stopStatusMonitorTimer();
+                var dialog = new Dialog();
+                dialog.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+                dialog.Owner = this;
+                dialog.DiaglogLabel.Content = FindResource("EnterAdminPwd") as string;
+                if (dialog.ShowDialog() == true)
+                {
+                    if (dialog.PwdText == Config.ADMIN_PWD)
+                    {
+                        IdleAndLogoutTimerStart();
+                        isLoginAdmin = true;
+                        MessageBox.Show(FindResource("LoginSuccess") as string);
+                        isParaSettingBtnEnabled(true);
+                    }
+                    else
+                    {
+                        MessageBox.Show(FindResource("PwdError") as string);
+                    }
+                }
             }
         }
         #endregion
@@ -1248,7 +1440,6 @@ namespace G80Utility
         #endregion
 
         //參數設置按鈕
-
         #region 讀取所有參數設定按鈕事件
         private void ReadAllBtn_Click(object sender, RoutedEventArgs e)
         {
@@ -1770,7 +1961,7 @@ namespace G80Utility
         #region 設置機器序列號(工廠)按鈕事件
         private void SetPrinterSNFacBtn_Click(object sender, RoutedEventArgs e)
         {
-            SetPrinterSN("factory");
+            editSNAuthority("factory");
         }
         #endregion
 
@@ -1992,7 +2183,39 @@ namespace G80Utility
         }
         #endregion
 
+        //============================判斷sn設定權限======================
+
+        public void editSNAuthority(string btnPosition)
+        {
+            if (isLoginSN)
+            {
+                SetPrinterSN(btnPosition);
+            }
+            else
+            {
+                var dialog = new Dialog();
+                dialog.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+                dialog.Owner = this;
+                dialog.DiaglogLabel.Content = FindResource("EnterSnPwd") as string;
+                if (dialog.ShowDialog() == true)
+                {
+                    if (dialog.PwdText == Config.EDIT_SN_PWD)
+                    {
+                        isLoginSN = true;
+                        MessageBox.Show(FindResource("LoginSuccess") as string);
+                        SetPrinterSN(btnPosition);
+                    }
+                    else
+                    {
+                        MessageBox.Show(FindResource("PwdError") as string);
+                    }
+
+                }
+            }
+        }
+
         //============================儲存和寫入參數檔====================
+
         #region 儲存參數至檔案
         private ParaSettings saveParatoFile()
         {
@@ -2111,7 +2334,7 @@ namespace G80Utility
             DIPSwitchCom.SelectedIndex = parasetting.DIPSwitchIndex;
             if (parasetting.CutterCheck == false)
             {
-                 CutterCheckBox.IsChecked = true;
+                CutterCheckBox.IsChecked = true;
             }
             else
             {
@@ -3241,6 +3464,7 @@ namespace G80Utility
         #endregion
 
         //==============================工廠生產功能=============================
+
         #region 打印自檢頁
         private void PrintTest(string printType)
         {
@@ -3446,7 +3670,54 @@ namespace G80Utility
         }
         #endregion
 
-        //===============================實時狀態timer功能===========================
+        //===============================定時登出timer功能========================
+
+        private void IdleAndLogoutTimerStart()
+        {
+            if (idleTimer.IsEnabled) {
+                idleTimer.Stop();
+            }
+            idleTimer.Interval = TimeSpan.FromSeconds(10); //每10秒檢查一次閒置狀態
+           
+            // 加入callback function
+            idleTimer.Tick += idle_timer_tick;
+
+            idleTimer.Start();
+        }
+
+        private void idle_timer_tick(object sender, EventArgs e)
+        {        
+            //TimeSpan? 代表TimeSpan可為null
+            //app閒置時間,可判斷app非在前景的時間
+            TimeSpan? appIdle = lostFocusTime == null ? null : (TimeSpan?)DateTime.Now.Subtract((DateTime)lostFocusTime);
+
+            //系統閒置時間,可判斷開啟視窗完全沒有移動滑鼠或使用鍵盤的狀態
+            TimeSpan machineIdle = IdleCheck.GetLastInputTime();
+       
+            //設定閒置多少時間要登出
+            TimeSpan idleTimeSpan = new TimeSpan(0, 10, 0); //設定閒置時間為10分鐘
+
+            //app在前景且滑鼠或鍵盤無使用超過設定之閒置時間
+            bool isMachineIdle = machineIdle > idleTimeSpan;
+
+            //app在背景超過設定之閒置時間
+            bool isAppIdle = appIdle != null && appIdle > idleTimeSpan; 
+            
+            if (isAppIdle || isMachineIdle) 
+            {
+                if (idleTimer.IsEnabled)
+                {
+                    idleTimer.Stop();
+                }
+                isLoginAdmin = false;
+                MessageBox.Show(FindResource("Logout") as string);
+                isParaSettingBtnEnabled(false);
+
+            }
+
+        }
+
+        //===============================實時狀態timer功能========================
 
         #region 啟動實時狀態查詢
         private void startStatusMonitorTimer()
@@ -3481,7 +3752,7 @@ namespace G80Utility
         }
         #endregion
 
-        //===============================實時狀態timer功能===========================
+        //=========================定時發送命令timer功能===========================
 
         #region 啟動定時發送命令
         private void startSendCmdTimer(int intervel)
@@ -3738,67 +4009,68 @@ namespace G80Utility
                     switch (dataType)
                     {
                         case "ReadPara":
-                        //bool isReceiveData = RS232Connect.SerialPortSendCMD("NeedReceive", data, null, receiveLength);
-                        //while (!isReceiveData)
-                        //{
-                        //    if (RS232Connect.mRecevieData != null)
-                        //    {
-                        //        setParaColumn(RS232Connect.mRecevieData);
-                        //        break;
-                        //    }
-                        //}
-                        //break;
+                            bool isReceiveData = USBConnect.USBSendCMD("NeedReceive", data, null, receiveLength);
+                            while (!isReceiveData)
+                            {
+                                if (USBConnect.mRecevieData != null)
+                                {
+                                    setParaColumn(USBConnect.mRecevieData);
+                                    break;
+                                }
+                            }
+                            break;
                         case "ReadSN":
-                            //bool isReceiveSN = RS232Connect.SerialPortSendCMD("NeedReceive", data, null, receiveLength);
-                            //while (!isReceiveSN)
-                            //{
-                            //    if (RS232Connect.mRecevieData != null)
-                            //    {
-                            //        SetPrinterInfo(RS232Connect.mRecevieData);
-                            //        break;
-                            //    }
-                            //}
+                            bool isReceiveSN = USBConnect.USBSendCMD("NeedReceive", data, null, receiveLength);
+
+                            while (!isReceiveSN)
+                            {
+                                if (USBConnect.mRecevieData != null)
+                                {
+                                    SetPrinterInfo(USBConnect.mRecevieData);
+                                    break;
+                                }
+                            }
                             break;
                         case "ReadPrinterInfo": //打印機統計信息
-                            //bool isReceivePI = RS232Connect.SerialPortSendCMD("NeedReceive", data, null, receiveLength);
-                            //while (!isReceivePI)
-                            //{
-                            //    if (RS232Connect.mRecevieData != null)
-                            //    {
-                            //        setPrinterInfotoUI(RS232Connect.mRecevieData);
-                            //        break;
-                            //    }
-                            //}
+                            bool isReceivePI = USBConnect.USBSendCMD("NeedReceive", data, null, receiveLength);
+                            while (!isReceivePI)
+                            {
+                                if (USBConnect.mRecevieData != null)
+                                {
+                                    setPrinterInfotoUI(USBConnect.mRecevieData);
+                                    break;
+                                }
+                            }
                             break;
                         case "ReadStatus": //打印機溫度電壓等狀態
-                                           //    bool isReceiveStatus = RS232Connect.SerialPortSendCMD("NeedReceive", data, null, receiveLength);
-                                           //    while (!isReceiveStatus)
-                                           //    {
-                                           //        if (RS232Connect.mRecevieData != null)
-                                           //        {
-                                           //            setPrinterStatus(RS232Connect.mRecevieData);
-                                           //            break;
-                                           //        }
-                                           //    }
+                            bool isReceiveStatus = USBConnect.USBSendCMD("NeedReceive", data, null, receiveLength);
+                            while (!isReceiveStatus)
+                            {
+                                if (USBConnect.mRecevieData != null)
+                                {
+                                    setPrinterStatus(USBConnect.mRecevieData);
+                                    break;
+                                }
+                            }
                             break;
                         case "ReadNowStatus":
-                            //bool isReceiveNowStatus = RS232Connect.SerialPortSendCMD("NeedReceive", data, null, receiveLength);
-                            //while (!isReceiveNowStatus)
-                            //{
-                            //    if (RS232Connect.mRecevieData != null)
-                            //    {
-                            //switch (QueryNowStatusPosition)
-                            //{
-                            //    case "bottom":
-                            //        showPrinteNowStatus(RS232Connect.mRecevieData, StatusMonitorLabel);
-                            //        break;
-                            //    case "maintain":
-                            //        showPrinteNowStatus(RS232Connect.mRecevieData, PrinterStatusText);
-                            //        break;
-                            //}
-                            //        break;
-                            //    }
-                            //}
+                            bool isReceiveNowStatus = USBConnect.USBSendCMD("NeedReceive", data, null, receiveLength);
+                            while (!isReceiveNowStatus)
+                            {
+                                if (USBConnect.mRecevieData != null)
+                                {
+                                    switch (QueryNowStatusPosition)
+                                    {
+                                        case "bottom":
+                                            showPrinteNowStatus(USBConnect.mRecevieData, StatusMonitorLabel);
+                                            break;
+                                        case "maintain":
+                                            showPrinteNowStatus(USBConnect.mRecevieData, PrinterStatusText);
+                                            break;
+                                    }
+                                    break;
+                                }
+                            }
                             break;
                         case "CommunicationTest": //通訊測試
                             USBConnect.USBSendCMD("NeedReceive", data, null, receiveLength);
@@ -3904,7 +4176,7 @@ namespace G80Utility
                         }
                         break;
                     case "CommunicationTest": //通訊測試
-                        EthernetConnect.EthernetSendCmd("NeedReceive", data, FindResource("GNSettingComplete") as string, receiveLength);
+                        EthernetConnect.EthernetSendCmd("NeedReceive", data, null, receiveLength);
                         //EthernetConnect.disconnect();
                         break;
                     case "BeepOrSetting":

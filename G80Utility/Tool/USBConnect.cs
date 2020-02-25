@@ -96,7 +96,7 @@ namespace G80Utility.Tool
             {
 
                 case "NeedReceive":
-
+                    
                     Task.Factory.StartNew(() =>
                     {
                         USBReceiveData(recevieLength);
@@ -133,7 +133,7 @@ namespace G80Utility.Tool
                 Console.WriteLine("原始資料" + BitConverter.ToString(buffer));
                 if (!re && Marshal.GetLastWin32Error() == ERROR_IO_PENDING)
                 {
-                    waitResutl = Kernel32.WaitForSingleObject(overlap.hEvent, 2000);
+                    waitResutl = Kernel32.WaitForSingleObject(overlap.hEvent, 3000);
 
                     if (waitResutl == 258 || waitResutl == 4294967295)
                     {
@@ -167,60 +167,7 @@ namespace G80Utility.Tool
         }
         #endregion
 
-        //接收設定回復結果
-        public static void ReceiveSettingResult(string msg)
-        {
-            byte[] buffer = new byte[7];
-            uint dwRead = 0;
-            Kernel32.OVERLAPPED overlap = new Kernel32.OVERLAPPED();
-            overlap.Offset = 0;
-            overlap.OffsetHigh = 0;
-            overlap.hEvent = Kernel32.CreateEvent(IntPtr.Zero, 0, 0, null);
-            long wait = 0;
-            bool re = Kernel32.ReadFile((IntPtr)USBHandle, buffer, 7, ref dwRead, ref overlap);
-
-            if (!re && Marshal.GetLastWin32Error() == ERROR_IO_PENDING)
-            {
-                wait = Kernel32.WaitForSingleObject(overlap.hEvent, 2000);
-                Console.WriteLine("wait2:" + wait);
-                if (wait == 258 || wait == 4294967295)
-                {
-                    isTimeout = true;
-                    isSettingOK = true;
-                    //Write0D0A2Times(); //目前設定2個 
-                    closeHandle();
-                }
-                else
-                {
-                    Kernel32.GetOverlappedResult((IntPtr)USBHandle, ref overlap, ref dwRead, true);
-                    Console.WriteLine("readWRITE..." + dwRead);
-
-                }
-            }
-            closeHandle();
-
-            string ReceiveResult = Encoding.Default.GetString(buffer);
-            Console.WriteLine("寫入結果" + Encoding.Default.GetString(buffer));
-            if (dwRead == 7 && ReceiveResult.Contains("OK"))
-            {
-                MessageBox.Show(msg);
-            }
-            //for wifi setting
-            else if (ReceiveResult.Contains("15") || ReceiveResult.Contains("3"))
-            {
-                WifiSettingResult = "wifisetOK";
-            }
-            else if (ReceiveResult.Contains("1") && !ReceiveResult.Contains("15"))
-            {
-                WifiSettingResult = "wifiresetOK";
-            }
-            else
-            {
-                WifiSettingResult = "wifisetFail";
-            }
-            isSettingOK = true;
-        }
-
+   
         #region 收取多餘資料
         public static void USBreceiveExtraData()
         {

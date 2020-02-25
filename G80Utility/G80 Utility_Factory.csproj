@@ -106,6 +106,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Dialog.xaml.cs">
+      <DependentUpon>Dialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Models\Device.cs" />
     <Compile Include="Models\ParaSettings.cs" />
     <Compile Include="Themes\LeftMarginMultiplierConverter.cs" />
@@ -115,6 +118,7 @@
     <Compile Include="Tool\Command.cs" />
     <Compile Include="Tool\Config.cs" />
     <Compile Include="Tool\EthernetConnect.cs" />
+    <Compile Include="Tool\IdleCheck .cs" />
     <Compile Include="Tool\Kernel32.cs" />
     <Compile Include="Tool\RS232Connect.cs" />
     <Compile Include="Tool\USBConnect.cs" />
@@ -124,6 +128,10 @@
     <Compile Include="G80MainWindow.xaml.cs">
       <DependentUpon>G80MainWindow.xaml</DependentUpon>
     </Compile>
+    <Page Include="Dialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Language\zh-CN.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -193,6 +201,9 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\ic_error.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

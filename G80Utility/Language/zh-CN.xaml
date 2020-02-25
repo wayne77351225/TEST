@@ -60,6 +60,16 @@
     <sys:String x:Key="PrintLogo">打印Logo</sys:String>
     <sys:String x:Key="ClearLogo">清除Logo</sys:String>
 
+    <!--***************************************************************權限登入**************************************************************************-->
+    <sys:String x:Key="EnterAdminPwd">请输入管理员密码</sys:String>
+    <sys:String x:Key="PwdTitle">登入</sys:String>
+    <sys:String x:Key="ok">确定</sys:String>
+    <sys:String x:Key="cancel">取消</sys:String>
+    <sys:String x:Key="EnterSnPwd">请输入序列号设定密码</sys:String>
+    <sys:String x:Key="LoginSuccess">登入成功</sys:String>
+    <sys:String x:Key="PwdError">密码错误</sys:String>
+    <sys:String x:Key="Logout">登出</sys:String>
+
     <!--*******************************************************Tab & Expander Header*********************************************************************-->
 
     <!--Expander Header-Printer Configuration-->
@@ -283,6 +293,7 @@
     <sys:String x:Key="GalleryEmpty">图片集空白</sys:String>
     <sys:String x:Key="PrintPieceEmpty">未输入打印张数</sys:String>
     <sys:String x:Key="HexStringError">16进制数据错误</sys:String>
+
     <!--button-->
     <sys:String x:Key="Load">读取</sys:String>
     <sys:String x:Key="Set">设定</sys:String>

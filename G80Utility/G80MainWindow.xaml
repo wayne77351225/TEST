@@ -40,8 +40,8 @@
                             </StackPanel>
                             <ComboBox Margin="10,0,10,0" FontSize="14" Width="120" Height="30" Name="DeviceSelectUSB"
                                 ItemsSource="{Binding USBDevice}"
-                             DisplayMemberPath="DisplayName"
-                                      SelectionChanged="DeviceSelectUSB_SelectionChanged"
+                                DisplayMemberPath="DisplayName"
+                                SelectionChanged="DeviceSelectUSB_SelectionChanged"
                             />
                         </StackPanel>
                         <!--乙太網-->
@@ -69,7 +69,7 @@
                         <Label Content="GP80250   V1.0：2020-01-10 " Margin="5,3,0,0" Name="PrinterModule" />
                         <StackPanel Orientation="Horizontal">
                             <Button  Margin="5" Name="ReadSNBtn" Click="ReadSNBtn_Click"  Content="读取信息" Padding="5" FontSize="14" Width="100"/>
-                            <Button  Margin="5" Name="SetSNBtn" Click="SetSNBtn_Click"  Content="设置序列号" Padding="5" FontSize="14" Width="100"/>
+                            <Button  Margin="5" Name="SetSNBtn" Click="SetSNBtn_Click" Content="设置序列号" Padding="5" FontSize="14" Width="100"/>
                         </StackPanel>
                     </StackPanel>
                 </GroupBox>
@@ -91,7 +91,7 @@
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
                             <Button  Margin="10,5,5,5" Name="WriteParaSettingFIleBtn" Click="WriteParaSettingFIleBtn_Click" Content="保存参数" Padding="5" FontSize="14" Width="85"/>
-                            <Button  Margin="5,5,10,5" IsEnabled="False" Content="登录管理员" Padding="5" FontSize="14" Width="85"/>
+                            <Button  Margin="5,5,10,5" Name="AdminLoginBtn" Click="AdminLoginBtn_Click" Content="登录管理员" Padding="5" FontSize="14" Width="85"/>
                         </StackPanel>
                     </StackPanel>
                 </GroupBox>
@@ -164,14 +164,14 @@
                             <TextBlock Text="勾选后才会下载参数到打印机中" Margin="0,5,0,5" Foreground="#99ef71" FontSize="14" HorizontalAlignment="Center" />
                             <!--全局操作-->
                             <GroupBox Header="全局操作" Margin="5,0,0,5" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14" >
-                                <StackPanel HorizontalAlignment="Center" Orientation="Horizontal"  Margin="5">
+                                <StackPanel Name="AllSetAndRead" HorizontalAlignment="Center" Orientation="Horizontal"  Margin="5">
                                     <Button  Margin="0,0,10,0" Content="读取参数" Name="ReadAllBtn" Click="ReadAllBtn_Click" Padding="10,5,10,5" Width="120"/>
                                     <Button  Margin="0,0,0,0" Content="设置参数" Name="WriteAllBtn" Click="WriteAllBtn_Click" Padding="10,5,10,5" Width="120"/>
                                 </StackPanel>
                             </GroupBox>
                             <!--通讯参数设置-->
                             <GroupBox Header="通讯参数设置" Margin="5,0,0,0" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14" Width="270">
-                                <StackPanel Margin="3,5,5,5">
+                                <StackPanel Margin="3,5,5,5" Name="CommunicatePanel">
                                     <StackPanel  Margin="0,0,0,6" Orientation="Horizontal">
                                         <TextBox  Margin="0,0,5,0" Name="SetIPText" Width="117" Height="26"  Foreground="#BDBDBD"/>
                                         <Button  Margin="0,0,5,0" Name="SetIPBtn" Click="SetIPBtn_Click" Content="设置IP地址" Padding="10,5,10,5" Width="110"/>
@@ -266,7 +266,7 @@
                                     </StackPanel>
                                 </GroupBox>
                                 <!--column1-->
-                                <StackPanel Grid.Row="1" Grid.RowSpan="2" Margin="10,10,5,0" >
+                                <StackPanel Grid.Row="1" Grid.RowSpan="2" Margin="10,10,5,0"  Name="PropertyColumn1" >
                                     <StackPanel  Margin="0,0,0,10" Orientation="Horizontal">
                                         <ComboBox  Margin="0,0,5,0" Name="LanguageSetCom" Width="100" Height="26" Foreground="#BDBDBD">
                                             <ComboBoxItem>简体GB18030</ComboBoxItem>
@@ -342,7 +342,7 @@
 
                                 </StackPanel>
                                 <!--column2-->
-                                <StackPanel Grid.Column="1" Grid.Row="1" Margin="10,10,0,0">
+                                <StackPanel Grid.Column="1" Grid.Row="1" Margin="10,10,0,0"  Name="PropertyColumn2">
                                     <StackPanel  Margin="0,0,0,10" Orientation="Horizontal">
                                         <ComboBox  Margin="0,0,5,0" Width="100" Height="26" Name="DensityCom" Foreground="#BDBDBD"/>
                                         <Button  Margin="0,0,5,0" Content="浓度调节" Name="DensityBtn" Click="DensityBtn_Click" Padding="10,5,10,5" Width="125" />
@@ -406,7 +406,7 @@
                                     </StackPanel>
                                 </StackPanel>
                                 <!--column3-->
-                                <StackPanel  Grid.Column="2" Grid.RowSpan="2">
+                                <StackPanel  Grid.Column="2" Grid.RowSpan="2"  >
                                     <StackPanel  Margin="0,18,0,3" Orientation="Horizontal">
                                         <ComboBox  Margin="0,0,5,0" Name="DIPSwitchCom" Width="100" Height="26" Foreground="#BDBDBD">
                                             <ComboBoxItem>不使用硬件DIP</ComboBoxItem>
@@ -435,7 +435,6 @@
                                         </StackPanel>
                                     </GroupBox>
                                 </StackPanel>
-
                             </Grid>
                         </GroupBox>
 
@@ -689,7 +688,7 @@
                                         <Label Content="GP80250   V1.0：2020-01-10 " Margin="5,3,0,0" Name="PrinterModuleFac" />
                                         <StackPanel Orientation="Horizontal">
                                             <Button  Margin="5" Name="RoadPrinterSNFacBtn" Click="RoadPrinterSNFacBtn_Click" Content="读取信息" Padding="5" FontSize="14" Width="100"/>
-                                            <Button  Margin="5" Name="SetPrinterSNFacBtn" Click="SetPrinterSNFacBtn_Click" Content="设置序列号" Padding="5" FontSize="14" Width="100"/>
+                                            <Button  Margin="5" Name="SetPrinterSNFacBtn"  Click="SetPrinterSNFacBtn_Click" Content="设置序列号" Padding="5" FontSize="14" Width="100"/>
                                         </StackPanel>
                                     </StackPanel>
                                 </GroupBox>

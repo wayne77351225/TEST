@@ -60,6 +60,16 @@
     <sys:String x:Key="SelectLogoAndDonwald">下載Logo</sys:String>
     <sys:String x:Key="PrintLogo">列印Logo</sys:String>
     <sys:String x:Key="ClearLogo">清除Logo</sys:String>
+    
+    <!--***************************************************************權限登入**************************************************************************-->
+    <sys:String x:Key="EnterAdminPwd">請輸入管理員密碼</sys:String>
+    <sys:String x:Key="PwdTitle">登入</sys:String>
+    <sys:String x:Key="ok">確定</sys:String>
+    <sys:String x:Key="cancel">取消</sys:String>
+    <sys:String x:Key="EnterSnPwd">請輸入序號設定密碼</sys:String>
+    <sys:String x:Key="LoginSuccess">登入成功</sys:String>
+    <sys:String x:Key="PwdError">密碼錯誤</sys:String>
+    <sys:String x:Key="Logout">登出</sys:String>
 
     <!--*******************************************************Tab & Expander Header*********************************************************************-->
     <!--right side TabItem-->
@@ -280,7 +290,7 @@
     <sys:String x:Key="GalleryEmpty">圖片集空白</sys:String>
     <sys:String x:Key="PrintPieceEmpty">未輸入打印張數</sys:String>
     <sys:String x:Key="HexStringError">16進位資料錯誤</sys:String>
-    
+
     <!--button-->
     <sys:String x:Key="Load">讀取</sys:String>
     <sys:String x:Key="Set">設定</sys:String>

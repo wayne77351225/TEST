@@ -52,7 +52,9 @@ namespace G80Utility.Tool
         public static bool isCMDQRCodeChecked;
         public static bool isCMDGeneralChecked;
         public static bool isCMDPageChecked;
-      
 
+        //for authority
+        public static string ADMIN_PWD = "shjbzfkj123";
+        public static string EDIT_SN_PWD = "szxlh123";
     }
 }
