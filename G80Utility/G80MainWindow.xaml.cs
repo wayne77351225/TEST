@@ -8,9 +8,12 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
+using System.IO;
 using System.IO.Ports;
 using System.Linq;
 using System.Net;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Timers;
@@ -1061,24 +1064,6 @@ namespace G80Utility
 
         #endregion
 
-        //========================參數設定的讀取與寫入=================
-
-        #region 讀取所有參數設定
-        private void ReadAllBtn_Click(object sender, RoutedEventArgs e)
-        {
-            IsParaSettingChecked();
-            readALL();
-        }
-        #endregion
-
-        #region 寫入所有參數設定
-        private void WriteAllBtn_Click(object sender, RoutedEventArgs e)
-        {
-            IsParaSettingChecked();
-            sendALL();
-        }
-        #endregion
-
         //========================Btn點擊事件===========================
 
         //通訊介面與實時查詢按鈕
@@ -1127,6 +1112,55 @@ namespace G80Utility
         private void SetSNBtn_Click(object sender, RoutedEventArgs e)
         {
             SetPrinterSN("communication");
+        }
+        #endregion
+
+        #region 導入參數按鈕事件
+
+        private void LoadParaSettingFIleBtn_Click(object sender, RoutedEventArgs e)
+        {
+            IFormatter formatter = new BinaryFormatter();
+            //default讀取位置在跟exe檔同目錄夾
+            try
+            {
+                Stream stream = new FileStream("SettingPara.sp", FileMode.Open, FileAccess.Read, FileShare.Read);
+                //判斷檔案是否為空
+                if (stream.Length != 0)
+                {
+                 
+                    ParaSettings parasetting = (ParaSettings)formatter.Deserialize(stream);
+                    stream.Close();
+                    readParafromFile(parasetting);
+                }
+                else
+                {
+                    MessageBox.Show(FindResource("GNSettingEmpty") as string);
+
+                }
+
+            }
+            catch (FileNotFoundException)
+            {
+                MessageBox.Show(FindResource("NotFoundSettingFile") as string);
+            }
+        }
+        #endregion
+
+        #region 儲存參數按鈕事件
+        private void WriteParaSettingFIleBtn_Click(object sender, RoutedEventArgs e)
+        {
+            //if (!isTxtEmpty && !isComEmpty) //isFormatok && 
+            //{
+            IFormatter formatter = new BinaryFormatter();
+            //default儲存位置在跟exe檔同目錄夾
+            Stream stream = new FileStream("SettingPara.sp", FileMode.Create, FileAccess.Write, FileShare.None);
+            formatter.Serialize(stream, saveParatoFile());
+            stream.Close();
+            //}
+            //else if (isTxtEmpty || isComEmpty)
+            //{
+            //    MessageBox.Show(FindResource("ColumnEmpty") as string);
+            //}
         }
         #endregion
 
@@ -1214,6 +1248,23 @@ namespace G80Utility
         #endregion
 
         //參數設置按鈕
+
+        #region 讀取所有參數設定按鈕事件
+        private void ReadAllBtn_Click(object sender, RoutedEventArgs e)
+        {
+            IsParaSettingChecked();
+            readALL();
+        }
+        #endregion
+
+        #region 寫入所有參數設定按鈕事件
+        private void WriteAllBtn_Click(object sender, RoutedEventArgs e)
+        {
+            IsParaSettingChecked();
+            sendALL();
+        }
+        #endregion
+
         #region 設定IP Address按鈕事件
         private void SetIPBtn_Click(object sender, RoutedEventArgs e)
         {
@@ -1929,7 +1980,7 @@ namespace G80Utility
             if (openDlgResult == true)
             {
                 filepath = openFileDlg.FileName;
-              
+
             }
         }
         #endregion
@@ -1941,29 +1992,175 @@ namespace G80Utility
         }
         #endregion
 
-        //=========================數據傳輸發送命令功能===================
-        public void SendCmd()
+        //============================儲存和寫入參數檔====================
+        #region 儲存參數至檔案
+        private ParaSettings saveParatoFile()
         {
-            String dataString = CmdContentTxt.Text;
-            if (CmdContentTxt.Text == "")
+            ParaSettings parasetting = new ParaSettings();
+            parasetting.IpAddress = SetIPText.Text;
+            parasetting.Gateway = SetGatewayText.Text;
+            parasetting.MacAddress = SetMACText.Text;
+            parasetting.AutoDisconnectIndex = AutoDisconnectCom.SelectedIndex;
+            parasetting.ConnectClientIndex = ConnectClientCom.SelectedIndex;
+            parasetting.EthernetSpeedIndex = EthernetSpeedCom.SelectedIndex;
+            parasetting.DHCPModeIndex = DHCPModeCom.SelectedIndex;
+            parasetting.USBModeIndex = USBModeCom.SelectedIndex;
+            parasetting.USBFixedIndex = USBFixedCom.SelectedIndex;
+            parasetting.CodePageSetIndex = CodePageCom.SelectedIndex;
+            parasetting.LanguageSetIndex = LanguageSetCom.SelectedIndex;
+            parasetting.FontBSettingtIndex = FontBSettingCom.SelectedIndex;
+            parasetting.CustomziedFontIndex = CustomziedFontCom.SelectedIndex;
+            parasetting.SetDirectionIndex = DirectionCombox.SelectedIndex;
+            parasetting.MotorAccControlIndex = MotorAccControlCom.SelectedIndex;
+            parasetting.AccMotorIndex = AccMotorCom.SelectedIndex;
+            parasetting.PrintSpeedIndex = PrintSpeedCom.SelectedIndex;
+            parasetting.DensityModeIndex = DensityModeCom.SelectedIndex;
+            parasetting.DensityIndex = DensityCom.SelectedIndex;
+            parasetting.PaperOutReprintIndex = PaperOutReprintCom.SelectedIndex;
+            parasetting.PaperWidthIndex = PaperWidthCom.SelectedIndex;
+            parasetting.HeadCloseCutIndex = HeadCloseCutCom.SelectedIndex;
+            parasetting.YOffsetIndex = YOffsetCom.SelectedIndex;
+            parasetting.MACShowIndex = MACShowCom.SelectedIndex;
+            parasetting.QRCodeIndex = QRCodeCom.SelectedIndex;
+            parasetting.LogoPrintControlIndex = LogoPrintControlCom.SelectedIndex;
+            parasetting.DIPSwitchIndex = DIPSwitchCom.SelectedIndex;
+            if (CutterCheckBox.IsChecked == true)
             {
-                CmdContentTxt.Text= dataString = FindResource("DefaultText") as string;
-            }
-
-            byte[] sendArray = null;
-            if (HexModeCheckbox.IsChecked == true)
-            {
-                if (StringToByteArray(dataString) == null) return;//hex string中包含錯誤返回
-                sendArray = StringToByteArray(dataString);
+                parasetting.CutterCheck = false;
             }
             else
             {
-                Encoding result = convertEncoding();
-                sendArray = result.GetBytes(dataString);
+                parasetting.CutterCheck = true;
             }
-            SendCmd(sendArray, "BeepOrSetting", 0);
+            if (BeepCheckBox.IsChecked == true)
+            {
+                parasetting.BeepCheck = false;
+            }
+            else
+            {
+                parasetting.BeepCheck = true;
+            }
+            if (DensityCheckBox.IsChecked == true)
+            {
+                parasetting.DensityCheck = false;
+            }
+            else
+            {
+                parasetting.DensityCheck = true;
+            }
+            if (ChineseForbiddenCheckBox.IsChecked == true)
+            {
+                parasetting.ChineseForbiddenCheck = false;
+            }
+            else
+            {
+                parasetting.ChineseForbiddenCheck = true;
+            }
+            if (CharNumberCheckBox.IsChecked == true)
+            {
+                parasetting.CharNumberCheck = false;
+            }
+            else
+            {
+                parasetting.CharNumberCheck = true;
+            }
+            if (CashboxCheckBox.IsChecked == true)
+            {
+                parasetting.CashboxCheck = false;
+            }
+            else
+            {
+                parasetting.CashboxCheck = true;
+            }
 
+            parasetting.DIPBaudRateComIndex = DIPBaudRateCom.SelectedIndex;
+
+            return parasetting;
         }
+        #endregion
+
+        #region 從檔案讀取參數
+        private void readParafromFile(ParaSettings parasetting)
+        {
+            SetIPText.Text = parasetting.IpAddress;
+            SetGatewayText.Text = parasetting.Gateway;
+            SetMACText.Text = parasetting.MacAddress;
+            AutoDisconnectCom.SelectedIndex = parasetting.AutoDisconnectIndex;
+            ConnectClientCom.SelectedIndex = parasetting.ConnectClientIndex;
+            EthernetSpeedCom.SelectedIndex = parasetting.EthernetSpeedIndex;
+            DHCPModeCom.SelectedIndex = parasetting.DHCPModeIndex;
+            USBModeCom.SelectedIndex = parasetting.USBModeIndex;
+            USBFixedCom.SelectedIndex = parasetting.USBFixedIndex;
+            CodePageCom.SelectedIndex = parasetting.CodePageSetIndex;
+            LanguageSetCom.SelectedIndex = parasetting.LanguageSetIndex;
+            FontBSettingCom.SelectedIndex = parasetting.FontBSettingtIndex;
+            CustomziedFontCom.SelectedIndex = parasetting.CustomziedFontIndex;
+            DirectionCombox.SelectedIndex = parasetting.SetDirectionIndex;
+            MotorAccControlCom.SelectedIndex = parasetting.MotorAccControlIndex;
+            AccMotorCom.SelectedIndex = parasetting.AccMotorIndex;
+            PrintSpeedCom.SelectedIndex = parasetting.PrintSpeedIndex;
+            DensityModeCom.SelectedIndex = parasetting.DensityModeIndex;
+            DensityCom.SelectedIndex = parasetting.DensityIndex;
+            PaperOutReprintCom.SelectedIndex = parasetting.PaperOutReprintIndex;
+            PaperWidthCom.SelectedIndex = parasetting.PaperWidthIndex;
+            HeadCloseCutCom.SelectedIndex = parasetting.HeadCloseCutIndex;
+            YOffsetCom.SelectedIndex = parasetting.YOffsetIndex;
+            MACShowCom.SelectedIndex = parasetting.MACShowIndex;
+            QRCodeCom.SelectedIndex = parasetting.QRCodeIndex;
+            LogoPrintControlCom.SelectedIndex = parasetting.LogoPrintControlIndex;
+            DIPSwitchCom.SelectedIndex = parasetting.DIPSwitchIndex;
+            if (parasetting.CutterCheck == false)
+            {
+                 CutterCheckBox.IsChecked = true;
+            }
+            else
+            {
+                CutterCheckBox.IsChecked = false;
+            }
+            if (parasetting.BeepCheck == false)
+            {
+                BeepCheckBox.IsChecked = true;
+            }
+            else
+            {
+                BeepCheckBox.IsChecked = false;
+            }
+            if (parasetting.DensityCheck == false)
+            {
+                DensityCheckBox.IsChecked = true;
+            }
+            else
+            {
+                DensityCheckBox.IsChecked = false;
+            }
+            if (parasetting.ChineseForbiddenCheck == false)
+            {
+                ChineseForbiddenCheckBox.IsChecked = true;
+            }
+            else
+            {
+                ChineseForbiddenCheckBox.IsChecked = false;
+            }
+            if (parasetting.CharNumberCheck == false)
+            {
+                CharNumberCheckBox.IsChecked = true;
+            }
+            else
+            {
+                CharNumberCheckBox.IsChecked = false;
+            }
+            if (parasetting.CashboxCheck == false)
+            {
+                CashboxCheckBox.IsChecked = true;
+            }
+            else
+            {
+                CashboxCheckBox.IsChecked = false;
+            }
+            DIPBaudRateCom.SelectedIndex = parasetting.DIPBaudRateComIndex;
+        }
+        #endregion
+
         //========================參數設置每個寫入命令功能=================
 
         #region 設定IP Address
@@ -2088,6 +2285,7 @@ namespace G80Utility
                 {
                     sendArray = StringToByteArray(Command.CONNECT_CLIENT_2_SETTING);
                 }
+
                 SendCmd(sendArray, "BeepOrSetting", 0);
             }
             else { MessageBox.Show(FindResource("ColumnEmpty") as string); }
@@ -2108,6 +2306,7 @@ namespace G80Utility
                 {
                     sendArray = StringToByteArray(Command.ETHERNET_SPEED_SETTING_100MHZ);
                 }
+
                 SendCmd(sendArray, "BeepOrSetting", 0);
             }
             else { MessageBox.Show(FindResource("ColumnEmpty") as string); }
@@ -2436,6 +2635,7 @@ namespace G80Utility
                         sendArray = StringToByteArray(Command.DENSITY_SETTING_HEADER + "08");
                         break;
                 }
+
                 SendCmd(sendArray, "BeepOrSetting", 0);
             }
             else { MessageBox.Show(FindResource("ColumnEmpty") as string); }
@@ -2561,6 +2761,7 @@ namespace G80Utility
                 {
                     sendArray = StringToByteArray(Command.QRCODE_ON_SETTING);
                 }
+
                 SendCmd(sendArray, "BeepOrSetting", 0);
             }
             else { MessageBox.Show(FindResource("ColumnEmpty") as string); }
@@ -2623,7 +2824,6 @@ namespace G80Utility
             {
                 dipArray.Set(0, true);
             }
-
             if (BeepCheckBox.IsChecked == true)
             {
                 dipArray.Set(1, false);
@@ -2664,7 +2864,6 @@ namespace G80Utility
             {
                 dipArray.Set(5, true);
             }
-
             switch (DIPBaudRateCom.SelectedIndex)
             {
                 case 0: //19200 00取反11
@@ -3016,6 +3215,7 @@ namespace G80Utility
         #endregion
 
         //=============================維護維修功能=============================
+
         #region 讀取打印機所有統計信息
         private void PrinterInfoRead()
         {
@@ -3296,7 +3496,7 @@ namespace G80Utility
 
         #region timer的ui處理
         private void timer_Send(object sender, ElapsedEventArgs e)
-        {          
+        {
             Dispatcher.BeginInvoke(new Action(() =>
             {
                 SendCmd();
@@ -3346,6 +3546,31 @@ namespace G80Utility
             return (string)lastSN;
         }
         #endregion
+
+        //============================數據傳輸發送命令功能==========================
+
+        public void SendCmd()
+        {
+            String dataString = CmdContentTxt.Text;
+            if (CmdContentTxt.Text == "")
+            {
+                CmdContentTxt.Text = dataString = FindResource("DefaultText") as string;
+            }
+
+            byte[] sendArray = null;
+            if (HexModeCheckbox.IsChecked == true)
+            {
+                if (StringToByteArray(dataString) == null) return;//hex string中包含錯誤返回
+                sendArray = StringToByteArray(dataString);
+            }
+            else
+            {
+                Encoding result = convertEncoding();
+                sendArray = result.GetBytes(dataString);
+            }
+            SendCmd(sendArray, "BeepOrSetting", 0);
+
+        }
 
         //========================RS232的設定/傳送與接收===========================
 

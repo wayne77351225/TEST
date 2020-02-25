@@ -86,11 +86,11 @@
                             </ComboBox>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
-                            <Button  Margin="10,5,5,5" IsEnabled="False" Content="导入参数" Padding="5" FontSize="14" Width="85"/>
-                            <Button  Margin="5" Content="重启打印机" Padding="5" FontSize="14" Width="85" Name="Restart" Click="Restart_Click"/>
+                            <Button  Margin="10,5,5,5" Name="LoadParaSettingFIleBtn" Click="LoadParaSettingFIleBtn_Click" Content="导入参数" Padding="5" FontSize="14" Width="85"/>
+                            <Button  Margin="5"  Content="重启打印机" Padding="5" FontSize="14" Width="85" Name="Restart" Click="Restart_Click"/>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
-                            <Button  Margin="10,5,5,5" IsEnabled="False" Content="保存参数" Padding="5" FontSize="14" Width="85"/>
+                            <Button  Margin="10,5,5,5" Name="WriteParaSettingFIleBtn" Click="WriteParaSettingFIleBtn_Click" Content="保存参数" Padding="5" FontSize="14" Width="85"/>
                             <Button  Margin="5,5,10,5" IsEnabled="False" Content="登录管理员" Padding="5" FontSize="14" Width="85"/>
                         </StackPanel>
                     </StackPanel>
