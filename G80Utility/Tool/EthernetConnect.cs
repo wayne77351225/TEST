@@ -21,7 +21,7 @@ namespace G80Utility.Tool
         public static string EthernetIPAddress;
         public static bool isReceiveData;
         public static byte[] mRecevieData;
-
+        public static bool connectStatus;
 
         #region socket非同步回撥方法
         private static void CallBackMethod(IAsyncResult asyncresult)
@@ -36,7 +36,7 @@ namespace G80Utility.Tool
         {
             TimeoutObject.Reset();
             int port = 9100;
-            bool isConnect=false;
+            bool isConnect = false;
 
             if (EthernetIPAddress != null)
             {
@@ -45,9 +45,13 @@ namespace G80Utility.Tool
                     IPAddress ip = IPAddress.Parse(EthernetIPAddress);
                     IPEndPoint ipe = new IPEndPoint(ip, port);
                     SocketClient = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                    IAsyncResult ConnectResult=SocketClient.BeginConnect(ipe, CallBackMethod, SocketClient);
-                    bool success = ConnectResult.AsyncWaitHandle.WaitOne(1000, true);
-                    if (success) {
+                    //SocketClient.Connect(ipe);
+                    isConnect = true;
+                    IAsyncResult ConnectResult = SocketClient.BeginConnect(ipe, CallBackMethod, SocketClient);
+                    bool success = ConnectResult.AsyncWaitHandle.WaitOne(3000, true);
+                    Console.WriteLine(SocketClient.Connected);
+                    if (success)
+                    {
                         isConnect = true;
                     }
                     else
@@ -58,7 +62,7 @@ namespace G80Utility.Tool
                         setSysStatusColorAndText(Application.Current.FindResource("ConnectTimeout") as string, "#FFEF7171");
                         disconnect();
                     }
-                   
+
                 }
                 catch (Exception e)
                 {
@@ -81,14 +85,36 @@ namespace G80Utility.Tool
         }
         #endregion
 
+        #region 傳送命令
+        public static bool EthernetConnectStatus()
+        {
+            if (!connectStatus)
+            {
+                connectStatus = connectToPrinter();
+            }
+            return connectStatus;
+        }
+        #endregion
+
         #region 關閉socket連線
         public static void disconnect()
         {
-            if (ThreadClient != null && ThreadClient.IsAlive )
+            if (ThreadClient != null && ThreadClient.IsAlive)
             {
                 ThreadClient.Abort();
             }
-            SocketClient.Close();
+            try
+            {
+                SocketClient.Close();
+                connectStatus = false;
+            }
+            catch (SocketException e)
+            {
+                Console.WriteLine(e.ToString());
+                Console.WriteLine(e.ErrorCode + "");
+
+            }
+
             isReceiveData = true;//如果不設為true前端會一直收資料
         }
         #endregion
@@ -114,6 +140,7 @@ namespace G80Utility.Tool
                         break;
                     case "NoReceive":
                         SocketClient.Send(data);
+                        disconnect(); //寫入命令才關閉socket，避免寫入後打印機回傳其他數值造成同一個socket在接收的時候出現問題
                         break;
                 }
             }
@@ -145,6 +172,8 @@ namespace G80Utility.Tool
                 Console.WriteLine(ex.Message + "\r\n");
                 isReceiveData = true;
             }
+
+
         }
         #endregion
 

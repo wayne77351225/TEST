@@ -1298,7 +1298,7 @@ namespace G80Utility
             if ((bool)USBCheckbox.IsChecked)
             {
                 sendArray = StringToByteArray(Command.USB_COMMUNICATION_TEST);
-                USBConnectAndSendCmd("CommunicationTest", sendArray, 0);
+                USBConnectAndSendCmd("CommunicationTest", sendArray, 8);
             }
             if ((bool)EthernetCheckbox.IsChecked)
             {
@@ -1306,7 +1306,7 @@ namespace G80Utility
                 if (isOK)
                 {
                     sendArray = StringToByteArray(Command.ETHERNET_COMMUNICATION_TEST);
-                    EthernetConnectAndSendCmd("CommunicationTest", sendArray, 0);
+                    EthernetConnectAndSendCmd("CommunicationTest", sendArray, 8); //這邊要收不然收其他資料時會誤收這個測試資料
                 }
             }
         }
@@ -4161,7 +4161,7 @@ namespace G80Utility
 
         private void EthernetConnectAndSendCmd(string dataType, byte[] data, int receiveLength)
         {
-            bool isConnect = EthernetConnect.connectToPrinter();
+            bool isConnect = EthernetConnect.EthernetConnectStatus(); //EthernetConnect.connectToPrinter();
             if (isConnect)
             {
                 switch (dataType)
@@ -4173,7 +4173,7 @@ namespace G80Utility
                             if (EthernetConnect.mRecevieData != null)
                             {
                                 setParaColumn(EthernetConnect.mRecevieData);
-                                EthernetConnect.disconnect();
+                                //EthernetConnect.disconnect();
                                 break;
                             }
                         }
@@ -4185,7 +4185,7 @@ namespace G80Utility
                             if (EthernetConnect.mRecevieData != null)
                             {
                                 SetPrinterInfo(EthernetConnect.mRecevieData);
-                                EthernetConnect.disconnect();
+                                //EthernetConnect.disconnect(); //使用同一個socket避免連線數超過
                                 break;
                             }
                         }
@@ -4197,7 +4197,7 @@ namespace G80Utility
                             if (EthernetConnect.mRecevieData != null)
                             {
                                 setPrinterInfotoUI(EthernetConnect.mRecevieData);
-                                EthernetConnect.disconnect();
+                                //EthernetConnect.disconnect();
                                 break;
                             }
                         }
@@ -4209,7 +4209,7 @@ namespace G80Utility
                             if (EthernetConnect.mRecevieData != null)
                             {
                                 setPrinterStatus(EthernetConnect.mRecevieData);
-                                EthernetConnect.disconnect();
+                                //EthernetConnect.disconnect();
                                 break;
                             }
                         }
@@ -4229,7 +4229,7 @@ namespace G80Utility
                                         showPrinteNowStatus(EthernetConnect.mRecevieData, PrinterStatusText);
                                         break;
                                 }
-                                EthernetConnect.disconnect();
+                                //EthernetConnect.disconnect();
                                 break;
                             }
                         }
@@ -4240,7 +4240,7 @@ namespace G80Utility
                         break;
                     case "BeepOrSetting":
                         EthernetConnect.EthernetSendCmd("NoReceive", data, null, 0);
-                        EthernetConnect.disconnect();
+                        //EthernetConnect.disconnect();
                         break;
                 }
             }

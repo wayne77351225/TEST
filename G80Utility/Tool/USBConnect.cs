@@ -133,7 +133,7 @@ namespace G80Utility.Tool
                 Console.WriteLine("原始資料" + BitConverter.ToString(buffer));
                 if (!re && Marshal.GetLastWin32Error() == ERROR_IO_PENDING)
                 {
-                    //waitResutl = Kernel32.WaitForSingleObject(overlap.hEvent, 3000);
+                    //waitResutl = Kernel32.WaitForSingleObject(overlap.hEvent, 3000); //關閉timeout，連續傳多個命令開啟timout會收不到
 
                     //if (waitResutl == 258 || waitResutl == 4294967295)
                     //{
@@ -166,44 +166,7 @@ namespace G80Utility.Tool
         }
         #endregion
 
-   
-        #region 收取多餘資料
-        public static void USBreceiveExtraData()
-        {
-            //接收数据缓存区：接收到的数据如果比这个小，则按实际数据大小
-            byte[] buffer = new byte[512]; //fb:xxxx(預留12個bytes)
-            uint dwRead = 0;
-            bool re = false;
-            Kernel32.OVERLAPPED overlap = new Kernel32.OVERLAPPED();
-            overlap.Offset = 0;
-            overlap.OffsetHigh = 0;
-            overlap.hEvent = Kernel32.CreateEvent(IntPtr.Zero, 0, 0, null);
-            long waitResutl = 0;
-
-            for (int i = 0; i < receiveTimes; i++)
-            {
-                re = Kernel32.ReadFile((IntPtr)USBHandle, buffer, 512, ref dwRead, ref overlap);
-
-                if (!re && Marshal.GetLastWin32Error() == ERROR_IO_PENDING)
-                {
-                    waitResutl = Kernel32.WaitForSingleObject(overlap.hEvent, 2000);
-
-                    if (waitResutl == 258 || waitResutl == 4294967295)
-                    {
-                        //isTimeout = true;
-
-                        Console.WriteLine("usbtool..." + "timeout");
-                        break;
-                    }
-                    Kernel32.GetOverlappedResult((IntPtr)USBHandle, ref overlap, ref dwRead, true);
-                    //isTimeout = false;
-                }
-            }
-
-            Console.WriteLine(Encoding.Default.GetString(buffer));
-            //Dispatcher.Invoke(DispatcherPriority.Background, new EnableOrDisableBtnDelegate(EnableOrDisableBtn), true);
-        }
-        #endregion
+          
 
         #region 關閉Handle
         public static void closeHandle()
