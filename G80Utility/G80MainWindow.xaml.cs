@@ -62,15 +62,18 @@ namespace G80Utility
 
         //nv logo 放大倍率參數m
         string nvLogo_m_hex;
+
         //nv logo 打印張數參數n，default打印1張
         string nvLogo_n_hex;
+
         //nv logo圖片集檔案路徑
         string[] fileNameArray;
+
         //nv logo 打印下載hex碼
         StringBuilder nvLogo_full_hex = new StringBuilder();
 
         //打印機實時狀態計時器
-       Timer statusMonitorTimer;
+        Timer statusMonitorTimer;
 
         //定時發送命另計時器
         Timer sendCmdTimer;
@@ -104,7 +107,7 @@ namespace G80Utility
 
             //頁面內容產生後註冊usb device plugin notify
             this.ContentRendered += WindowThd_ContentRendered;
-            
+
         }
 
         //window畫面生成事件
@@ -2073,13 +2076,13 @@ namespace G80Utility
             //record last directory
             openFileDialog.RestoreDirectory = true;
             openFileDialog.Multiselect = true;
-
+            nvLogo_full_hex.Clear(); //每次開啟要清空，不然下載時會一直重複
+            nvLogo_full_hex.Append("1C71");
             if ((bool)openFileDialog.ShowDialog())
             {
                 if (fileNameArray == null) //第一次開啟
                 {
                     fileNameArray = openFileDialog.FileNames;
-                    nvLogo_full_hex.Append("1C71");
                 }
                 else
                 { //未清除再開啟
@@ -2205,9 +2208,11 @@ namespace G80Utility
             else
             {
                 nvLogo_n_hex = fileNameArray.Length.ToString("X2");
-                //因為hex碼是兩個string,1c71長度佔去4，index插入要=4
-                nvLogo_full_hex.Insert(4, nvLogo_n_hex);
+                byte[] insertBtye = StringToByteArray(nvLogo_n_hex);
                 byte[] sendArray = StringToByteArray(nvLogo_full_hex.ToString());
+                List<byte> sendList = sendArray.ToList();
+                sendList.Insert(2, insertBtye[0]);
+                sendArray = sendList.ToArray();
                 Console.WriteLine(nvLogo_full_hex.ToString());
                 SendCmd(sendArray, "BeepOrSetting", 0);
             }
@@ -3756,11 +3761,12 @@ namespace G80Utility
         #region 啟動閒置檢查timer
         private void IdleAndLogoutTimerStart()
         {
-            if (idleTimer.IsEnabled) {
+            if (idleTimer.IsEnabled)
+            {
                 idleTimer.Stop();
             }
             idleTimer.Interval = TimeSpan.FromSeconds(10); //每10秒檢查一次閒置狀態
-           
+
             // 加入callback function
             idleTimer.Tick += idle_timer_tick;
 
@@ -3770,14 +3776,14 @@ namespace G80Utility
 
         #region 閒置時間計算並登出
         private void idle_timer_tick(object sender, EventArgs e)
-        {        
+        {
             //TimeSpan? 代表TimeSpan可為null
             //app閒置時間,可判斷app非在前景的時間
             TimeSpan? appIdle = lostFocusTime == null ? null : (TimeSpan?)DateTime.Now.Subtract((DateTime)lostFocusTime);
 
             //系統閒置時間,可判斷開啟視窗完全沒有移動滑鼠或使用鍵盤的狀態
             TimeSpan machineIdle = IdleCheck.GetLastInputTime();
-       
+
             //設定閒置多少時間要登出
             TimeSpan idleTimeSpan = new TimeSpan(0, 10, 0); //設定閒置時間為10分鐘
 
@@ -3785,9 +3791,9 @@ namespace G80Utility
             bool isMachineIdle = machineIdle > idleTimeSpan;
 
             //app在背景超過設定之閒置時間
-            bool isAppIdle = appIdle != null && appIdle > idleTimeSpan; 
-            
-            if (isAppIdle || isMachineIdle) 
+            bool isAppIdle = appIdle != null && appIdle > idleTimeSpan;
+
+            if (isAppIdle || isMachineIdle)
             {
                 if (idleTimer.IsEnabled)
                 {
@@ -4071,7 +4077,7 @@ namespace G80Utility
                             bool isReceiveData = USBConnect.USBSendCMD("NeedReceive", data, null, receiveLength);
                             while (!isReceiveData)
                             {
-                                    if (USBConnect.mRecevieData != null)
+                                if (USBConnect.mRecevieData != null)
                                 {
                                     setParaColumn(USBConnect.mRecevieData);
                                     break;
@@ -4166,7 +4172,7 @@ namespace G80Utility
             {
                 switch (dataType)
                 {
-                    case "ReadPara":                     
+                    case "ReadPara":
                         bool isReceiveData = EthernetConnect.EthernetSendCmd("NeedReceive", data, null, receiveLength);
                         while (!isReceiveData)
                         {

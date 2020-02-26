@@ -85,7 +85,7 @@ namespace G80Utility.Tool
         }
         #endregion
 
-        #region 傳送命令
+        #region 傳送狀態檢查
         public static bool EthernetConnectStatus()
         {
             if (!connectStatus)
