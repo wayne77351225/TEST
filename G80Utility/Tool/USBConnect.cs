@@ -133,37 +133,36 @@ namespace G80Utility.Tool
                 Console.WriteLine("原始資料" + BitConverter.ToString(buffer));
                 if (!re && Marshal.GetLastWin32Error() == ERROR_IO_PENDING)
                 {
-                    waitResutl = Kernel32.WaitForSingleObject(overlap.hEvent, 3000);
+                    //waitResutl = Kernel32.WaitForSingleObject(overlap.hEvent, 3000);
 
-                    if (waitResutl == 258 || waitResutl == 4294967295)
-                    {
-                        Console.WriteLine("data0..." + "timeout");
-                        isTimeout = true;
-                        isReceiveData = true;
-                        break;
-                    }
-
+                    //if (waitResutl == 258 || waitResutl == 4294967295)
+                    //{
+                    //    Console.WriteLine("data0..." + "timeout");
+                    //    isTimeout = true;
+                    //    isReceiveData = true;
+                    //    break;
+                    //}
                     Kernel32.GetOverlappedResult((IntPtr)USBHandle, ref overlap, ref dwRead, true);
                     Console.WriteLine("readgn..." + dwRead);
                 }
-                if (waitResutl == 258 || waitResutl == 4294967295)
-                {
-                    Console.WriteLine("data..." + "timeout");
-                    isTimeout = true;
-                    isReceiveData = true;
-                    break;
-                }
+                //if (waitResutl == 258 || waitResutl == 4294967295)
+                //{
+                //    Console.WriteLine("data..." + "timeout");
+                //    isTimeout = true;
+                //    isReceiveData = true;
+                //    break;
+                //}
                 nReadLen += (int)dwRead;
                 //isTimeout = false;
             }
           
             closeHandle();
 
-            if (dwRead == size)
-            {
+            //if (dwRead == size)
+            //{
                 Console.WriteLine("接收資料" + BitConverter.ToString(buffer));
                 mRecevieData = buffer;
-            }
+            //}
         }
         #endregion
 
