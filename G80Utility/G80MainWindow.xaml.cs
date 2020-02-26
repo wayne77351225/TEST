@@ -16,6 +16,7 @@ using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
@@ -26,6 +27,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using Color = System.Windows.Media.Color;
 using ColorConverter = System.Windows.Media.ColorConverter;
+using Timer = System.Timers.Timer;
 
 namespace G80Utility
 {
@@ -68,7 +70,7 @@ namespace G80Utility
         StringBuilder nvLogo_full_hex = new StringBuilder();
 
         //打印機實時狀態計時器
-        Timer statusMonitorTimer;
+       Timer statusMonitorTimer;
 
         //定時發送命另計時器
         Timer sendCmdTimer;
@@ -105,17 +107,20 @@ namespace G80Utility
             
         }
 
+        //window畫面生成事件
         private void WindowThd_ContentRendered(object sender, EventArgs e)
         {
             registerUSBdetect();
         }
 
+        //app在背景事件
         override protected void OnDeactivated(EventArgs e)
         {
             lostFocusTime = DateTime.Now;
             base.OnDeactivated(e);
         }
 
+        //app在前景事件
         protected override void OnActivated(EventArgs e)
         {
             lostFocusTime = null;
@@ -677,12 +682,11 @@ namespace G80Utility
             //代碼頁btn
             CodePageSetBtn.IsEnabled = isEnabled;
             CodePagePrintBtn.IsEnabled = isEnabled;
+            CodePageCom.IsEnabled = isEnabled;
 
             //硬/軟體dip開關btn
             DIPSwitchBtn.IsEnabled = isEnabled;
-
-            //軟體dip設定btn
-            DIPSettingBtn.IsEnabled = isEnabled;
+            DIPSwitchCom.IsEnabled = isEnabled;
 
             //全局操作btn
             foreach (UIElement child in AllSetAndRead.Children)
@@ -699,10 +703,21 @@ namespace G80Utility
                     {
                         ((Button)grandChild).IsEnabled = isEnabled;
                     }
+
+                    if (grandChild.GetType().ToString().Contains("TextBox"))
+                    {
+                        ((TextBox)grandChild).IsEnabled = isEnabled;
+                    }
+
+
+                    if (grandChild.GetType().ToString().Contains("ComboBox"))
+                    {
+                        ((ComboBox)grandChild).IsEnabled = isEnabled;
+                    }
                 }
             }
 
-            //打印机属性设置Column1btn
+            //打印机属性设置Column1 btn/textbox/combobox
             foreach (StackPanel child in PropertyColumn1.Children)
             {
                 foreach (UIElement grandChild in child.Children)
@@ -711,11 +726,22 @@ namespace G80Utility
                     {
                         ((Button)grandChild).IsEnabled = isEnabled;
                     }
+
+                    if (grandChild.GetType().ToString().Contains("TextBox"))
+                    {
+                        ((TextBox)grandChild).IsEnabled = isEnabled;
+                    }
+
+
+                    if (grandChild.GetType().ToString().Contains("ComboBox"))
+                    {
+                        ((ComboBox)grandChild).IsEnabled = isEnabled;
+                    }
                 }
 
             }
 
-            //打印机属性设置Column2btn
+            //打印机属性设置Column2 btn/textbox/combobox
             foreach (StackPanel child in PropertyColumn2.Children)
             {
                 foreach (UIElement grandChild in child.Children)
@@ -724,8 +750,38 @@ namespace G80Utility
                     {
                         ((Button)grandChild).IsEnabled = isEnabled;
                     }
+
+                    if (grandChild.GetType().ToString().Contains("TextBox"))
+                    {
+                        ((TextBox)grandChild).IsEnabled = isEnabled;
+                    }
+
+
+                    if (grandChild.GetType().ToString().Contains("ComboBox"))
+                    {
+                        ((ComboBox)grandChild).IsEnabled = isEnabled;
+                    }
                 }
 
+            }
+
+            //軟體dip設置
+            foreach (UIElement child in DipSettingStackPanel.Children)
+            {
+
+                if (child.GetType().ToString().Contains("Button"))
+                {
+                    ((Button)child).IsEnabled = isEnabled;
+                }
+
+                if (child.GetType().ToString().Contains("CheckBox"))
+                {
+                    ((CheckBox)child).IsEnabled = isEnabled;
+                }
+                if (child.GetType().ToString().Contains("ComboBox"))
+                {
+                    ((ComboBox)child).IsEnabled = isEnabled;
+                }
             }
 
         }
@@ -2384,6 +2440,31 @@ namespace G80Utility
         }
         #endregion
 
+        //============================數據傳輸發送命令功能==========================
+
+        public void SendCmd()
+        {
+            String dataString = CmdContentTxt.Text;
+            if (CmdContentTxt.Text == "")
+            {
+                CmdContentTxt.Text = dataString = FindResource("DefaultText") as string;
+            }
+
+            byte[] sendArray = null;
+            if (HexModeCheckbox.IsChecked == true)
+            {
+                if (StringToByteArray(dataString) == null) return;//hex string中包含錯誤返回
+                sendArray = StringToByteArray(dataString);
+            }
+            else
+            {
+                Encoding result = convertEncoding();
+                sendArray = result.GetBytes(dataString);
+            }
+            SendCmd(sendArray, "BeepOrSetting", 0);
+
+        }
+
         //========================參數設置每個寫入命令功能=================
 
         #region 設定IP Address
@@ -3672,6 +3753,7 @@ namespace G80Utility
 
         //===============================定時登出timer功能========================
 
+        #region 啟動閒置檢查timer
         private void IdleAndLogoutTimerStart()
         {
             if (idleTimer.IsEnabled) {
@@ -3684,7 +3766,9 @@ namespace G80Utility
 
             idleTimer.Start();
         }
+        #endregion
 
+        #region 閒置時間計算並登出
         private void idle_timer_tick(object sender, EventArgs e)
         {        
             //TimeSpan? 代表TimeSpan可為null
@@ -3716,7 +3800,7 @@ namespace G80Utility
             }
 
         }
-
+        #endregion
         //===============================實時狀態timer功能========================
 
         #region 啟動實時狀態查詢
@@ -3817,31 +3901,6 @@ namespace G80Utility
             return (string)lastSN;
         }
         #endregion
-
-        //============================數據傳輸發送命令功能==========================
-
-        public void SendCmd()
-        {
-            String dataString = CmdContentTxt.Text;
-            if (CmdContentTxt.Text == "")
-            {
-                CmdContentTxt.Text = dataString = FindResource("DefaultText") as string;
-            }
-
-            byte[] sendArray = null;
-            if (HexModeCheckbox.IsChecked == true)
-            {
-                if (StringToByteArray(dataString) == null) return;//hex string中包含錯誤返回
-                sendArray = StringToByteArray(dataString);
-            }
-            else
-            {
-                Encoding result = convertEncoding();
-                sendArray = result.GetBytes(dataString);
-            }
-            SendCmd(sendArray, "BeepOrSetting", 0);
-
-        }
 
         //========================RS232的設定/傳送與接收===========================
 
@@ -4012,7 +4071,7 @@ namespace G80Utility
                             bool isReceiveData = USBConnect.USBSendCMD("NeedReceive", data, null, receiveLength);
                             while (!isReceiveData)
                             {
-                                if (USBConnect.mRecevieData != null)
+                                    if (USBConnect.mRecevieData != null)
                                 {
                                     setParaColumn(USBConnect.mRecevieData);
                                     break;
@@ -4107,7 +4166,7 @@ namespace G80Utility
             {
                 switch (dataType)
                 {
-                    case "ReadPara":
+                    case "ReadPara":                     
                         bool isReceiveData = EthernetConnect.EthernetSendCmd("NeedReceive", data, null, receiveLength);
                         while (!isReceiveData)
                         {
