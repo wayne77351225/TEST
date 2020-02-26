@@ -40,8 +40,9 @@ namespace G80Utility.Tool
                 MessageBox.Show(Application.Current.FindResource("ExceedMaxWidth") as string);
                 return false;
             }
-            FileInfo fi = new FileInfo(filename);
-            if (fi.Length > 8000) { //檔案大小超過
+            //FileInfo fi = new FileInfo(filename);
+            int totalPixs = bmpWidth * bmpHeight;
+            if (totalPixs > 64000) { //大小超過flash下載限制
                 MessageBox.Show(Application.Current.FindResource("ExceedMaxSize") as string);
                 return false;
             }
@@ -49,8 +50,6 @@ namespace G80Utility.Tool
             return true;
         }
         #endregion
-
-       
 
         #region bitmap換算成hex string
         public static string bitmapToHexString(Bitmap bmp)
