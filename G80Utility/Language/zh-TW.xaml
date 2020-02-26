@@ -2,7 +2,7 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                      xmlns:sys="clr-namespace:System;assembly=mscorlib">
     <!--Window Title-->
-    <sys:String x:Key="WindowTitle">G80 Utility Beta v1.1</sys:String>
+    <sys:String x:Key="WindowTitle">G80 Utility Beta v1.2</sys:String>
 
     <!--Top通訊介面-->
     <sys:String x:Key="ConnectionInterface">通訊介面</sys:String>
@@ -284,8 +284,8 @@
     <sys:String x:Key="ErrorFormat">欄位格式錯誤</sys:String>
     <sys:String x:Key="NotSettingEthernetport">連接網口失敗</sys:String>
     <sys:String x:Key="ExceedMaxHeight">圖片長度超過打印範圍(2034)，請縮小後再行下載</sys:String>
-    <sys:String x:Key="ExceedMaxWidth">圖片長度超過打印範圍(640)，請縮小後再行下載</sys:String>
-    <sys:String x:Key="ExceedMaxSize">圖片大小不可超過8KB，請調整後再行下載</sys:String>
+    <sys:String x:Key="ExceedMaxWidth">圖片寬度超過打印範圍(640)，請縮小後再行下載</sys:String>
+    <sys:String x:Key="ExceedMaxSize">圖片尺寸過大，請縮小後再試</sys:String>
     <sys:String x:Key="ExceedMaxNumber">圖片集不可超過255張</sys:String>
     <sys:String x:Key="GalleryEmpty">圖片集空白</sys:String>
     <sys:String x:Key="PrintPieceEmpty">未輸入打印張數</sys:String>
