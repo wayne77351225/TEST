@@ -7,7 +7,7 @@
         xmlns:local="clr-namespace:G80Utility"
         mc:Ignorable="d"
         ResizeMode="CanMinimize"
-        Title="G80 Utility(Factory)" Height="740" Width="1035">
+        Title="{DynamicResource WindowTitle}" Height="740" Width="1035">
     <StackPanel  Background="#333333">
         <!--Top 通訊-->
         <Border Margin="5,10,5,3" >
@@ -417,7 +417,7 @@
                                     </StackPanel>
                                     <!--dip設置-->
                                     <GroupBox  VerticalAlignment="Top" Margin="0,10,0,0" Header="软件 DIP 设置" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14" Height="340" Width="180" HorizontalAlignment="Left">
-                                        <StackPanel>
+                                        <StackPanel Name="DipSettingStackPanel">
                                             <CheckBox Content="切刀" Name="CutterCheckBox" FontSize="14" Padding="5,0,0,0" Margin="10,15,0,0"/>
                                             <CheckBox Content="蜂鸣器"  Name="BeepCheckBox" FontSize="14" Padding="5,0,0,0" Margin="10,10,0,0" />
                                             <CheckBox Content="浓度" Name="DensityCheckBox" FontSize="14" Padding="5,0,0,0" Margin="10,10,0,0" />
