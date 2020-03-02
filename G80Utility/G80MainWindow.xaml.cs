@@ -2458,6 +2458,7 @@ namespace G80Utility
             byte[] sendArray = null;
             if (HexModeCheckbox.IsChecked == true)
             {
+                dataString = dataString.Replace(" ", "");
                 if (StringToByteArray(dataString) == null) return;//hex string中包含錯誤返回
                 sendArray = StringToByteArray(dataString);
             }
@@ -2690,7 +2691,7 @@ namespace G80Utility
             else { MessageBox.Show(FindResource("ColumnEmpty") as string); }
         }
         #endregion
-
+        
         #region 設定代碼頁
         private void CodePageSet()
         {
@@ -3619,6 +3620,9 @@ namespace G80Utility
                 for (int i = 0; i < contiunue; i++)
                 {
                     SendCmd(sendArray, "BeepOrSetting", 0);
+                    if (DeviceType == "Ethernet") {
+                        Thread.Sleep(100);
+                    }
                 }
             }
 
