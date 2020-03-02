@@ -2212,8 +2212,7 @@ namespace G80Utility
                 byte[] sendArray = StringToByteArray(nvLogo_full_hex.ToString());
                 List<byte> sendList = sendArray.ToList();
                 sendList.Insert(2, insertBtye[0]);
-                sendArray = sendList.ToArray();
-                Console.WriteLine(nvLogo_full_hex.ToString());
+                sendArray = sendList.ToArray();                
                 SendCmd(sendArray, "BeepOrSetting", 0);
             }
         }

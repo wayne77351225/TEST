@@ -13,8 +13,8 @@ namespace G80Utility.Tool
         #region 取得bitmap的xL/xH/yL/yH HexString
         public static string getBmpHighandLowHex(int bmpWidth, int bmpHeight)
         {
-            int widthDot = bmpWidth / 8;
-            int heightDot = bmpHeight / 8;
+            int widthDot =( bmpWidth + 7) / 8;
+            int heightDot = (bmpHeight + 7) / 8;
             byte[] data = new byte[4];
             data[0] = (byte)(widthDot & 0xFF);
             data[1] = (byte)((widthDot >> 8) & 0xff);
