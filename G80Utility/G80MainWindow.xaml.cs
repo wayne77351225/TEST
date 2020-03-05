@@ -2546,7 +2546,6 @@ namespace G80Utility
             {
                 CmdContentTxt.Text = dataString = FindResource("DefaultText") as string;
             }
-
             byte[] sendArray = null;
             if (HexModeCheckbox.IsChecked == true)
             {
@@ -2559,7 +2558,43 @@ namespace G80Utility
                 Encoding result = convertEncoding();
                 sendArray = result.GetBytes(dataString);
             }
-            SendCmd(sendArray, "BeepOrSetting", 0);
+            
+
+            switch (DeviceType)
+            {
+                case "RS232":
+                    if (isRS232Connected)
+                    {
+                        SendCmd(sendArray, "BeepOrSetting", 0);
+                    }
+                    else
+                    {
+                        stopSendCmdTimer();
+                    }
+                    break;
+                case "USB":
+                    if (isUSBConnected)
+                    {
+                        SendCmd(sendArray, "BeepOrSetting", 0);
+                    }
+                    else
+                    {
+                        stopSendCmdTimer();
+                    }
+                    break;
+                case "Ethernet":
+                    if (isEthernetConnected)
+                    {
+                        SendCmd(sendArray, "BeepOrSetting", 0);
+                    }
+                    else
+                    {
+                        stopSendCmdTimer();
+                    }
+                    break;
+            }
+          
+    
 
         }
 
