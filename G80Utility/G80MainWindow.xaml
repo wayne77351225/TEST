@@ -18,7 +18,7 @@
                         <!--RS232-->
                         <StackPanel>
                             <StackPanel  Margin="10" Orientation="Horizontal">
-                                <RadioButton FontSize="14" Name="RS232Radio" GroupName="connection" Content="{DynamicResource RS232}" VerticalAlignment="Center" Margin="0,0,5,0"   Checked="ConnectType_SelectionChanged" />
+                                <RadioButton FontSize="14" Name="RS232Radio" GroupName="connection" IsChecked="False" Content="{DynamicResource RS232}" VerticalAlignment="Center" Margin="0,0,5,0"   Checked="ConnectType_SelectionChanged" />
                                 <Image Margin="35,0,0,0" Source="Images/grey_circle.png" Width="12" Name="RS232ConnectImage"/>
                             </StackPanel>
                             <ComboBox Margin="10,0,10,0"  FontSize="14" Width="100" Height="30" Name="DeviceSelectRS232"
@@ -50,7 +50,7 @@
                                 <RadioButton FontSize="14" Name="EhernetRadio" GroupName="connection" Content="{DynamicResource Ethernet}" VerticalAlignment="Center"  Checked="ConnectType_SelectionChanged"/>
                                 <Image  Margin="52,0,0,0"   Source="Images/grey_circle.png" Width="12" Name="EthernetConnectImage"/>
                             </StackPanel>
-                            <TextBox Margin="10,0,10,0" Name="EhternetIPTxt" LostFocus="EhternetIPTxt_LostFocus"  FontSize="14"  Height="30"  Width="110" Foreground="#BDBDBD" Padding="5"/>
+                            <TextBox Margin="10,0,10,0" Name="EhternetIPTxt"   FontSize="14"  Height="30"  Width="110" Foreground="#BDBDBD" Padding="5"/>
                         </StackPanel>
                         <!--通訊測試-->
                         <StackPanel Margin="10,0,10,0" VerticalAlignment="Center">
