@@ -5041,16 +5041,16 @@ namespace G80Utility
         {
             switch (language.SelectedIndex)
             {
+                //case 0:
+                //    LoadLanguage("zh-TW");
+                //    break;
                 case 0:
-                    LoadLanguage("zh-TW");
-                    break;
-                case 1:
                     LoadLanguage("zh-CN");
                     break;
-                case 2:
-                    LoadLanguage("en-US");
+                //case 2:
+                //    LoadLanguage("en-US");
 
-                    break;
+                //    break;
             }
         }
         //load language resource
@@ -5088,8 +5088,6 @@ namespace G80Utility
                     }
                 }
                 this.Resources.MergedDictionaries.Add(langRd); //把抓取到的語系資源檔加入
-
-
             }
         }
         #endregion
@@ -5103,15 +5101,15 @@ namespace G80Utility
             Console.WriteLine(lan);
             switch (lan)
             {
-                case "zh-TW":
+                //case "zh-TW":
+                //    language.SelectedIndex = 0;
+                //    break;
+                case "zh-CN":
                     language.SelectedIndex = 0;
                     break;
-                case "zh-CN":
-                    language.SelectedIndex = 1;
-                    break;
-                case "en-US":
-                    language.SelectedIndex = 2;
-                    break;
+                //case "en-US":
+                //    language.SelectedIndex = 2;
+                //    break;
             }
 
         }

@@ -80,9 +80,9 @@
                         <StackPanel Orientation="Horizontal" Margin="7,10,5,10" HorizontalAlignment="Center">
                             <Label Padding="0" FontSize="14" Content="{DynamicResource SelectLanguage}" VerticalAlignment="Center"/>
                             <ComboBox  FontSize="14" Padding="8,8,0,0" Width="100" Height="30" Background="#424242" SelectionChanged="Language_SelectionChanged" Name="language" >
-                                <ComboBoxItem  Content="{DynamicResource zhTW}" />
+                                <!--<ComboBoxItem  Content="{DynamicResource zhTW}" />-->
                                 <ComboBoxItem  Content="{DynamicResource zhCN}" />
-                                <ComboBoxItem  Content="{DynamicResource enUS}" />
+                                <!--<ComboBoxItem  Content="{DynamicResource enUS}" />-->
                             </ComboBox>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
