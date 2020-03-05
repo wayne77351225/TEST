@@ -93,10 +93,27 @@ namespace G80Utility.Tool
                         ThreadClient = new Thread(EthernetReceive);
                         ThreadClient.IsBackground = true;
                         ThreadClient.Start();
-                        SocketClient.Send(data);
+                        try
+                        {
+                            SocketClient.Send(data);
+                        }
+                        catch (Exception) //被主機中只連線時
+                        {
+                            connectStatus = 2;
+                            isReceiveData = true;
+                        }
+
                         break;
                     case "NoReceive":
-                        SocketClient.Send(data);
+                        try
+                        {
+                            SocketClient.Send(data);
+                        }
+                        catch (Exception) { //被主機中只連線時
+                            connectStatus = 2;
+                            isReceiveData = true;
+                        }
+                        
                         // disconnect(); //寫入命令才關閉socket，避免寫入後打印機回傳其他數值造成同一個socket在接收的時候出現問題
                         break;
                 }
