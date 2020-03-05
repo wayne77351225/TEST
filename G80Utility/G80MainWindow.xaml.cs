@@ -117,6 +117,8 @@ namespace G80Utility
             //頁面內容產生後註冊usb device plugin notify
             this.ContentRendered += WindowThd_ContentRendered;
 
+            this.Closing += Window_Closing;
+
         }
 
         //window畫面生成事件
@@ -124,6 +126,15 @@ namespace G80Utility
         {
             registerUSBdetect();
             isOpenWindow = false;
+        }
+
+        //window視窗關閉事件
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            SaveLastIP();
+            e.Cancel = false;
+
+
         }
 
         //app在背景事件
@@ -151,8 +162,8 @@ namespace G80Utility
             DataContext = viewmodel;
 
             //BaudRate預設
-            BaudRateCom.SelectedIndex = 2;
-            App.Current.Properties["BaudRateSetting"] = 38400;
+            BaudRateCom.SelectedIndex = 3;
+            App.Current.Properties["BaudRateSetting"] = 115200;
 
             //default 為選取RS232
             this.RS232Radio.IsChecked = true;
@@ -174,6 +185,9 @@ namespace G80Utility
 
             //通訊測試沒有過不能使用
             isTabEnabled(false);
+
+            //讀取最後一次紀錄ip
+            LoadLastIP();
         }
         #endregion
 
@@ -442,6 +456,55 @@ namespace G80Utility
             else
             {
                 Config.isDIPSwitchChecked = false;
+            }
+        }
+        #endregion
+
+        #region 判斷參數設定的核取框狀態並做設定
+        private void SelectAllorClearAll(bool now, bool changeTo)
+        {
+
+            //先取得StackPanel下的所有UIElement
+            foreach (StackPanel child in CommunicatePanel.Children)
+            {   //沒有選擇時，Combobox的SelectedIndex=-1
+                foreach (UIElement grandChild in child.Children)
+                {
+                    if (grandChild.GetType().ToString().Contains("CheckBox") && ((CheckBox)grandChild).IsChecked == now)
+                    {
+                        ((CheckBox)grandChild).IsChecked = changeTo;
+                    }
+                }
+            }
+            foreach (StackPanel child in PropertyColumn1.Children)
+            {
+                foreach (UIElement grandChild in child.Children)
+                {
+                    if (grandChild.GetType().ToString().Contains("CheckBox") && ((CheckBox)grandChild).IsChecked == now)
+                    {
+                        ((CheckBox)grandChild).IsChecked = changeTo;
+                    }
+                }
+
+            }
+            foreach (StackPanel child in PropertyColumn2.Children)
+            {
+                foreach (UIElement grandChild in child.Children)
+                {
+                    if (grandChild.GetType().ToString().Contains("CheckBox") && ((CheckBox)grandChild).IsChecked == now)
+                    {
+                        ((CheckBox)grandChild).IsChecked = changeTo;
+                    }
+                }
+
+            }
+            if (CodePageSetCheckbox.IsChecked == now)
+            {
+                CodePageSetCheckbox.IsChecked = changeTo;
+            }
+
+            if (DIPSwitchCheckbox.IsChecked == now)
+            {
+                DIPSwitchCheckbox.IsChecked = changeTo;
             }
         }
         #endregion
@@ -1573,6 +1636,20 @@ namespace G80Utility
         }
         #endregion
 
+        #region 全選與清除按鈕事件
+        //全選
+        private void SelectBtn_Click(object sender, RoutedEventArgs e)
+        {
+            SelectAllorClearAll(false, true);
+        }
+
+        //清除全選
+        private void ClearAllBtn_Click(object sender, RoutedEventArgs e)
+        {
+            SelectAllorClearAll(true, false);
+        }
+        #endregion
+
         #region 設定IP Address按鈕事件
         private void SetIPBtn_Click(object sender, RoutedEventArgs e)
         {
@@ -2301,7 +2378,24 @@ namespace G80Utility
         }
         #endregion
 
+        //========================紀錄和讀取最後一次設定IP=================
+        #region 紀錄最後一次輸入IP
+        public void SaveLastIP() {
+            string IP = EhternetIPTxt.Text;
+            //建立註冊機碼目錄
+            createSNRegistry();
+            setIPRegistry(IP);
+        }
+        #endregion
 
+        #region 讀取最後一次輸入IP
+        public void LoadLastIP()
+        {
+            string IP = getIPRegistry();
+            EhternetIPTxt.Text= IP;
+
+        }
+        #endregion
         //============================判斷sn設定權限======================
 
         public void editSNAuthority(string btnPosition)
@@ -4042,6 +4136,23 @@ namespace G80Utility
         }
         #endregion
 
+        #region 註冊機碼IP的寫入
+        private void setIPRegistry(string IP)
+        {
+            RegistryKey registryKey = Registry.LocalMachine.CreateSubKey(@"SOFTWARE\ZLPPT"); //修改也要使用create不能用open
+            registryKey.SetValue("IP", IP);
+        }
+        #endregion
+
+        #region 註冊機碼IP的讀取
+        private string getIPRegistry()
+        {
+            var lastIP = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\ZLPPT").GetValue("IP");
+
+            return (string)lastIP;
+        }
+        #endregion
+
         //==========================通訊介面連線狀態檢查====================
 
         #region RS232通訊測試
@@ -5113,6 +5224,8 @@ namespace G80Utility
             }
 
         }
+
+
         #endregion
 
 

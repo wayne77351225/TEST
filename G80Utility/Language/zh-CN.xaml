@@ -304,4 +304,8 @@
     <sys:String x:Key="Load">读取</sys:String>
     <sys:String x:Key="Set">设定</sys:String>
     <sys:String x:Key="Cancel">取消</sys:String>
+    <sys:String x:Key="SelectAll">全选</sys:String>
+    <sys:String x:Key="ClearAll">清除</sys:String>
+
+
 </ResourceDictionary>

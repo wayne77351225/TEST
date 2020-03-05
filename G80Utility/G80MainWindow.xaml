@@ -165,8 +165,10 @@
                             <!--全局操作-->
                             <GroupBox Header="全局操作" Margin="5,0,0,5" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14" >
                                 <StackPanel Name="AllSetAndRead" HorizontalAlignment="Center" Orientation="Horizontal"  Margin="5">
-                                    <Button  Margin="0,0,10,0" Content="读取参数" Name="ReadAllBtn" Click="ReadAllBtn_Click" Padding="10,5,10,5" Width="120"/>
-                                    <Button  Margin="0,0,0,0" Content="设置参数" Name="WriteAllBtn" Click="WriteAllBtn_Click" Padding="10,5,10,5" Width="120"/>
+                                    <Button  Margin="0,0,10,0" Content="{DynamicResource SelectAll}" Name="SelectBtn" Click="SelectBtn_Click" Padding="10,5,10,5" Width="50"/>
+                                    <Button  Margin="0,0,10,0" Content="{DynamicResource ClearAll}" Name="ClearAllBtn" Click="ClearAllBtn_Click" Padding="10,5,10,5" Width="50"/>
+                                    <Button  Margin="0,0,10,0" Content="读取" Name="ReadAllBtn" Click="ReadAllBtn_Click" Padding="10,5,10,5" Width="60"/>
+                                    <Button  Margin="0,0,0,0" Content="设置" Name="WriteAllBtn" Click="WriteAllBtn_Click" Padding="10,5,10,5" Width="60"/>
                                 </StackPanel>
                             </GroupBox>
                             <!--通讯参数设置-->
@@ -188,7 +190,7 @@
                                         <CheckBox VerticalAlignment="Center" IsChecked="True" Name="SetMACCheckbox"/>
                                     </StackPanel>
                                     <StackPanel  Margin="0,0,0,6" Orientation="Horizontal">
-                                        <ComboBox  Margin="0,0,5,0" Width="117" Name="AutoDisconnectCom" Height="26" Foreground="#BDBDBD">
+                                        <ComboBox  Margin="0,0,5,0" Width="117" SelectedIndex="0" Name="AutoDisconnectCom" Height="26" Foreground="#BDBDBD">
                                             <ComboBoxItem>无</ComboBoxItem>
                                             <ComboBoxItem>1分钟</ComboBoxItem>
                                             <ComboBoxItem>2分钟</ComboBoxItem>
@@ -200,7 +202,7 @@
                                         <CheckBox VerticalAlignment="Center" IsChecked="True" Name="AutoDisconnectheckbox"/>
                                     </StackPanel>
                                     <StackPanel  Margin="0,0,0,6" Orientation="Horizontal">
-                                        <ComboBox  Margin="0,0,5,0" Name="ConnectClientCom" Width="117" Height="26" Foreground="#BDBDBD">
+                                        <ComboBox  Margin="0,0,5,0" SelectedIndex="0"  Name="ConnectClientCom" Width="117" Height="26" Foreground="#BDBDBD">
                                             <ComboBoxItem>1个</ComboBoxItem>
                                             <ComboBoxItem>2个</ComboBoxItem>
                                         </ComboBox>
@@ -208,7 +210,7 @@
                                         <CheckBox VerticalAlignment="Center" IsChecked="True" Name="ConnectClientbox"/>
                                     </StackPanel>
                                     <StackPanel  Margin="0,0,0,6" Orientation="Horizontal">
-                                        <ComboBox  Margin="0,0,5,0" Name="EthernetSpeedCom" Width="117" Height="26" Foreground="#BDBDBD">
+                                        <ComboBox  Margin="0,0,5,0" SelectedIndex="1"  Name="EthernetSpeedCom" Width="117" Height="26" Foreground="#BDBDBD">
                                             <ComboBoxItem>10Base</ComboBoxItem>
                                             <ComboBoxItem>10Base/100Base</ComboBoxItem>
                                         </ComboBox>
@@ -216,7 +218,7 @@
                                         <CheckBox VerticalAlignment="Center" IsChecked="True"  Name="EthernetSpeedCheckbox"/>
                                     </StackPanel>
                                     <StackPanel  Margin="0,0,0,6" Orientation="Horizontal">
-                                        <ComboBox Name="DHCPModeCom"  Margin="0,0,5,0" Width="117" Height="26" Foreground="#BDBDBD">
+                                        <ComboBox Name="DHCPModeCom" SelectedIndex="0"   Margin="0,0,5,0" Width="117" Height="26" Foreground="#BDBDBD">
                                             <ComboBoxItem>静态DHCP</ComboBoxItem>
                                             <ComboBoxItem>模式1</ComboBoxItem>
                                             <ComboBoxItem>模式2</ComboBoxItem>
@@ -226,7 +228,7 @@
                                         <CheckBox VerticalAlignment="Center" IsChecked="True" Name="DHCPModeCheckbox"/>
                                     </StackPanel>
                                     <StackPanel  Margin="0,0,0,6" Orientation="Horizontal">
-                                        <ComboBox Name="USBModeCom" Margin="0,0,5,0" Width="117" Height="26" Foreground="#BDBDBD">
+                                        <ComboBox Name="USBModeCom" SelectedIndex="1"  Margin="0,0,5,0" Width="117" Height="26" Foreground="#BDBDBD">
                                             <ComboBoxItem>VCOM</ComboBoxItem>
                                             <ComboBoxItem>UTP</ComboBoxItem>
                                         </ComboBox>
@@ -234,7 +236,7 @@
                                         <CheckBox VerticalAlignment="Center" IsChecked="True" Name="USBModeCheckbox"/>
                                     </StackPanel>
                                     <StackPanel  Margin="0,0,0,0" Orientation="Horizontal">
-                                        <ComboBox  Name="USBFixedCom" Margin="0,0,5,0" Width="117" Height="26" Text="IP Address" Foreground="#BDBDBD">
+                                        <ComboBox  Name="USBFixedCom" SelectedIndex="1"  Margin="0,0,5,0" Width="117" Height="26" Text="IP Address" Foreground="#BDBDBD">
                                             <ComboBoxItem>不固定</ComboBoxItem>
                                             <ComboBoxItem>固定</ComboBoxItem>
                                         </ComboBox>
@@ -259,7 +261,7 @@
                                 <!--代碼頁-->
                                 <GroupBox  Margin="10,5,0,10" Grid.ColumnSpan="2" Height="65"  Width="485" Header="代码页" VerticalAlignment="Center" HorizontalAlignment="Left" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14" >
                                     <StackPanel  Margin="10,0,0,0" Orientation="Horizontal">
-                                        <ComboBox  Margin="0,0,10,0" Name="CodePageCom" Width="130" Height="28" Text="IP Address" Foreground="#BDBDBD"/>
+                                        <ComboBox  Margin="0,0,10,0" SelectedIndex="0"  Name="CodePageCom" Width="130" Height="28" Text="IP Address" Foreground="#BDBDBD"/>
                                         <Button  Margin="0,0,10,0" Name="CodePageSetBtn" Click="CodePageSetBtn_Click" Content="设置代码页" Padding="10,5,10,5" Width="130" Height="28"/>
                                         <Button  Margin="0,0,10,0" Name="CodePagePrintBtn" Click="CodePagePrintBtn_Click"  Content="打印代码页" Padding="10,5,10,5" Width="130" Height="28"/>
                                         <CheckBox VerticalAlignment="Center" IsChecked="True" Name="CodePageSetCheckbox"/>
@@ -268,7 +270,7 @@
                                 <!--column1-->
                                 <StackPanel Grid.Row="1" Grid.RowSpan="2" Margin="10,10,5,0"  Name="PropertyColumn1" >
                                     <StackPanel  Margin="0,0,0,10" Orientation="Horizontal">
-                                        <ComboBox  Margin="0,0,5,0" Name="LanguageSetCom" Width="100" Height="26" Foreground="#BDBDBD">
+                                        <ComboBox SelectedIndex="0"  Margin="0,0,5,0" Name="LanguageSetCom" Width="100" Height="26" Foreground="#BDBDBD">
                                             <ComboBoxItem>简体GB18030</ComboBoxItem>
                                             <ComboBoxItem>繁体BIG5</ComboBoxItem>
                                             <ComboBoxItem>韩文</ComboBoxItem>
@@ -280,7 +282,7 @@
                                         <CheckBox VerticalAlignment="Center" IsChecked="True" Name="LanguageSetCheckbox"/>
                                     </StackPanel>
                                     <StackPanel  Margin="0,0,0,10" Orientation="Horizontal">
-                                        <ComboBox  Margin="0,0,5,0" Width="100" Height="26" Name="FontBSettingCom" Foreground="#BDBDBD">
+                                        <ComboBox  Margin="0,0,5,0" SelectedIndex="1"  Width="100" Height="26" Name="FontBSettingCom" Foreground="#BDBDBD">
                                             <ComboBoxItem>不支持</ComboBoxItem>
                                             <ComboBoxItem>支持</ComboBoxItem>
                                         </ComboBox>
@@ -288,7 +290,7 @@
                                         <CheckBox VerticalAlignment="Center" IsChecked="True" Name="FontBSettingCheckbox" />
                                     </StackPanel>
                                     <StackPanel  Margin="0,0,0,10" Orientation="Horizontal">
-                                        <ComboBox  Margin="0,0,5,0" Name="CustomziedFontCom" Width="100" Height="26" Foreground="#BDBDBD">
+                                        <ComboBox  Margin="0,0,5,0" SelectedIndex="1"  Name="CustomziedFontCom" Width="100" Height="26" Foreground="#BDBDBD">
                                             <ComboBoxItem>关闭</ComboBoxItem>
                                             <ComboBoxItem>启用</ComboBoxItem>
                                         </ComboBox>
@@ -296,7 +298,7 @@
                                         <CheckBox VerticalAlignment="Center" IsChecked="True" Name="CustomziedFontCheckbox" />
                                     </StackPanel>
                                     <StackPanel  Margin="0,0,0,10" Orientation="Horizontal">
-                                        <ComboBox  Margin="0,0,5,0" Width="100" Height="26"  Foreground="#BDBDBD" Name="DirectionCombox">
+                                        <ComboBox  Margin="0,0,5,0" SelectedIndex="1"  Width="100" Height="26"  Foreground="#BDBDBD" Name="DirectionCombox">
                                             <ComboBoxItem>80250N</ComboBoxItem>
                                             <ComboBoxItem>H80250</ComboBoxItem>
                                         </ComboBox>
@@ -304,7 +306,7 @@
                                         <CheckBox VerticalAlignment="Center" IsChecked="True" Name="DirectionCheckbox"/>
                                     </StackPanel>
                                     <StackPanel  Margin="0,0,0,10" Orientation="Horizontal">
-                                        <ComboBox  Margin="0,0,5,0" Name="MotorAccControlCom" Width="100" Height="26"  Foreground="#BDBDBD">
+                                        <ComboBox  Margin="0,0,5,0" SelectedIndex="0"  Name="MotorAccControlCom" Width="100" Height="26"  Foreground="#BDBDBD">
                                             <ComboBoxItem>关闭</ComboBoxItem>
                                             <ComboBoxItem>开启</ComboBoxItem>
                                         </ComboBox>
@@ -312,7 +314,7 @@
                                         <CheckBox VerticalAlignment="Center" IsChecked="True" Name="MotorAccControlCheckbox"/>
                                     </StackPanel>
                                     <StackPanel  Margin="0,0,0,10" Orientation="Horizontal">
-                                        <ComboBox  Margin="0,0,5,0" Width="100" Height="26" Name="AccMotorCom" Foreground="#BDBDBD">
+                                        <ComboBox  Margin="0,0,5,0" SelectedIndex="0"  Width="100" Height="26" Name="AccMotorCom" Foreground="#BDBDBD">
                                             <ComboBoxItem>1.0</ComboBoxItem>
                                             <ComboBoxItem>0.8</ComboBoxItem>
                                             <ComboBoxItem>0.6</ComboBoxItem>
@@ -323,7 +325,7 @@
                                         <CheckBox VerticalAlignment="Center" IsChecked="True"  Name="AccMotorCheckbox"/>
                                     </StackPanel>
                                     <StackPanel  Margin="0,0,0,10" Orientation="Horizontal">
-                                        <ComboBox  Margin="0,0,5,0" Name="PrintSpeedCom" Width="100" Height="26"  Foreground="#BDBDBD">
+                                        <ComboBox  Margin="0,0,5,0" SelectedIndex="1"  Name="PrintSpeedCom" Width="100" Height="26"  Foreground="#BDBDBD">
                                             <ComboBoxItem>200mm/s</ComboBoxItem>
                                             <ComboBoxItem>250mm/s</ComboBoxItem>
                                             <ComboBoxItem>300mm/s</ComboBoxItem>
@@ -332,7 +334,7 @@
                                         <CheckBox VerticalAlignment="Center" IsChecked="True" Name="PrintSpeedCheckbox"/>
                                     </StackPanel>
                                     <StackPanel  Margin="0,0,0,10" Orientation="Horizontal">
-                                        <ComboBox  Margin="0,0,5,0" Name="DensityModeCom" Width="100" Height="26" Foreground="#BDBDBD">
+                                        <ComboBox  Margin="0,0,5,0" SelectedIndex="1"  Name="DensityModeCom" Width="100" Height="26" Foreground="#BDBDBD">
                                             <ComboBoxItem>低</ComboBoxItem>
                                             <ComboBoxItem>高</ComboBoxItem>
                                         </ComboBox>
@@ -344,12 +346,12 @@
                                 <!--column2-->
                                 <StackPanel Grid.Column="1" Grid.Row="1" Margin="10,10,0,0"  Name="PropertyColumn2">
                                     <StackPanel  Margin="0,0,0,10" Orientation="Horizontal">
-                                        <ComboBox  Margin="0,0,5,0" Width="100" Height="26" Name="DensityCom" Foreground="#BDBDBD"/>
+                                        <ComboBox  Margin="0,0,5,0" SelectedIndex="6"  Width="100" Height="26" Name="DensityCom" Foreground="#BDBDBD"/>
                                         <Button  Margin="0,0,5,0" Content="浓度调节" Name="DensityBtn" Click="DensityBtn_Click" Padding="10,5,10,5" Width="125" />
                                         <CheckBox VerticalAlignment="Center" IsChecked="True" Name="DensityCheckbox"/>
                                     </StackPanel>
                                     <StackPanel  Margin="0,0,0,10" Orientation="Horizontal">
-                                        <ComboBox  Margin="0,0,5,0" Name="PaperOutReprintCom" Width="100" Height="26" Foreground="#BDBDBD">
+                                        <ComboBox  Margin="0,0,5,0" SelectedIndex="1"  Name="PaperOutReprintCom" Width="100" Height="26" Foreground="#BDBDBD">
                                             <ComboBoxItem>关闭</ComboBoxItem>
                                             <ComboBoxItem>打开</ComboBoxItem>
                                         </ComboBox>
@@ -357,7 +359,7 @@
                                         <CheckBox VerticalAlignment="Center" IsChecked="True" Name="PaperOutReprintCheckbox"/>
                                     </StackPanel>
                                     <StackPanel  Margin="0,0,0,10" Orientation="Horizontal">
-                                        <ComboBox  Margin="0,0,5,0" Name="PaperWidthCom" Width="100" Height="26" Foreground="#BDBDBD">
+                                        <ComboBox  Margin="0,0,5,0" SelectedIndex="1" Name="PaperWidthCom" Width="100" Height="26" Foreground="#BDBDBD">
                                             <ComboBoxItem>58MM</ComboBoxItem>
                                             <ComboBoxItem>80MM</ComboBoxItem>
                                         </ComboBox>
@@ -365,7 +367,7 @@
                                         <CheckBox VerticalAlignment="Center" IsChecked="True" Name="PaperWidthCheckbox" />
                                     </StackPanel>
                                     <StackPanel  Margin="0,0,0,10" Orientation="Horizontal">
-                                        <ComboBox  Margin="0,0,5,0" Name="HeadCloseCutCom" Width="100" Height="26" Foreground="#BDBDBD">
+                                        <ComboBox  Margin="0,0,5,0" SelectedIndex="0"  Name="HeadCloseCutCom" Width="100" Height="26" Foreground="#BDBDBD">
                                             <ComboBoxItem>不切纸</ComboBoxItem>
                                             <ComboBoxItem>切纸</ComboBoxItem>
                                         </ComboBox>
@@ -373,7 +375,7 @@
                                         <CheckBox VerticalAlignment="Center" IsChecked="True" Name="HeadCloseCutCheckbox"/>
                                     </StackPanel>
                                     <StackPanel  Margin="0,0,0,10" Orientation="Horizontal">
-                                        <ComboBox  Margin="0,0,5,0" Name="YOffsetCom" Width="100" Height="26"  Foreground="#BDBDBD">
+                                        <ComboBox  Margin="0,0,5,0" SelectedIndex="1"  Name="YOffsetCom" Width="100" Height="26"  Foreground="#BDBDBD">
                                             <ComboBoxItem>1.0</ComboBoxItem>
                                             <ComboBoxItem>0.5</ComboBoxItem>
                                         </ComboBox>
@@ -381,7 +383,7 @@
                                         <CheckBox VerticalAlignment="Center" IsChecked="True" Name="YOffsetCheckbox"/>
                                     </StackPanel>
                                     <StackPanel  Margin="0,0,0,10" Orientation="Horizontal">
-                                        <ComboBox  Margin="0,0,5,0" Name="MACShowCom" Width="100" Height="26" Foreground="#BDBDBD">
+                                        <ComboBox  Margin="0,0,5,0" SelectedIndex="0"  Name="MACShowCom" Width="100" Height="26" Foreground="#BDBDBD">
                                             <ComboBoxItem>十进制</ComboBoxItem>
                                             <ComboBoxItem>十六进制</ComboBoxItem>
                                         </ComboBox>
@@ -389,7 +391,7 @@
                                         <CheckBox VerticalAlignment="Center" IsChecked="True" Name="MACShowCheckbox"/>
                                     </StackPanel>
                                     <StackPanel  Margin="0,0,0,10" Orientation="Horizontal">
-                                        <ComboBox  Margin="0,0,5,0" Name="QRCodeCom" Width="100" Height="26" Foreground="#BDBDBD">
+                                        <ComboBox  Margin="0,0,5,0" SelectedIndex="1"  Name="QRCodeCom" Width="100" Height="26" Foreground="#BDBDBD">
                                             <ComboBoxItem>无效</ComboBoxItem>
                                             <ComboBoxItem>有效</ComboBoxItem>
                                         </ComboBox>
@@ -397,7 +399,7 @@
                                         <CheckBox VerticalAlignment="Center" IsChecked="True" Name="QRCodeCheckbox"/>
                                     </StackPanel>
                                     <StackPanel  Margin="0,0,0,10" Orientation="Horizontal">
-                                        <ComboBox  Margin="0,0,5,0" Name="LogoPrintControlCom" Width="100" Height="26" Foreground="#BDBDBD">
+                                        <ComboBox  Margin="0,0,5,0" SelectedIndex="0"  Name="LogoPrintControlCom" Width="100" Height="26" Foreground="#BDBDBD">
                                             <ComboBoxItem>自检页不打印LOGO</ComboBoxItem>
                                             <ComboBoxItem>自检页打印LOGO</ComboBoxItem>
                                         </ComboBox>
@@ -408,7 +410,7 @@
                                 <!--column3-->
                                 <StackPanel  Grid.Column="2" Grid.RowSpan="2"  >
                                     <StackPanel  Margin="0,18,0,3" Orientation="Horizontal">
-                                        <ComboBox  Margin="0,0,5,0" Name="DIPSwitchCom" Width="100" Height="26" Foreground="#BDBDBD">
+                                        <ComboBox  Margin="0,0,5,0" SelectedIndex="1"  Name="DIPSwitchCom" Width="100" Height="26" Foreground="#BDBDBD">
                                             <ComboBoxItem>不使用硬件DIP</ComboBoxItem>
                                             <ComboBoxItem>使用硬件DIP</ComboBoxItem>
                                         </ComboBox>
