@@ -54,10 +54,10 @@
                         </StackPanel>
                         <!--通訊測試-->
                         <StackPanel Margin="10,0,10,0" VerticalAlignment="Center">
-                            <CheckBox Content="串口" Margin="0,0,0,5" Name="rs232Checkbox"/>
-                            <CheckBox Content="USB打印设备" Margin="0,0,0,5" Name="USBCheckbox"/>
-                            <CheckBox Content="以太网" Margin="0,0,0,15" Name="EthernetCheckbox"/>
-                            <Button Content="三接口测试" Padding="5" Name="ConnectTest" Click="ConnectTest_Click"/>
+                            <CheckBox Content="串口" Margin="0,0,0,5" Name="rs232Checkbox" IsChecked="True"/>
+                            <CheckBox Content="USB打印设备" Margin="0,0,0,5" Name="USBCheckbox" IsChecked="True"/>
+                            <CheckBox Content="以太网" Margin="0,0,0,15" Name="EthernetCheckbox" IsChecked="True"/>
+                            <Button Content="三接口测试" Padding="5" Name="ConnectTest" Click="ConnectTest_Click" />
                         </StackPanel>
                     </StackPanel>
                 </GroupBox>
