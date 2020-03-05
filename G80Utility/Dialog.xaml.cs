@@ -15,6 +15,7 @@ namespace G80Utility
         public Dialog()
         {
             InitializeComponent();
+            PwdTextBox.Focus();
         }
 
         public string PwdText
