@@ -51,6 +51,11 @@ namespace G80Utility
         //傳輸通道類別
         string DeviceType;
 
+        //判斷通訊狀態，用來確定維修維護是否要立刻查詢
+        bool isUSBConnected;
+        bool isRS232Connected;
+        bool isEthernetConnected;
+
         //device 清單
         List<Device> deviceList = new List<Device>();
 
@@ -107,13 +112,13 @@ namespace G80Utility
 
             //頁面內容產生後註冊usb device plugin notify
             this.ContentRendered += WindowThd_ContentRendered;
-
         }
 
         //window畫面生成事件
         private void WindowThd_ContentRendered(object sender, EventArgs e)
         {
             registerUSBdetect();
+            checkRS232Communitcation();
         }
 
         //app在背景事件
@@ -160,6 +165,27 @@ namespace G80Utility
 
             //dip baud rade default
             DIPBaudRateCom.SelectedIndex = 1;
+        }
+        #endregion
+
+        #region RS232 BaudRate設定
+        private void BaudRateCom_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            switch (BaudRateCom.SelectedIndex)
+            {
+                case 0:
+                    App.Current.Properties["BaudRateSetting"] = 9600;
+                    break;
+                case 1:
+                    App.Current.Properties["BaudRateSetting"] = 19200;
+                    break;
+                case 2:
+                    App.Current.Properties["BaudRateSetting"] = 38400;
+                    break;
+                case 3:
+                    App.Current.Properties["BaudRateSetting"] = 115200;
+                    break;
+            }
         }
         #endregion
 
@@ -790,6 +816,38 @@ namespace G80Utility
         }
         #endregion
 
+        #region 畫面操作開關控制
+        public void isTabEnabled(bool isEnabled)
+        {
+            ConnectTest.IsEnabled = isEnabled;
+            ReadSNBtn.IsEnabled = isEnabled;
+            SetSNBtn.IsEnabled = isEnabled;
+            Restart.IsEnabled = isEnabled;
+            DataSendTab.IsEnabled = isEnabled;
+            ParaSetTab.IsEnabled = isEnabled;
+            NVlLogoTab.IsEnabled = isEnabled;
+            BlineTab.IsEnabled = isEnabled; //Collapsed
+            MaintaiTab.IsEnabled = isEnabled;
+            FactoryTab.IsEnabled = isEnabled;
+            FWUpgradeTab.IsEnabled = isEnabled;//Collapsed
+            StatusMonitorBtn.IsEnabled = isEnabled;
+        }
+        #endregion
+
+        #region Ethernet lost focus時檢查連線狀態
+        private void EhternetIPTxt_LostFocus(object sender, RoutedEventArgs e)
+        {
+            //TextBox texbox = (TextBox)sender;
+
+            bool isFormatOK = chekckEthernetIPText(); //避免開啟預設空欄位不放在一開始檢查
+
+            if (isFormatOK && EhernetRadio.IsChecked == true)
+            {
+                checkEthernetCommunitcation();
+            }
+        }
+        #endregion
+
         //========================取得資料後設定UI=================
 
         #region 顯示打印機型號/軟件版本/機器序號
@@ -1201,33 +1259,33 @@ namespace G80Utility
             }
             receiveInt = byteArraytoHexStringtoInt(receiveArray4Bytes);
             FeedLinesTxt.Text = receiveInt.ToString();
-            for (int i = 12; i < 15; i++) //打印行數
+            for (int i = 12; i < 16; i++) //打印行數
             {
                 receiveArray4Bytes[i - 12] = data[i];
             }
             receiveInt = byteArraytoHexStringtoInt(receiveArray4Bytes);
             PrintedLinesTxt.Text = receiveInt.ToString();
-            for (int i = 15; i < 17; i++) //切紙次數
+            for (int i = 16; i < 18; i++) //切紙次數
             {
-                receiveArray2Bytes[i - 15] = data[i];
+                receiveArray2Bytes[i - 16] = data[i];
             }
             receiveInt = byteArraytoHexStringtoInt(receiveArray2Bytes);
             CutPaperTimesTxt.Text = receiveInt.ToString();
-            for (int i = 17; i < 19; i++) //開蓋次數
+            for (int i = 18; i < 20; i++) //開蓋次數
             {
-                receiveArray2Bytes[i - 17] = data[i];
+                receiveArray2Bytes[i - 18] = data[i];
             }
             receiveInt = byteArraytoHexStringtoInt(receiveArray2Bytes);
             HeadOpenTimesTxt.Text = receiveInt.ToString();
-            for (int i = 19; i < 21; i++) //缺紙次數
+            for (int i = 20; i < 22; i++) //缺紙次數
             {
-                receiveArray2Bytes[i - 19] = data[i];
+                receiveArray2Bytes[i - 20] = data[i];
             }
             receiveInt = byteArraytoHexStringtoInt(receiveArray2Bytes);
             PaperOutTimesTxt.Text = receiveInt.ToString();
-            for (int i = 21; i < 23; i++) //故障次數
+            for (int i = 22; i < 24; i++) //故障次數
             {
-                receiveArray2Bytes[i - 21] = data[i];
+                receiveArray2Bytes[i - 22] = data[i];
             }
             receiveInt = byteArraytoHexStringtoInt(receiveArray2Bytes);
             ErrorTimesTxt.Text = receiveInt.ToString();
@@ -1295,23 +1353,22 @@ namespace G80Utility
             byte[] sendArray;
             if ((bool)rs232Checkbox.IsChecked)
             {
-                sendArray = StringToByteArray(Command.RS232_COMMUNICATION_TEST);
-                SerialPortConnect("CommunicationTest", sendArray, 0);
+                checkRS232Communitcation();
             }
             if ((bool)USBCheckbox.IsChecked)
             {
-                sendArray = StringToByteArray(Command.USB_COMMUNICATION_TEST);
-                USBConnectAndSendCmd("CommunicationTest", sendArray, 8);
+                checkUSBCommunitcation();
             }
             if ((bool)EthernetCheckbox.IsChecked)
             {
                 bool isOK = chekckEthernetIPText();
                 if (isOK)
                 {
-                    sendArray = StringToByteArray(Command.ETHERNET_COMMUNICATION_TEST);
-                    EthernetConnectAndSendCmd("CommunicationTest", sendArray, 8); //這邊要收不然收其他資料時會誤收這個測試資料
+                    checkEthernetCommunitcation();
                 }
             }
+            byte[] sendEmpty = { 0x0a, 0x0a, 0x0a };
+            SendCmd(sendEmpty, "BeepOrSetting", 0);
         }
         #endregion
 
@@ -1320,6 +1377,13 @@ namespace G80Utility
         {
             byte[] sendArray = StringToByteArray(Command.RESTART);
             SendCmd(sendArray, "BeepOrSetting", 0);
+            USBConnect.IsConnect = false;
+            RS232Connect.IsConnect = false;
+            EthernetConnect.connectStatus = 0;
+            EthernetConnectImage.Source = new BitmapImage(new Uri("Images/grey_circle.png", UriKind.Relative));
+            USBConnectImage.Source = new BitmapImage(new Uri("Images/grey_circle.png", UriKind.Relative));
+            RS232ConnectImage.Source = new BitmapImage(new Uri("Images/grey_circle.png", UriKind.Relative));
+            MessageBox.Show(FindResource("Reconnect") as string);
         }
         #endregion
 
@@ -1783,10 +1847,38 @@ namespace G80Utility
         #region 打印機維護維修tab按鈕事件
         private void MaintainTab_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            QueryNowStatusPosition = "maintain";
-            PrinterInfoRead();
-            PrinterNowStatus();
-            queryPrinterStatus();
+            switch (DeviceType)
+            {
+                case "RS232":
+                    if (isRS232Connected)
+                    {
+                        QueryNowStatusPosition = "maintain";
+                        PrinterInfoRead();
+                        PrinterNowStatus();
+                        queryPrinterStatus();
+                    }
+                    break;
+                case "USB":
+                    if (isUSBConnected)
+                    { //還要判斷不同通訊狀態下的連線
+
+                        QueryNowStatusPosition = "maintain";
+                        PrinterInfoRead();
+                        PrinterNowStatus();
+                        queryPrinterStatus();
+                    }
+                    break;
+                case "Ethernet":
+                    if (isEthernetConnected)
+                    { //還要判斷不同通訊狀態下的連線
+
+                        QueryNowStatusPosition = "maintain";
+                        PrinterInfoRead();
+                        PrinterNowStatus();
+                        queryPrinterStatus();
+                    }
+                    break;
+            }
         }
         #endregion
 
@@ -1940,7 +2032,7 @@ namespace G80Utility
         #region 指令測試-維護-按鈕事件
         private void CMDTest_Maintanin_Btn_Click(object sender, RoutedEventArgs e)
         {
-            CMDTest("factory");
+            CMDTest("maintain");
         }
         #endregion
 
@@ -2006,7 +2098,7 @@ namespace G80Utility
         #region 指令測試-工廠-按鈕事件
         private void CMDTestBtn_Click(object sender, RoutedEventArgs e)
         {
-            CMDTest("maintain");
+            CMDTest("factory");
         }
         #endregion
 
@@ -2212,7 +2304,7 @@ namespace G80Utility
                 byte[] sendArray = StringToByteArray(nvLogo_full_hex.ToString());
                 List<byte> sendList = sendArray.ToList();
                 sendList.Insert(2, insertBtye[0]);
-                sendArray = sendList.ToArray();                
+                sendArray = sendList.ToArray();
                 SendCmd(sendArray, "BeepOrSetting", 0);
             }
         }
@@ -2242,6 +2334,7 @@ namespace G80Utility
 
         }
         #endregion
+
 
         //============================判斷sn設定權限======================
 
@@ -2444,7 +2537,7 @@ namespace G80Utility
         }
         #endregion
 
-        //============================數據傳輸發送命令功能==========================
+        //============================數據傳輸發送命令功能=================
 
         public void SendCmd()
         {
@@ -2690,7 +2783,7 @@ namespace G80Utility
             else { MessageBox.Show(FindResource("ColumnEmpty") as string); }
         }
         #endregion
-        
+
         #region 設定代碼頁
         private void CodePageSet()
         {
@@ -3619,7 +3712,8 @@ namespace G80Utility
                 for (int i = 0; i < contiunue; i++)
                 {
                     SendCmd(sendArray, "BeepOrSetting", 0);
-                    if (DeviceType == "Ethernet") {
+                    if (DeviceType == "Ethernet")
+                    {
                         Thread.Sleep(100);
                     }
                 }
@@ -3754,8 +3848,44 @@ namespace G80Utility
         #region 打印機即時狀態
         private void PrinterNowStatus()
         {
-            byte[] sendArray = StringToByteArray(Command.STATUS_MONITOR);
-            SendCmd(sendArray, "ReadNowStatus", 9);
+            switch (DeviceType)
+            {
+                case "RS232":
+                    if (isRS232Connected)
+                    {
+                        byte[] sendArray = StringToByteArray(Command.STATUS_MONITOR);
+                        SendCmd(sendArray, "ReadNowStatus", 9);
+                    }
+                    else
+                    {
+                        stopStatusMonitorTimer();
+                    }
+                    break;
+                case "USB":
+                    if (isUSBConnected)
+                    {
+                        byte[] sendArray = StringToByteArray(Command.STATUS_MONITOR);
+                        SendCmd(sendArray, "ReadNowStatus", 9);
+                    }
+                    else
+                    {
+                        stopStatusMonitorTimer();
+                    }
+                    break;
+                case "Ethernet":
+                    if (isEthernetConnected)
+                    {
+                        byte[] sendArray = StringToByteArray(Command.STATUS_MONITOR);
+                        SendCmd(sendArray, "ReadNowStatus", 9);
+                    }
+                    else
+                    {
+                        stopStatusMonitorTimer();
+                    }
+                    break;
+
+            }
+
         }
         #endregion
 
@@ -3911,350 +4041,493 @@ namespace G80Utility
         }
         #endregion
 
-        //========================RS232的設定/傳送與接收===========================
+        //==========================通訊介面連線狀態檢查====================
 
-        #region RS232 Port設定
-        private void RS232_SelectedChnaged(object sender, SelectionChangedEventArgs e)
+        #region RS232通訊測試
+        public void checkRS232Communitcation()
         {
-            Device seletedItem = DeviceSelectRS232.SelectedItem as Device;
-            if (seletedItem != null)
+            if ((bool)RS232Radio.IsChecked || (bool)rs232Checkbox.IsChecked)
             {
-                string portName = seletedItem.RS232PortName;
-                if (portName != null)
+                if (RS232PortName != null)
                 {
-                    RS232PortName = portName;
-
-                }
-            }
-        }
-        #endregion
-
-        #region RS232 BaudRate設定
-        private void BaudRateCom_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            switch (BaudRateCom.SelectedIndex)
-            {
-                case 0:
-                    App.Current.Properties["BaudRateSetting"] = 9600;
-                    break;
-                case 1:
-                    App.Current.Properties["BaudRateSetting"] = 19200;
-                    break;
-                case 2:
-                    App.Current.Properties["BaudRateSetting"] = 38400;
-                    break;
-                case 3:
-                    App.Current.Properties["BaudRateSetting"] = 115200;
-                    break;
-            }
-        }
-        #endregion
-
-        #region RS232接收資料
-        private void SerialPortConnect(string dataType, byte[] data, int receiveLength)
-        {
-            RS232Connect.CloseSerialPort();
-            if (RS232PortName != null)
-            {
-                bool isError = RS232Connect.OpenSerialPort(RS232PortName, FindResource("CannotOpenComport") as string);
-
-                if (!isError)
-                {
-                    switch (dataType)
+                    RS232Connect.CloseSerialPort(); //連線前會先判斷是否已開啟PORT
+                    bool isError = RS232Connect.OpenSerialPort(RS232PortName, FindResource("CannotOpenComport") as string);
+                    if (!isError)
                     {
-                        case "ReadPara":
-                            bool isReceiveData = RS232Connect.SerialPortSendCMD("NeedReceive", data, null, receiveLength);
-                            while (!isReceiveData)
-                            {
-                                if (RS232Connect.mRecevieData != null)
-                                {
-                                    setParaColumn(RS232Connect.mRecevieData);
-                                    break;
-                                }
-                            }
-                            break;
-                        case "ReadSN":
-                            bool isReceiveSN = RS232Connect.SerialPortSendCMD("NeedReceive", data, null, receiveLength);
-                            while (!isReceiveSN)
-                            {
-                                if (RS232Connect.mRecevieData != null)
-                                {
-                                    SetPrinterInfo(RS232Connect.mRecevieData);
-                                    break;
-                                }
-                            }
-                            break;
-                        case "ReadPrinterInfo": //打印機統計信息
-                            bool isReceivePI = RS232Connect.SerialPortSendCMD("NeedReceive", data, null, receiveLength);
-                            while (!isReceivePI)
-                            {
-                                if (RS232Connect.mRecevieData != null)
-                                {
-                                    setPrinterInfotoUI(RS232Connect.mRecevieData);
-                                    break;
-                                }
-                            }
-                            break;
-                        case "ReadStatus": //打印機溫度電壓等狀態
-                            bool isReceiveStatus = RS232Connect.SerialPortSendCMD("NeedReceive", data, null, receiveLength);
-                            while (!isReceiveStatus)
-                            {
-                                if (RS232Connect.mRecevieData != null)
-                                {
-                                    setPrinterStatus(RS232Connect.mRecevieData);
-                                    break;
-                                }
-                            }
-                            break;
-                        case "ReadNowStatus": //即時狀態
-                            bool isReceiveNowStatus = RS232Connect.SerialPortSendCMD("NeedReceive", data, null, receiveLength);
-                            while (!isReceiveNowStatus)
-                            {
-                                if (RS232Connect.mRecevieData != null)
-                                {
-                                    switch (QueryNowStatusPosition)
-                                    {
-                                        case "bottom":
-                                            showPrinteNowStatus(RS232Connect.mRecevieData, StatusMonitorLabel);
-                                            break;
-                                        case "maintain":
-                                            showPrinteNowStatus(RS232Connect.mRecevieData, PrinterStatusText);
-                                            break;
-                                    }
-
-                                    break;
-                                }
-                            }
-                            break;
-                        case "CommunicationTest": //通訊測試
-                            RS232Connect.SerialPortSendCMD("NeedReceive", data, null, receiveLength);
-                            RS232ConnectImage.Source = new BitmapImage(new Uri("Images/green_circle.png", UriKind.Relative));
-                            RS232Connect.CloseSerialPort(); //沒立刻關閉有時會漏收命令
-                            break;
-                        case "BeepOrSetting":
-                            RS232Connect.SerialPortSendCMD("NoReceive", data, null, 0);
-                            RS232Connect.CloseSerialPort(); //沒立刻關閉有時會漏收命令
-                            break;
+                        byte[] sendArray = StringToByteArray(Command.RS232_COMMUNICATION_TEST);
+                        SerialPortConnect("CommunicationTest", sendArray, 8);
                     }
-                    //startTimer();
-                    if (!RS232Connect.IsConnect)
+                    else //serial open port failed
                     {
-                        RS232ConnectImage.Source = new BitmapImage(new Uri("Images/red_circle.png", UriKind.Relative)); //連線失敗時
-                        setSysStatusColorAndText(FindResource("CannotOpenComport") as string, "#FFEF7171");
+                        isRS232Connected = false;
+                        connectFailUI(RS232ConnectImage, FindResource("CannotOpenComport") as string);
                     }
-
                 }
                 else
                 {
-                    RS232ConnectImage.Source = new BitmapImage(new Uri("Images/red_circle.png", UriKind.Relative));
-                }
-            }
-            else
-            {
-                MessageBox.Show(FindResource("NotSettingComport") as string);
-                try // just in case serial port is not open could also be acheved using if(serial.IsOpen)
-                {
-                    RS232Connect.CloseSerialPort();
-                }
-                catch
-                {
+                    MessageBox.Show(FindResource("NotSettingComport") as string);
                 }
             }
         }
         #endregion
 
-        //===================USB 傳送指令==================
-
-        private void USBConnectAndSendCmd(string dataType, byte[] data, int receiveLength)
+        #region USB通訊測試
+        public void checkUSBCommunitcation()
         {
-            if (USBpath != null)
+            if ((bool)USBRadio.IsChecked || (bool)USBCheckbox.IsChecked)
             {
                 int result = USBConnect.ConnectUSBDevice(USBpath);
-
                 if (result == 1)
                 {
-                    USBConnectImage.Source = new BitmapImage(new Uri("Images/green_circle.png", UriKind.Relative));
-                    switch (dataType)
-                    {
-                        case "ReadPara":
-                            bool isReceiveData = USBConnect.USBSendCMD("NeedReceive", data, null, receiveLength);
-                            while (!isReceiveData)
-                            {
-                                if (USBConnect.mRecevieData != null)
-                                {
-                                    setParaColumn(USBConnect.mRecevieData);
-                                    break;
-                                }
-                            }
-                            break;
-                        case "ReadSN":
-                            bool isReceiveSN = USBConnect.USBSendCMD("NeedReceive", data, null, receiveLength);
 
-                            while (!isReceiveSN)
-                            {
-                                if (USBConnect.mRecevieData != null)
-                                {
-                                    SetPrinterInfo(USBConnect.mRecevieData);
-                                    break;
-                                }
-                            }
-                            break;
-                        case "ReadPrinterInfo": //打印機統計信息
-                            bool isReceivePI = USBConnect.USBSendCMD("NeedReceive", data, null, receiveLength);
-                            while (!isReceivePI)
-                            {
-                                if (USBConnect.mRecevieData != null)
-                                {
-                                    setPrinterInfotoUI(USBConnect.mRecevieData);
-                                    break;
-                                }
-                            }
-                            break;
-                        case "ReadStatus": //打印機溫度電壓等狀態
-                            bool isReceiveStatus = USBConnect.USBSendCMD("NeedReceive", data, null, receiveLength);
-                            while (!isReceiveStatus)
-                            {
-                                if (USBConnect.mRecevieData != null)
-                                {
-                                    setPrinterStatus(USBConnect.mRecevieData);
-                                    break;
-                                }
-                            }
-                            break;
-                        case "ReadNowStatus":
-                            bool isReceiveNowStatus = USBConnect.USBSendCMD("NeedReceive", data, null, receiveLength);
-                            while (!isReceiveNowStatus)
-                            {
-                                if (USBConnect.mRecevieData != null)
-                                {
-                                    switch (QueryNowStatusPosition)
-                                    {
-                                        case "bottom":
-                                            showPrinteNowStatus(USBConnect.mRecevieData, StatusMonitorLabel);
-                                            break;
-                                        case "maintain":
-                                            showPrinteNowStatus(USBConnect.mRecevieData, PrinterStatusText);
-                                            break;
-                                    }
-                                    break;
-                                }
-                            }
-                            break;
-                        case "CommunicationTest": //通訊測試
-                            USBConnect.USBSendCMD("NeedReceive", data, null, receiveLength);
-                            break;
-                        case "BeepOrSetting":
-                            USBConnect.USBSendCMD("NoReceive", data, null, 0);
-                            break;
-                    }
-                    //startTimer();
+                    byte[] sendArray = StringToByteArray(Command.USB_COMMUNICATION_TEST);
+                    USBConnectAndSendCmd("CommunicationTest", sendArray, 8);
                 }
-                else
+                else //USB CreateFile失敗
                 {
-                    MessageBox.Show(FindResource("NotSettingUSBport") as string);
+                    isUSBConnected = false;
                     USBConnect.closeHandle();
+                    MessageBox.Show(FindResource("NotSettingUSBport") as string);
                     USBConnectImage.Source = new BitmapImage(new Uri("Images/red_circle.png", UriKind.Relative)); //連線失敗時
                     setSysStatusColorAndText(FindResource("NotSettingUSBport") as string, "#FFEF7171");
+                    isTabEnabled(false);
                 }
             }
-            else
+
+        }
+        #endregion
+
+        #region Ethernet通訊測試
+        public void checkEthernetCommunitcation()
+        {
+            if ((bool)EhernetRadio.IsChecked || (bool)EthernetCheckbox.IsChecked)
             {
-                MessageBox.Show(FindResource("NotSettingUSBport") as string);
-                USBConnect.closeHandle();
-                USBConnectImage.Source = new BitmapImage(new Uri("Images/red_circle.png", UriKind.Relative)); //連線失敗時
-                setSysStatusColorAndText(FindResource("NotSettingUSBport") as string, "#FFEF7171");
+                int connectStatus = EthernetConnect.EthernetConnectStatus();
+                switch (connectStatus)
+                {
+                    case 0: //fail
+                        isEthernetConnected = false;
+                        EthernetConnectImage.Source = new BitmapImage(new Uri("Images/red_circle.png", UriKind.Relative)); //連線失敗時
+                        MessageBox.Show(FindResource("NotSettingEthernetport") as string);
+                        setSysStatusColorAndText(FindResource("NotSettingEthernetport") as string, "#FFEF7171");
+                        isTabEnabled(false);
+                        break;
+                    case 1: //success
+                        byte[] sendArray = StringToByteArray(Command.ETHERNET_COMMUNICATION_TEST);
+                        EthernetConnectAndSendCmd("CommunicationTest", sendArray, 8);
+                        break;
+                    case 2: //timeout
+                        isEthernetConnected = false;
+                        EthernetConnectImage.Source = new BitmapImage(new Uri("Images/red_circle.png", UriKind.Relative)); //連線失敗時
+                        MessageBox.Show(FindResource("ConnectTimeout") as string);
+                        setSysStatusColorAndText(FindResource("ConnectTimeout") as string, "#FFEF7171");
+                        isTabEnabled(false);
+                        break;
+
+                }
             }
         }
+        #endregion
 
-        //===================Ethernet 傳送指令==================
+        #region RS232判斷是否正確收到通訊測試回傳訊息
+        public void isRS232CommunicateOK(byte[] data)
+        {
+            string receiveData = BitConverter.ToString(data);
+            Console.WriteLine("RS232:" + receiveData);
+            if (receiveData.Contains(Command.RS232_COMMUNICATION_RECEIVE))
+            {
+                isRS232Connected = true;
+                connectSuccessUI(RS232ConnectImage);
+            }
+            else //回傳資料錯誤時
+            {
+                isRS232Connected = false;
+                connectFailUI(RS232ConnectImage, FindResource("FailToSend") as string);
+            }
+        }
+        #endregion
 
+        #region USB判斷是否正確收到通訊測試回傳訊息
+        public void isUSBCommunicateOK(byte[] data)
+        {
+            string receiveData = BitConverter.ToString(data);
+            Console.WriteLine("USB:" + receiveData);
+            if (receiveData.Contains(Command.USB_COMMUNICATION_RECEIVE))
+            {
+                isUSBConnected = true;
+                connectSuccessUI(USBConnectImage);
+            }
+            else//回傳資料錯誤時
+            {
+                isUSBConnected = false;
+                connectFailUI(USBConnectImage, FindResource("FailToSend") as string);
+            }
+        }
+        #endregion
+
+        #region Ethernet判斷是否正確收到通訊測試回傳訊息
+        public void isEthernetCommunicateOK(byte[] data)
+        {
+            string receiveData = BitConverter.ToString(data);
+            Console.WriteLine("Ethernet:" + receiveData);
+            if (receiveData.Contains(Command.ETHERNET_COMMUNICATION_RECEIVE))
+            {
+                isEthernetConnected = true;
+                connectSuccessUI(EthernetConnectImage);
+            }
+            else //回傳資料錯誤時
+            {
+                isEthernetConnected = false;
+                connectFailUI(EthernetConnectImage, FindResource("FailToSend") as string);
+            }
+        }
+        #endregion
+
+        #region 連線成功的變數設定與UI處理
+        public void connectSuccessUI(System.Windows.Controls.Image circleImage)
+        {
+            circleImage.Source = new BitmapImage(new Uri("Images/green_circle.png", UriKind.Relative));
+            isTabEnabled(true);
+        }
+        #endregion
+
+        #region 連線失敗的變數設定與UI處理
+        public void connectFailUI(System.Windows.Controls.Image circleImage, string errorMessage)
+        {
+            circleImage.Source = new BitmapImage(new Uri("Images/red_circle.png", UriKind.Relative));
+            MessageBox.Show(errorMessage);
+            isTabEnabled(false);
+
+        }
+        #endregion
+
+        #region 命令傳送失敗的處理
+        public void SendCmdFail(string connectType)
+        {
+            switch (connectType)
+            {
+                case "R": //RS232
+                    if (!RS232Connect.IsConnect)
+                    { 
+                        isRS232Connected = false;
+                        connectFailUI(RS232ConnectImage, FindResource("ConnectTimeout") as string);
+                    }
+                    break;
+                case "U": //USB
+                    if (!USBConnect.IsConnect)
+                    {
+                        isUSBConnected = false;
+                        connectFailUI(USBConnectImage, FindResource("ConnectTimeout") as string);
+                        USBConnect.closeHandle();
+                    }
+                    break;
+                case "E":
+                    if (EthernetConnect.connectStatus != 1)
+                    {
+                        isEthernetConnected = false;
+                        connectFailUI(EthernetConnectImage, FindResource("ConnectTimeout") as string);
+                    }
+                    break;
+            }
+        }
+        #endregion
+
+        //===========================命令傳送與接收資料==============================
+        //連線失敗時isReceiveData為true
+        #region RS232傳送與接收資料
+        private void SerialPortConnect(string dataType, byte[] data, int receiveLength)
+        {
+            switch (dataType)
+            {
+                case "ReadPara":
+                    RS232Connect.SerialPortSendCMD("NeedReceive", data, null, receiveLength);
+                    while (!RS232Connect.isReceiveData)
+                    {
+                        if (RS232Connect.mRecevieData != null)
+                        {
+                            setParaColumn(RS232Connect.mRecevieData);
+                            break;
+                        }
+                    }
+                    break;
+                case "ReadSN":
+                    RS232Connect.SerialPortSendCMD("NeedReceive", data, null, receiveLength);
+                    while (!RS232Connect.isReceiveData)
+                    {
+                        if (RS232Connect.mRecevieData != null)
+                        {
+                            SetPrinterInfo(RS232Connect.mRecevieData);
+                            break;
+                        }
+                    }
+                    break;
+                case "ReadPrinterInfo": //打印機統計信息
+                    RS232Connect.SerialPortSendCMD("NeedReceive", data, null, receiveLength);
+                    while (!RS232Connect.isReceiveData)
+                    {
+                        if (RS232Connect.mRecevieData != null)
+                        {
+                            setPrinterInfotoUI(RS232Connect.mRecevieData);
+                            break;
+                        }
+                    }
+                    break;
+                case "ReadStatus": //打印機溫度電壓等狀態
+                    bool isReceiveStatus = RS232Connect.SerialPortSendCMD("NeedReceive", data, null, receiveLength);
+                    while (!RS232Connect.isReceiveData)
+                    {
+                        if (RS232Connect.mRecevieData != null)
+                        {
+                            setPrinterStatus(RS232Connect.mRecevieData);
+                            break;
+                        }
+                    }
+                    break;
+                case "ReadNowStatus": //即時狀態
+                    RS232Connect.SerialPortSendCMD("NeedReceive", data, null, receiveLength);
+                    while (!RS232Connect.isReceiveData)
+                    {
+                        if (RS232Connect.mRecevieData != null)
+                        {
+                            switch (QueryNowStatusPosition)
+                            {
+                                case "bottom":
+                                    showPrinteNowStatus(RS232Connect.mRecevieData, StatusMonitorLabel);
+                                    break;
+                                case "maintain":
+                                    showPrinteNowStatus(RS232Connect.mRecevieData, PrinterStatusText);
+                                    break;
+                            }
+
+                            break;
+                        }
+                    }
+                    break;
+                case "CommunicationTest": //通訊測試
+                    RS232Connect.SerialPortSendCMD("NeedReceive", data, null, receiveLength);
+                    while (!RS232Connect.isReceiveData)
+                    {
+                        if (RS232Connect.mRecevieData != null)
+                        {
+                            isRS232CommunicateOK(RS232Connect.mRecevieData);
+                            break;
+                        }
+                    }
+                    break;
+                case "BeepOrSetting":
+                    RS232Connect.SerialPortSendCMD("NoReceive", data, null, 0);
+                    break;
+            }
+            SendCmdFail("R");
+        }
+        #endregion
+
+        #region USB傳送命令與接收資料
+        private void USBConnectAndSendCmd(string dataType, byte[] data, int receiveLength)
+        {
+            switch (dataType)
+            {
+                case "ReadPara":
+                    USBConnect.USBSendCMD("NeedReceive", data, null, receiveLength);
+                    while (!USBConnect.isReceiveData)
+                    {
+                        if (USBConnect.mRecevieData != null)
+                        {
+                            setParaColumn(USBConnect.mRecevieData);
+                            break;
+                        }
+                    }
+                    break;
+                case "ReadSN":
+                    USBConnect.USBSendCMD("NeedReceive", data, null, receiveLength);
+                    while (!USBConnect.isReceiveData)
+                    {
+                       // if (!USBConnect.IsConnect) break;
+
+                        if (USBConnect.mRecevieData != null)
+                        {
+                            SetPrinterInfo(USBConnect.mRecevieData);
+                            break;
+                        }
+                    }
+                    break;
+                case "ReadPrinterInfo": //打印機統計信息
+                    USBConnect.USBSendCMD("NeedReceive", data, null, receiveLength);
+                    while (!USBConnect.isReceiveData)
+                    {
+                        //if (!USBConnect.IsConnect) break;
+
+                        if (USBConnect.mRecevieData != null)
+                        {
+                            setPrinterInfotoUI(USBConnect.mRecevieData);
+                            break;
+                        }
+                    }
+                    break;
+                case "ReadStatus": //打印機溫度電壓等狀態
+                    USBConnect.USBSendCMD("NeedReceive", data, null, receiveLength);
+                    while (!USBConnect.isReceiveData)
+                    {
+                        //if (!USBConnect.IsConnect) break;
+
+                        if (USBConnect.mRecevieData != null)
+                        {
+                            setPrinterStatus(USBConnect.mRecevieData);
+                            break;
+                        }
+                    }
+                    break;
+                case "ReadNowStatus":
+                    USBConnect.USBSendCMD("NeedReceive", data, null, receiveLength);
+                    while (!USBConnect.isReceiveData)
+                    {
+                        //if (!USBConnect.IsConnect) break;
+
+                        if (USBConnect.mRecevieData != null)
+                        {
+                            switch (QueryNowStatusPosition)
+                            {
+                                case "bottom":
+                                    showPrinteNowStatus(USBConnect.mRecevieData, StatusMonitorLabel);
+                                    break;
+                                case "maintain":
+                                    showPrinteNowStatus(USBConnect.mRecevieData, PrinterStatusText);
+                                    break;
+                            }
+                            break;
+                        }
+                    }
+                    break;
+                case "CommunicationTest": //通訊測試
+                    USBConnect.USBSendCMD("NeedReceive", data, null, receiveLength);
+                    while (!USBConnect.isReceiveData)
+                    {
+                        if (USBConnect.mRecevieData != null)
+                        {
+                            isUSBCommunicateOK(USBConnect.mRecevieData);
+                            break;
+                        }
+                    }
+                    break;
+                case "BeepOrSetting":
+                    USBConnect.USBSendCMD("NoReceive", data, null, 0);
+                    break;
+            }
+            SendCmdFail("U");
+        }
+        #endregion
+
+        #region 網口傳送命令與接收資料 
         private void EthernetConnectAndSendCmd(string dataType, byte[] data, int receiveLength)
         {
-            bool isConnect = EthernetConnect.EthernetConnectStatus(); //EthernetConnect.connectToPrinter();
-            if (isConnect)
+            switch (dataType)
             {
-                switch (dataType)
-                {
-                    case "ReadPara":
-                        bool isReceiveData = EthernetConnect.EthernetSendCmd("NeedReceive", data, null, receiveLength);
-                        while (!isReceiveData)
+                case "ReadPara":
+                    bool isReceiveData = EthernetConnect.EthernetSendCmd("NeedReceive", data, null, receiveLength);
+                    while (!EthernetConnect.isReceiveData)
+                    {
+                        if (EthernetConnect.mRecevieData != null)
                         {
-                            if (EthernetConnect.mRecevieData != null)
-                            {
-                                setParaColumn(EthernetConnect.mRecevieData);
-                                //EthernetConnect.disconnect();
-                                break;
-                            }
+                            setParaColumn(EthernetConnect.mRecevieData);
+                            break;
                         }
-                        break;
-                    case "ReadSN":
-                        bool isReceiveSN = EthernetConnect.EthernetSendCmd("NeedReceive", data, null, receiveLength);
-                        while (!isReceiveSN)
+                    }
+                    break;
+                case "ReadSN":
+                    bool isReceiveSN = EthernetConnect.EthernetSendCmd("NeedReceive", data, null, receiveLength);
+                    while (!EthernetConnect.isReceiveData)
+                    {
+                        if (EthernetConnect.mRecevieData != null)
                         {
-                            if (EthernetConnect.mRecevieData != null)
-                            {
-                                SetPrinterInfo(EthernetConnect.mRecevieData);
-                                //EthernetConnect.disconnect(); //使用同一個socket避免連線數超過
-                                break;
-                            }
+                            SetPrinterInfo(EthernetConnect.mRecevieData);
+                            break;
                         }
-                        break;
-                    case "ReadPrinterInfo": //打印機統計信息
-                        bool isReceivePI = EthernetConnect.EthernetSendCmd("NeedReceive", data, null, receiveLength);
-                        while (!isReceivePI)
+                    }
+                    break;
+                case "ReadPrinterInfo": //打印機統計信息
+                    bool isReceivePI = EthernetConnect.EthernetSendCmd("NeedReceive", data, null, receiveLength);
+                    while (!EthernetConnect.isReceiveData)
+                    {
+                        if (EthernetConnect.mRecevieData != null)
                         {
-                            if (EthernetConnect.mRecevieData != null)
-                            {
-                                setPrinterInfotoUI(EthernetConnect.mRecevieData);
-                                //EthernetConnect.disconnect();
-                                break;
-                            }
+                            setPrinterInfotoUI(EthernetConnect.mRecevieData);
+                            break;
                         }
-                        break;
-                    case "ReadStatus": //打印機溫度電壓等狀態
-                        bool isReceiveStatus = EthernetConnect.EthernetSendCmd("NeedReceive", data, null, receiveLength);
-                        while (!isReceiveStatus)
+                    }
+                    break;
+                case "ReadStatus": //打印機溫度電壓等狀態
+                    bool isReceiveStatus = EthernetConnect.EthernetSendCmd("NeedReceive", data, null, receiveLength);
+                    while (!EthernetConnect.isReceiveData)
+                    {
+                        if (EthernetConnect.mRecevieData != null)
                         {
-                            if (EthernetConnect.mRecevieData != null)
-                            {
-                                setPrinterStatus(EthernetConnect.mRecevieData);
-                                //EthernetConnect.disconnect();
-                                break;
-                            }
+                            setPrinterStatus(EthernetConnect.mRecevieData);
+                            break;
                         }
-                        break;
-                    case "ReadNowStatus":
-                        bool isReceiveNowStatus = EthernetConnect.EthernetSendCmd("NeedReceive", data, null, receiveLength);
-                        while (!isReceiveNowStatus)
+                    }
+                    break;
+                case "ReadNowStatus":
+                    bool isReceiveNowStatus = EthernetConnect.EthernetSendCmd("NeedReceive", data, null, receiveLength);
+                    while (!EthernetConnect.isReceiveData)
+                    {
+                        if (EthernetConnect.mRecevieData != null)
                         {
-                            if (EthernetConnect.mRecevieData != null)
+                            switch (QueryNowStatusPosition)
                             {
-                                switch (QueryNowStatusPosition)
-                                {
-                                    case "bottom":
-                                        showPrinteNowStatus(EthernetConnect.mRecevieData, StatusMonitorLabel);
-                                        break;
-                                    case "maintain":
-                                        showPrinteNowStatus(EthernetConnect.mRecevieData, PrinterStatusText);
-                                        break;
-                                }
-                                //EthernetConnect.disconnect();
-                                break;
+                                case "bottom":
+                                    showPrinteNowStatus(EthernetConnect.mRecevieData, StatusMonitorLabel);
+                                    break;
+                                case "maintain":
+                                    showPrinteNowStatus(EthernetConnect.mRecevieData, PrinterStatusText);
+                                    break;
                             }
+                            break;
                         }
-                        break;
-                    case "CommunicationTest": //通訊測試
-                        EthernetConnect.EthernetSendCmd("NeedReceive", data, null, receiveLength);
-                        //EthernetConnect.disconnect();
-                        break;
-                    case "BeepOrSetting":
-                        EthernetConnect.EthernetSendCmd("NoReceive", data, null, 0);
-                        //EthernetConnect.disconnect();
-                        break;
-                }
+                    }
+                    break;
+                case "CommunicationTest": //通訊測試
+                    EthernetConnect.EthernetSendCmd("NeedReceive", data, null, receiveLength);
+                    while (!EthernetConnect.isReceiveData)
+                    {
+                        if (EthernetConnect.mRecevieData != null)
+                        {
+                            isEthernetCommunicateOK(EthernetConnect.mRecevieData);
+                            break;
+                        }
+                    }
+                    break;
+                case "BeepOrSetting":
+                    EthernetConnect.EthernetSendCmd("NoReceive", data, null, 0);
+                    break;
             }
-            //startTimer();
+            SendCmdFail("E");
         }
+        #endregion
+
+        #region 不同通道傳送命令
+        public void SendCmd(byte[] sendArray, string sendType, int length)
+        {
+            //stopTimer();
+            switch (DeviceType)
+            {
+                case "RS232":
+                    SerialPortConnect(sendType, sendArray, length);
+                    break;
+                case "USB":
+                    USBConnectAndSendCmd(sendType, sendArray, length);
+                    break;
+                case "Ethernet":
+                    bool isOK = chekckEthernetIPText(); //避免開啟預設空欄位不放在一開始檢查
+                    if (isOK)
+                    {
+                        EthernetConnectAndSendCmd(sendType, sendArray, length);
+                    }
+                    break;
+            }
+        }
+        #endregion
+
+        //===========================Ethernet 相關檢查=============================
 
         #region 網口欄位是否輸入檢查
         private bool chekckEthernetIPText()
@@ -4412,32 +4685,7 @@ namespace G80Utility
         }
         #endregion
 
-        //========================不同通道傳送命令===========================
-
-        #region 不同通道傳送命令
-        public void SendCmd(byte[] sendArray, string sendType, int length)
-        {
-            //stopTimer();
-            switch (DeviceType)
-            {
-                case "RS232":
-                    SerialPortConnect(sendType, sendArray, length);
-                    break;
-                case "USB":
-                    USBConnectAndSendCmd(sendType, sendArray, length);
-                    break;
-                case "Ethernet":
-                    bool isOK = chekckEthernetIPText(); //避免開啟預設空欄位不放在一開始檢查
-                    if (isOK)
-                    {
-                        EthernetConnectAndSendCmd(sendType, sendArray, length);
-                    }
-                    break;
-            }
-        }
-        #endregion
-
-        //=========================RS232 port search and get=====================
+        //=========================RS232 取得port並設定到UI=====================
 
         #region 取得rs232 port
         private void getSerialPort()
@@ -4458,6 +4706,24 @@ namespace G80Utility
                 deviceList.Add(device);
 
                 viewmodel.addDevice(device);
+            }
+
+
+        }
+        #endregion
+
+        #region 取得RS232 Port後設定到UI
+        private void RS232_SelectedChnaged(object sender, SelectionChangedEventArgs e)
+        {
+            Device seletedItem = DeviceSelectRS232.SelectedItem as Device;
+            if (seletedItem != null)
+            {
+                string portName = seletedItem.RS232PortName;
+                if (portName != null)
+                {
+                    RS232PortName = portName;
+
+                }
             }
         }
         #endregion
@@ -4599,7 +4865,6 @@ namespace G80Utility
         #region 取得usb device所有資訊並設定選取item
         public void getUSBInfoandUpdateView()
         {
-
             getUSBSNandDescription();
             if (OSVersion != "5.1")
             {
@@ -4655,8 +4920,10 @@ namespace G80Utility
                 if (usbpath != null)
                 {
                     //將sn恢復為大小寫正常顯示
+
                     USBpath = usbpath.Replace(seletedItem.USBSN.ToLower(), seletedItem.USBSN);
                     //USBConnect.USBpath = USBpath;
+
                 }
             }
             else
@@ -4686,7 +4953,7 @@ namespace G80Utility
         {
             if (msg == USBDetector.UsbDevicechange)
             {
-                viewmodel.removePort(deviceList);
+                viewmodel.removePort(deviceList); //msg == USBDetector.UsbDevicechange (int)wparam == USBDetector.NewUsbDeviceConnected || (int)wparam == USBDetector.UsbDeviceRemoved
                 deviceList.Clear(); //清空避免重複
                 getSerialPort();
                 getUSBInfoandUpdateView();
@@ -4694,6 +4961,15 @@ namespace G80Utility
                 DeviceSelectRS232.SelectedIndex = viewmodel.RS232Device.Count - 1;
                 viewmodel.getDeviceObserve("usb");
                 DeviceSelectUSB.SelectedIndex = viewmodel.USBDevice.Count - 1;//設定選取第一筆
+                if (RS232Radio.IsChecked == true && DeviceSelectUSB.SelectedIndex != -1)
+                {
+                    checkRS232Communitcation();
+                }
+                if (USBRadio.IsChecked == true && DeviceSelectUSB.SelectedIndex != -1)
+                {
+                    Thread.Sleep(3000); //為了重開機等待打印機ready再傳送資料
+                    checkUSBCommunitcation();
+                }
 
             }
             handled = false;
@@ -4718,14 +4994,29 @@ namespace G80Utility
             if (USBRadio.IsChecked == true)
             {
                 DeviceType = "USB";
+                if (DeviceSelectUSB.SelectedIndex != -1)
+                {
+                    checkUSBCommunitcation();
+                }
+
             }
             else if (EhernetRadio.IsChecked == true)
             {
                 DeviceType = "Ethernet";
+                if (EhternetIPTxt.Text != "")
+                {
+                    checkEthernetCommunitcation();
+                }
             }
             else if (RS232Radio.IsChecked == true)
             {
                 DeviceType = "RS232";
+                if (DeviceSelectRS232.SelectedIndex != -1)
+                {
+                    //checkRS232Communitcation();
+                }
+
+
             }
 
         }
@@ -4813,9 +5104,8 @@ namespace G80Utility
             }
 
         }
-
-
         #endregion
+
 
     }
 }

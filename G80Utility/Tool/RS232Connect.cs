@@ -15,7 +15,7 @@ namespace G80Utility.Tool
         public static byte[] mRecevieData;
         public static bool IsConnect;
 
-        //開啟SerialPort
+        #region 開啟SerialPort
         public static bool OpenSerialPort(string comPort, string msg)
         {
             bool isError = false;
@@ -27,37 +27,98 @@ namespace G80Utility.Tool
             mSerialPort.DataBits = 8;
             mSerialPort.StopBits = StopBits.One;
             mSerialPort.Handshake = Handshake.RequestToSend;
-            mSerialPort.ReadTimeout = 100000;
+            mSerialPort.ReadTimeout = 5000;
             mSerialPort.WriteTimeout = 5000;
-           
             //不加下面兩行就會無法開啟serialport
             mSerialPort.DtrEnable = true;
             mSerialPort.RtsEnable = true;
-
             try
             {
                 mSerialPort.Open();
-                //MessageBox.Show("open port");
-
+                mSerialPort.DiscardOutBuffer();
+                mSerialPort.DiscardInBuffer();
             }
-            catch (Exception ex) //開啟comport時要用try catch接起來以免遇到comport無法開啟出錯
+            catch (Exception) 
             {
                 isError = true;
-
-                if (ex.ToString().Contains("UnauthorizedAccessException"))
-                {
-                    MessageBox.Show(msg);
-                }
-                else
-                {
-                    MessageBox.Show(ex.ToString());
-                }
                 mSerialPort.Close();
             }
             return isError;
         }
+        #endregion
 
-        //關閉SerialPort
+        #region 透過RS232傳送CMD
+        public static bool SerialPortSendCMD(string cmdType, byte[] data, string msg, int recevieLength)
+        {
+            //將isReceiveData和mRecevieData恢復預設
+            isReceiveData = false;
+            mRecevieData = null;
+
+            List<byte> buffer = new List<byte>();
+            foreach (byte bytedata in data)
+            {
+                buffer.Add(bytedata);
+            }
+            byte[] dataSend = buffer.ToArray();
+            try
+            {
+                IsConnect = true;
+                mSerialPort.Write(dataSend, 0, dataSend.Length);
+
+                switch (cmdType)
+                {
+
+                    case "NeedReceive":
+
+                        Task.Factory.StartNew(() =>
+                        {
+                            ReceiveInfo(recevieLength);
+                        });
+                        break;
+                    case "NoReceive":
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                IsConnect = false;
+                mSerialPort.Close();
+                isReceiveData = true;//如果不設為true前端會一直收資料
+            }
+            return isReceiveData;
+        }
+        #endregion
+
+        #region 接收回復內容
+        public static void ReceiveInfo(int count)
+        {
+            int offset = 0;
+            byte[] buffer = new byte[count];
+
+            while (count > 0)
+            {
+                try
+                {
+                    int bytesRead = mSerialPort.Read(buffer, offset, count);
+                    offset += bytesRead;
+                    count -= bytesRead;
+                    IsConnect = true;
+                }
+                catch (Exception)
+                {
+                    IsConnect = false;
+                    isReceiveData = true;
+                    break;
+                }
+            }
+            Console.WriteLine("COM接收資料" + BitConverter.ToString(buffer));
+            mRecevieData = buffer;
+            isReceiveData = true;
+        }
+        #endregion
+
+        #region 關閉SerialPort
         public static void CloseSerialPort()
         {
             if (mSerialPort != null && mSerialPort.IsOpen)
@@ -65,91 +126,6 @@ namespace G80Utility.Tool
                 mSerialPort.Close();
             }
         }
-
-        //透過RS232傳送CMD
-        public static bool SerialPortSendCMD(string cmdType, byte[] data, string msg,int recevieLength)
-        {
-            //將isReceiveData和mRecevieData恢復預設
-            isReceiveData = false;
-            mRecevieData = null;
-           
-
-            if (mSerialPort.IsOpen)
-            {
-                List<byte> buffer = new List<byte>();
-                foreach (byte bytedata in data)
-                {
-                    buffer.Add(bytedata);
-                }
-                byte[] dataSend = buffer.ToArray();
-                try
-                {
-                    IsConnect = true;
-                    mSerialPort.Write(dataSend, 0, dataSend.Length);
-
-                    switch (cmdType) {
-
-                        case "NeedReceive":
-
-                            Task.Factory.StartNew(() =>
-                            {
-                                ReceiveInfo(recevieLength);                      
-                            });
-                            break;
-                        case "NoReceive":
-                            break;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.ToString());
-                    if (ex.ToString().Contains("TimeOut") || ex.ToString().Contains("IO"))
-                    {
-                        MessageBox.Show("Failed to SEND:" + "\n" + "Comport setting error!");
-                    }
-                    else
-                    {
-                        MessageBox.Show("Failed to SEND:" + "\n" + ex + "\n");
-                    }
-                    IsConnect = false;
-                    mSerialPort.Close();
-                    isReceiveData = true;//如果不設為true前端會一直收資料
-                }
-            }
-            else //mSerialPort close
-            {
-                MessageBox.Show(msg);
-                isReceiveData = true;//如果不設為true前端會一直收資料
-                IsConnect = false;
-            }
-            return isReceiveData;
-        }
-  
-
-        //接收回復內容
-        public static void ReceiveInfo(int count)
-        {
-            int offset = 0;
-            byte[] buffer = new byte[count];
-            while (count > 0)
-            {
-                int bytesRead = mSerialPort.Read(buffer, offset, count);
-                offset += bytesRead;
-                count -= bytesRead;
-            }
-
-            mRecevieData = buffer;
-            IsConnect = true;
-            isReceiveData = true;
-        }
-
-        //接收設定回復結果
-        public static void ReceiveSettingResult(string msg) {
-            string recieved_data = mSerialPort.ReadLine().Trim(); 
-            if (recieved_data.Contains("OK"))
-            {
-                MessageBox.Show(msg);
-            }
-        }
+        #endregion
     }
 }

@@ -21,7 +21,9 @@ namespace G80Utility.Tool
         public static string EthernetIPAddress;
         public static bool isReceiveData;
         public static byte[] mRecevieData;
-        public static bool connectStatus;
+        public static int connectStatus;
+        //判斷如果ip改變要重新連線，因為目前是一個連線可以重複讀取
+        public static string EthernetIPAddressOld;
 
         #region socket非同步回撥方法
         private static void CallBackMethod(IAsyncResult asyncresult)
@@ -32,90 +34,45 @@ namespace G80Utility.Tool
         #endregion
 
         #region socket連線印表機
-        public static bool connectToPrinter()
+        public static int connectToPrinter()
         {
             TimeoutObject.Reset();
             int port = 9100;
-            bool isConnect = false;
-
-            if (EthernetIPAddress != null)
+            int connectCode = 0; //0:連線失敗,1:連線成功,2:連線逾時
+            try
             {
-                try
+                IPAddress ip = IPAddress.Parse(EthernetIPAddress);
+                IPEndPoint ipe = new IPEndPoint(ip, port);
+                SocketClient = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                IAsyncResult ConnectResult = SocketClient.BeginConnect(ipe, CallBackMethod, SocketClient);
+                bool success = ConnectResult.AsyncWaitHandle.WaitOne(3000, true);
+                EthernetIPAddressOld = EthernetIPAddress;
+                if (success)
                 {
-                    IPAddress ip = IPAddress.Parse(EthernetIPAddress);
-                    IPEndPoint ipe = new IPEndPoint(ip, port);
-                    SocketClient = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                    //SocketClient.Connect(ipe);
-                    isConnect = true;
-                    IAsyncResult ConnectResult = SocketClient.BeginConnect(ipe, CallBackMethod, SocketClient);
-                    bool success = ConnectResult.AsyncWaitHandle.WaitOne(3000, true);
-                    Console.WriteLine(SocketClient.Connected);
-                    if (success)
-                    {
-                        isConnect = true;
-                    }
-                    else
-                    {
-                        isConnect = false;
-                        ((G80MainWindow)Application.Current.MainWindow).EthernetConnectImage.Source = new BitmapImage(new Uri("Images/red_circle.png", UriKind.Relative)); //連線失敗時
-                        MessageBox.Show(Application.Current.FindResource("ConnectTimeout") as string);
-                        setSysStatusColorAndText(Application.Current.FindResource("ConnectTimeout") as string, "#FFEF7171");
-                        disconnect();
-                    }
-
+                    connectCode = 1;
                 }
-                catch (Exception e)
+                else
                 {
-                    isConnect = false;
-                    Console.WriteLine("連線失敗！\r\n" + e.ToString());
-                    ((G80MainWindow)Application.Current.MainWindow).EthernetConnectImage.Source = new BitmapImage(new Uri("Images/red_circle.png", UriKind.Relative)); //連線失敗時
-                    MessageBox.Show(Application.Current.FindResource("NotSettingEthernetport") as string);
-                    setSysStatusColorAndText(Application.Current.FindResource("NotSettingEthernetport") as string, "#FFEF7171");
+                    connectCode = 2;
+                    disconnect();
                 }
             }
-            else
+            catch (Exception e)
             {
-                isConnect = false;
-                ((G80MainWindow)Application.Current.MainWindow).EthernetConnectImage.Source = new BitmapImage(new Uri("Images/red_circle.png", UriKind.Relative)); //連線失敗時
-                MessageBox.Show(Application.Current.FindResource("NotSettingEthernetport") as string);
-                setSysStatusColorAndText(Application.Current.FindResource("NotSettingEthernetport") as string, "#FFEF7171");
-
+                connectCode = 0;
             }
-            return isConnect;
+            return connectCode;
         }
         #endregion
 
         #region 傳送狀態檢查
-        public static bool EthernetConnectStatus()
+        public static int EthernetConnectStatus() //測試連線狀態，避免重複連線
         {
-            if (!connectStatus)
+            if (connectStatus != 1 || EthernetIPAddressOld != EthernetIPAddress)
             {
-                connectStatus = connectToPrinter();
+                connectStatus = connectToPrinter();　//非連線狀態要先連線
             }
             return connectStatus;
-        }
-        #endregion
-
-        #region 關閉socket連線
-        public static void disconnect()
-        {
-            if (ThreadClient != null && ThreadClient.IsAlive)
-            {
-                ThreadClient.Abort();
-            }
-            try
-            {
-                SocketClient.Close();
-                connectStatus = false;
-            }
-            catch (SocketException e)
-            {
-                Console.WriteLine(e.ToString());
-                Console.WriteLine(e.ErrorCode + "");
-
-            }
-
-            isReceiveData = true;//如果不設為true前端會一直收資料
         }
         #endregion
 
@@ -127,7 +84,7 @@ namespace G80Utility.Tool
             mRecevieData = null;
             Receive_Size = recevieLength;
 
-            if (TimeoutObject.WaitOne(2000, false))
+            if (TimeoutObject.WaitOne(2000, false) && connectStatus == 1)
             {
                 ((G80MainWindow)Application.Current.MainWindow).EthernetConnectImage.Source = new BitmapImage(new Uri("Images/green_circle.png", UriKind.Relative)); //連線失敗時
                 switch (cmdType)
@@ -140,15 +97,14 @@ namespace G80Utility.Tool
                         break;
                     case "NoReceive":
                         SocketClient.Send(data);
-                        disconnect(); //寫入命令才關閉socket，避免寫入後打印機回傳其他數值造成同一個socket在接收的時候出現問題
+                        // disconnect(); //寫入命令才關閉socket，避免寫入後打印機回傳其他數值造成同一個socket在接收的時候出現問題
                         break;
                 }
             }
             else
             {
-                ((G80MainWindow)Application.Current.MainWindow).EthernetConnectImage.Source = new BitmapImage(new Uri("Images/red_circle.png", UriKind.Relative)); //連線失敗時
-                MessageBox.Show(Application.Current.FindResource("ConnectTimeout") as string);
-                setSysStatusColorAndText(Application.Current.FindResource("ConnectTimeout") as string, "#FFEF7171");
+                connectStatus = 2;
+                isReceiveData = true;
                 disconnect();
             }
             return isReceiveData;
@@ -168,22 +124,45 @@ namespace G80Utility.Tool
             }
             catch (Exception ex)
             {
-                //這邊會收到中斷執行緒的exception所以不特別做ui處理
                 Console.WriteLine(ex.Message + "\r\n");
                 isReceiveData = true;
-            }
+                connectStatus = 2;
+                disconnect();
 
+            }
 
         }
         #endregion
 
-        #region 狀態列設定文字與顏色
-        public static void setSysStatusColorAndText(string msg, string color)
+        #region 關閉socket連線
+        public static void disconnect()
         {
-            ((G80MainWindow)Application.Current.MainWindow).SysStatusText.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString(color));
-            ((G80MainWindow)Application.Current.MainWindow).SysStatusText.Text = msg;
-        }
+            if (ThreadClient != null && ThreadClient.IsAlive)
+            {
+                try
+                {
+                    ThreadClient.Abort();
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.ToString());
+                }
+            }
+            try
+            {
+                SocketClient.Close();
+                connectStatus = 0;
+            }
+            catch (SocketException e)
+            {
+                connectStatus = 0;
+                Console.WriteLine(e.ToString());
+                Console.WriteLine(e.ErrorCode + "");
 
+            }
+
+            isReceiveData = true;//如果不設為true前端會一直收資料
+        }
         #endregion
     }
 }

@@ -50,7 +50,7 @@
                                 <RadioButton FontSize="14" Name="EhernetRadio" GroupName="connection" Content="{DynamicResource Ethernet}" VerticalAlignment="Center"  Checked="ConnectType_SelectionChanged"/>
                                 <Image  Margin="52,0,0,0"   Source="Images/grey_circle.png" Width="12" Name="EthernetConnectImage"/>
                             </StackPanel>
-                            <TextBox Margin="10,0,10,0" Name="EhternetIPTxt" FontSize="14"  Height="30"  Width="110" Foreground="#BDBDBD" Padding="5"/>
+                            <TextBox Margin="10,0,10,0" Name="EhternetIPTxt" LostFocus="EhternetIPTxt_LostFocus"  FontSize="14"  Height="30"  Width="110" Foreground="#BDBDBD" Padding="5"/>
                         </StackPanel>
                         <!--通訊測試-->
                         <StackPanel Margin="10,0,10,0" VerticalAlignment="Center">
@@ -101,8 +101,8 @@
         <!--Tap分頁-->
         <TabControl Height="470" TabStripPlacement="Top" Margin="5,3,5,0" >
             <!--數據傳輸-->
-            <TabItem Header="{DynamicResource PrintTest}"  FontSize="14">
-                <Border Margin="5,5,5,1" >
+            <TabItem Header="{DynamicResource PrintTest}"  FontSize="14" >
+                <Border Margin="5,5,5,1" Name="DataSendTab"   >
                     <StackPanel  Height="445" Margin="10,0,0,0" >
                         <GroupBox  Header="發送數據" Width="985" Height="260" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14"  HorizontalAlignment="Left" >
                             <TextBox Name="CmdContentTxt" Text="输入需要打印的数据，输入完成后，点击发送按键" Width="970" Height="236"  TextWrapping="Wrap"  VerticalScrollBarVisibility="Auto"/>
@@ -158,7 +158,7 @@
 
             <!--參數設定-->
             <TabItem Header="{DynamicResource PrinterConfig}"  FontSize="14">
-                <Border Background="#595959" >
+                <Border Background="#595959"  Name="ParaSetTab"  >
                     <StackPanel Height="445" Width="1010" Orientation="Horizontal">
                         <StackPanel>
                             <TextBlock Text="勾选后才会下载参数到打印机中" Margin="0,5,0,5" Foreground="#99ef71" FontSize="14" HorizontalAlignment="Center" />
@@ -446,7 +446,7 @@
 
             <!--NVLogo-->
             <TabItem Header="{DynamicResource NVLogo}"  FontSize="14">
-                <StackPanel Height="415" Orientation="Horizontal">
+                <StackPanel Height="415" Orientation="Horizontal"  Name="NVlLogoTab" >
                     <StackPanel>
                         <StackPanel Orientation="Horizontal" Margin="10" >
                             <Button Content="打开图片集" Name="OpenImgFileBtn" Click="OpenImgFileBtn_Click" Padding="10,5,10,5" Width="110" Margin="0,0,10,0" FontSize="14"/>
@@ -486,7 +486,7 @@
 
             <!--黑標功能-->
             <TabItem Header="{DynamicResource BLineSetting}"  FontSize="14" Visibility="Collapsed">
-                <StackPanel Height="380"  Margin="20,50,0,0">
+                <StackPanel Height="380"  Margin="20,50,0,0"  Name="BlineTab" >
                     <Grid >
                         <Grid.ColumnDefinitions >
                             <ColumnDefinition />
@@ -524,7 +524,7 @@
             </TabItem>
 
             <!--维修维护-->
-            <TabItem   FontSize="14" >
+            <TabItem   FontSize="14">
                 <TabItem.Header>
                     <Label Content="{DynamicResource PrinterAction}"
                             Name="MaintainTab"
@@ -532,7 +532,7 @@
                             Padding="0" Margin="0"
                     />
                 </TabItem.Header>
-                <Border CornerRadius="5" Background="#595959" Margin="0,0,1,2">
+                <Border CornerRadius="5" Background="#595959" Margin="0,0,1,2"  Name="MaintaiTab" >
                     <StackPanel Height="445">
                         <Grid Margin="15">
                             <Grid.ColumnDefinitions>
@@ -647,7 +647,7 @@
 
             <!--工廠生產-->
             <TabItem Header="工厂生产"  FontSize="14">
-                <Border CornerRadius="5" Background="#595959" Margin="0,0,1,2">
+                <Border CornerRadius="5" Background="#595959" Margin="0,0,1,2"  Name="FactoryTab" >
                     <StackPanel Height="445">
                         <Grid HorizontalAlignment="Center" Margin="0,30,0,0">
                             <Grid.ColumnDefinitions>
@@ -700,8 +700,8 @@
             </TabItem>
 
             <!--升級程序-->
-            <TabItem Header="{DynamicResource FWUpdate}"  FontSize="14">
-                <Border CornerRadius="5" Background="#595959" Margin="0,0,1,2">
+            <TabItem Header="{DynamicResource FWUpdate}"  FontSize="14" Visibility="Collapsed">
+                <Border CornerRadius="5" Background="#595959" Margin="0,0,1,2"  Name="FWUpgradeTab" >
                     <StackPanel  Margin="0,40,0,0" HorizontalAlignment="Center" >
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
                             <Label Content="下载地址" Margin="0,0,5,0"/>

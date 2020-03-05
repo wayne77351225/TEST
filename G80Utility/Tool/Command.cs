@@ -16,6 +16,15 @@ namespace G80Utility.Tool
         //Ethernet接口測試
         public static string ETHERNET_COMMUNICATION_TEST = "1F 1B 10 03 00";
 
+        //RS232接口測試收到數據
+        public static string RS232_COMMUNICATION_RECEIVE = "1F-1B-1F-48-46-10-01-00";
+
+        //USB接口測試收到數據
+        public static string USB_COMMUNICATION_RECEIVE = "1F-1B-1F-48-46-10-02-00";
+
+        //Ethernet接口測試收到數據
+        public static string ETHERNET_COMMUNICATION_RECEIVE = "1F-1B-1F-48-46-10-03-00";
+
         //即時狀態
         public static string STATUS_MONITOR = "1F 1B 10 04 00";
 
