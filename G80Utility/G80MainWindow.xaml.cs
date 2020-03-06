@@ -133,8 +133,6 @@ namespace G80Utility
         {
             SaveLastIP();
             e.Cancel = false;
-
-
         }
 
         //app在背景事件
@@ -188,6 +186,8 @@ namespace G80Utility
 
             //讀取最後一次紀錄ip
             LoadLastIP();
+
+            collectMacAddress();
         }
         #endregion
 
@@ -902,6 +902,24 @@ namespace G80Utility
             FactoryTab.IsEnabled = isEnabled;
             FWUpgradeTab.IsEnabled = isEnabled;//Collapsed
             StatusMonitorBtn.IsEnabled = isEnabled;
+        }
+        #endregion
+
+        #region MacAddress的生成
+        public byte[] collectMacAddress() {
+            Random random = new Random();
+            int mac4 = random.Next(0, 255);
+            int mac5 = random.Next(0, 255);
+            int mac6 = random.Next(0, 255);
+
+            string hexMac4 = mac4.ToString("X2"); //X:16進位,2:2位數
+            string hexMac5 = mac5.ToString("X2");
+            string hexMac6 = mac6.ToString("X2");
+
+            //寫入MAC Address
+            byte[] sendArray = StringToByteArray(Command.MAC_ADDRESS_SETTING_HEADER + "00 47 50" + hexMac4 + hexMac5 + hexMac6);
+            SetMACText.Text = "00:47:50:" + hexMac4 + ":" + hexMac5 + ":" + hexMac6;
+            return sendArray;
         }
         #endregion
 
@@ -2718,19 +2736,19 @@ namespace G80Utility
         #region 設定MAC
         private void SetMAC()
         {
-            byte[] sendArray = null;
-            Random random = new Random();
-            int mac4 = random.Next(0, 255);
-            int mac5 = random.Next(0, 255);
-            int mac6 = random.Next(0, 255);
+            byte[] sendArray = collectMacAddress();
+            //Random random = new Random();
+            //int mac4 = random.Next(0, 255);
+            //int mac5 = random.Next(0, 255);
+            //int mac6 = random.Next(0, 255);
 
-            string hexMac4 = mac4.ToString("X2"); //X:16進位,2:2位數
-            string hexMac5 = mac5.ToString("X2");
-            string hexMac6 = mac6.ToString("X2");
+            //string hexMac4 = mac4.ToString("X2"); //X:16進位,2:2位數
+            //string hexMac5 = mac5.ToString("X2");
+            //string hexMac6 = mac6.ToString("X2");
 
-            //寫入MAC Address
-            sendArray = StringToByteArray(Command.MAC_ADDRESS_SETTING_HEADER + "00 47 50" + hexMac4 + hexMac5 + hexMac6);
-            SetMACText.Text = "00:47:50:" + hexMac4 + ":" + hexMac5 + ":" + hexMac6;
+            ////寫入MAC Address
+            //sendArray = StringToByteArray(Command.MAC_ADDRESS_SETTING_HEADER + "00 47 50" + hexMac4 + hexMac5 + hexMac6);
+            //SetMACText.Text = "00:47:50:" + hexMac4 + ":" + hexMac5 + ":" + hexMac6;
             SendCmd(sendArray, "BeepOrSetting", 0);
         }
         #endregion

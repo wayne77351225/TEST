@@ -175,12 +175,12 @@
                             <GroupBox Header="通讯参数设置" Margin="5,0,0,0" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14" Width="270">
                                 <StackPanel Margin="3,5,5,5" Name="CommunicatePanel">
                                     <StackPanel  Margin="0,0,0,6" Orientation="Horizontal">
-                                        <TextBox  Margin="0,0,5,0" Name="SetIPText" Width="117" Height="26"  Foreground="#BDBDBD"/>
+                                        <TextBox  Margin="0,0,5,0" Text="192.168.123.123" Name="SetIPText" Width="117" Height="26"  Foreground="#BDBDBD"/>
                                         <Button  Margin="0,0,5,0" Name="SetIPBtn" Click="SetIPBtn_Click" Content="设置IP地址" Padding="10,5,10,5" Width="110"/>
                                         <CheckBox VerticalAlignment="Center" IsChecked="True" Name="SetIPCheckbox" />
                                     </StackPanel>
                                     <StackPanel  Margin="0,0,0,6" Orientation="Horizontal">
-                                        <TextBox  Margin="0,0,5,0" Name="SetGatewayText" Width="117" Height="26"  Foreground="#BDBDBD"/>
+                                        <TextBox  Margin="0,0,5,0" Text="192.168.123.1" Name="SetGatewayText" Width="117" Height="26"  Foreground="#BDBDBD"/>
                                         <Button  Margin="0,0,5,0" Name="SetGatewayBtn"  Click="SetGatewayBtn_Click" Content="设置网关地址" Padding="10,5,10,5" Width="110"/>
                                         <CheckBox VerticalAlignment="Center" IsChecked="True" Name="SetGatewayCheckbox"/>
                                     </StackPanel>
