@@ -2384,14 +2384,14 @@ namespace G80Utility
             string IP = EhternetIPTxt.Text;
             //建立註冊機碼目錄
             createSNRegistry();
-            setIPRegistry(IP);
+            setRegistry("IP", IP);
         }
         #endregion
 
         #region 讀取最後一次輸入IP
         public void LoadLastIP()
         {
-            string IP = getIPRegistry();
+            string IP = getRegistry("IP");
             EhternetIPTxt.Text= IP;
 
         }
@@ -3882,7 +3882,7 @@ namespace G80Utility
             createSNRegistry();
 
             //初次未記錄,抓取user輸入值
-            if (getSNRegistry() == null)
+            if (getRegistry("SN") == null)
             {
                 switch (functionClass)
                 {
@@ -3896,7 +3896,7 @@ namespace G80Utility
             }
             else
             { //已經有紀錄，抓取最後一次序號值
-                sn = getSNRegistry();
+                sn = getRegistry("SN");
                 string number = sn.Substring(10, 6);
                 sn = sn.Remove(10, 6);
                 int lastNumber = Int32.Parse(number);
@@ -3926,7 +3926,7 @@ namespace G80Utility
                     sendArray[i] = snArray[i - sendLen];
                 }
                 SendCmd(sendArray, "BeepOrSetting", 0);
-                setSNRegistry(sn); //寫入序號到註冊機碼
+                setRegistry("SN",sn); //寫入序號到註冊機碼
                 //寫入序號到畫面
                 PrinterSNFacTxt.Text = sn;
                 PrinterSNTxt.Text = sn;
@@ -4119,37 +4119,20 @@ namespace G80Utility
         }
         #endregion
 
-        #region 註冊機碼sn的寫入
-        private void setSNRegistry(string sn)
+        #region 註冊機碼的寫入
+        private void setRegistry(string valueName,string value)
         {
             RegistryKey registryKey = Registry.LocalMachine.CreateSubKey(@"SOFTWARE\ZLPPT"); //修改也要使用create不能用open
-            registryKey.SetValue("SN", sn);
+            registryKey.SetValue(valueName, value);
         }
         #endregion
 
-        #region 註冊機碼sn的讀取
-        private string getSNRegistry()
+        #region 註冊機碼的讀取
+        private string getRegistry(string valueName)
         {
-            var lastSN = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\ZLPPT").GetValue("SN");
+            var lastValue = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\ZLPPT").GetValue(valueName);
 
-            return (string)lastSN;
-        }
-        #endregion
-
-        #region 註冊機碼IP的寫入
-        private void setIPRegistry(string IP)
-        {
-            RegistryKey registryKey = Registry.LocalMachine.CreateSubKey(@"SOFTWARE\ZLPPT"); //修改也要使用create不能用open
-            registryKey.SetValue("IP", IP);
-        }
-        #endregion
-
-        #region 註冊機碼IP的讀取
-        private string getIPRegistry()
-        {
-            var lastIP = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\ZLPPT").GetValue("IP");
-
-            return (string)lastIP;
+            return (string)lastValue;
         }
         #endregion
 
