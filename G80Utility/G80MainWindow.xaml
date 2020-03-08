@@ -62,7 +62,7 @@
                     </StackPanel>
                 </GroupBox>
                 <!--機器信息-->
-                <GroupBox Header="机器信息" Margin="15,5,0,10" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14" Height="150">
+                <GroupBox Header="机器信息" Margin="15,5,0,10" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14" Height="150" Visibility="Collapsed">
                     <StackPanel VerticalAlignment="Top">
                         <Label Content="机器序列号:" FontSize="14" Margin="5,0,0,0"/>
                         <TextBox Width="200" Height="30" FontSize="14" Name="PrinterSNTxt" HorizontalAlignment="Left" Margin="5,0,0,0"/>
@@ -100,62 +100,6 @@
 
         <!--Tap分頁-->
         <TabControl Height="470" TabStripPlacement="Top" Margin="5,3,5,0" >
-            <!--數據傳輸-->
-            <TabItem Header="{DynamicResource PrintTest}"  FontSize="14">
-                <Border Margin="5,5,5,1" >
-                    <StackPanel  Height="445" Margin="10,0,0,0" >
-                        <GroupBox  Header="發送數據" Width="985" Height="260" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14"  HorizontalAlignment="Left" >
-                            <TextBox Name="CmdContentTxt" Text="输入需要打印的数据，输入完成后，点击发送按键" Width="970" Height="236"  TextWrapping="Wrap"  VerticalScrollBarVisibility="Auto"/>
-                        </GroupBox>
-                        <StackPanel Orientation="Horizontal" Margin="0,20,0,0"  >
-                            <StackPanel Margin="5,20,0,0" >
-                                <StackPanel  Margin="0,0,10,10" Orientation="Horizontal">
-                                    <Button Width="100" Name="SendCmdBtn" Click="SendCmdBtn_Click" Content="發送" Margin="0,0,10,0" Padding="0,5,0,5" FontSize="14" />
-                                    <Button Width="100" Name="SendEnterBtn" Click="SendEnterBtn_Click" Content="打印" Margin="0,0,10,0" Padding="0,5,0,5" FontSize="14" />
-                                    <Button Width="100" Name="ClearCmdBtn" Click="ClearCmdBtn_Click" Content="清空" Margin="0,0,10,0" Padding="0,5,0,5" FontSize="14" />
-                                    <Button Width="100" Name="OepnFileBtn" Click="OepnFileBtn_Click" Content="打開文件" Margin="0,0,10,0" Padding="0,5,0,5" FontSize="14" />
-                                </StackPanel>
-                                <StackPanel Orientation="Horizontal" Margin="0,0,0,0"  >
-                                    <CheckBox Name="HexModeCheckbox" Checked="HexModeCheckbox_Checked" Unchecked="HexModeCheckbox_Unchecked" Content="十六进制模式" Margin="0,0,20,0"  Height="22" Padding="5,0,0,0"  VerticalAlignment="Center" FontSize="14"/>
-                                    <!--<CheckBox Content="二維碼模式" Padding="5,0,0,0" VerticalAlignment="Center"  FontSize="14"/>
-                                    <Label Content="二維碼大小：" Margin="25,0,0,0" VerticalAlignment="Top"  FontSize="14"/>
-                                    <TextBox Width="50"  FontSize="14" Height="22"/>-->
-                                </StackPanel>
-                                <StackPanel  Margin="-2,10,10,15" Orientation="Horizontal">
-                                    <Label Content="定时发送间隔："  FontSize="14"/>
-                                    <TextBox Name="SendCmdItervalTxt" Width="70" Text="500"  FontSize="14" Height="22" PreviewTextInput="NumberValidationTextBox" input:InputMethod.IsInputMethodEnabled="False"/>
-                                    <Label Content="ms"  FontSize="14" Margin="0,0,10,0"/>
-                                    <Button Name="SendCmdItervalBtn" Click="SendCmdItervalBtn_Click" Content="{DynamicResource StartSendCmd}"   FontSize="14" Width="80" Margin="0,0,22,0"/>
-                                    <!--<Button Content="十六进制转存模式"  FontSize="14" Width="130"/>-->
-                                </StackPanel>
-                            </StackPanel>
-                            <!--<GroupBox Header="打印小票测试"  Width="520"  Margin="5,0,10,5" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14">
-                                <StackPanel  >
-                                    <StackPanel Orientation="Horizontal" Margin="10,20,5,10" >
-                                        <RadioButton Content="一鍵測試" Margin="0,0,15,0" Padding="5,0,0,0"  VerticalAlignment="Center" FontSize="14"/>
-                                        <RadioButton Content="時間戳記" Padding="5,0,0,0" VerticalAlignment="Center"  FontSize="14"/>
-                                    </StackPanel>
-                                    <StackPanel Orientation="Horizontal" Margin="0,5,5,10">
-                                        <StackPanel Orientation="Horizontal" Margin="10,5,5,0">
-                                            <Label Content="從" VerticalAlignment="Top"  FontSize="14"/>
-                                            <TextBox Width="80"  FontSize="14" Height="22"/>
-                                            <Label Content="張開始"  FontSize="14"/>
-                                        </StackPanel>
-                                        <StackPanel Orientation="Horizontal" Margin="0,5,5,0">
-                                            <Label Content="到"  VerticalAlignment="Top"  FontSize="14"/>
-                                            <TextBox Width="80"  FontSize="14" Height="22"/>
-                                            <Label Content="張結束" FontSize="14"/>
-                                        </StackPanel>
-                                        <Button Content="開始計數" Height="26" FontSize="14" Width="75" Margin="5,0,10,0"/>
-                                        <Button Content="停止計數" Height="26" FontSize="14" Width="75"/>
-                                    </StackPanel>
-                                </StackPanel>
-                            </GroupBox>-->
-                        </StackPanel>
-                    </StackPanel>
-                </Border>
-            </TabItem>
-
             <!--參數設定-->
             <TabItem Header="{DynamicResource PrinterConfig}"  FontSize="14">
                 <Border Background="#595959" >
@@ -444,6 +388,62 @@
                 </Border>
             </TabItem>
 
+            <!--數據傳輸-->
+            <TabItem Header="{DynamicResource PrintTest}"  FontSize="14" Visibility="Collapsed">
+                <Border Margin="5,5,5,1" >
+                    <StackPanel  Height="445" Margin="10,0,0,0" >
+                        <GroupBox  Header="發送數據" Width="985" Height="260" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14"  HorizontalAlignment="Left" >
+                            <TextBox Name="CmdContentTxt" Text="输入需要打印的数据，输入完成后，点击发送按键" Width="970" Height="236"  TextWrapping="Wrap"  VerticalScrollBarVisibility="Auto"/>
+                        </GroupBox>
+                        <StackPanel Orientation="Horizontal" Margin="0,20,0,0"  >
+                            <StackPanel Margin="5,20,0,0" >
+                                <StackPanel  Margin="0,0,10,10" Orientation="Horizontal">
+                                    <Button Width="100" Name="SendCmdBtn" Click="SendCmdBtn_Click" Content="發送" Margin="0,0,10,0" Padding="0,5,0,5" FontSize="14" />
+                                    <Button Width="100" Name="SendEnterBtn" Click="SendEnterBtn_Click" Content="打印" Margin="0,0,10,0" Padding="0,5,0,5" FontSize="14" />
+                                    <Button Width="100" Name="ClearCmdBtn" Click="ClearCmdBtn_Click" Content="清空" Margin="0,0,10,0" Padding="0,5,0,5" FontSize="14" />
+                                    <Button Width="100" Name="OepnFileBtn" Click="OepnFileBtn_Click" Content="打開文件" Margin="0,0,10,0" Padding="0,5,0,5" FontSize="14" />
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,0"  >
+                                    <CheckBox Name="HexModeCheckbox" Checked="HexModeCheckbox_Checked" Unchecked="HexModeCheckbox_Unchecked" Content="十六进制模式" Margin="0,0,20,0"  Height="22" Padding="5,0,0,0"  VerticalAlignment="Center" FontSize="14"/>
+                                    <!--<CheckBox Content="二維碼模式" Padding="5,0,0,0" VerticalAlignment="Center"  FontSize="14"/>
+                                    <Label Content="二維碼大小：" Margin="25,0,0,0" VerticalAlignment="Top"  FontSize="14"/>
+                                    <TextBox Width="50"  FontSize="14" Height="22"/>-->
+                                </StackPanel>
+                                <StackPanel  Margin="-2,10,10,15" Orientation="Horizontal">
+                                    <Label Content="定时发送间隔："  FontSize="14"/>
+                                    <TextBox Name="SendCmdItervalTxt" Width="70" Text="500"  FontSize="14" Height="22" PreviewTextInput="NumberValidationTextBox" input:InputMethod.IsInputMethodEnabled="False"/>
+                                    <Label Content="ms"  FontSize="14" Margin="0,0,10,0"/>
+                                    <Button Name="SendCmdItervalBtn" Click="SendCmdItervalBtn_Click" Content="{DynamicResource StartSendCmd}"   FontSize="14" Width="80" Margin="0,0,22,0"/>
+                                    <!--<Button Content="十六进制转存模式"  FontSize="14" Width="130"/>-->
+                                </StackPanel>
+                            </StackPanel>
+                            <!--<GroupBox Header="打印小票测试"  Width="520"  Margin="5,0,10,5" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14">
+                                <StackPanel  >
+                                    <StackPanel Orientation="Horizontal" Margin="10,20,5,10" >
+                                        <RadioButton Content="一鍵測試" Margin="0,0,15,0" Padding="5,0,0,0"  VerticalAlignment="Center" FontSize="14"/>
+                                        <RadioButton Content="時間戳記" Padding="5,0,0,0" VerticalAlignment="Center"  FontSize="14"/>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" Margin="0,5,5,10">
+                                        <StackPanel Orientation="Horizontal" Margin="10,5,5,0">
+                                            <Label Content="從" VerticalAlignment="Top"  FontSize="14"/>
+                                            <TextBox Width="80"  FontSize="14" Height="22"/>
+                                            <Label Content="張開始"  FontSize="14"/>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal" Margin="0,5,5,0">
+                                            <Label Content="到"  VerticalAlignment="Top"  FontSize="14"/>
+                                            <TextBox Width="80"  FontSize="14" Height="22"/>
+                                            <Label Content="張結束" FontSize="14"/>
+                                        </StackPanel>
+                                        <Button Content="開始計數" Height="26" FontSize="14" Width="75" Margin="5,0,10,0"/>
+                                        <Button Content="停止計數" Height="26" FontSize="14" Width="75"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </GroupBox>-->
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+            </TabItem>
+
             <!--NVLogo-->
             <TabItem Header="{DynamicResource NVLogo}"  FontSize="14">
                 <StackPanel Height="415" Orientation="Horizontal">
@@ -524,7 +524,7 @@
             </TabItem>
 
             <!--维修维护-->
-            <TabItem   FontSize="14" >
+            <TabItem   FontSize="14"  Visibility="Collapsed">
                 <TabItem.Header>
                     <Label Content="{DynamicResource PrinterAction}"
                             Name="MaintainTab"
@@ -681,7 +681,7 @@
                             </GroupBox>
                             <StackPanel Grid.Column="1" Grid.Row="0">
                                 <!--機器信息-->
-                                <GroupBox  Header="机器信息" Margin="20,0,0,20" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14" Height="150">
+                                <GroupBox  Header="机器信息" Margin="20,0,0,20" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14" Height="150" Visibility="Collapsed">
                                     <StackPanel VerticalAlignment="Top" HorizontalAlignment="Center">
                                         <Label Content="机器序列号:" FontSize="14" Margin="5,0,0,0"/>
                                         <TextBox FontSize="14" Width="200" Height="30"  Name="PrinterSNFacTxt" HorizontalAlignment="Left" Margin="5,0,0,0"/>
@@ -692,7 +692,7 @@
                                         </StackPanel>
                                     </StackPanel>
                                 </GroupBox>
-                                <Button Margin="20,0,0,0" Name="FactoryDefaultBtn" Click="FactoryDefaultBtn_Click" Content="出厂设置" Padding="5" FontSize="14" Height="40" />
+                                <Button Margin="20,30,0,0" Name="FactoryDefaultBtn" Click="FactoryDefaultBtn_Click" Content="出厂设置" Padding="5" FontSize="14" Height="40" />
                             </StackPanel>
                         </Grid>
                     </StackPanel>
@@ -700,7 +700,7 @@
             </TabItem>
 
             <!--升級程序-->
-            <TabItem Header="{DynamicResource FWUpdate}"  FontSize="14">
+            <TabItem Header="{DynamicResource FWUpdate}"  FontSize="14" Visibility="Collapsed">
                 <Border CornerRadius="5" Background="#595959" Margin="0,0,1,2">
                     <StackPanel  Margin="0,40,0,0" HorizontalAlignment="Center" >
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
