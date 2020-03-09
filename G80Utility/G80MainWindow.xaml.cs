@@ -2370,8 +2370,8 @@ namespace G80Utility
                 Console.WriteLine(BitConverter.ToString(sendArray).Replace("-", ""));
                 MessageBox.Show(FindResource("WaitforRedLight") as string);
             }
-        }
         #endregion
+        }
 
         //升級程序按鈕
         #region 開啟FW檔案按鈕事件
