@@ -2367,6 +2367,8 @@ namespace G80Utility
                 sendList.Insert(2, insertBtye[0]);
                 sendArray = sendList.ToArray();
                 SendCmd(sendArray, "BeepOrSetting", 0);
+                Console.WriteLine(BitConverter.ToString(sendArray).Replace("-", ""));
+                MessageBox.Show(FindResource("WaitforRedLight") as string);
             }
         }
         #endregion
@@ -2408,7 +2410,8 @@ namespace G80Utility
 
         #region 讀取最後一次輸入IP
         public void LoadLastIP()
-        {
+        {   //首次使用要建立註冊機碼目錄
+            createSNRegistry();
             string IP = getRegistry("IP");
             EhternetIPTxt.Text= IP;
 
@@ -4148,8 +4151,14 @@ namespace G80Utility
         #region 註冊機碼的讀取
         private string getRegistry(string valueName)
         {
-            var lastValue = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\ZLPPT").GetValue(valueName);
-
+            string lastValue=null;
+            if (Registry.LocalMachine.OpenSubKey(@"SOFTWARE\ZLPPT").GetValue(valueName) == null)
+            {
+                lastValue = "";
+            }
+            else {
+                lastValue = (string)Registry.LocalMachine.OpenSubKey(@"SOFTWARE\ZLPPT").GetValue(valueName);
+            }
             return (string)lastValue;
         }
         #endregion
