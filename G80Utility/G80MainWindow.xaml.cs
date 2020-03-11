@@ -1,4 +1,5 @@
-﻿using G80Utility.Models;
+﻿using G80Utility.HID;
+using G80Utility.Models;
 using G80Utility.Tool;
 using G80Utility.ViewModels;
 using Microsoft.Win32;
@@ -95,11 +96,42 @@ namespace G80Utility
 
         //判斷是否剛開啟視窗，避免一開啟視窗就跳出訊息
         bool isOpenWindow;
+
+        IAP_download iap_download;
+
+        byte download_time = 0;
+        byte hex_to_bin_time = 0;
+        //定义回调
+        public delegate void setTextValueCallBack(byte index, string text);
+        //声明回调
+        public setTextValueCallBack setCallBack;
+
+        //定义回调
+        public delegate void setConnectStatusCallBack(bool con);
+        //声明回调
+        public setConnectStatusCallBack set_connect_status;
+
+        Timer timer;
         #endregion
 
         public G80MainWindow()
         {
+            iap_download = new IAP_download();
+            
             InitializeComponent();
+            
+            iap_download.Initial();
+            iap_download.isConnectedFunc = device_connect_status;
+            set_connect_status += device_connect_status_ui;
+
+            //啟動ipa計時器   
+            timer = new Timer();
+            timer.Interval = 1000;
+            timer.Elapsed += timer_1s_Tick;
+            timer.Start();
+
+            this.Closing += Window_Closing;
+
             isOpenWindow = true;
 
             //預設參數設定與導入參數等不可使用
@@ -132,6 +164,7 @@ namespace G80Utility
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             SaveLastIP();
+            timer.Dispose(); //關閉計時器
             e.Cancel = false;
         }
 
@@ -209,6 +242,7 @@ namespace G80Utility
                     App.Current.Properties["BaudRateSetting"] = 115200;
                     break;
             }
+            Console.WriteLine(App.Current.Properties["BaudRateSetting"]);
         }
         #endregion
 
@@ -900,7 +934,7 @@ namespace G80Utility
             BlineTab.IsEnabled = isEnabled; //Collapsed
             MaintaiTab.IsEnabled = isEnabled;
             FactoryTab.IsEnabled = isEnabled;
-            FWUpgradeTab.IsEnabled = isEnabled;//Collapsed
+            //FWUpgradeTab.IsEnabled = isEnabled;//不走三接口通道
             StatusMonitorBtn.IsEnabled = isEnabled;
         }
         #endregion
@@ -2375,28 +2409,128 @@ namespace G80Utility
 
         //升級程序按鈕
         #region 開啟FW檔案按鈕事件
-        private void OpenFWfileBtn_Click(object sender, RoutedEventArgs e)
+        private void OpenFWfileBtn_Click(object sender, EventArgs e)
         {
-            OpenFileDialog openFileDlg = new OpenFileDialog();
-            openFileDlg.Multiselect = false;//该值确定是否可以选择多个文件
-            openFileDlg.Title = "请选择文件夹";
-            openFileDlg.Filter = "所有文件(*.hex)|*.hex";
-            Nullable<bool> openDlgResult = openFileDlg.ShowDialog();
-            string filepath;
-            if (openDlgResult == true)
-            {
-                filepath = openFileDlg.FileName;
+            string file_name = "";
 
+            OpenFileDialog dialog = new OpenFileDialog();
+            dialog.Multiselect = false;//该值确定是否可以选择多个文件
+            dialog.Title = "请选择文件夹";
+            dialog.Filter = "所有文件(*.hex)|*.hex";
+            if (dialog.ShowDialog() == true)
+            {
+                file_name = dialog.FileName;
+                FilePathTxt.Text = file_name;
+                iap_download.hex_file_name = file_name;
+                updata_file_button_Click(sender, e);
+            }
+            else
+            {
+                FilePathTxt.Text = "状态：打开文件失败！";
             }
         }
+
         #endregion
 
         #region 更新FW程序按鈕事件
         private void DownloadFWBtn_Click(object sender, RoutedEventArgs e)
         {
-
+            download_time = 0;
+            hex_to_bin_time = 0;
+            //实例化回调
+            setCallBack = new setTextValueCallBack(updata_ui_status_text);
+            //创建一个线程去执行这个方法:创建的线程默认是前台线程
+            Thread thread = new Thread(new ParameterizedThreadStart(iap_download.download_code));
+            //Start方法标记这个线程就绪了，可以随时被执行，具体什么时候执行这个线程，由CPU决定
+            //将线程设置为后台线程
+            thread.IsBackground = true;
+            thread.Start(this);
         }
         #endregion
+
+        public void device_connect_status(bool con)
+        {
+            this.Dispatcher.Invoke(set_connect_status, con);
+        }
+
+        public void device_connect_status_ui(bool con)
+        {
+            if (con)
+            {
+                DeviceStatusTxt.Text = "设备已连接";
+            }
+            else
+            {
+                DeviceStatusTxt.Text = "设备断开";
+                WriteStatusLabel.Content = "升级完成 ";
+            }
+        }
+
+        private void updata_ui_status_text(byte index, string text)
+        {
+            switch (index)
+            {
+                case 1:
+                    StatusLabel.Content = text;
+                    break;
+
+                case 2:
+                    CodeSizeLabel.Content = text;
+                    break;
+
+                case 3:
+                    AddrLabel.Content = text;
+                    break;
+
+                case 4:
+                    ReadFileProgress.Value = int.Parse(text);
+                    break;
+
+                case 5:
+                    WriteStatusLabel.Content = text;
+                    break;
+
+                case 6:
+                    DownloadProgress.Value = int.Parse(text);
+                    break;
+            }
+        }
+
+        private void updata_file_button_Click(object sender, EventArgs e)
+        {
+            download_time = 0;
+            hex_to_bin_time = 0;
+            //实例化回调
+            setCallBack = new setTextValueCallBack(updata_ui_status_text);
+            //创建一个线程去执行这个方法:创建的线程默认是前台线程
+            Thread thread = new Thread(new ParameterizedThreadStart(iap_download.hex_file_to_bin_array));
+            //Start方法标记这个线程就绪了，可以随时被执行，具体什么时候执行这个线程，由CPU决定
+            //将线程设置为后台线程
+            thread.IsBackground = true;
+            thread.Start(this);
+        }
+
+        private void timer_1s_Tick(object sender, EventArgs e)
+        {
+            switch (iap_download.run_step)
+            {
+                case 2:
+                    download_time++;
+                    Dispatcher.BeginInvoke(new Action(() =>
+                    {
+                        DownloadTimeTxt.Text = download_time.ToString();
+                    }), null);
+                    break;
+                case 1:
+                    hex_to_bin_time++;
+                    Dispatcher.BeginInvoke(new Action(() =>
+                    {
+                        ConverTimeTxt.Text = hex_to_bin_time.ToString();
+                    }), null);
+
+                    break;
+            }
+        }
 
         //========================紀錄和讀取最後一次設定IP=================
         #region 紀錄最後一次輸入IP
@@ -5153,7 +5287,7 @@ namespace G80Utility
 
         }
         #endregion
-
+     
         //===============================語系切換與設定===========================
 
         #region 語系切換 
@@ -5236,8 +5370,12 @@ namespace G80Utility
         }
 
 
+
         #endregion
 
-
+        private void ConnectClose_Click(object sender, RoutedEventArgs e)
+        {
+            RS232Connect.CloseSerialPort();
+        }
     }
 }

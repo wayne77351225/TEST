@@ -109,6 +109,9 @@
     <Compile Include="Dialog.xaml.cs">
       <DependentUpon>Dialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="HID\Hid.cs" />
+    <Compile Include="HID\HIDInterface.cs" />
+    <Compile Include="HID\IAP.cs" />
     <Compile Include="Models\Device.cs" />
     <Compile Include="Models\ParaSettings.cs" />
     <Compile Include="Themes\LeftMarginMultiplierConverter.cs" />

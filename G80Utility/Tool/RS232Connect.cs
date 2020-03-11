@@ -22,6 +22,7 @@ namespace G80Utility.Tool
 
             //Sets up serial port
             mSerialPort.PortName = comPort;
+            Console.WriteLine("class:"+ (int)App.Current.Properties["BaudRateSetting"]);
             mSerialPort.BaudRate = (int)App.Current.Properties["BaudRateSetting"];
             mSerialPort.Parity = Parity.None;
             mSerialPort.DataBits = 8;

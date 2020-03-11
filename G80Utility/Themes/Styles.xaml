@@ -130,6 +130,37 @@
     <Geometry x:Key="ExpanderToggleButtonArrow">M5,-0 L9,5 1,5 z</Geometry>
     <!--#endregion-->
 
+
+    <!--for progressbar-->
+    <LinearGradientBrush x:Key="GlowFXProgressAnimated" MappingMode="RelativeToBoundingBox">
+        <GradientStop Offset="0" Color="#00000000"></GradientStop>
+        <GradientStop Offset=".50" Color="#660099FF"></GradientStop>
+        <GradientStop Offset="1" Color="#00000000"></GradientStop>
+    </LinearGradientBrush>
+    <!-- CONTROL BACKGROUND -->
+    <SolidColorBrush x:Key="BaseColor" Color="#99000000"></SolidColorBrush>
+
+    <!-- GLASS EFFECT -->
+    <LinearGradientBrush x:Key="GlassFX" StartPoint=".5,0" EndPoint=".5,.5">
+        <GradientStop Offset="1" Color="#33DDDDDD"></GradientStop>
+        <GradientStop Offset="1" Color="#33000000"></GradientStop>
+    </LinearGradientBrush>
+    <!-- GLOW EFFECT -->
+    <RadialGradientBrush x:Key="GlowFX" GradientOrigin=".5,1" Center=".5,1">
+        <GradientStop Offset="0" Color="#990000FF"></GradientStop>
+        <GradientStop Offset=".5" Color="#660000DD"></GradientStop>
+        <GradientStop Offset="1" Color="#33000000"></GradientStop>
+    </RadialGradientBrush>
+    <LinearGradientBrush x:Key="GlowFXProgress">
+        <GradientStop Offset="0" Color="#66008080"></GradientStop>
+        <!--進度條後面的顏色-->
+        <GradientStop Offset=".99" Color="#7640E0D0"></GradientStop>
+        <!--進度條前面的顏色-->
+        <GradientStop Offset="1" Color="#00000000"></GradientStop>
+    </LinearGradientBrush>
+    <!--#end for progressbar-->
+
+
     <!--#region FontStyle-->
     <Style TargetType="{x:Type TextBlock}">
         <Setter Property="FontFamily" Value="Calibri light"/>
@@ -3451,8 +3482,43 @@
     </Style>
 
     <!--#endregion-->
+    <!--for progressbar-->
+    <Style TargetType="{x:Type ProgressBar}">
+        <Setter Property="OverridesDefaultStyle" Value="True" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ProgressBar}">
+                    <Grid MinHeight="14" MinWidth="20">
+                        <Border x:Name="BaseRectangle" Background="{StaticResource BaseColor}" CornerRadius="10,0,10,0"></Border>
+                        <Border x:Name="GlassRectangle" CornerRadius="10,0,10,0"  Background="{StaticResource GlassFX}"></Border>
+                        <Border x:Name="animation" CornerRadius="10,0,10,0" Opacity=".7" Background="{StaticResource GlowFXProgress}" HorizontalAlignment="Left"></Border>
+                        <Border x:Name="PART_Indicator" CornerRadius="10,0,10,0" Background="{StaticResource GlowFXProgress}" HorizontalAlignment="Left"></Border>
+                        <Border x:Name="PART_Track" BorderThickness="1" CornerRadius="10,0,10,0" BorderBrush="Black"></Border>
+                        <Border x:Name="BordeCabeceraSombra" BorderThickness="2" CornerRadius="10,0,10,0" BorderBrush="DarkGray" Opacity=".2" Margin="1,1,1,0"></Border>
+                        <!--<Label x:Name="Progress" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontWeight="Bold" Foreground="White" Opacity=".7" Content="{Binding Path=Value, RelativeSource={RelativeSource TemplatedParent}}"></Label>-->
+                    </Grid>
+                    <!--<ControlTemplate.Triggers>
+                        <Trigger Property="IsIndeterminate" Value="True">
+                            -->
+                    <!--<Setter Property="Visibility" TargetName="Progress" Value="Hidden"></Setter>-->
+                    <!--<Setter Property="Background" TargetName="PART_Indicator">
+                                <Setter.Value>
+                                    <Binding Source="{StaticResource GlowFXProgress}"/>
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Opacity" Value=".5"></Setter>
+                        </Trigger>
+                    </ControlTemplate.Triggers>-->
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <!--#end for progressbar-->
 
-<!-- Toolbar styles from https://docs.microsoft.com/en-us/dotnet/framework/wpf/controls/how-to-style-controls-on-a-toolbar -->
+    <!-- Toolbar styles from https://docs.microsoft.com/en-us/dotnet/framework/wpf/controls/how-to-style-controls-on-a-toolbar -->
 
 	<Style x:Key="{x:Static ToolBar.SeparatorStyleKey}" TargetType="{x:Type Separator}" BasedOn="{StaticResource {x:Type Separator}}"/>
 	<Style x:Key="{x:Static ToolBar.ButtonStyleKey}" TargetType="{x:Type Button}" BasedOn="{StaticResource {x:Type Button}}"/>
