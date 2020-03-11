@@ -704,7 +704,14 @@
             </TabItem>
 
             <!--升級程序-->
-            <TabItem Header="{DynamicResource FWUpdate}"  FontSize="14" Visibility="Visible">
+            <TabItem FontSize="14" Visibility="Visible">
+                <TabItem.Header>
+                    <Label Content="{DynamicResource FWUpdate}"
+                            Name="FWUpdateTab"
+                            MouseLeftButtonDown="FWUpdateTab_MouseLeftButtonDown"
+                            Padding="0" Margin="0"
+                    />
+                </TabItem.Header>
                 <Border CornerRadius="5" Background="#595959" Margin="0,0,1,2"  Name="FWUpgradeTab" >
                     <StackPanel  Margin="0,40,0,0" HorizontalAlignment="Center" >
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,20">

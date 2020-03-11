@@ -116,19 +116,9 @@ namespace G80Utility
 
         public G80MainWindow()
         {
-            iap_download = new IAP_download();
-            
-            InitializeComponent();
-            
-            iap_download.Initial();
-            iap_download.isConnectedFunc = device_connect_status;
-            set_connect_status += device_connect_status_ui;
 
-            //啟動ipa計時器   
-            timer = new Timer();
-            timer.Interval = 1000;
-            timer.Elapsed += timer_1s_Tick;
-            timer.Start();
+
+            InitializeComponent();
 
             this.Closing += Window_Closing;
 
@@ -940,7 +930,8 @@ namespace G80Utility
         #endregion
 
         #region MacAddress的生成
-        public byte[] collectMacAddress() {
+        public byte[] collectMacAddress()
+        {
             Random random = new Random();
             int mac4 = random.Next(0, 255);
             int mac5 = random.Next(0, 255);
@@ -2404,10 +2395,30 @@ namespace G80Utility
                 Console.WriteLine(BitConverter.ToString(sendArray).Replace("-", ""));
                 MessageBox.Show(FindResource("WaitforRedLight") as string);
             }
-        #endregion
+            #endregion
         }
 
         //升級程序按鈕
+        #region 升級程序tab按鈕事件
+        private void FWUpdateTab_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {   //初始化
+            UIintial();
+
+            //iap初始化
+            iap_download = new IAP_download();
+            iap_download.Initial();
+            iap_download.isConnectedFunc = device_connect_status;
+            set_connect_status += device_connect_status_ui;
+
+            //啟動ipa計時器   
+            timer = new Timer();
+            timer.Interval = 1000;
+            timer.Elapsed += timer_1s_Tick;
+            timer.Start();
+        }
+        #endregion
+
+
         #region 開啟FW檔案按鈕事件
         private void OpenFWfileBtn_Click(object sender, EventArgs e)
         {
@@ -2448,93 +2459,10 @@ namespace G80Utility
         }
         #endregion
 
-        public void device_connect_status(bool con)
-        {
-            this.Dispatcher.Invoke(set_connect_status, con);
-        }
-
-        public void device_connect_status_ui(bool con)
-        {
-            if (con)
-            {
-                DeviceStatusTxt.Text = "设备已连接";
-            }
-            else
-            {
-                DeviceStatusTxt.Text = "设备断开";
-                WriteStatusLabel.Content = "升级完成 ";
-            }
-        }
-
-        private void updata_ui_status_text(byte index, string text)
-        {
-            switch (index)
-            {
-                case 1:
-                    StatusLabel.Content = text;
-                    break;
-
-                case 2:
-                    CodeSizeLabel.Content = text;
-                    break;
-
-                case 3:
-                    AddrLabel.Content = text;
-                    break;
-
-                case 4:
-                    ReadFileProgress.Value = int.Parse(text);
-                    break;
-
-                case 5:
-                    WriteStatusLabel.Content = text;
-                    break;
-
-                case 6:
-                    DownloadProgress.Value = int.Parse(text);
-                    break;
-            }
-        }
-
-        private void updata_file_button_Click(object sender, EventArgs e)
-        {
-            download_time = 0;
-            hex_to_bin_time = 0;
-            //实例化回调
-            setCallBack = new setTextValueCallBack(updata_ui_status_text);
-            //创建一个线程去执行这个方法:创建的线程默认是前台线程
-            Thread thread = new Thread(new ParameterizedThreadStart(iap_download.hex_file_to_bin_array));
-            //Start方法标记这个线程就绪了，可以随时被执行，具体什么时候执行这个线程，由CPU决定
-            //将线程设置为后台线程
-            thread.IsBackground = true;
-            thread.Start(this);
-        }
-
-        private void timer_1s_Tick(object sender, EventArgs e)
-        {
-            switch (iap_download.run_step)
-            {
-                case 2:
-                    download_time++;
-                    Dispatcher.BeginInvoke(new Action(() =>
-                    {
-                        DownloadTimeTxt.Text = download_time.ToString();
-                    }), null);
-                    break;
-                case 1:
-                    hex_to_bin_time++;
-                    Dispatcher.BeginInvoke(new Action(() =>
-                    {
-                        ConverTimeTxt.Text = hex_to_bin_time.ToString();
-                    }), null);
-
-                    break;
-            }
-        }
-
         //========================紀錄和讀取最後一次設定IP=================
         #region 紀錄最後一次輸入IP
-        public void SaveLastIP() {
+        public void SaveLastIP()
+        {
             string IP = EhternetIPTxt.Text;
             //建立註冊機碼目錄
             createSNRegistry();
@@ -2547,7 +2475,7 @@ namespace G80Utility
         {   //首次使用要建立註冊機碼目錄
             createSNRegistry();
             string IP = getRegistry("IP");
-            EhternetIPTxt.Text= IP;
+            EhternetIPTxt.Text = IP;
 
         }
         #endregion
@@ -4081,7 +4009,7 @@ namespace G80Utility
                     sendArray[i] = snArray[i - sendLen];
                 }
                 SendCmd(sendArray, "BeepOrSetting", 0);
-                setRegistry("SN",sn); //寫入序號到註冊機碼
+                setRegistry("SN", sn); //寫入序號到註冊機碼
                 //寫入序號到畫面
                 PrinterSNFacTxt.Text = sn;
                 PrinterSNTxt.Text = sn;
@@ -4089,6 +4017,117 @@ namespace G80Utility
             else if (sn.Length < 16 || sn.Length > 16)
             {
                 MessageBox.Show(FindResource("LessLength") as string);
+            }
+        }
+        #endregion
+
+        //========================IAP 升級Firmware相關===================
+
+        #region hid裝置連線狀態
+        public void device_connect_status(bool con)
+        {
+            this.Dispatcher.Invoke(set_connect_status, con);
+        }
+        #endregion
+
+        #region hid裝置連線狀態更新到ui
+        public void device_connect_status_ui(bool con)
+        {
+            if (con)
+            {
+                DeviceStatusTxt.Text = "设备已连接";
+            }
+            else
+            {
+                DeviceStatusTxt.Text = "设备断开";
+                WriteStatusLabel.Content = "升级完成 ";
+            }
+        }
+        #endregion
+
+        #region fw更新畫面初始化
+        private void UIintial()
+        {
+
+            StatusLabel.Content = "";
+            CodeSizeLabel.Content = "";
+            AddrLabel.Content = "";
+            ReadFileProgress.Value = 0;
+            WriteStatusLabel.Content = "";
+            DownloadProgress.Value = 0;
+            DownloadTimeTxt.Text = "";
+            ConverTimeTxt.Text = "";
+        }
+        #endregion
+
+        #region ui內容更新function
+        private void updata_ui_status_text(byte index, string text)
+        {
+            switch (index)
+            {
+                case 1:
+                    StatusLabel.Content = text;
+                    break;
+
+                case 2:
+                    CodeSizeLabel.Content = text;
+                    break;
+
+                case 3:
+                    AddrLabel.Content = text;
+                    break;
+
+                case 4:
+                    ReadFileProgress.Value = int.Parse(text);
+                    break;
+
+                case 5:
+                    WriteStatusLabel.Content = text;
+                    break;
+
+                case 6:
+                    DownloadProgress.Value = int.Parse(text);
+                    break;
+            }
+        }
+        #endregion
+
+        #region 執行檔案解析
+        private void updata_file_button_Click(object sender, EventArgs e)
+        {
+            download_time = 0;
+            hex_to_bin_time = 0;
+            //实例化回调
+            setCallBack = new setTextValueCallBack(updata_ui_status_text);
+            //创建一个线程去执行这个方法:创建的线程默认是前台线程
+            Thread thread = new Thread(new ParameterizedThreadStart(iap_download.hex_file_to_bin_array));
+            //Start方法标记这个线程就绪了，可以随时被执行，具体什么时候执行这个线程，由CPU决定
+            //将线程设置为后台线程
+            thread.IsBackground = true;
+            thread.Start(this);
+        }
+        #endregion
+
+        #region 解析與更新計時器
+        private void timer_1s_Tick(object sender, EventArgs e)
+        {
+            switch (iap_download.run_step)
+            {
+                case 2:
+                    download_time++;
+                    Dispatcher.BeginInvoke(new Action(() =>
+                    {
+                        DownloadTimeTxt.Text = download_time.ToString();
+                    }), null);
+                    break;
+                case 1:
+                    hex_to_bin_time++;
+                    Dispatcher.BeginInvoke(new Action(() =>
+                    {
+                        ConverTimeTxt.Text = hex_to_bin_time.ToString();
+                    }), null);
+
+                    break;
             }
         }
         #endregion
@@ -4190,6 +4229,7 @@ namespace G80Utility
 
         }
         #endregion
+
         //===============================實時狀態timer功能========================
 
         #region 啟動實時狀態查詢
@@ -4275,7 +4315,7 @@ namespace G80Utility
         #endregion
 
         #region 註冊機碼的寫入
-        private void setRegistry(string valueName,string value)
+        private void setRegistry(string valueName, string value)
         {
             RegistryKey registryKey = Registry.LocalMachine.CreateSubKey(@"SOFTWARE\ZLPPT"); //修改也要使用create不能用open
             registryKey.SetValue(valueName, value);
@@ -4285,12 +4325,13 @@ namespace G80Utility
         #region 註冊機碼的讀取
         private string getRegistry(string valueName)
         {
-            string lastValue=null;
+            string lastValue = null;
             if (Registry.LocalMachine.OpenSubKey(@"SOFTWARE\ZLPPT").GetValue(valueName) == null)
             {
                 lastValue = "";
             }
-            else {
+            else
+            {
                 lastValue = (string)Registry.LocalMachine.OpenSubKey(@"SOFTWARE\ZLPPT").GetValue(valueName);
             }
             return (string)lastValue;
@@ -5250,7 +5291,8 @@ namespace G80Utility
                 {
                     isTabEnabled(true);
                 }
-                else {
+                else
+                {
                     MessageBox.Show(FindResource("USBUnconnect") as string);
                 }
 
@@ -5271,14 +5313,14 @@ namespace G80Utility
             else if (RS232Radio.IsChecked == true)
             {
                 DeviceType = "RS232";
-                if (DeviceSelectRS232.SelectedIndex != -1 && isRS232Connected )
+                if (DeviceSelectRS232.SelectedIndex != -1 && isRS232Connected)
                 {
                     isTabEnabled(true);
                 }
                 else
                 {
-                    if(!isOpenWindow) //判斷第一次開啟視窗時不跳訊息
-                    MessageBox.Show(FindResource("RS232Unconnect") as string);
+                    if (!isOpenWindow) //判斷第一次開啟視窗時不跳訊息
+                        MessageBox.Show(FindResource("RS232Unconnect") as string);
                 }
 
 
@@ -5287,7 +5329,7 @@ namespace G80Utility
 
         }
         #endregion
-     
+
         //===============================語系切換與設定===========================
 
         #region 語系切換 
@@ -5302,10 +5344,10 @@ namespace G80Utility
                 case 0:
                     LoadLanguage("zh-CN");
                     break;
-                //case 2:
-                //    LoadLanguage("en-US");
+                    //case 2:
+                    //    LoadLanguage("en-US");
 
-                //    break;
+                    //    break;
             }
         }
         //load language resource
@@ -5362,9 +5404,9 @@ namespace G80Utility
                 case "zh-CN":
                     language.SelectedIndex = 0;
                     break;
-                //case "en-US":
-                //    language.SelectedIndex = 2;
-                //    break;
+                    //case "en-US":
+                    //    language.SelectedIndex = 2;
+                    //    break;
             }
 
         }
@@ -5377,5 +5419,7 @@ namespace G80Utility
         {
             RS232Connect.CloseSerialPort();
         }
+
+
     }
 }
