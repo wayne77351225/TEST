@@ -154,7 +154,9 @@ namespace G80Utility
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             SaveLastIP();
-            timer.Dispose(); //關閉計時器
+            if (timer != null) {
+                timer.Dispose(); //關閉計時器  
+            }
             e.Cancel = false;
         }
 

@@ -105,6 +105,7 @@ namespace G80Utility.HID
             else //disconnect
             {
                 isConnectedFunc(false);
+                Close();
             }
         }
 
