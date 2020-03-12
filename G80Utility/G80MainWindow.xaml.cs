@@ -96,21 +96,26 @@ namespace G80Utility
 
         //判斷是否剛開啟視窗，避免一開啟視窗就跳出訊息
         bool isOpenWindow;
-
+        
+        // iap object
         IAP_download iap_download;
 
+        //文件解析與下載計時 
         byte download_time = 0;
         byte hex_to_bin_time = 0;
-        //定义回调
+
+        //委派IAP UI文字更新功能
         public delegate void setTextValueCallBack(byte index, string text);
-        //声明回调
+        //IAP 文件解析與下載UI文字更新
         public setTextValueCallBack setCallBack;
 
-        //定义回调
+        //委派IAP 設備連接狀態UI文字更新
         public delegate void setConnectStatusCallBack(bool con);
-        //声明回调
+
+        //IAP 設備連接狀態UI文字更新
         public setConnectStatusCallBack set_connect_status;
 
+        //文件解析與下載計時器 
         Timer timer;
         #endregion
 
