@@ -479,7 +479,7 @@
                             <RadioButton Content="{DynamicResource DoubleWidthandHeight}" Padding="10,0,0,0" Margin="3,0,0,10" Name="DoubleWidthandHeightRadio" GroupName="NVRadio"/>
                             <StackPanel Orientation="Horizontal" Margin="0,10,0,10" >
                                 <Label Content="{DynamicResource Ordinal}"/>
-                                <TextBox Width="50" x:Name="NVLogoPieceTXT"/>
+                                <TextBox Width="50" x:Name="NVLogoPieceTXT"  Text="1"/>
                                 <Label Content="{DynamicResource piece}"/>
                             </StackPanel>
                             <Button Content="{DynamicResource PrintLogo}" Name="PrintLogoBtn" Click="PrintLogoBtn_Click" Padding="10" Margin="0,10,0,15" Width="100" HorizontalAlignment="Left" />
@@ -620,7 +620,7 @@
                                     <Button  Margin="10,5,10,5" Name="PrintTest_L_Maintanin" Click="PrintTest_L_Maintanin_Click" Content="自检页(长)" Padding="5" FontSize="14" Width="180" />
                                     <Button  Margin="10,5,10,5" Name="PrintTest_EVEN_Maintanin" Click="PrintTest_EVEN_Maintanin_Click" Content="打印均匀测试" Padding="5" FontSize="14" Width="180" />
                                     <StackPanel   Margin="10,5,10,5" Orientation="Horizontal" HorizontalAlignment="Center" >
-                                        <TextBox  FontSize="14" Width="70" Name="CutTimes_Maintanin_Txt"/>
+                                        <TextBox  FontSize="14" Width="70" Text="1" Name="CutTimes_Maintanin_Txt" TextChanged="CutTimes_Maintanin_Txt_TextChanged"/>
                                         <Button  Margin="10,0,0,0" Name="CutTimes_Maintanin_Btn" Click="CutTimes_Maintanin_Btn_Click" Content="连续切纸" Padding="5" FontSize="14"  Width="100"/>
                                     </StackPanel>
                                     <Button  Margin="10,5,10,5" Name="BeepTest_Maintanin_Btn" Click="BeepTest_Maintanin_Btn_Click" Content="蜂鸣器测试" Padding="5" FontSize="14" Width="180" />
@@ -668,7 +668,7 @@
                                     <Button  Margin="10,5,10,5" Name="PrintTest_L" Click="PrintTest_L_Click" Content="自检页(长)" Padding="5" FontSize="14" Width="180" />
                                     <Button  Margin="10,5,10,5" Name="PrintTest_EVEN" Click="PrintTest_EVEN_Click" Content="打印均匀测试" Padding="5" FontSize="14" Width="180" />
                                     <StackPanel   Margin="10,5,10,5" Orientation="Horizontal" HorizontalAlignment="Center" >
-                                        <TextBox  FontSize="14" Width="70" Name="CutTimesTxt"/>
+                                        <TextBox  Text="1" FontSize="14" Width="70" Name="CutTimesTxt"/>
                                         <Button  Margin="10,0,0,0" Name="CutTimesBtn" Click="CutTimesBtn_Click" Content="连续切纸" Padding="5" FontSize="14"  Width="100"/>
                                     </StackPanel>
                                     <Button  Margin="10,5,10,5" Name="BeepTestBtn" Click="BeepTestBtn_Click" Content="蜂鸣器测试" Padding="5" FontSize="14" Width="180" />
