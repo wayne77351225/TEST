@@ -124,6 +124,8 @@
     <sys:String x:Key="HeadOpenTimes">開蓋次數</sys:String>
     <sys:String x:Key="PaperOutTimes">缺紙次數</sys:String>
     <sys:String x:Key="ErrorTimes">故障次數</sys:String>
+    <sys:String x:Key="Lines">行</sys:String>
+    <sys:String x:Key="Times">次</sys:String>
     <sys:String x:Key="CutSetting">裁切設定</sys:String>
     <sys:String x:Key="CutNumber">裁切次數(100以內)</sys:String>
     <sys:String x:Key="Cut">裁切</sys:String>
@@ -238,7 +240,9 @@
     <sys:String x:Key="SendingData">發送代碼數據</sys:String>
     <sys:String x:Key="BurningFailed">燒寫失敗，請檢查</sys:String>
     <sys:String x:Key="UpdateToROM">更新代碼到ROM</sys:String>
+    <sys:String x:Key="BaudChangeWarning">DIP設定完成，請記得同步串口通訊的波特率</sys:String>
 
+    
     <!--Printer Status-->
     <sys:String x:Key="Ready">就緒</sys:String>
     <sys:String x:Key="HeadOpen">開蓋</sys:String>

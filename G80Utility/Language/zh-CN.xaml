@@ -2,7 +2,7 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                      xmlns:sys="clr-namespace:System;assembly=mscorlib">
     <!--Window Title-->
-    <sys:String x:Key="WindowTitle">G80 Utility Beta v2.0 </sys:String>
+    <sys:String x:Key="WindowTitle">G80 Utility Beta v2.0</sys:String>
 
     <!--Top通讯介面-->
     <sys:String x:Key="ConnectionInterface">通讯介面</sys:String>
@@ -124,6 +124,8 @@
     <sys:String x:Key="HeadOpenTimes">开盖次数</sys:String>
     <sys:String x:Key="PaperOutTimes">缺纸次数</sys:String>
     <sys:String x:Key="ErrorTimes">故障次数</sys:String>
+    <sys:String x:Key="Lines">行</sys:String>
+    <sys:String x:Key="Times">次</sys:String>
     <sys:String x:Key="CutSetting">切纸设置</sys:String>
     <sys:String x:Key="CutNumber">切纸次数(100以内)</sys:String>
     <sys:String x:Key="Cut">切纸</sys:String>
@@ -238,7 +240,8 @@
     <sys:String x:Key="SendingData">发送代码数据</sys:String>
     <sys:String x:Key="BurningFailed">烧写失败，请检查</sys:String>
     <sys:String x:Key="UpdateToROM">更新代码到ROM</sys:String>
-
+    <sys:String x:Key="BaudChangeWarning">DIP设定完成，请記得同步串口通讯的波特率</sys:String>
+    
     <!--Printer Status-->
     <sys:String x:Key="Ready">就绪</sys:String>
     <sys:String x:Key="HeadOpen">开盖</sys:String>

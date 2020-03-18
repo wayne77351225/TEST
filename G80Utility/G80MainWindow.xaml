@@ -103,7 +103,7 @@
         <!--Tap分頁-->
         <TabControl Height="470" TabStripPlacement="Top" Margin="5,3,5,0" >
             <!--數據傳輸-->
-            <TabItem Header="{DynamicResource PrintTest}"  FontSize="14" >
+            <TabItem Header="{DynamicResource DataTransfer}"  FontSize="14" >
                 <Border Margin="5,5,5,1" Name="DataSendTab"   >
                     <StackPanel  Height="445" Margin="10,0,0,0" >
                         <GroupBox  Header="發送數據" Width="985" Height="260" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14"  HorizontalAlignment="Left" >

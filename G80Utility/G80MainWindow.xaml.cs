@@ -3481,6 +3481,7 @@ namespace G80Utility
             Array.Resize(ref sendArray, sendArray.Length + 1);
             sendArray[sendArray.Length - 1] = bytes[0];
             SendCmd(sendArray, "BeepOrSetting", 0);
+            MessageBox.Show(FindResource("BaudChangeWarning") as string);
         }
         #endregion
 
