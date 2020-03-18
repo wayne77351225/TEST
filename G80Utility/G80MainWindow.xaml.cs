@@ -5356,6 +5356,7 @@ namespace G80Utility
                     //    break;
             }
         }
+
         //load language resource
         private void LoadLanguage(String name)
         {

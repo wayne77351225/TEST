@@ -117,6 +117,13 @@
     <sys:String x:Key="SetDIP">设置DIP值</sys:String>
 
     <!--维护维修/工厂测试-->
+    <sys:String x:Key="PrinterStatistics">打印机统计信息</sys:String>
+    <sys:String x:Key="PaperFeededLines">走纸总行数</sys:String>
+    <sys:String x:Key="PrintedLines">打印行数</sys:String>
+    <sys:String x:Key="PaperCutingTimes">切纸次数</sys:String>
+    <sys:String x:Key="HeadOpenTimes">开盖次数</sys:String>
+    <sys:String x:Key="PaperOutTimes">缺纸次数</sys:String>
+    <sys:String x:Key="ErrorTimes">故障次数</sys:String>
     <sys:String x:Key="CutSetting">切纸设置</sys:String>
     <sys:String x:Key="CutNumber">切纸次数(100以内)</sys:String>
     <sys:String x:Key="Cut">切纸</sys:String>
