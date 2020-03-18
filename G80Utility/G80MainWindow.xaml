@@ -588,8 +588,8 @@
                                         <Label Content="次" FontSize="14"/>
                                         <CheckBox VerticalAlignment="Center" Name="ErrorTimesCheckbox" Margin="20,0,0,0"/>
                                     </StackPanel>
-                                    <Button HorizontalAlignment="Center" Name="PrinterInfoReadBtn" Click="PrinterInfoReadBtn_Click" Margin="10,10,10,5" Content="读取" Padding="5" FontSize="14"  Width="190" Height="35"/>
-                                    <StackPanel  Margin="0,5,0,5"  Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <Button Visibility="Collapsed" HorizontalAlignment="Center" Name="PrinterInfoReadBtn" Click="PrinterInfoReadBtn_Click" Margin="10,10,10,5" Content="读取" Padding="5" FontSize="14"  Width="190" Height="35"/>
+                                    <StackPanel  Margin="0,25,0,5"  Orientation="Horizontal" HorizontalAlignment="Center">
                                         <Button  Margin="10,5,10,5"  Name="SelectAllBtn" Click="SelectAllBtn_Click" Content="全选" Padding="5" Width="85" FontSize="14" Height="35"/>
                                         <Button  Margin="10,5,10,5" Name="CLeanPrinterInfoBtn" Click="CLeanPrinterInfoBtn_Click" Content="清除" Padding="5"  Width="85"  FontSize="14" Height="35"/>
                                     </StackPanel>
