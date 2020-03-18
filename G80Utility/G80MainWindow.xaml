@@ -474,7 +474,7 @@
                         </GroupBox>
                     </StackPanel>
                     <StackPanel  Margin="10,0,10,0" VerticalAlignment="Center">
-                        <Button Content="{DynamicResource SelectLogoAndDonwald}" Padding="20,10,20,10" Margin="0,0,0,15" Name="DonwaldLogoBtn" Click="DonwaldLogoBtn_Click"/>
+                        <Button Content="{DynamicResource DonwaldLogo}" Padding="20,10,20,10" Margin="0,0,0,15" Name="DonwaldLogoBtn" Click="DonwaldLogoBtn_Click"/>
                         <Button Content="{DynamicResource ClearLogo}" Padding="20,10,20,10" Margin="0,0,0,0" Name="ClearLogoBtn" Click="ClearLogoBtn_Click"/>
                     </StackPanel>
                     <GroupBox Header="{DynamicResource LogoSetting}"  Margin="10,44,10,40" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14" Width="175" Height="325">
