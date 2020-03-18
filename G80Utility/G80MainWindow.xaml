@@ -159,7 +159,13 @@
             </TabItem>
 
             <!--參數設定-->
-            <TabItem Header="{DynamicResource PrinterConfig}"  FontSize="14">
+            <TabItem  FontSize="14">
+                <TabItem.Header>
+                    <Label Content="{DynamicResource PrinterConfig}"
+                            Name="ParaSettingTab" MouseLeftButtonDown="ParaSettingTab_MouseLeftButtonDown"
+                            Padding="0" Margin="0"
+                    />
+                </TabItem.Header>
                 <Border Background="#595959"  Name="ParaSetTab"  >
                     <StackPanel Height="445" Width="1010" Orientation="Horizontal">
                         <StackPanel>
@@ -412,7 +418,7 @@
                                 <!--column3-->
                                 <StackPanel  Grid.Column="2" Grid.RowSpan="2"  >
                                     <StackPanel  Margin="0,18,0,3" Orientation="Horizontal">
-                                        <ComboBox  Margin="0,0,5,0" SelectedIndex="1"  Name="DIPSwitchCom" Width="100" Height="26" Foreground="#BDBDBD">
+                                        <ComboBox  Margin="0,0,5,0" SelectedIndex="1"  Name="DIPSwitchCom" SelectionChanged="DIPSwitchCom_SelectionChanged" Width="100" Height="26" Foreground="#BDBDBD">
                                             <ComboBoxItem>不使用硬件DIP</ComboBoxItem>
                                             <ComboBoxItem>使用硬件DIP</ComboBoxItem>
                                         </ComboBox>
@@ -420,7 +426,7 @@
                                         <CheckBox VerticalAlignment="Center" IsChecked="True" Name="DIPSwitchCheckbox"/>
                                     </StackPanel>
                                     <!--dip設置-->
-                                    <GroupBox  VerticalAlignment="Top" Margin="0,10,0,0" Header="软件 DIP 设置" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14" Height="340" Width="180" HorizontalAlignment="Left">
+                                    <GroupBox Name="DIPGroupBox" VerticalAlignment="Top" Margin="0,10,0,0" Header="软件 DIP 设置" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14" Height="340" Width="180" HorizontalAlignment="Left">
                                         <StackPanel Name="DipSettingStackPanel">
                                             <CheckBox Content="切刀" Name="CutterCheckBox" FontSize="14" Padding="5,0,0,0" Margin="10,15,0,0"/>
                                             <CheckBox Content="蜂鸣器"  Name="BeepCheckBox" FontSize="14" Padding="5,0,0,0" Margin="10,10,0,0" />

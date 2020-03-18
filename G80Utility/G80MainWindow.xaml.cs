@@ -955,6 +955,33 @@ namespace G80Utility
         }
         #endregion
 
+        #region dip switch切換時和點參數設定tab時控制軟體dip設置使否可使用
+        private void DIPSwitchCom_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (DIPSwitchCom.SelectedIndex == 0 && DIPGroupBox != null) //software
+            {
+                DIPGroupBox.IsEnabled = true;
+            }
+            else if (DIPSwitchCom.SelectedIndex == 1 && DIPGroupBox != null) //hardware
+            {
+                DIPGroupBox.IsEnabled = false;
+            }
+
+        }
+        //參數設定tab點擊事件，再此判斷一次避免畫面剛生成DIPGroupBox為null無法disabled的問題
+        private void ParaSettingTab_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (DIPSwitchCom.SelectedIndex == 0) //software
+            {
+                DIPGroupBox.IsEnabled = true;
+            }
+            else if (DIPSwitchCom.SelectedIndex == 1) //hardware
+            {
+                DIPGroupBox.IsEnabled = false;
+            }
+        }
+        #endregion
+
         //========================取得資料後設定UI=================
 
         #region 顯示打印機型號/軟件版本/機器序號
