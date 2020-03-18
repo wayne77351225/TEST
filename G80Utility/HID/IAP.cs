@@ -8,6 +8,7 @@ using System.IO.Ports;
 using System.IO;
 using System.Threading;
 using System.Windows;
+using System.Windows.Threading;
 
 namespace G80Utility.HID
 {
@@ -123,7 +124,7 @@ namespace G80Utility.HID
             StreamReader cal_line_num;
             if (this.hex_file_name == null)
             {
-                win.Dispatcher.Invoke(win.setCallBack, (byte)1, "请先选择文件");
+                win.Dispatcher.Invoke(win.setCallBack, (byte)1, win.FindResource("SelectFileFirst") as string);
                 return;
             }
 
@@ -135,10 +136,10 @@ namespace G80Utility.HID
             catch
             {
                 EventArgs ex = new EventArgs();
-                win.Dispatcher.Invoke(win.setCallBack, (byte)1, "文件错误，请检查");
+                win.Dispatcher.Invoke(win.setCallBack, (byte)1, win.FindResource("FileError") as string);
                 return;
             }
-            win.Dispatcher.Invoke(win.setCallBack, (byte)1, "正在解析");
+            win.Dispatcher.Invoke(win.setCallBack, (byte)1, win.FindResource("Parsing") as string);
             do
             {
                 line_num++;
@@ -200,7 +201,7 @@ namespace G80Utility.HID
             win.Dispatcher.Invoke(win.setCallBack, (byte)4, "100");
             UInt32 code_size = (UInt32)(code_data_bin.Length / 1024);
             win.Dispatcher.Invoke(win.setCallBack, (byte)2, code_size.ToString() + "KB");
-            win.Dispatcher.Invoke(win.setCallBack, (byte)1, "解析完成");
+            win.Dispatcher.Invoke(win.setCallBack, (byte)1, win.FindResource("ParseCompleted") as string);
             this.run_step = 0;
             this.convert_bin_done = true;
         }
@@ -321,52 +322,52 @@ namespace G80Utility.HID
         public void download_code(object sender)
         {
 
-            this.run_step = 2;
+         
             G80MainWindow win = (G80MainWindow)sender;
             if (!this.convert_bin_done)
             {
-                MessageBox.Show("请先解析文件");
+                MessageBox.Show(win.FindResource("ParseFirst") as string);
                 return;
             }
-
-            win.Dispatcher.Invoke(win.setCallBack, (byte)5, "读取芯片选项字节");
+            this.run_step = 2;
+            win.Dispatcher.Invoke(win.setCallBack, (byte)5, win.FindResource("ReadChipOption") as string);
             byte[] receive_data = new byte[64];
             if (!read_opt_byte(out receive_data))
             {
-                MessageBox.Show("读取芯片选项字节失败");
+                MessageBox.Show(win.FindResource("FailedReadChipOption") as string);
                 return;
             }
             if (receive_data[1] != 0xaa)
             {
-                MessageBox.Show("芯片上锁，请检查");
+                MessageBox.Show(win.FindResource("ChipIsLocked") as string);
                 return;
             }
-            win.Dispatcher.Invoke(win.setCallBack, (byte)5, "读取芯片应用程序地址");
+            win.Dispatcher.Invoke(win.setCallBack, (byte)5, win.FindResource("ReadChipAddress") as string );
             if (!get_erasure_addr(out receive_data))
             {
-                MessageBox.Show("读取擦除地址失败");
+                MessageBox.Show(win.FindResource("EraseAddressFailed") as string);
                 return;
             }
             UInt32 write_addr = (UInt32)receive_data[0] << 0 | (UInt32)receive_data[1] << 8 | (UInt32)receive_data[2] << 16 | (UInt32)receive_data[3] << 24;
             if (this.download_addr != write_addr)
             {
-                MessageBox.Show("地址错误，请检查");
+                MessageBox.Show(win.FindResource("AddressError") as string);
                 return;
             }
-            win.Dispatcher.Invoke(win.setCallBack, (byte)5, "探险芯片扇区");
+            win.Dispatcher.Invoke(win.setCallBack, (byte)5, win.FindResource("CheckChipSector") as string );
             if (!erasure_section(write_addr, (UInt32)code_data_bin.Length))
             {
-                MessageBox.Show("擦除内存错误，请检查");
+                MessageBox.Show(win.FindResource("EraseMemoryError") as string);
                 return;
             }
-            win.Dispatcher.Invoke(win.setCallBack, (byte)5, "发送代码数据");
+            win.Dispatcher.Invoke(win.setCallBack, (byte)5, win.FindResource("SendingData") as string);
             if (!download_code(code_data_bin, win))
             {
-                MessageBox.Show("烧写失败，请检查");
+                MessageBox.Show(win.FindResource("BurningFailed") as string);
                 return;
             }
             GD32HIDIAP_LeaveIAP();
-            win.Dispatcher.Invoke(win.setCallBack, (byte)5, "更新代码到ROM");
+            win.Dispatcher.Invoke(win.setCallBack, (byte)5, win.FindResource("UpdateToROM") as string );
 
             this.run_step = 0;
         }

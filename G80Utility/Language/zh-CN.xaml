@@ -2,31 +2,123 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                      xmlns:sys="clr-namespace:System;assembly=mscorlib">
     <!--Window Title-->
-    <sys:String x:Key="WindowTitle">G80 Utility Beta v1.6.1(串口關閉按鈕暫時測試用)</sys:String>
+    <sys:String x:Key="WindowTitle">G80 Utility Beta v2.0 </sys:String>
 
-    <!--Top通訊介面-->
+    <!--Top通讯介面-->
     <sys:String x:Key="ConnectionInterface">通讯介面</sys:String>
     <sys:String x:Key="USB">USB口</sys:String>
     <sys:String x:Key="RS232">串口</sys:String>
     <sys:String x:Key="Ethernet">网口</sys:String>
-    <sys:String x:Key="EthernetConnect">连接</sys:String>
+    <sys:String x:Key="USBPrintingDevice">USB打印设备</sys:String>
+    <sys:String x:Key="InterfacesTest">三接口测试</sys:String>
+
+    <!--其他设定-->
+    <sys:String x:Key="Others">其他设定</sys:String>
+    <!--Language Selection-->
+    <sys:String x:Key="SelectLanguage">语系切换：</sys:String>
+    <sys:String x:Key="zhTW">繁体中文</sys:String>
+    <sys:String x:Key="zhCN">简体中文</sys:String>
+    <sys:String x:Key="enUS">英文(美)</sys:String>
+
+    <sys:String x:Key="RestartPrinter">重启打印机</sys:String>
 
     <!--Expander Header-->
     <sys:String x:Key="PrinterAction">维修维护</sys:String>
-    <sys:String x:Key="PrintTest">数据传输</sys:String>
+    <sys:String x:Key="DataTransfer">数据传输</sys:String>
     <sys:String x:Key="PrinterConfig">参数设置</sys:String>
     <sys:String x:Key="BLineSetting">黑标设置</sys:String>
     <sys:String x:Key="NVLogo">NV Logo</sys:String>
     <sys:String x:Key="FWUpdate">升级程序</sys:String>
 
-    <!--數據傳輸-->
+    <!--数据传输-->
+    <sys:String x:Key="SendData">发送数据</sys:String>
+    <sys:String x:Key="Send">发送</sys:String>
+    <sys:String x:Key="Print">打印</sys:String>
+    <sys:String x:Key="Empty">清空</sys:String>
+    <sys:String x:Key="HexMode">十六进制模式</sys:String>
+    <sys:String x:Key="TimedSendingInterval">定时发送间隔:</sys:String>
     <sys:String x:Key="StartSendCmd">开始定时</sys:String>
     <sys:String x:Key="StopSendCmd">停止定时</sys:String>
     <sys:String x:Key="DefaultText">输入需要打印的数据，输入完成后，点击发送按键"</sys:String>
 
-    <!--維護維修/工廠測試-->
+    <!--参数设置-->
+    <sys:String x:Key="OperationsForAll">全局操作</sys:String>
+    <sys:String x:Key="WarningText">勾选后才会下载参数到打印机中</sys:String>
+    <sys:String x:Key="Load">读取</sys:String>
+    <sys:String x:Key="Set">设置</sys:String>
+    <sys:String x:Key="CommunicationParameterSetting">通讯参数设置</sys:String>
+    <sys:String x:Key="SetIP">设置ip地址</sys:String>
+    <sys:String x:Key="SetGateway">设置网关地址</sys:String>
+    <sys:String x:Key="SetMacAddress">设置mac地址</sys:String>
+    <sys:String x:Key="AutomaticDisconnectTime">自动断线时间</sys:String>
+    <sys:String x:Key="na">无</sys:String>
+    <sys:String x:Key="Mins">分钟</sys:String>
+    <sys:String x:Key="NumberConnections">网络连接数量</sys:String>
+    <sys:String x:Key="Client">个</sys:String>
+    <sys:String x:Key="CommunicationSpeed">网口通讯速度</sys:String>
+    <sys:String x:Key="DHCP">DHCP</sys:String>
+    <sys:String x:Key="Static">静态DHCP</sys:String>
+    <sys:String x:Key="Mode">模式</sys:String>
+    <sys:String x:Key="USBMode">USB模式</sys:String>
+    <sys:String x:Key="USBPort">USB端口</sys:String>
+    <sys:String x:Key="Fixed">固定</sys:String>
+    <sys:String x:Key="Unfixed">不固定</sys:String>
+    <sys:String x:Key="PrinterPropertySettings">打印机属性设置</sys:String>
+    <sys:String x:Key="CodePage">代码页</sys:String>
+    <sys:String x:Key="SetCodePage">设置代码页</sys:String>
+    <sys:String x:Key="PrintCodePage">打印代码页</sys:String>
+    <sys:String x:Key="SetLanguage">语言设置</sys:String>
+    <sys:String x:Key="CNGB18030">简体GB18030</sys:String>
+    <sys:String x:Key="TWBIG">繁体BIG</sys:String>
+    <sys:String x:Key="Korean">韩文</sys:String>
+    <sys:String x:Key="Japanese">日文</sys:String>
+    <sys:String x:Key="JapaneseSHIFTJIS">日文SHIFT JIS</sys:String>
+    <sys:String x:Key="JapaneseJI">日文JI</sys:String>
+    <sys:String x:Key="FontB">FontB字体</sys:String>
+    <sys:String x:Key="Support">支持</sys:String>
+    <sys:String x:Key="Unsupport">不支持</sys:String>
+    <sys:String x:Key="CustomizeTheFont">定制字体</sys:String>
+    <sys:String x:Key="Enabled">启用</sys:String>
+    <sys:String x:Key="NotEnabled">不启用</sys:String>
+    <sys:String x:Key="FeedingDirection">走纸方向</sys:String>
+    <sys:String x:Key="MotorSpeed">马达加速</sys:String>
+    <sys:String x:Key="On">开启</sys:String>
+    <sys:String x:Key="Off">关闭</sys:String>
+    <sys:String x:Key="MotorAcceleration">马达加速度</sys:String>
+    <sys:String x:Key="Speed">打印速度</sys:String>
+    <sys:String x:Key="DensityMode">浓度模式</sys:String>
+    <sys:String x:Key="High">高</sys:String>
+    <sys:String x:Key="Low">低</sys:String>
+    <sys:String x:Key="Density">浓度调节</sys:String>
+    <sys:String x:Key="ReprintPaperOut">纸尽重打</sys:String>
+    <sys:String x:Key="PaperWidth">打印纸宽</sys:String>
+    <sys:String x:Key="AutomaticallyCut">合盖后自动切纸</sys:String>
+    <sys:String x:Key="CutPara">切纸</sys:String>
+    <sys:String x:Key="NotCut">不切纸</sys:String>
+    <sys:String x:Key="VerticalOffsetUnit">垂直移动单位</sys:String>
+    <sys:String x:Key="MacAddreessDisplay">mac地址显示</sys:String>
+    <sys:String x:Key="Decimal">十进制</sys:String>
+    <sys:String x:Key="Hexadecimal">十六进制</sys:String>
+    <sys:String x:Key="QRCode">二维码功能</sys:String>
+    <sys:String x:Key="PrintTestLogoSetting">自检页LOGO设置</sys:String>
+    <sys:String x:Key="PrintTestLogo">自检页打印LOGO</sys:String>
+    <sys:String x:Key="NotPrintLogo">自检页不打印LOGOo</sys:String>
+    <sys:String x:Key="DIPSwitch">DIP开关</sys:String>
+    <sys:String x:Key="HardwareDIP">使用硬件DIP</sys:String>
+    <sys:String x:Key="SoftwareDIP">不使用硬件DIP</sys:String>
+    <sys:String x:Key="SoftwareDIPSetting">软件DIP设置</sys:String>
+    <sys:String x:Key="Cutter">切刀</sys:String>
+    <sys:String x:Key="Beeper">蜂鸣器</sys:String>
+    <sys:String x:Key="DensityDIP">浓度</sys:String>
+    <sys:String x:Key="ChineseProhibited">中文禁止</sys:String>
+    <sys:String x:Key="LineCharacters">48/42字符数</sys:String>
+    <sys:String x:Key="Drawer">钱箱</sys:String>
+    <sys:String x:Key="BaudRateDIP">串口波特率</sys:String>
+    <sys:String x:Key="SetDIP">设置DIP值</sys:String>
+
+    <!--维护维修/工厂测试-->
     <sys:String x:Key="CutSetting">切纸设置</sys:String>
-    <sys:String x:Key="CutNumber">切纸次数(100以內)</sys:String>
+    <sys:String x:Key="CutNumber">切纸次数(100以内)</sys:String>
     <sys:String x:Key="Cut">切纸</sys:String>
     <sys:String x:Key="CommandTest">指令测试</sys:String>
     <sys:String x:Key="CommandTestBtn">测试</sys:String>
@@ -37,7 +129,7 @@
     <sys:String x:Key="OpenCashDrawer">下踢钱箱</sys:String>
     <sys:String x:Key="RestartPirnter">重启打印机</sys:String>
 
-    <!--黑標設定-->
+    <!--黑标设定-->
     <sys:String x:Key="SetBLineBillMaxLen">设置黑标票据最大长度</sys:String>
     <sys:String x:Key="DetectBlineFeedPrintTest">检测到黑标后进行打印测试</sys:String>
     <sys:String x:Key="SetBlineMaxWidth">设置黑标最大宽度</sys:String>
@@ -47,19 +139,34 @@
     <sys:String x:Key="LoadBLineSettings">读取黑标设置</sys:String>
 
     <!--NV Logo-->
+    <sys:String x:Key="OpendImages">打开图片集</sys:String>
+    <sys:String x:Key="AlreadyOpen">已打开</sys:String>
+    <sys:String x:Key="ImagesHasBeenOpened">张图片</sys:String>
+    <sys:String x:Key="ClearAllImages">清空图片集</sys:String>
     <sys:String x:Key="ShowPic">图片显示</sys:String>
+    <sys:String x:Key="DonwaldLogo">下载Logo</sys:String>
     <sys:String x:Key="LogoSetting">NV Logo 参数设定</sys:String>
+    <sys:String x:Key="PrintLogo">打印Logo</sys:String>
+    <sys:String x:Key="ClearLogo">清除Logo</sys:String>
     <sys:String x:Key="Ordinal">第</sys:String>
     <sys:String x:Key="piece">张</sys:String>
     <sys:String x:Key="SingleWidthandHeight">单倍宽高</sys:String>
     <sys:String x:Key="DoubleWidth">双倍宽度</sys:String>
     <sys:String x:Key="DoubleHeight">双倍高度</sys:String>
     <sys:String x:Key="DoubleWidthandHeight">双倍宽高</sys:String>
-    <sys:String x:Key="SelectLogoAndDonwald">下载Logo</sys:String>
-    <sys:String x:Key="PrintLogo">打印Logo</sys:String>
-    <sys:String x:Key="ClearLogo">清除Logo</sys:String>
 
-    <!--***************************************************************權限登入**************************************************************************-->
+    <!--FW Upgrade-->
+    <sys:String x:Key="HIDDeviceConnectionStatus">HID设备连接状况</sys:String>
+    <sys:String x:Key="ParseData">解析文件数据</sys:String>
+    <sys:String x:Key="Address">写入地址:</sys:String>
+    <sys:String x:Key="FileSize">代码大小:</sys:String>
+    <sys:String x:Key="Status">状态:</sys:String>
+    <sys:String x:Key="Time">时间:</sys:String>
+    <sys:String x:Key="Seconds">秒</sys:String>
+    <sys:String x:Key="DownloadData">下载数据</sys:String>
+    <sys:String x:Key="DownloadFirmware">下载固件</sys:String>
+
+    <!--***************************************************************权限登入**************************************************************************-->
     <sys:String x:Key="EnterAdminPwd">请输入管理员密码</sys:String>
     <sys:String x:Key="PwdTitle">登入</sys:String>
     <sys:String x:Key="ok">确定</sys:String>
@@ -69,16 +176,11 @@
     <sys:String x:Key="PwdError">密码错误</sys:String>
     <sys:String x:Key="Logout">登出</sys:String>
 
-    <!--**********************************************************************底部功能*********************************************************************--> 
+    <!--**********************************************************************底部功能*********************************************************************-->
     <!--for Bottom Button-->
+    <sys:String x:Key="SystemStatus">状态信息:</sys:String>
     <sys:String x:Key="StartStatusMonitor">启动实时状态查询</sys:String>
     <sys:String x:Key="StopStatusMonitor">关闭实时状态查询</sys:String>
-
-    <!--Language Selection-->
-    <sys:String x:Key="SelectLanguage">语系切换：</sys:String>
-    <sys:String x:Key="zhTW">繁体中文</sys:String>
-    <sys:String x:Key="zhCN">简体中文</sys:String>
-    <sys:String x:Key="enUS">英文(美)</sys:String>
 
     <!--**********************************************************************共用功能*********************************************************************-->
     <!--message box-->
@@ -107,13 +209,45 @@
     <sys:String x:Key="USBUnconnect">USB尚未连接，请先进行接口测试</sys:String>
     <sys:String x:Key="EthernetUnconnect">网口尚未连接，请先进行接口测试</sys:String>
     <sys:String x:Key="WaitforRedLight">Flash写入数据中，请待打印机红灯停止闪烁后再行执行其他命令!</sys:String>
+    <sys:String x:Key="DeviceConnected">设备已连接</sys:String>
+    <sys:String x:Key="DeviceDisconnected">设备断开</sys:String>
+    <sys:String x:Key="UpgradeCompleted">升级完成</sys:String>
+    <sys:String x:Key="SelectFolder">请选择文件夹</sys:String>
+    <sys:String x:Key="AllFiles">所有文件</sys:String>
+    <sys:String x:Key="FailedOpen">打开文件失败</sys:String>
+    <sys:String x:Key="SelectFileFirst">请先选择文件</sys:String>
+    <sys:String x:Key="FileError">文件错误，请检查</sys:String>
+    <sys:String x:Key="Parsing">正在解析</sys:String>
+    <sys:String x:Key="ParseCompleted">解析完成</sys:String>
+    <sys:String x:Key="ParseFirst">请先解析文件</sys:String>
+    <sys:String x:Key="ReadChipOption">读取芯片选项字节</sys:String>
+    <sys:String x:Key="FailedReadChipOption">读取芯片选项字节失败</sys:String>
+    <sys:String x:Key="ChipIsLocked">芯片上锁，请检查</sys:String>
+    <sys:String x:Key="ReadChipAddress">读取芯片应用程序地址</sys:String>
+    <sys:String x:Key="EraseAddressFailed">读取擦除地址失败</sys:String>
+    <sys:String x:Key="AddressError">地址错误，请检查</sys:String>
+    <sys:String x:Key="CheckChipSector">探险芯片扇区</sys:String>
+    <sys:String x:Key="EraseMemoryError">擦除内存错误，请检查</sys:String>
+    <sys:String x:Key="SendingData">发送代码数据</sys:String>
+    <sys:String x:Key="BurningFailed">烧写失败，请检查</sys:String>
+    <sys:String x:Key="UpdateToROM">更新代码到ROM</sys:String>
+
+    <!--Printer Status-->
+    <sys:String x:Key="Ready">就绪</sys:String>
+    <sys:String x:Key="HeadOpen">开盖</sys:String>
+    <sys:String x:Key="PaperOut">缺纸</sys:String>
+    <sys:String x:Key="CutterError">切刀错误r</sys:String>
+    <sys:String x:Key="DrawerOpen">钱箱开启</sys:String>
+    <sys:String x:Key="TPHOverheadted">打印头过热</sys:String>
+    <sys:String x:Key="ErrorOccured">已发生错误</sys:String>
 
 
     <!--button-->
     <sys:String x:Key="SelectAll">全选</sys:String>
     <sys:String x:Key="ClearAll">清除</sys:String>
+    <sys:String x:Key="OpenFile">打开文件</sys:String>
 
-    <!--多餘的-->
+    <!--多余的-->
     <sys:String x:Key="NOFramework4.0">请先安装.Net Framework4.0方可正常执行此程序</sys:String>
     <sys:String x:Key="CommandEmpty">尚未输入指令</sys:String>
     <sys:String x:Key="GNSettingComplete">写入完成</sys:String>

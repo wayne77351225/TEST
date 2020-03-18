@@ -96,7 +96,7 @@ namespace G80Utility
 
         //判斷是否剛開啟視窗，避免一開啟視窗就跳出訊息
         bool isOpenWindow;
-        
+
         // iap object
         IAP_download iap_download;
 
@@ -121,7 +121,6 @@ namespace G80Utility
 
         public G80MainWindow()
         {
-
 
             InitializeComponent();
 
@@ -159,7 +158,8 @@ namespace G80Utility
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             SaveLastIP();
-            if (timer != null) {
+            if (timer != null)
+            {
                 timer.Dispose(); //關閉計時器  
             }
             e.Cancel = false;
@@ -1005,12 +1005,12 @@ namespace G80Utility
 
             if (receiveData.Contains(Command.RE_IP_CLASSFY))
             {
-                checkIsGetData(SetIPText, null, data, "设置IP地址", false, 0);
+                checkIsGetData(SetIPText, null, data,FindResource("SetIP") as string, false, 0);
             }
 
             if (receiveData.Contains(Command.RE_GATEWAY_CLASSFY))
             {
-                checkIsGetData(SetGatewayText, null, data, "设置网关地址", false, 0);
+                checkIsGetData(SetGatewayText, null, data, FindResource("SetGateway") as string, false, 0);
             }
 
             if (receiveData.Contains(Command.RE_MAC_CLASSFY))
@@ -1022,38 +1022,38 @@ namespace G80Utility
                 else
                 {
                     SysStatusText.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFEF7171")); ;
-                    SysStatusText.Text = "设置MAC地址" + FindResource("NotReadParameterYet") as string;
+                    SysStatusText.Text = FindResource("SetMacAddress") as string + FindResource("NotReadParameterYet") as string;
                 }
             }
 
             if (receiveData.Contains(Command.RE_AUTODISCONNECT_CLASSFY))
             {
-                checkIsGetData(null, AutoDisconnectCom, data, "自动断线时间", false, 8);
+                checkIsGetData(null, AutoDisconnectCom, data, FindResource("AutomaticDisconnectTime") as string, false, 8);
             }
 
             if (receiveData.Contains(Command.RE_CLIENTCOUNT_CLASSFY))
             {
-                checkIsGetData(null, ConnectClientCom, data, "网络连接数量", true, 2);
+                checkIsGetData(null, ConnectClientCom, data, FindResource("NumberConnections") as string, true, 2);
             }
 
             if (receiveData.Contains(Command.RE_NETWORK_SPEED_CLASSFY))
             {
-                checkIsGetData(null, EthernetSpeedCom, data, "网口通讯速度", false, 1);
+                checkIsGetData(null, EthernetSpeedCom, data, FindResource("CommunicationSpeed") as string, false, 1);
             }
 
             if (receiveData.Contains(Command.RE_DHCP_MODE_CLASSFY))
             {
-                checkIsGetData(null, DHCPModeCom, data, "DHCP模式", false, 3);
+                checkIsGetData(null, DHCPModeCom, data, FindResource("DHCP") as string, false, 3);
             }
 
             if (receiveData.Contains(Command.RE_USB_MODE_CLASSFY))
             {
-                checkIsGetData(null, USBModeCom, data, "USB模式", false, 1);
+                checkIsGetData(null, USBModeCom, data, FindResource("USBMode") as string, false, 1);
             }
 
             if (receiveData.Contains(Command.RE_USB_FIX_CLASSFY))
             {
-                checkIsGetData(null, USBFixedCom, data, "USB端口", false, 1);
+                checkIsGetData(null, USBFixedCom, data, FindResource("USBPort") as string, false, 1);
             }
 
             if (receiveData.Contains(Command.RE_CODEPAGE_CLASSFY))
@@ -1080,33 +1080,33 @@ namespace G80Utility
                 }
                 else
                 {
-                    setSysStatusColorAndText("设置代码页" + FindResource("NotReadParameterYet") as string, "#FFEF7171");
+                    setSysStatusColorAndText(FindResource("SetCodePage") as string+ FindResource("NotReadParameterYet") as string, "#FFEF7171");
                 }
             }
 
             if (receiveData.Contains(Command.RE_LANGUAGES_CLASSFY))
             {
-                checkIsGetData(null, LanguageSetCom, data, "语言设置", true, 6);
+                checkIsGetData(null, LanguageSetCom, data, FindResource("SetLanguage") as string, true, 6);
             }
 
             if (receiveData.Contains(Command.RE_FONTB_CLASSFY))
             {
-                checkIsGetData(null, FontBSettingCom, data, "FontB字体", false, 1);
+                checkIsGetData(null, FontBSettingCom, data, FindResource("FontB") as string, false, 1);
             }
 
             if (receiveData.Contains(Command.RE_CUSTOMFONT_CLASSFY))
             {
-                checkIsGetData(null, CustomziedFontCom, data, "定制字体", false, 1);
+                checkIsGetData(null, CustomziedFontCom, data, FindResource("CustomizeTheFont") as string, false, 1);
             }
 
             if (receiveData.Contains(Command.RE_DIRECTION_CLASSFY))
             {
-                checkIsGetData(null, DirectionCombox, data, "走纸方向", false, 1);
+                checkIsGetData(null, DirectionCombox, data, FindResource("FeedingDirection") as string, false, 1);
             }
 
             if (receiveData.Contains(Command.RE_MOTOR_ACC_CONTROL_CLASSFY))
             {
-                checkIsGetData(null, MotorAccControlCom, data, "马达加速", false, 1);
+                checkIsGetData(null, MotorAccControlCom, data, FindResource("MotorSpeed") as string, false, 1);
             }
 
             if (receiveData.Contains(Command.RE_MOTOR_ACC_CLASSFY))
@@ -1130,7 +1130,7 @@ namespace G80Utility
                         break;
 
                     default:
-                        setSysStatusColorAndText("马达加速度" + FindResource("NotReadParameterYet") as string, "#FFEF7171");
+                        setSysStatusColorAndText(FindResource("MotorAcceleration") as string + FindResource("NotReadParameterYet") as string, "#FFEF7171");
                         break;
                 }
 
@@ -1151,7 +1151,7 @@ namespace G80Utility
                         PrintSpeedCom.SelectedIndex = 2;
                         break;
                     default:
-                        setSysStatusColorAndText("打印速度" + FindResource("NotReadParameterYet") as string, "#FFEF7171");
+                        setSysStatusColorAndText(FindResource("Speed") as string + FindResource("NotReadParameterYet") as string, "#FFEF7171");
                         break;
                 }
 
@@ -1159,52 +1159,52 @@ namespace G80Utility
 
             if (receiveData.Contains(Command.RE_DENSITY_MODE_CLASSFY))
             {
-                checkIsGetData(null, DensityModeCom, data, "浓度模式", false, 1);
+                checkIsGetData(null, DensityModeCom, data, FindResource("DensityMode") as string, false, 1);
             }
 
             if (receiveData.Contains(Command.RE_DENSITY_CLASSFY))
             {
-                checkIsGetData(null, DensityCom, data, "浓度调节", true, 10);
+                checkIsGetData(null, DensityCom, data, FindResource("Density") as string, true, 10);
             }
 
             if (receiveData.Contains(Command.RE_PAPEROUT_CLASSFY))
             {
-                checkIsGetData(null, PaperOutReprintCom, data, "纸尽重打", false, 1);
+                checkIsGetData(null, PaperOutReprintCom, data, FindResource("ReprintPaperOut") as string, false, 1);
             }
 
             if (receiveData.Contains(Command.RE_PAPERWIDTH_CLASSFY))
             {
-                checkIsGetData(null, PaperWidthCom, data, "打印纸宽", false, 1);
+                checkIsGetData(null, PaperWidthCom, data, FindResource("PaperWidth") as string, false, 1);
             }
 
             if (receiveData.Contains(Command.RE_HEADCLOSE_CUT_CLASSFY))
             {
-                checkIsGetData(null, HeadCloseCutCom, data, "合盖后自动切纸", false, 1);
+                checkIsGetData(null, HeadCloseCutCom, data, FindResource("AutomaticallyCut") as string, false, 1);
             }
 
             if (receiveData.Contains(Command.RE_YOFFSET_CLASSFY))
             {
-                checkIsGetData(null, YOffsetCom, data, "垂直移动单位", false, 1);
+                checkIsGetData(null, YOffsetCom, data, FindResource("VerticalOffsetUnit") as string, false, 1);
             }
 
             if (receiveData.Contains(Command.RE_MACSHOW_CLASSFY))
             {
-                checkIsGetData(null, MACShowCom, data, "MAC地址显示", false, 1);
+                checkIsGetData(null, MACShowCom, data, FindResource("MacAddreessDisplay") as string, false, 1);
             }
 
             if (receiveData.Contains(Command.RE_QRCODE_CLASSFY))
             {
-                checkIsGetData(null, QRCodeCom, data, "二维码功能", false, 1);
+                checkIsGetData(null, QRCodeCom, data, FindResource("QRCode") as string, false, 1);
             }
 
             if (receiveData.Contains(Command.RE_LOGOPRINT_CLASSFY))
             {
-                checkIsGetData(null, LogoPrintControlCom, data, "自检页LOGO设置", false, 1);
+                checkIsGetData(null, LogoPrintControlCom, data, FindResource("PrintTestLogoSetting") as string, false, 1);
             }
 
             if (receiveData.Contains(Command.RE_DIPSW_CLASSFY))
             {
-                checkIsGetData(null, DIPSwitchCom, data, "DIP开关", false, 1);
+                checkIsGetData(null, DIPSwitchCom, data, FindResource("DIPSwitch") as string, false, 1);
             }
 
             if (receiveData.Contains(Command.RE_DIPVALUE_CLASSFY))
@@ -1298,30 +1298,30 @@ namespace G80Utility
             StringBuilder status = new StringBuilder();
             if (!bitarray[0]) //bit0 开盖
             {
-                status.Append("开盖；");
+                status.Append(FindResource("HeadOpen") as string+"；");
             }
             if (!bitarray[1]) // bit1 缺纸
             {
-                status.Append("缺纸；");
+                status.Append(FindResource("PaperOut") as string + "；");
 
             }
             if (!bitarray[2]) // bit2 切刀错误
             {
-                status.Append("切刀错误；");
+                status.Append(FindResource("CutterError") as string + "；");
 
             }
             if (!bitarray[3]) //钱箱状态
             {
-                status.Append("钱箱打开；");
+                status.Append(FindResource("DrawerOpen") as string + "；");
             }
             if (!bitarray[4]) //打印头超温
             {
-                status.Append("打印头超温；");
+                status.Append(FindResource("TPHOverheadted") as string + "；");
 
             }
             if (!bitarray[5]) //已发生错误
             {
-                status.Append("已发生错误；");
+                status.Append(FindResource("ErrorOccured") as string + "；");
 
             }
             int count = 0;
@@ -1333,7 +1333,7 @@ namespace G80Utility
                 }
                 if (count == 6)
                 {
-                    status.Append("就绪");
+                    status.Append(FindResource("Ready") as string + "");
                     break;
                 }
             }
@@ -1498,7 +1498,7 @@ namespace G80Utility
         private void StatusMonitorBtn_Click(object sender, RoutedEventArgs e)
         {
             string btnName = StatusMonitorBtn.Content.ToString();
-            if (btnName.Contains("启动") || btnName.Contains("開啟"))
+            if (btnName.Contains("启动") || btnName.Contains("開啟") || btnName.Contains("Start"))
             {
                 startStatusMonitorTimer();
             }
@@ -1657,7 +1657,7 @@ namespace G80Utility
             {
                 interval = Int32.Parse(SendCmdItervalTxt.Text);
             }
-            if (btnName.Contains("开始") || btnName.Contains("開始"))
+            if (btnName.Contains("开始") || btnName.Contains("開始") || btnName.Contains("Start"))
             {
                 startSendCmdTimer(interval);
             }
@@ -2402,8 +2402,8 @@ namespace G80Utility
                 Console.WriteLine(BitConverter.ToString(sendArray).Replace("-", ""));
                 MessageBox.Show(FindResource("WaitforRedLight") as string);
             }
-            #endregion
         }
+        #endregion
 
         //升級程序按鈕
         #region 升級程序tab按鈕事件
@@ -2425,7 +2425,6 @@ namespace G80Utility
         }
         #endregion
 
-
         #region 開啟FW檔案按鈕事件
         private void OpenFWfileBtn_Click(object sender, EventArgs e)
         {
@@ -2433,8 +2432,8 @@ namespace G80Utility
 
             OpenFileDialog dialog = new OpenFileDialog();
             dialog.Multiselect = false;//该值确定是否可以选择多个文件
-            dialog.Title = "请选择文件夹";
-            dialog.Filter = "所有文件(*.hex)|*.hex";
+            dialog.Title = FindResource("SelectFolder") as string;
+            dialog.Filter = FindResource("AllFiles") as string+"(*.hex)|*.hex";
             if (dialog.ShowDialog() == true)
             {
                 file_name = dialog.FileName;
@@ -2444,7 +2443,7 @@ namespace G80Utility
             }
             else
             {
-                FilePathTxt.Text = "状态：打开文件失败！";
+                FilePathTxt.Text = FindResource("Status") as string + FindResource("FailedOpen") as string;
             }
         }
 
@@ -4042,12 +4041,12 @@ namespace G80Utility
         {
             if (con)
             {
-                DeviceStatusTxt.Text = "设备已连接";
+                DeviceStatusTxt.Text =FindResource("DeviceConnected") as string;
             }
             else
             {
-                DeviceStatusTxt.Text = "设备断开";
-                WriteStatusLabel.Content = "升级完成 ";
+                DeviceStatusTxt.Text = FindResource("DeviceDisconnected") as string;
+                WriteStatusLabel.Content = FindResource("UpgradeCompleted") as string;
             }
         }
         #endregion
@@ -5422,6 +5421,7 @@ namespace G80Utility
 
         #endregion
 
+        //===============================for 測試可關閉串口===========================
         private void ConnectClose_Click(object sender, RoutedEventArgs e)
         {
             RS232Connect.CloseSerialPort();

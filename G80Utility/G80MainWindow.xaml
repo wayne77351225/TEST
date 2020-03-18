@@ -620,7 +620,7 @@
                                     <Button  Margin="10,5,10,5" Name="PrintTest_L_Maintanin" Click="PrintTest_L_Maintanin_Click" Content="自检页(长)" Padding="5" FontSize="14" Width="180" />
                                     <Button  Margin="10,5,10,5" Name="PrintTest_EVEN_Maintanin" Click="PrintTest_EVEN_Maintanin_Click" Content="打印均匀测试" Padding="5" FontSize="14" Width="180" />
                                     <StackPanel   Margin="10,5,10,5" Orientation="Horizontal" HorizontalAlignment="Center" >
-                                        <TextBox  FontSize="14" Width="70" Text="1" Name="CutTimes_Maintanin_Txt" TextChanged="CutTimes_Maintanin_Txt_TextChanged"/>
+                                        <TextBox  FontSize="14" Width="70" Text="1" Name="CutTimes_Maintanin_Txt" />
                                         <Button  Margin="10,0,0,0" Name="CutTimes_Maintanin_Btn" Click="CutTimes_Maintanin_Btn_Click" Content="连续切纸" Padding="5" FontSize="14"  Width="100"/>
                                     </StackPanel>
                                     <Button  Margin="10,5,10,5" Name="BeepTest_Maintanin_Btn" Click="BeepTest_Maintanin_Btn_Click" Content="蜂鸣器测试" Padding="5" FontSize="14" Width="180" />
