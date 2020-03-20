@@ -117,6 +117,13 @@ namespace G80Utility
 
         //文件解析與下載計時器 
         Timer timer;
+
+        //測試連線命令(用自動斷線命令來測試是否通)
+        string TEST_SEND_CMD = "1F 1B 1F 53 5A 4A 42 5A 46 30 13 01";
+        string TEST_RECEIVE_CMD = "1F-1B-1F-48-46-30-13-01";
+
+        //判斷sn設定位置
+        string SNTxtSettingPosition;
         #endregion
 
         public G80MainWindow()
@@ -212,7 +219,7 @@ namespace G80Utility
             DIPBaudRateCom.SelectedIndex = 1;
 
             //通訊測試沒有過不能使用
-            isTabEnabled(false);
+            //isTabEnabled(false);
 
             //讀取最後一次紀錄ip
             LoadLastIP();
@@ -919,23 +926,6 @@ namespace G80Utility
         }
         #endregion
 
-        #region 畫面操作開關控制
-        public void isTabEnabled(bool isEnabled)
-        {
-            ReadSNBtn.IsEnabled = isEnabled;
-            SetSNBtn.IsEnabled = isEnabled;
-            Restart.IsEnabled = isEnabled;
-            DataSendTab.IsEnabled = isEnabled;
-            ParaSetTab.IsEnabled = isEnabled;
-            NVlLogoTab.IsEnabled = isEnabled;
-            BlineTab.IsEnabled = isEnabled; //Collapsed
-            MaintaiTab.IsEnabled = isEnabled;
-            FactoryTab.IsEnabled = isEnabled;
-            //FWUpgradeTab.IsEnabled = isEnabled;//不走三接口通道
-            StatusMonitorBtn.IsEnabled = isEnabled;
-        }
-        #endregion
-
         #region MacAddress的生成
         public byte[] collectMacAddress()
         {
@@ -1032,7 +1022,7 @@ namespace G80Utility
 
             if (receiveData.Contains(Command.RE_IP_CLASSFY))
             {
-                checkIsGetData(SetIPText, null, data,FindResource("SetIP") as string, false, 0);
+                checkIsGetData(SetIPText, null, data, FindResource("SetIP") as string, false, 0);
             }
 
             if (receiveData.Contains(Command.RE_GATEWAY_CLASSFY))
@@ -1107,7 +1097,7 @@ namespace G80Utility
                 }
                 else
                 {
-                    setSysStatusColorAndText(FindResource("SetCodePage") as string+ FindResource("NotReadParameterYet") as string, "#FFEF7171");
+                    setSysStatusColorAndText(FindResource("SetCodePage") as string + FindResource("NotReadParameterYet") as string, "#FFEF7171");
                 }
             }
 
@@ -1325,7 +1315,7 @@ namespace G80Utility
             StringBuilder status = new StringBuilder();
             if (!bitarray[0]) //bit0 开盖
             {
-                status.Append(FindResource("HeadOpen") as string+"；");
+                status.Append(FindResource("HeadOpen") as string + "；");
             }
             if (!bitarray[1]) // bit1 缺纸
             {
@@ -1487,37 +1477,121 @@ namespace G80Utility
             byte[] sendArray;
             if ((bool)rs232Checkbox.IsChecked)
             {
-                checkRS232Communitcation();
+                if (RS232PortName != null)
+                {
+                    RS232Connect.CloseSerialPort(); //連線前會先判斷是否已開啟PORT    
+                    bool isError = RS232Connect.OpenSerialPort(RS232PortName, FindResource("CannotOpenComport") as string);
+                    if (!isError)
+                    {
+                        sendArray = StringToByteArray(Command.RS232_COMMUNICATION_TEST);
+                        RS232Connect.SerialPortSendCMD("NeedReceive", sendArray, null, 8);
+                        while (!RS232Connect.isReceiveData)
+                        {
+                            if (RS232Connect.mRecevieData != null)
+                            {
+                                isRS232CommunicateOK(RS232Connect.mRecevieData, "communication");
+                                break;
+                            }
+                        }
+                        SendCmdFail("R");
+                        RS232Connect.CloseSerialPort(); //最後關閉
+                    }
+                    else //serial open port failed
+                    {
+                        isRS232Connected = false;
+                        connectFailUI(RS232ConnectImage, FindResource("CannotOpenComport") as string);
+                    }
+                }
+                else
+                {
+                    MessageBox.Show(FindResource("NotSettingComport") as string);
+                }
+
             }
             if ((bool)USBCheckbox.IsChecked)
             {
-                checkUSBCommunitcation();
+                if (USBpath != null) //先判斷是否有USBpath
+                {    //已斷線，重新測試連線
+                    if (USBConnect.USBHandle == -1)
+                    {
+                        int result = USBConnect.ConnectUSBDevice(USBpath);
+                        if (result == 1)
+                        {
+
+                            byte[] sendArrayUSB = StringToByteArray(Command.USB_COMMUNICATION_TEST);
+                            //USBConnectAndSendCmd("CommunicationTest", sendArray, 8);
+                            USBConnect.USBSendCMD("NeedReceive", sendArrayUSB, null, 8);
+                            while (!USBConnect.isReceiveData)
+                            {
+                                if (USBConnect.mRecevieData != null)
+                                {
+                                    isUSBCommunicateOK(USBConnect.mRecevieData, "communication");
+                                    USBConnect.closeHandle();
+                                    break;
+                                }
+                            }
+                            SendCmdFail("U");
+                        }
+                        else //USB CreateFile失敗
+                        {
+                            isUSBConnected = false;
+                            connectFailUI(USBConnectImage, FindResource("NotSettingUSBport") as string);
+                        }
+                    }
+
+                }
+                else
+                {
+                    MessageBox.Show(FindResource("NotSettingUSBport") as string);
+                }
             }
             if ((bool)EthernetCheckbox.IsChecked)
             {
                 bool isOK = chekckEthernetIPText();
                 if (isOK)
                 {
-                    checkEthernetCommunitcation();
+                    //checkEthernetCommunitcation();
+                    int connectStatus = EthernetConnect.EthernetConnectStatus();
+                    switch (connectStatus)
+                    {
+                        case 0: //fail
+                            isEthernetConnected = false;
+                            connectFailUI(EthernetConnectImage, FindResource("NotSettingEthernetport") as string);
+                            break;
+                        case 1: //success
+                            byte[] sendArrayEthernet = StringToByteArray(Command.ETHERNET_COMMUNICATION_TEST);
+                            //EthernetConnectAndSendCmd("CommunicationTest", sendArray, 8);
+                            EthernetConnect.EthernetSendCmd("NeedReceive", sendArrayEthernet, null, 8);
+                            while (!EthernetConnect.isReceiveData)
+                            {
+                                if (EthernetConnect.mRecevieData != null)
+                                {
+                                    isEthernetCommunicateOK(EthernetConnect.mRecevieData, "communication");
+                                    break;
+                                }
+                            }
+                            SendCmdFail("E");
+                            EthernetConnect.disconnect();
+                            break;
+                        case 2: //timeout
+                            isEthernetConnected = false;
+                            connectFailUI(EthernetConnectImage, FindResource("ConnectTimeout") as string);
+                            EthernetConnect.disconnect();
+                            break;
+
+                    }
                 }
             }
-            byte[] sendEmpty = { 0x0a, 0x0a, 0x0a };
-            SendCmd(sendEmpty, "BeepOrSetting", 0);
+            //一樣傳送命令前確認開通通道再關閉，避免前面測試完通道已經關閉造成錯誤
+            DifferInterfaceConnectChkAndSend("Send3Empty"); 
+
         }
         #endregion
 
         #region 重啟印表機按鈕事件
         private void Restart_Click(object sender, RoutedEventArgs e)
         {
-            byte[] sendArray = StringToByteArray(Command.RESTART);
-            SendCmd(sendArray, "BeepOrSetting", 0);
-            USBConnect.IsConnect = false;
-            RS232Connect.IsConnect = false;
-            EthernetConnect.connectStatus = 0;
-            EthernetConnectImage.Source = new BitmapImage(new Uri("Images/grey_circle.png", UriKind.Relative));
-            USBConnectImage.Source = new BitmapImage(new Uri("Images/grey_circle.png", UriKind.Relative));
-            RS232ConnectImage.Source = new BitmapImage(new Uri("Images/grey_circle.png", UriKind.Relative));
-            MessageBox.Show(FindResource("Reconnect") as string);
+            DifferInterfaceConnectChkAndSend("Restart");        
         }
         #endregion
 
@@ -1540,14 +1614,15 @@ namespace G80Utility
         #region 讀取機器序列號(通訊)按鈕事件
         private void ReadSNBtn_Click(object sender, RoutedEventArgs e)
         {
-            RoadPrinterSN();
+            DifferInterfaceConnectChkAndSend("RoadPrinterSN");
         }
         #endregion
 
         #region 設置機器序列號(通訊)按鈕事件
         private void SetSNBtn_Click(object sender, RoutedEventArgs e)
         {
-            editSNAuthority("communication");
+            SNTxtSettingPosition = "communication";
+            editSNAuthority();
         }
         #endregion
 
@@ -1632,15 +1707,14 @@ namespace G80Utility
         #region 發送命令按鈕事件
         private void SendCmdBtn_Click(object sender, RoutedEventArgs e)
         {
-            SendCmd();
+            DifferInterfaceConnectChkAndSend("SendCmd");
         }
         #endregion
 
         #region 發送換行命令按鈕事件
         private void SendEnterBtn_Click(object sender, RoutedEventArgs e)
         {
-            byte[] sendArray = { 0x0a };
-            SendCmd(sendArray, "BeepOrSetting", 0);
+            DifferInterfaceConnectChkAndSend("SendEmpty");
         }
         #endregion
 
@@ -1656,8 +1730,8 @@ namespace G80Utility
         {
             OpenFileDialog openFileDlg = new OpenFileDialog();
             openFileDlg.Multiselect = false;//该值确定是否可以选择多个文件
-            openFileDlg.Title = "请选择文件夹";
-            openFileDlg.Filter = "所有文件(*.txt)|*.txt";
+            openFileDlg.Title = FindResource("SelectFolder") as string;
+            openFileDlg.Filter = FindResource("AllFiles") as string + "(*.txt)|*.txt";
             Nullable<bool> openDlgResult = openFileDlg.ShowDialog();
             string filepath;
             if (openDlgResult == true)
@@ -1701,7 +1775,7 @@ namespace G80Utility
         private void ReadAllBtn_Click(object sender, RoutedEventArgs e)
         {
             IsParaSettingChecked();
-            readALL();
+            DifferInterfaceConnectChkAndSend("readALL");
         }
         #endregion
 
@@ -1709,7 +1783,7 @@ namespace G80Utility
         private void WriteAllBtn_Click(object sender, RoutedEventArgs e)
         {
             IsParaSettingChecked();
-            sendALL();
+            DifferInterfaceConnectChkAndSend("sendALL");
         }
         #endregion
 
@@ -1730,264 +1804,206 @@ namespace G80Utility
         #region 設定IP Address按鈕事件
         private void SetIPBtn_Click(object sender, RoutedEventArgs e)
         {
-            SetIP();
+            DifferInterfaceConnectChkAndSend("SetIP");
         }
         #endregion
 
         #region  設定Gateway按鈕事件
         private void SetGatewayBtn_Click(object sender, RoutedEventArgs e)
         {
-            SetGateway();
+            DifferInterfaceConnectChkAndSend("SetGateway");
         }
         #endregion
 
         #region 設定MAC按鈕事件
         private void SetMACBtn_Click(object sender, RoutedEventArgs e)
         {
-            SetMAC();
+            DifferInterfaceConnectChkAndSend("SetMAC");
         }
         #endregion
 
         #region 設定自動斷線時間按鈕事件
         private void AutoDisconnectBtn_Click(object sender, RoutedEventArgs e)
         {
-            AutoDisconnect();
+            DifferInterfaceConnectChkAndSend("AutoDisconnect");
         }
         #endregion
 
         #region 設定網路連接數量按鈕事件
         private void ConnectClientBtn_Click(object sender, RoutedEventArgs e)
         {
-            ConnectClient();
+            DifferInterfaceConnectChkAndSend("ConnectClient");
         }
         #endregion
 
         #region 設定網口通訊速度按鈕事件
         private void EthernetSpeedBtn_Click(object sender, RoutedEventArgs e)
         {
-            EthernetSpeed();
+            DifferInterfaceConnectChkAndSend("EthernetSpeed");
         }
         #endregion
 
         #region 設定DHCP模式按鈕事件
         private void DHCPModeBtn_Click(object sender, RoutedEventArgs e)
         {
-            DHCPMode();
+            DifferInterfaceConnectChkAndSend("DHCPMode");
         }
         #endregion
 
         #region 設定USB模式按鈕事件
         private void USBModeBtn_Click(object sender, RoutedEventArgs e)
         {
-            USBMode();
+            DifferInterfaceConnectChkAndSend("USBMode");
         }
         #endregion
 
         #region 設定USB端口值按鈕事件
         private void USBFixedBtn_Click(object sender, RoutedEventArgs e)
         {
-            USBFixed();
+            DifferInterfaceConnectChkAndSend("USBFixed");
         }
         #endregion
 
         #region 設定代碼頁按鈕事件
         private void CodePageSetBtn_Click(object sender, RoutedEventArgs e)
         {
-            CodePageSet();
+            DifferInterfaceConnectChkAndSend("CodePageSet");
         }
         #endregion
 
         #region 打印代碼頁按鈕事件
         private void CodePagePrintBtn_Click(object sender, RoutedEventArgs e)
         {
-            if (CodePageCom.SelectedIndex != -1)
-            {
-                List<byte> codePage = new List<byte>();
-                byte[] header = Command.CODEPAGE_PRINT_HEADER;
-                byte[] separate = Command.CODEPAGE_PRINT_SEPARATE;
-                byte[] char1 = Command.CODEPAGE_PRINT_CHAR1;
-                byte[] char2 = Command.CODEPAGE_PRINT_CHAR2;
-                byte[] selectedCode;
-                byte[] selectedName;
-
-                //加入header
-                for (int i = 0; i < header.Length; i++)
-                {
-                    codePage.Add(header[i]);
-                }
-
-                //取得代碼
-                string HexCode = CodePageCom.SelectedItem.ToString();
-                int Code = Int32.Parse(HexCode.Split(':')[0]);
-
-                //取得代碼和名稱 byte array
-                string CodeName = CodePageCom.SelectedItem.ToString();
-                selectedCode = BitConverter.GetBytes(Code);
-                selectedName = Encoding.Default.GetBytes(CodeName);
-
-                //加入代碼
-                codePage.Add(selectedCode[0]);
-
-                //加入區隔
-                for (int i = 0; i < separate.Length; i++)
-                {
-                    codePage.Add(separate[i]);
-                }
-
-                //加入名稱
-                for (int i = 0; i < selectedName.Length; i++)
-                {
-                    codePage.Add(selectedName[i]);
-                }
-
-                //加入char1
-                for (int i = 0; i < char1.Length; i++)
-                {
-                    codePage.Add(char1[i]);
-                }
-
-                //加入名稱
-                for (int i = 0; i < selectedName.Length; i++)
-                {
-                    codePage.Add(selectedName[i]);
-                }
-
-                //加入char2
-                for (int i = 0; i < char2.Length; i++)
-                {
-                    codePage.Add(char2[i]);
-                }
-                byte[] sendArray = codePage.ToArray();
-                SendCmd(sendArray, "BeepOrSetting", 0);
-            }
-            else { MessageBox.Show(FindResource("ColumnEmpty") as string); }
-
+            DifferInterfaceConnectChkAndSend("CodePagePrint");
         }
         #endregion
 
         #region 設定語言按鈕事件
         private void LanguageSetBtn_Click(object sender, RoutedEventArgs e)
         {
-            LanguageSet();
+            DifferInterfaceConnectChkAndSend("LanguageSet");
         }
         #endregion
 
         #region FontB設定按鈕事件
         private void FontBSettingBtn_Click(object sender, RoutedEventArgs e)
         {
-            FontBSetting();
+            DifferInterfaceConnectChkAndSend("FontBSetting");
         }
         #endregion
 
         #region 設定定制字體按鈕事件
         private void CustomziedFontBtn_Click(object sender, RoutedEventArgs e)
         {
-            CustomziedFont();
+            DifferInterfaceConnectChkAndSend("CustomziedFont");
         }
         #endregion
 
         #region 走紙方向按鈕事件
         private void Direction_Click(object sender, RoutedEventArgs e)
         {
-            SetDirection();
+            DifferInterfaceConnectChkAndSend("SetDirection");
         }
         #endregion
 
         #region 設定馬達加速開關按鈕事件
         private void MotorAccControlBtn_Click(object sender, RoutedEventArgs e)
         {
-            MotorAccControl();
+            DifferInterfaceConnectChkAndSend("MotorAccControl");
         }
         #endregion
 
         #region 設定馬達加速度按鈕事件
         private void AccMotorBtn_Click(object sender, RoutedEventArgs e)
         {
-            AccMotor();
+            DifferInterfaceConnectChkAndSend("AccMotor");
         }
         #endregion
 
         #region 設定打印速度按鈕事件
         private void PrintSpeedBtn_Click(object sender, RoutedEventArgs e)
         {
-            PrintSpeed();
+            DifferInterfaceConnectChkAndSend("PrintSpeed");
         }
         #endregion
 
         #region 設定濃度模式按鈕事件
         private void DensityModeBtn_Click(object sender, RoutedEventArgs e)
         {
-            DensityMode();
+            DifferInterfaceConnectChkAndSend("DensityMode");
         }
         #endregion
 
         #region 設定濃度調節按鈕事件
         private void DensityBtn_Click(object sender, RoutedEventArgs e)
         {
-            Density();
+            DifferInterfaceConnectChkAndSend("Density");
         }
         #endregion
 
         #region 設定紙盡重打按鈕事件
         private void PaperOutReprintBtn_Click(object sender, RoutedEventArgs e)
         {
-            PaperOutReprint();
+            DifferInterfaceConnectChkAndSend("PaperOutReprint");
         }
         #endregion
 
         #region 設定打印紙寬按鈕事件
         private void PaperWidthBtn_Click(object sender, RoutedEventArgs e)
         {
-            PaperWidth();
+            DifferInterfaceConnectChkAndSend("PaperWidth");
         }
         #endregion
 
         #region 設定合蓋自動切紙按鈕事件
         private void HeadCloseCutBtn_Click(object sender, RoutedEventArgs e)
         {
-            HeadCloseCut();
+            DifferInterfaceConnectChkAndSend("HeadCloseCut");
         }
         #endregion
 
         #region 設定垂直移動單位按鈕事件
         private void YOffsetBtn_Click(object sender, RoutedEventArgs e)
         {
-            YOffset();
+            DifferInterfaceConnectChkAndSend("YOffset");
         }
         #endregion
 
         #region 設定MAC顯示按鈕事件
         private void MACShowBtn_Click(object sender, RoutedEventArgs e)
         {
-            MACShow();
+            DifferInterfaceConnectChkAndSend("MACShow");
         }
         #endregion
 
         #region 設定二維碼按鈕事件
         private void QRCodeBtn_Click(object sender, RoutedEventArgs e)
         {
-            QRCode();
+            DifferInterfaceConnectChkAndSend("QRCode");
         }
         #endregion
 
         #region 設定自檢頁logo按鈕事件
         private void LogoPrintControlBtn_Click(object sender, RoutedEventArgs e)
         {
-            LogoPrintControl();
+            DifferInterfaceConnectChkAndSend("LogoPrintControl");
         }
         #endregion
 
         #region 設定DIP開關按鈕事件
         private void DIPSwitchBtn_Click(object sender, RoutedEventArgs e)
         {
-            DIPSwitch();
+            DifferInterfaceConnectChkAndSend("DIPSwitch");
         }
         #endregion
 
         #region DIP值設定按鈕事件
         private void DIPSettingBtn_Click(object sender, RoutedEventArgs e)
         {
-            DIPSetting();
+            if (DIPSwitchCom.SelectedIndex == 0) //設定為軟體dip時才寫入
+            {
+                DifferInterfaceConnectChkAndSend("DIPSetting");
+            }
         }
         #endregion
 
@@ -1996,16 +2012,16 @@ namespace G80Utility
         private void MaintainTab_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             QueryNowStatusPosition = "maintain";
-            PrinterInfoRead();
-            PrinterNowStatus();
-            queryPrinterStatus();
+            DifferInterfaceConnectChkAndSend("PrinterInfoRead");
+            DifferInterfaceConnectChkAndSend("PrinterNowStatus");
+            DifferInterfaceConnectChkAndSend("queryPrinterStatus");
         }
         #endregion
 
         #region 打印機信息查詢按鈕事件
         private void PrinterInfoReadBtn_Click(object sender, RoutedEventArgs e)
         {
-            PrinterInfoRead();
+            DifferInterfaceConnectChkAndSend("PrinterInfoRead");
         }
         #endregion
 
@@ -2051,50 +2067,15 @@ namespace G80Utility
             if (IsPrinterInfoAllChecked())
             {
                 //清除所有的打印机统计信息
-                cleanPrinterInfo();
+                DifferInterfaceConnectChkAndSend("cleanPrinterInfo");
             }
             else
             {
-                IsPrinterInfoChecked();//先確認選取狀態
-                if (Config.isFeedLinesChecked)
-                {
-                    byte[] sendArray = StringToByteArray(Command.CLEAN_PRINTINFO_FEED_LINES);
-                    SendCmd(sendArray, "BeepOrSetting", 0);
-                }
-
-                if (Config.isPrintedLinesChecked)
-                {
-                    byte[] sendArray = StringToByteArray(Command.CLEAN_PRINTINFO_PRINTED_LINES);
-                    SendCmd(sendArray, "BeepOrSetting", 0);
-                }
-
-                if (Config.isCutPaperTimesChecked)
-                {
-                    byte[] sendArray = StringToByteArray(Command.CLEAN_PRINTINFO_CUTPAPER_TIMES);
-                    SendCmd(sendArray, "BeepOrSetting", 0);
-                }
-
-                if (Config.isHeadOpenTimesChecked)
-                {
-                    byte[] sendArray = StringToByteArray(Command.CLEAN_PRINTINFO_HEADOPEN_TIMES);
-                    SendCmd(sendArray, "BeepOrSetting", 0);
-                }
-
-                if (Config.isPaperOutTimesChecked)
-                {
-                    byte[] sendArray = StringToByteArray(Command.CLEAN_PRINTINFO_PAPEROUT_TIMES);
-                    SendCmd(sendArray, "BeepOrSetting", 0);
-                }
-                if (Config.iErrorTimesChecked)
-                {
-                    byte[] sendArray = StringToByteArray(Command.CLEAN_PRINTINFO_ERROR_TIMES);
-                    SendCmd(sendArray, "BeepOrSetting", 0);
-                }
-
+                DifferInterfaceConnectChkAndSend("CleanPrinterInfoOneByOne");
             }
 
             //清除完就要讀取打印機信息
-            PrinterInfoRead();
+            DifferInterfaceConnectChkAndSend("PrinterInfoRead");
         }
         #endregion
 
@@ -2102,73 +2083,71 @@ namespace G80Utility
         private void PrinterStatusQueryBtn_Click(object sender, RoutedEventArgs e)
         {
             QueryNowStatusPosition = "maintain";
-            PrinterNowStatus();
-            queryPrinterStatus();
+            DifferInterfaceConnectChkAndSend("PrinterNowStatus");
+            DifferInterfaceConnectChkAndSend("queryPrinterStatus");
         }
         #endregion
 
         #region 打印自檢頁(短)-維護-按鈕事件
         private void PrintTest_S_Maintanin_Click(object sender, RoutedEventArgs e)
         {
-            PrintTest("short");
+            DifferInterfaceConnectChkAndSend("PrintTestShort");
         }
         #endregion
 
         #region 打印自檢頁(長)-維護-按鈕事件
         private void PrintTest_L_Maintanin_Click(object sender, RoutedEventArgs e)
         {
-            PrintTest("long");
+            DifferInterfaceConnectChkAndSend("PrintTestLong");
         }
         #endregion
 
         #region 打印均勻測試-維護-按鈕事件
         private void PrintTest_EVEN_Maintanin_Click(object sender, RoutedEventArgs e)
         {
-            PrintEvenTest();
+            DifferInterfaceConnectChkAndSend("PrintEvenTest");
         }
         #endregion
 
         #region 蜂鳴器測試-維護-按鈕事件
         private void BeepTest_Maintanin_Btn_Click(object sender, RoutedEventArgs e)
         {
-            BeepTest();
+            DifferInterfaceConnectChkAndSend("BeepTest");
         }
         #endregion
 
         #region 下踢錢箱-維護-按鈕事件
         private void OpenCashBox_Maintanin_Btn_Click(object sender, RoutedEventArgs e)
         {
-            OpenCashBox();
+            DifferInterfaceConnectChkAndSend("OpenCashBox");
         }
         #endregion
 
         #region 連續切紙-維護-按鈕事件
         private void CutTimes_Maintanin_Btn_Click(object sender, RoutedEventArgs e)
         {
-            CutTimes("maintain");
+            DifferInterfaceConnectChkAndSend("CutTimesMaintain");
         }
         #endregion
 
         #region 指令測試-維護-按鈕事件
         private void CMDTest_Maintanin_Btn_Click(object sender, RoutedEventArgs e)
         {
-            CMDTest("maintain");
+            DifferInterfaceConnectChkAndSend("CMDTestMaintain");
         }
         #endregion
 
         #region SDRAM測試按鈕事件
         private void SDRAMTestBtn_Click(object sender, RoutedEventArgs e)
         {
-            byte[] sendArray = StringToByteArray(Command.SDRAM_TEST);
-            SendCmd(sendArray, "BeepOrSetting", 0);
+            DifferInterfaceConnectChkAndSend("SDRAMTest");
         }
         #endregion
 
         #region Flash測試按鈕事件
         private void FlashTestBtn_Click(object sender, RoutedEventArgs e)
         {
-            byte[] sendArray = StringToByteArray(Command.FLASH_TEST);
-            SendCmd(sendArray, "BeepOrSetting", 0);
+            DifferInterfaceConnectChkAndSend("FlashTest");
         }
         #endregion
 
@@ -2176,63 +2155,64 @@ namespace G80Utility
         #region 打印自檢頁(短)-工廠-按鈕事件
         private void PrintTest_S_Click(object sender, RoutedEventArgs e)
         {
-            PrintTest("short");
+            DifferInterfaceConnectChkAndSend("PrintTestShort");
         }
         #endregion
 
         #region 打印自檢頁(長)-工廠-按鈕事件
         private void PrintTest_L_Click(object sender, RoutedEventArgs e)
         {
-            PrintTest("long");
+            DifferInterfaceConnectChkAndSend("PrintTestLong");
         }
         #endregion
 
         #region 打印均勻測試-工廠-按鈕事件
         private void PrintTest_EVEN_Click(object sender, RoutedEventArgs e)
         {
-            PrintEvenTest();
+            DifferInterfaceConnectChkAndSend("PrintEvenTest");
         }
         #endregion
 
         #region 蜂鳴器測試-工廠-按鈕事件
         private void BeepTestBtn_Click(object sender, RoutedEventArgs e)
         {
-            BeepTest();
+            DifferInterfaceConnectChkAndSend("BeepTest");
         }
         #endregion
 
         #region 下踢錢箱-工廠-按鈕事件
         private void OpenCashBoxBtn_Click(object sender, RoutedEventArgs e)
         {
-            OpenCashBox();
+            DifferInterfaceConnectChkAndSend("OpenCashBox");
         }
         #endregion
 
         #region 連續切紙-工廠-按鈕事件
         private void CutTimesBtn_Click(object sender, RoutedEventArgs e)
         {
-            CutTimes("factory");
+            DifferInterfaceConnectChkAndSend("CutTimesFactory");
         }
         #endregion
 
         #region 指令測試-工廠-按鈕事件
         private void CMDTestBtn_Click(object sender, RoutedEventArgs e)
         {
-            CMDTest("factory");
+            DifferInterfaceConnectChkAndSend("CMDTestFactory");
         }
         #endregion
 
         #region 讀取機器序列號(工廠)按鈕事件
         private void RoadPrinterSNFacBtn_Click(object sender, RoutedEventArgs e)
         {
-            RoadPrinterSN();
+            DifferInterfaceConnectChkAndSend("RoadPrinterSN");
         }
         #endregion
 
         #region 設置機器序列號(工廠)按鈕事件
         private void SetPrinterSNFacBtn_Click(object sender, RoutedEventArgs e)
         {
-            editSNAuthority("factory");
+            SNTxtSettingPosition = "factory";
+            editSNAuthority();
         }
         #endregion
 
@@ -2240,14 +2220,14 @@ namespace G80Utility
         private void FactoryDefaultBtn_Click(object sender, RoutedEventArgs e)
         {
             //清除所有的打印机统计信息
-            cleanPrinterInfo();
+            DifferInterfaceConnectChkAndSend("cleanPrinterInfo");
 
             //根据参数设置界面的复选框进行所有参数的下载
             IsParaSettingChecked();
-            sendALL();
+            DifferInterfaceConnectChkAndSend("sendALL");
 
             //发送打印自检页（长）命令
-            PrintTest("long");
+            DifferInterfaceConnectChkAndSend("PrintTestLong");
         }
         #endregion
 
@@ -2255,27 +2235,14 @@ namespace G80Utility
         #region 打印logo按鈕事件
         private void PrintLogoBtn_Click(object sender, RoutedEventArgs e)
         {
-            nvLogoRadioBtnChecked();
-            int number;
-            if (NVLogoPieceTXT.Text != null && Int32.TryParse(NVLogoPieceTXT.Text, out number))
-            {
-                string numberHex = number.ToString("X2");
-                byte[] sendArray = StringToByteArray(Command.PRINT_LOGOS_HEADER + numberHex + nvLogo_m_hex);
-                SendCmd(sendArray, "BeepOrSetting", 0);
-            }
-            else
-            {
-                MessageBox.Show(FindResource("PrintPieceEmpty") as string);
-            }
-
+            DifferInterfaceConnectChkAndSend("PrintLogo");         
         }
         #endregion
 
         #region 清除logo下載按鈕事件
         private void ClearLogoBtn_Click(object sender, RoutedEventArgs e)
         {
-            byte[] sendArray = StringToByteArray(Command.CLEAN_LOGOS_INPRINTER);
-            SendCmd(sendArray, "BeepOrSetting", 0);
+            DifferInterfaceConnectChkAndSend("ClearLogo");
         }
         #endregion
 
@@ -2413,22 +2380,7 @@ namespace G80Utility
         #region 下載圖片集按鈕事件
         private void DonwaldLogoBtn_Click(object sender, RoutedEventArgs e)
         {
-            if (nvLogo_full_hex.Length == 0)
-            {
-                MessageBox.Show(FindResource("GalleryEmpty") as string);
-            }
-            else
-            {
-                nvLogo_n_hex = fileNameArray.Length.ToString("X2");
-                byte[] insertBtye = StringToByteArray(nvLogo_n_hex);
-                byte[] sendArray = StringToByteArray(nvLogo_full_hex.ToString());
-                List<byte> sendList = sendArray.ToList();
-                sendList.Insert(2, insertBtye[0]);
-                sendArray = sendList.ToArray();
-                SendCmd(sendArray, "BeepOrSetting", 0);
-                Console.WriteLine(BitConverter.ToString(sendArray).Replace("-", ""));
-                MessageBox.Show(FindResource("WaitforRedLight") as string);
-            }
+            DifferInterfaceConnectChkAndSend("DonwaldLogo");
         }
         #endregion
 
@@ -2460,7 +2412,7 @@ namespace G80Utility
             OpenFileDialog dialog = new OpenFileDialog();
             dialog.Multiselect = false;//该值确定是否可以选择多个文件
             dialog.Title = FindResource("SelectFolder") as string;
-            dialog.Filter = FindResource("AllFiles") as string+"(*.hex)|*.hex";
+            dialog.Filter = FindResource("AllFiles") as string + "(*.hex)|*.hex";
             if (dialog.ShowDialog() == true)
             {
                 file_name = dialog.FileName;
@@ -2514,11 +2466,11 @@ namespace G80Utility
         #endregion
         //============================判斷sn設定權限======================
 
-        public void editSNAuthority(string btnPosition)
+        public void editSNAuthority()
         {
             if (isLoginSN)
             {
-                SetPrinterSN(btnPosition);
+                DifferInterfaceConnectChkAndSend("SetPrinterSN");
             }
             else
             {
@@ -2532,7 +2484,8 @@ namespace G80Utility
                     {
                         isLoginSN = true;
                         MessageBox.Show(FindResource("LoginSuccess") as string);
-                        SetPrinterSN(btnPosition);
+                        DifferInterfaceConnectChkAndSend("SetPrinterSN");
+                        //SetPrinterSN();
                     }
                     else
                     {
@@ -3409,11 +3362,11 @@ namespace G80Utility
             {
                 byte[] sendArray = null;
 
-                if (DIPSwitchCom.SelectedIndex == 0)
+                if (DIPSwitchCom.SelectedIndex == 0) //software
                 {
                     sendArray = StringToByteArray(Command.DIP_OFF_SETTING);
                 }
-                else if (DIPSwitchCom.SelectedIndex == 1)
+                else if (DIPSwitchCom.SelectedIndex == 1) //hardware
                 {
                     sendArray = StringToByteArray(Command.DIP_ON_SETTING);
                 }
@@ -3428,7 +3381,7 @@ namespace G80Utility
         {
 
             BitArray dipArray = new BitArray(8);
-            byte[] sendArray = null;
+
             if (CutterCheckBox.IsChecked == true)
             {
                 dipArray.Set(0, false);
@@ -3504,7 +3457,7 @@ namespace G80Utility
             //bit array轉btye array
             byte[] bytes = new byte[1];
             dipArray.CopyTo(bytes, 0);
-            sendArray = StringToByteArray(Command.DIP_VALUE_SETTING_HEADER);
+            byte[] sendArray = StringToByteArray(Command.DIP_VALUE_SETTING_HEADER);
             Array.Resize(ref sendArray, sendArray.Length + 1);
             sendArray[sendArray.Length - 1] = bytes[0];
             SendCmd(sendArray, "BeepOrSetting", 0);
@@ -3680,9 +3633,11 @@ namespace G80Utility
             }
 
             //最後發送DIP值讀取命令
-            sendArray = StringToByteArray(Command.READ_ALL_HEADER + "31 35 01");
-            SendCmd(sendArray, "ReadPara", 9);
-
+            if (DIPSwitchCom.SelectedIndex == 0) //設定為軟體dip時才讀取
+            {
+                sendArray = StringToByteArray(Command.READ_ALL_HEADER + "31 35 01");
+                SendCmd(sendArray, "ReadPara", 9);
+            }
         }
         #endregion
 
@@ -3824,7 +3779,10 @@ namespace G80Utility
                 DIPSwitch();
             }
 
-            DIPSetting();
+            if (DIPSwitchCom.SelectedIndex == 0) //設定為軟體dip時才寫入
+            {
+                DIPSetting();
+            }
         }
         #endregion
 
@@ -3857,21 +3815,21 @@ namespace G80Utility
         //==============================工廠生產功能=============================
 
         #region 打印自檢頁
-        private void PrintTest(string printType)
-        {
-            byte[] sendArray = null;
+        //private void PrintTest(string printType)
+        //{
+        //    byte[] sendArray = null;
 
-            if (printType == "short")
-            {
-                sendArray = StringToByteArray(Command.PRINT_TEST_SHORT);
-            }
-            else if (printType == "long")
-            {
-                sendArray = StringToByteArray(Command.PRINT_TEST_LONG);
-            }
-            SendCmd(sendArray, "BeepOrSetting", 0);
+        //    if (printType == "short")
+        //    {
+        //        sendArray = StringToByteArray(Command.PRINT_TEST_SHORT);
+        //    }
+        //    else if (printType == "long")
+        //    {
+        //        sendArray = StringToByteArray(Command.PRINT_TEST_LONG);
+        //    }
+        //    SendCmd(sendArray, "BeepOrSetting", 0);
 
-        }
+        //}
         #endregion
 
         #region 打印均勻測試
@@ -3898,87 +3856,47 @@ namespace G80Utility
         }
         #endregion
 
-        #region 連續切紙
-        private void CutTimes(string type)
-        {
-            int result;
-            string times = null;
-            if (type == "factory")
-            {
-                times = CutTimesTxt.Text;
-            }
-            else if (type == "maintain")
-            {
-
-                times = CutTimes_Maintanin_Txt.Text;
-            }
-
-            if (times == "" || !Int32.TryParse(times, out result))
-            {
-                MessageBox.Show(FindResource("ErrorFormat") as string);
-            }
-            else
-            {
-                int contiunue = Int32.Parse(times);
-                byte[] sendArray = StringToByteArray(Command.CUT_TIMES);
-                for (int i = 0; i < contiunue; i++)
-                {
-                    SendCmd(sendArray, "BeepOrSetting", 0);
-                    if (DeviceType == "Ethernet")
-                    {
-                        Thread.Sleep(100);
-                    }
-                }
-            }
-
-        }
-        #endregion
-
         #region 指令測試
-        private void CMDTest(string functionClass)
+        private void CMDTestFactory()
         {
-            switch (functionClass)
+            IsFactortyChecked();
+            if (Config.isCMDQRCodeChecked)
             {
-                case "factory":
-                    IsFactortyChecked();
-                    if (Config.isCMDQRCodeChecked)
-                    {
-                        byte[] qrcode = Command.CMD_TEST_QRCODE;
-                        SendCmd(qrcode, "BeepOrSetting", 0);
-                    }
+                byte[] qrcode = Command.CMD_TEST_QRCODE;
+            }
 
-                    if (Config.isCMDGeneralChecked)
-                    {
-                        byte[] general = Command.CMD_TEST_GENERAL;
-                        SendCmd(general, "BeepOrSetting", 0);
-                    }
+            if (Config.isCMDGeneralChecked)
+            {
+                byte[] general = Command.CMD_TEST_GENERAL;
+                SendCmd(general, "BeepOrSetting", 0);
+            }
 
-                    if (Config.isCMDPageChecked)
-                    {
-                        byte[] page = Command.CMD_TEST_PAGEMODE;
-                        SendCmd(page, "BeepOrSetting", 0);
-                    }
-                    break;
-                case "maintain":
-                    IsMaintainTestChecked();
-                    if (Config.isCMDQRCodeMaintainChecked)
-                    {
-                        byte[] qrcode = Command.CMD_TEST_QRCODE;
-                        SendCmd(qrcode, "BeepOrSetting", 0);
-                    }
+            if (Config.isCMDPageChecked)
+            {
+                byte[] page = Command.CMD_TEST_PAGEMODE;
+                SendCmd(page, "BeepOrSetting", 0);
+            }
+        }
 
-                    if (Config.isCMDGeneralMaintainChecked)
-                    {
-                        byte[] general = Command.CMD_TEST_GENERAL;
-                        SendCmd(general, "BeepOrSetting", 0);
-                    }
+        private void CMDTestMaintain()
+        {
+            IsMaintainTestChecked();
+            if (Config.isCMDQRCodeMaintainChecked)
+            {
+                byte[] qrcode = Command.CMD_TEST_QRCODE;
+                SendCmd(qrcode, "BeepOrSetting", 0);
+            }
 
-                    if (Config.isCMDPageMaintainChecked)
-                    {
-                        byte[] page = Command.CMD_TEST_PAGEMODE;
-                        SendCmd(page, "BeepOrSetting", 0);
-                    }
-                    break;
+            if (Config.isCMDGeneralMaintainChecked)
+            {
+                byte[] general = Command.CMD_TEST_GENERAL;
+                SendCmd(general, "BeepOrSetting", 0);
+            }
+
+            if (Config.isCMDPageMaintainChecked)
+            {
+                byte[] page = Command.CMD_TEST_PAGEMODE;
+                SendCmd(page, "BeepOrSetting", 0);
             }
         }
         #endregion
@@ -3992,7 +3910,7 @@ namespace G80Utility
         #endregion
 
         #region 設置機器序列號
-        private void SetPrinterSN(string functionClass)
+        private void SetPrinterSN()
         {
             string sn = null;
             //建立註冊機碼目錄
@@ -4001,7 +3919,7 @@ namespace G80Utility
             //初次未記錄,抓取user輸入值
             if (getRegistry("SN") == null)
             {
-                switch (functionClass)
+                switch (SNTxtSettingPosition)
                 {
                     case "factory":
                         sn = PrinterSNFacTxt.Text;
@@ -4069,7 +3987,7 @@ namespace G80Utility
         {
             if (con)
             {
-                DeviceStatusTxt.Text =FindResource("DeviceConnected") as string;
+                DeviceStatusTxt.Text = FindResource("DeviceConnected") as string;
             }
             else
             {
@@ -4283,7 +4201,7 @@ namespace G80Utility
         {
             Dispatcher.BeginInvoke(new Action(() =>
             {
-                PrinterNowStatus();
+                DifferInterfaceConnectChkAndSend("PrinterNowStatus");
             }), null);
         }
         #endregion
@@ -4317,7 +4235,7 @@ namespace G80Utility
         {
             Dispatcher.BeginInvoke(new Action(() =>
             {
-                SendCmd();
+                DifferInterfaceConnectChkAndSend("SendCmd");
             }), null);
         }
         #endregion
@@ -4333,7 +4251,7 @@ namespace G80Utility
         }
         #endregion
 
-        //==========================註冊機碼的寫入與讀取===========================
+        //==========================註冊機碼的寫入與讀取=============================
 
         #region 註冊機碼位置的產生
         private void createSNRegistry()
@@ -4372,163 +4290,609 @@ namespace G80Utility
         }
         #endregion
 
-        //==========================通訊介面連線狀態檢查====================
+        //============================所有功能整合===================================
+
+        #region 整合所有功能
+        public void AllFunctionCollection(string cmdType)
+        {
+            switch (cmdType)
+            {
+                case "Restart":
+                    byte[] sendArray = StringToByteArray(Command.RESTART);
+                    SendCmd(sendArray, "BeepOrSetting", 0);
+                    USBConnect.IsConnect = false;
+                    RS232Connect.IsConnect = false;
+                    EthernetConnect.connectStatus = 0;
+                    EthernetConnectImage.Source = new BitmapImage(new Uri("Images/grey_circle.png", UriKind.Relative));
+                    USBConnectImage.Source = new BitmapImage(new Uri("Images/grey_circle.png", UriKind.Relative));
+                    RS232ConnectImage.Source = new BitmapImage(new Uri("Images/grey_circle.png", UriKind.Relative));
+                    //if (isRS232Connected != false && isUSBConnected != false && isEthernetConnected != false) {
+                    //    MessageBox.Show(FindResource("Reconnect") as string); //通訊失敗就不用跳訊息
+                    //}
+                    break;
+                case "CleanPrinterInfoOneByOne":
+                    IsPrinterInfoChecked();//先確認選取狀態
+                    if (Config.isFeedLinesChecked)
+                    {
+                        byte[] sendArrayFeed = StringToByteArray(Command.CLEAN_PRINTINFO_FEED_LINES);
+                        SendCmd(sendArrayFeed, "BeepOrSetting", 0);
+                    }
+
+                    if (Config.isPrintedLinesChecked)
+                    {
+                        byte[] sendArrayPrint = StringToByteArray(Command.CLEAN_PRINTINFO_PRINTED_LINES);
+                        SendCmd(sendArrayPrint, "BeepOrSetting", 0);
+                    }
+
+                    if (Config.isCutPaperTimesChecked)
+                    {
+                        byte[] sendArrayCut = StringToByteArray(Command.CLEAN_PRINTINFO_CUTPAPER_TIMES);
+                        SendCmd(sendArrayCut, "BeepOrSetting", 0);
+                    }
+
+                    if (Config.isHeadOpenTimesChecked)
+                    {
+                        byte[] sendArrayHead = StringToByteArray(Command.CLEAN_PRINTINFO_HEADOPEN_TIMES);
+                        SendCmd(sendArrayHead, "BeepOrSetting", 0);
+                    }
+
+                    if (Config.isPaperOutTimesChecked)
+                    {
+                        byte[] sendArrayOut = StringToByteArray(Command.CLEAN_PRINTINFO_PAPEROUT_TIMES);
+                        SendCmd(sendArrayOut, "BeepOrSetting", 0);
+                    }
+                    if (Config.iErrorTimesChecked)
+                    {
+                        byte[] sendArrayError = StringToByteArray(Command.CLEAN_PRINTINFO_ERROR_TIMES);
+                        SendCmd(sendArrayError, "BeepOrSetting", 0);
+                    }
+                    break;
+                case "SendEmpty":
+                    byte[] emptyArray = { 0x0a };
+                    SendCmd(emptyArray, "BeepOrSetting", 0);
+                    break;
+                case "Send3Empty": //通訊測試後連送三個0x0a
+                    byte[] empty3Array = { 0x0a, 0x0a, 0x0a };
+                    SendCmd(empty3Array, "BeepOrSetting", 0);
+                    break;
+                case "SendCmd":
+                    SendCmd();
+                    break;
+                case "SetIP":
+                    SetIP();
+                    break;
+                case "SetGateway":
+                    SetGateway();
+                    break;
+                case "SetMAC":
+                    SetMAC();
+                    break;
+                case "AutoDisconnect":
+                    AutoDisconnect();
+                    break;
+                case "ConnectClient":
+                    ConnectClient();
+                    break;
+                case "EthernetSpeed":
+                    EthernetSpeed();
+                    break;
+                case "DHCPMode":
+                    AutoDisconnect();
+                    break;
+                case "USBMode":
+                    USBMode();
+                    break;
+                case "USBFixed":
+                    USBFixed();
+                    break;
+                case "CodePageSet":
+                    CodePageSet();
+                    break;
+                case "CodePagePrint":
+                    if (CodePageCom.SelectedIndex != -1)
+                    {
+                        List<byte> codePage = new List<byte>();
+                        byte[] header = Command.CODEPAGE_PRINT_HEADER;
+                        byte[] separate = Command.CODEPAGE_PRINT_SEPARATE;
+                        byte[] char1 = Command.CODEPAGE_PRINT_CHAR1;
+                        byte[] char2 = Command.CODEPAGE_PRINT_CHAR2;
+                        byte[] selectedCode;
+                        byte[] selectedName;
+
+                        //加入header
+                        for (int i = 0; i < header.Length; i++)
+                        {
+                            codePage.Add(header[i]);
+                        }
+
+                        //取得代碼
+                        string HexCode = CodePageCom.SelectedItem.ToString();
+                        int Code = Int32.Parse(HexCode.Split(':')[0]);
+
+                        //取得代碼和名稱 byte array
+                        string CodeName = CodePageCom.SelectedItem.ToString();
+                        selectedCode = BitConverter.GetBytes(Code);
+                        selectedName = Encoding.Default.GetBytes(CodeName);
+
+                        //加入代碼
+                        codePage.Add(selectedCode[0]);
+
+                        //加入區隔
+                        for (int i = 0; i < separate.Length; i++)
+                        {
+                            codePage.Add(separate[i]);
+                        }
+
+                        //加入名稱
+                        for (int i = 0; i < selectedName.Length; i++)
+                        {
+                            codePage.Add(selectedName[i]);
+                        }
+
+                        //加入char1
+                        for (int i = 0; i < char1.Length; i++)
+                        {
+                            codePage.Add(char1[i]);
+                        }
+
+                        //加入名稱
+                        for (int i = 0; i < selectedName.Length; i++)
+                        {
+                            codePage.Add(selectedName[i]);
+                        }
+
+                        //加入char2
+                        for (int i = 0; i < char2.Length; i++)
+                        {
+                            codePage.Add(char2[i]);
+                        }
+                        byte[] sendArrayCode = codePage.ToArray();
+                        SendCmd(sendArrayCode, "BeepOrSetting", 0);
+                    }
+                    else { MessageBox.Show(FindResource("ColumnEmpty") as string); }
+                    break;
+                case "LanguageSet":
+                    LanguageSet();
+                    break;
+                case "FontBSetting":
+                    FontBSetting();
+                    break;
+                case "CustomziedFont":
+                    CustomziedFont();
+                    break;
+                case "SetDirection":
+                    SetDirection();
+                    break;
+                case "MotorAccControl":
+                    MotorAccControl();
+                    break;
+                case "AccMotor":
+                    AccMotor();
+                    break;
+                case "PrintSpeed":
+                    PrintSpeed();
+                    break;
+                case "DensityMode":
+                    DensityMode();
+                    break;
+                case "Density":
+                    Density();
+                    break;
+                case "PaperOutReprint":
+                    PaperOutReprint();
+                    break;
+                case "PaperWidth":
+                    PaperWidth();
+                    break;
+                case "HeadCloseCut":
+                    HeadCloseCut();
+                    break;
+                case "YOffset":
+                    YOffset();
+                    break;
+                case "MACShow":
+                    MACShow();
+                    break;
+                case "LogoPrintControl":
+                    LogoPrintControl();
+                    break;
+                case "DIPSwitch":
+                    DIPSwitch();
+                    break;
+                case "DIPSetting":
+                    DIPSetting();
+                    break;
+                case "readALL":
+                    readALL();
+                    break;
+                case "sendALL":
+                    sendALL();
+                    break;
+                case "PrinterInfoRead":
+                    PrinterInfoRead();
+                    break;
+                case "cleanPrinterInfo":
+                    cleanPrinterInfo();
+                    break;
+                case "queryPrinterStatus":
+                    queryPrinterStatus();
+                    break;
+                case "PrintTestShort":
+                    byte[] sendArrayShort = StringToByteArray(Command.PRINT_TEST_SHORT);
+                    SendCmd(sendArrayShort, "BeepOrSetting", 0);
+                    break;
+                case "PrintTestLong":
+                    byte[] sendArrayLong = StringToByteArray(Command.PRINT_TEST_LONG);
+                    SendCmd(sendArrayLong, "BeepOrSetting", 0);
+                    break;
+                case "PrintEvenTest":
+                    PrintEvenTest();
+                    break;
+                case "BeepTest":
+                    BeepTest();
+                    break;
+                case "OpenCashBox":
+                    OpenCashBox();
+                    break;
+                case "CutTimesFactory":
+                    int resultF;
+                    string timesF = CutTimesTxt.Text;
+                    if (timesF == "" || !Int32.TryParse(timesF, out resultF))
+                    {
+                        MessageBox.Show(FindResource("ErrorFormat") as string);
+                    }
+                    else
+                    {
+                        int contiunue = Int32.Parse(timesF);
+                        byte[] sendArrayCutF = StringToByteArray(Command.CUT_TIMES);
+                        for (int i = 0; i < contiunue; i++)
+                        {
+                            SendCmd(sendArrayCutF, "BeepOrSetting", 0);
+                            if (DeviceType == "Ethernet")
+                            {
+                                Thread.Sleep(100);
+                            }
+                        }
+                    }
+                    break;
+                case "CutTimesMaintain":
+                    int result;
+                    string times = null;
+                    times = CutTimes_Maintanin_Txt.Text;
+                    if (times == "" || !Int32.TryParse(times, out result))
+                    {
+                        MessageBox.Show(FindResource("ErrorFormat") as string);
+                    }
+                    else
+                    {
+                        int contiunue = Int32.Parse(times);
+                        byte[] sendArrayCutM = StringToByteArray(Command.CUT_TIMES);
+                        for (int i = 0; i < contiunue; i++)
+                        {
+                            SendCmd(sendArrayCutM, "BeepOrSetting", 0);
+                            if (DeviceType == "Ethernet")
+                            {
+                                Thread.Sleep(100);
+                            }
+                        }
+                    }
+                    break;
+                case "SDRAMTest":
+                    byte[] SDRAMArray = StringToByteArray(Command.SDRAM_TEST);
+                    SendCmd(SDRAMArray, "BeepOrSetting", 0);
+                    break;
+                case "FlashTest":
+                    byte[] FlashArray = StringToByteArray(Command.FLASH_TEST);
+                    SendCmd(FlashArray, "BeepOrSetting", 0);
+                    break;
+                case "CMDTestFactory":
+                    CMDTestFactory();
+                    break;
+                case "CMDTestMaintain":
+                    CMDTestMaintain();
+                    break;
+                case "RoadPrinterSN":
+                    RoadPrinterSN();
+                    break;
+                case "SetPrinterSN":
+                    SetPrinterSN();
+                    break;
+                case "PrinterNowStatus":
+                    PrinterNowStatus();
+                    break;
+                case "PrintLogo":
+                    nvLogoRadioBtnChecked();
+                    int number;
+                    if (NVLogoPieceTXT.Text != null && Int32.TryParse(NVLogoPieceTXT.Text, out number))
+                    {
+                        string numberHex = number.ToString("X2");
+                        byte[] sendArrayPrint = StringToByteArray(Command.PRINT_LOGOS_HEADER + numberHex + nvLogo_m_hex);
+                        SendCmd(sendArrayPrint, "BeepOrSetting", 0);
+                    }
+                    else
+                    {
+                        MessageBox.Show(FindResource("PrintPieceEmpty") as string);
+                    }
+                    break;
+                case "ClearLogo":
+                    byte[] sendArrayClear = StringToByteArray(Command.CLEAN_LOGOS_INPRINTER);
+                    SendCmd(sendArrayClear, "BeepOrSetting", 0);
+                    break;
+                case "DonwaldLogo":
+                    if (nvLogo_full_hex.Length == 0)
+                    {
+                        MessageBox.Show(FindResource("GalleryEmpty") as string);
+                    }
+                    else
+                    {
+                        nvLogo_n_hex = fileNameArray.Length.ToString("X2");
+                        byte[] insertBtye = StringToByteArray(nvLogo_n_hex);
+                        byte[] sendArrayDownload = StringToByteArray(nvLogo_full_hex.ToString());
+                        List<byte> sendList = sendArrayDownload.ToList();
+                        sendList.Insert(2, insertBtye[0]);
+                        sendArrayDownload = sendList.ToArray();
+                        SendCmd(sendArrayDownload, "BeepOrSetting", 0);
+                        Console.WriteLine(BitConverter.ToString(sendArrayDownload).Replace("-", ""));
+                        MessageBox.Show(FindResource("WaitforRedLight") as string);
+                    }
+                    break;
+            }
+        }
+        #endregion
+
+        //======================通訊介面連線狀態檢查並執行命令傳送=======================
+        
+        #region 檢查通訊介面並傳送命令
+        public void DifferInterfaceConnectChkAndSend(string cmdType)
+        {
+            switch (DeviceType)
+            {
+                case "RS232":
+                    if (RS232PortName != null) //先判斷是否有get prot name
+                    {    //已斷線，重新測試連線
+                        if (!RS232Connect.RS232ConnectStatus())
+                        {
+                            checkRS232Communitcation();
+                        }
+                        if (isRS232Connected)
+                        {
+                            AllFunctionCollection(cmdType);
+                            RS232Connect.CloseSerialPort(); //最後關閉
+                        }
+
+                    }
+                    else
+                    {
+                        MessageBox.Show(FindResource("NotSettingComport") as string);
+                    }
+                    break;
+                case "USB":
+                    if (USBpath != null) //先判斷是否有USBpath
+                    {    //已斷線，重新測試連線
+                        if (USBConnect.USBHandle == -1)
+                        {
+                            checkUSBCommunitcation();
+                        }
+                        if (isUSBConnected) {
+                            AllFunctionCollection(cmdType);
+                            USBConnect.closeHandle(); //最後關閉
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show(FindResource("NotSettingUSBport") as string);
+                    }
+                    break;
+                case "Ethernet":
+                    bool isOK = chekckEthernetIPText();
+                    if (isOK)
+                    {
+                        int connectStatus = EthernetConnect.EthernetConnectStatus();
+                        checkEthernetCommunitcation(connectStatus); 
+                        if (isEthernetConnected)
+                        {
+                            AllFunctionCollection(cmdType);
+                            EthernetConnect.disconnect(); //最後關閉
+                        }                    
+                    }
+                    break;
+            }
+        }
+        #endregion
 
         #region RS232通訊測試
         public void checkRS232Communitcation()
         {
-            if ((bool)RS232Radio.IsChecked || (bool)rs232Checkbox.IsChecked)
+            bool isError = RS232Connect.OpenSerialPort(RS232PortName, FindResource("CannotOpenComport") as string);
+            if (!isError)
             {
-                if (RS232PortName != null)
+
+                byte[] sendArray = StringToByteArray(TEST_SEND_CMD);
+                RS232Connect.SerialPortSendCMD("NeedReceive", sendArray, null, 9);
+                while (!RS232Connect.isReceiveData)
                 {
-                    RS232Connect.CloseSerialPort(); //連線前會先判斷是否已開啟PORT
-                    bool isError = RS232Connect.OpenSerialPort(RS232PortName, FindResource("CannotOpenComport") as string);
-                    if (!isError)
+                    if (RS232Connect.mRecevieData != null)
                     {
-                        byte[] sendArray = StringToByteArray(Command.RS232_COMMUNICATION_TEST);
-                        RS232Connect.SerialPortSendCMD("NeedReceive", sendArray, null, 8);
-                        while (!RS232Connect.isReceiveData)
-                        {
-                            if (RS232Connect.mRecevieData != null)
-                            {
-                                isRS232CommunicateOK(RS232Connect.mRecevieData);
-                                break;
-                            }
-                        }
-                        SendCmdFail("R");
-                    }
-                    else //serial open port failed
-                    {
-                        isRS232Connected = false;
-                        connectFailUI(RS232ConnectImage, FindResource("CannotOpenComport") as string);
+                        isRS232CommunicateOK(RS232Connect.mRecevieData, "cmdSend");
+                        break;
                     }
                 }
-                else
-                {
-                    MessageBox.Show(FindResource("NotSettingComport") as string);
-                }
+                SendCmdFail("R");
             }
+            else //serial open port failed
+            {
+                isRS232Connected = false;
+                connectFailUI(RS232ConnectImage, FindResource("CannotOpenComport") as string);
+            }
+
         }
         #endregion
 
         #region USB通訊測試
         public void checkUSBCommunitcation()
         {
-            if ((bool)USBRadio.IsChecked || (bool)USBCheckbox.IsChecked)
+            int result = USBConnect.ConnectUSBDevice(USBpath);
+            if (result == 1)
             {
-                int result = USBConnect.ConnectUSBDevice(USBpath);
-                if (result == 1)
-                {
 
-                    byte[] sendArray = StringToByteArray(Command.USB_COMMUNICATION_TEST);
-                    //USBConnectAndSendCmd("CommunicationTest", sendArray, 8);
-                    USBConnect.USBSendCMD("NeedReceive", sendArray, null, 8);
-                    while (!USBConnect.isReceiveData)
-                    {
-                        if (USBConnect.mRecevieData != null)
-                        {
-                            isUSBCommunicateOK(USBConnect.mRecevieData);
-                            break;
-                        }
-                    }
-                    SendCmdFail("U");
-                }
-                else //USB CreateFile失敗
+                byte[] sendArray = StringToByteArray(TEST_SEND_CMD);
+                //USBConnectAndSendCmd("CommunicationTest", sendArray, 8);
+                USBConnect.USBSendCMD("NeedReceive", sendArray, null, 9);
+                while (!USBConnect.isReceiveData)
                 {
-                    isUSBConnected = false;
-                    connectFailUI(USBConnectImage, FindResource("NotSettingUSBport") as string);
+                    if (USBConnect.mRecevieData != null)
+                    {
+                        isUSBCommunicateOK(USBConnect.mRecevieData, "cmdSend");
+                        break;
+                    }
                 }
+                SendCmdFail("U");
+            }
+            else //USB CreateFile失敗
+            {
+                isUSBConnected = false;
+                connectFailUI(USBConnectImage, FindResource("NotSettingUSBport") as string);
             }
 
         }
         #endregion
 
         #region Ethernet通訊測試
-        public void checkEthernetCommunitcation()
+        public void checkEthernetCommunitcation(int connectStatus)
         {
-            if ((bool)EhernetRadio.IsChecked || (bool)EthernetCheckbox.IsChecked)
+            switch (connectStatus)
             {
-                int connectStatus = EthernetConnect.EthernetConnectStatus();
-                switch (connectStatus)
-                {
-                    case 0: //fail
-                        isEthernetConnected = false;
-                        connectFailUI(EthernetConnectImage, FindResource("NotSettingEthernetport") as string);
-                        break;
-                    case 1: //success
-                        byte[] sendArray = StringToByteArray(Command.ETHERNET_COMMUNICATION_TEST);
-                        //EthernetConnectAndSendCmd("CommunicationTest", sendArray, 8);
-                        EthernetConnect.EthernetSendCmd("NeedReceive", sendArray, null, 8);
-                        while (!EthernetConnect.isReceiveData)
+                case 0: //fail
+                    isEthernetConnected = false;
+                    connectFailUI(EthernetConnectImage, FindResource("NotSettingEthernetport") as string);
+                    break;
+                case 1: //success
+                    byte[] sendArray = StringToByteArray(TEST_SEND_CMD);
+                    //EthernetConnectAndSendCmd("CommunicationTest", sendArray, 8);
+                    EthernetConnect.EthernetSendCmd("NeedReceive", sendArray, null, 9);
+                    while (!EthernetConnect.isReceiveData)
+                    {
+                        if (EthernetConnect.mRecevieData != null)
                         {
-                            if (EthernetConnect.mRecevieData != null)
-                            {
-                                isEthernetCommunicateOK(EthernetConnect.mRecevieData);
-                                break;
-                            }
+                            isEthernetCommunicateOK(EthernetConnect.mRecevieData, "cmdSend");
+                            break;
                         }
-                        SendCmdFail("E");
-                        break;
-                    case 2: //timeout
-                        isEthernetConnected = false;
-                        connectFailUI(EthernetConnectImage, FindResource("ConnectTimeout") as string);
-                        break;
+                    }
+                    SendCmdFail("E");
+                    break;
+                case 2: //timeout
+                    isEthernetConnected = false;
+                    connectFailUI(EthernetConnectImage, FindResource("ConnectTimeout") as string);
+                    break;
 
-                }
             }
         }
         #endregion
 
         #region RS232判斷是否正確收到通訊測試回傳訊息
-        public void isRS232CommunicateOK(byte[] data)
+        public void isRS232CommunicateOK(byte[] data, string testSource)
         {
             string receiveData = BitConverter.ToString(data);
             Console.WriteLine("RS232:" + receiveData);
-            if (receiveData.Contains(Command.RS232_COMMUNICATION_RECEIVE))
+            if (testSource == "cmdSend")
             {
-                isRS232Connected = true;
-                connectSuccessUI(RS232ConnectImage);
+                if (receiveData.Contains(TEST_RECEIVE_CMD))
+                {
+                    isRS232Connected = true;
+                    connectSuccessUI(RS232ConnectImage);
+                }
+                else //回傳資料錯誤時
+                {
+                    isRS232Connected = false;
+                    connectFailUI(RS232ConnectImage, FindResource("FailToSend") as string);
+                }
+
             }
-            else //回傳資料錯誤時
+            else if (testSource == "communication")
             {
-                isRS232Connected = false;
-                connectFailUI(RS232ConnectImage, FindResource("FailToSend") as string);
+                if (receiveData.Contains(Command.RS232_COMMUNICATION_RECEIVE))
+                {
+                    isRS232Connected = true;
+                    connectSuccessUI(RS232ConnectImage);
+                }
+                else //回傳資料錯誤時
+                {
+                    isRS232Connected = false;
+                    connectFailUI(RS232ConnectImage, FindResource("FailToSend") as string);
+                }
+
             }
+
         }
         #endregion
 
         #region USB判斷是否正確收到通訊測試回傳訊息
-        public void isUSBCommunicateOK(byte[] data)
+        public void isUSBCommunicateOK(byte[] data, string testSource)
         {
             string receiveData = BitConverter.ToString(data);
             Console.WriteLine("USB:" + receiveData);
-            if (receiveData.Contains(Command.USB_COMMUNICATION_RECEIVE))
+            if (testSource == "cmdSend")
             {
-                isUSBConnected = true;
-                connectSuccessUI(USBConnectImage);
+                if (receiveData.Contains(TEST_RECEIVE_CMD))
+                {
+                    isUSBConnected = true;
+                    connectSuccessUI(USBConnectImage);
+                }
+                else //回傳資料錯誤時
+                {
+                    isUSBConnected = false;
+                    connectFailUI(USBConnectImage, FindResource("FailToSend") as string);
+                }
+
             }
-            else//回傳資料錯誤時
+            else if (testSource == "communication")
             {
-                isUSBConnected = false;
-                connectFailUI(USBConnectImage, FindResource("FailToSend") as string);
+                if (receiveData.Contains(Command.USB_COMMUNICATION_RECEIVE))
+                {
+                    isUSBConnected = true;
+                    connectSuccessUI(USBConnectImage);
+                }
+                else //回傳資料錯誤時
+                {
+                    isUSBConnected = false;
+                    connectFailUI(USBConnectImage, FindResource("FailToSend") as string);
+                }
+
             }
         }
         #endregion
 
         #region Ethernet判斷是否正確收到通訊測試回傳訊息
-        public void isEthernetCommunicateOK(byte[] data)
+        public void isEthernetCommunicateOK(byte[] data, string testSource)
         {
             string receiveData = BitConverter.ToString(data);
             Console.WriteLine("Ethernet:" + receiveData);
-            if (receiveData.Contains(Command.ETHERNET_COMMUNICATION_RECEIVE))
+            if (testSource == "cmdSend")
             {
-                isEthernetConnected = true;
-                connectSuccessUI(EthernetConnectImage);
+                if (receiveData.Contains(TEST_RECEIVE_CMD))
+                {
+                    isEthernetConnected = true;
+                    connectSuccessUI(EthernetConnectImage);
+                }
+                else //回傳資料錯誤時
+                {
+                    isEthernetConnected = false;
+                    connectFailUI(EthernetConnectImage, FindResource("FailToSend") as string);
+                }
             }
-            else //回傳資料錯誤時
+            else if (testSource == "communication")
             {
-                isEthernetConnected = false;
-                connectFailUI(EthernetConnectImage, FindResource("FailToSend") as string);
+                if (receiveData.Contains(Command.ETHERNET_COMMUNICATION_RECEIVE))
+                {
+                    isEthernetConnected = true;
+                    connectSuccessUI(EthernetConnectImage);
+                }
+                else //回傳資料錯誤時
+                {
+                    isEthernetConnected = false;
+                    connectFailUI(EthernetConnectImage, FindResource("FailToSend") as string);
+                }
+
             }
         }
         #endregion
@@ -4537,7 +4901,7 @@ namespace G80Utility
         public void connectSuccessUI(System.Windows.Controls.Image circleImage)
         {
             circleImage.Source = new BitmapImage(new Uri("Images/green_circle.png", UriKind.Relative));
-            isTabEnabled(true);
+            // isTabEnabled(true);
         }
         #endregion
 
@@ -4547,7 +4911,7 @@ namespace G80Utility
             circleImage.Source = new BitmapImage(new Uri("Images/red_circle.png", UriKind.Relative));
             MessageBox.Show(errorMessage);
             setSysStatusColorAndText(errorMessage, "#FFEF7171");
-            isTabEnabled(false);
+            // isTabEnabled(false);
 
         }
         #endregion
@@ -4664,7 +5028,7 @@ namespace G80Utility
                         RS232Connect.SerialPortSendCMD("NoReceive", data, null, 0);
                         break;
                 }
-                SendCmdFail("R");
+                //SendCmdFail("R");
             }
         }
         #endregion
@@ -4743,7 +5107,7 @@ namespace G80Utility
                         USBConnect.USBSendCMD("NoReceive", data, null, 0);
                         break;
                 }
-                SendCmdFail("U");
+                //SendCmdFail("U");
             }
         }
         #endregion
@@ -4818,22 +5182,11 @@ namespace G80Utility
                             }
                         }
                         break;
-                    case "CommunicationTest": //通訊測試
-                        EthernetConnect.EthernetSendCmd("NeedReceive", data, null, receiveLength);
-                        while (!EthernetConnect.isReceiveData)
-                        {
-                            if (EthernetConnect.mRecevieData != null)
-                            {
-                                isEthernetCommunicateOK(EthernetConnect.mRecevieData);
-                                break;
-                            }
-                        }
-                        break;
                     case "BeepOrSetting":
                         EthernetConnect.EthernetSendCmd("NoReceive", data, null, 0);
                         break;
                 }
-                SendCmdFail("E");
+               // SendCmdFail("E");
             }
         }
         #endregion
@@ -5320,45 +5673,14 @@ namespace G80Utility
             //增加判斷如果切換通道時未連線進行提醒
             if (USBRadio.IsChecked == true)
             {
-                DeviceType = "USB";
-                if (DeviceSelectUSB.SelectedIndex != -1 && isUSBConnected)
-                {
-                    isTabEnabled(true);
-                }
-                else
-                {
-                    MessageBox.Show(FindResource("USBUnconnect") as string);
-                }
-
-            }
+                DeviceType = "USB";            }
             else if (EhernetRadio.IsChecked == true)
             {
                 DeviceType = "Ethernet";
-                if (EhternetIPTxt.Text != "" && isEthernetConnected)
-                {
-                    isTabEnabled(true);
-                }
-                else
-                {
-                    MessageBox.Show(FindResource("EthernetUnconnect") as string);
-                }
-
             }
             else if (RS232Radio.IsChecked == true)
             {
                 DeviceType = "RS232";
-                if (DeviceSelectRS232.SelectedIndex != -1 && isRS232Connected)
-                {
-                    isTabEnabled(true);
-                }
-                else
-                {
-                    if (!isOpenWindow) //判斷第一次開啟視窗時不跳訊息
-                        MessageBox.Show(FindResource("RS232Unconnect") as string);
-                }
-
-
-
             }
 
         }
@@ -5375,16 +5697,14 @@ namespace G80Utility
                 //case 0:
                 //    LoadLanguage("zh-TW");
                 //    break;
+                //case 1:
+                //    LoadLanguage("zh-CN");
+                //    break;
                 case 0:
-                    LoadLanguage("zh-CN");
+                    LoadLanguage("en-US");
                     break;
-                    //case 2:
-                    //    LoadLanguage("en-US");
-
-                    //    break;
             }
         }
-
         //load language resource
         private void LoadLanguage(String name)
         {
@@ -5428,34 +5748,23 @@ namespace G80Utility
         //暫時關閉繁中
         private void setDefaultLanguage()
         {
-            string lan = "zh-CN";
-            //string lan = CultureInfo.CurrentCulture.Name;
-            Console.WriteLine(lan);
+            string lan = "en-US";
+            //string lan = CultureInfo.CurrentCulture.Name;          
             switch (lan)
             {
                 //case "zh-TW":
                 //    language.SelectedIndex = 0;
                 //    break;
-                case "zh-CN":
+                //case "zh-CN":
+                //    language.SelectedIndex = 1;
+                //    break;
+                case "en-US":
                     language.SelectedIndex = 0;
                     break;
-                    //case "en-US":
-                    //    language.SelectedIndex = 2;
-                    //    break;
             }
 
         }
-
-
-
         #endregion
-
-        //===============================for 測試可關閉串口===========================
-        private void ConnectClose_Click(object sender, RoutedEventArgs e)
-        {
-            RS232Connect.CloseSerialPort();
-        }
-
 
     }
 }
