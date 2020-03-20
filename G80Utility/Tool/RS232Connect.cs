@@ -113,7 +113,7 @@ namespace G80Utility.Tool
                     break;
                 }
             }
-            Console.WriteLine("COM接收資料" + BitConverter.ToString(buffer));
+            //Console.WriteLine("COM接收資料" + BitConverter.ToString(buffer));
             mRecevieData = buffer;
             isReceiveData = true;
         }
@@ -125,6 +125,20 @@ namespace G80Utility.Tool
             if (mSerialPort != null && mSerialPort.IsOpen)
             {
                 mSerialPort.Close();
+            }
+        }
+        #endregion
+
+        #region 判斷SerailPort連現狀態
+        public static bool RS232ConnectStatus()
+        {
+            if (mSerialPort != null && mSerialPort.IsOpen)
+            {
+                return true;
+            }
+            else {
+
+                return false;
             }
         }
         #endregion

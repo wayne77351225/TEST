@@ -35,8 +35,6 @@ namespace G80Utility.Tool
         #region 連接usb設備
         public static int ConnectUSBDevice(string DeviceName)
         {
-            if (USBHandle == -1) //確認連線斷線後才開啟新連線
-            { 
                 USBHandle = Kernel32.CreateFile
                (
                    DeviceName,
@@ -59,12 +57,7 @@ namespace G80Utility.Tool
                 {
                     Console.WriteLine(" 成功 HidHandle = 0x" + "{0:x}", USBHandle);
                     return 1;
-                }
-            }
-            else {
-                Console.WriteLine("USB已經連線 HidHandle = 0x" + "{0:x}", USBHandle);
-                return 1;
-            }        
+                }      
         }
         #endregion
 
@@ -145,7 +138,7 @@ namespace G80Utility.Tool
                 closeHandle(); //timeout後關閉USBHandle
             }
             mRecevieData = buffer;
-            Console.WriteLine("USB接收資料" + BitConverter.ToString(buffer));
+            //Console.WriteLine("USB接收資料" + BitConverter.ToString(buffer));
             isReceiveData = true;
         }
         #endregion

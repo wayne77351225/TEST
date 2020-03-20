@@ -137,7 +137,7 @@ namespace G80Utility.Tool
                 //將客戶端套接字接收到的資料存入記憶體緩衝區，並獲取長度  
                 int length = SocketClient.Receive(buffer);
                 mRecevieData = buffer;
-
+                //Console.WriteLine("Ether接收資料" + BitConverter.ToString(buffer));
             }
             catch (Exception ex)
             {
