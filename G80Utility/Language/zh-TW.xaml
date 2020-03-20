@@ -213,7 +213,7 @@
     <sys:String x:Key="PrintPieceEmpty">未輸入打印張數</sys:String>
     <sys:String x:Key="HexStringError">16進位資料錯誤</sys:String>
     <sys:String x:Key="FailToSend">傳輸失敗</sys:String>
-    <sys:String x:Key="Reconnect">重啟後請先測試接口通訊是否正常</sys:String>
+    <sys:String x:Key="Reconnect">重啟後，請檢查接口通訊是否正常</sys:String>
     <sys:String x:Key="RS232Unconnect">串口尚未連線，請先進行接口測試</sys:String>
     <sys:String x:Key="USBUnconnect">USB尚未連線，請先進行接口測試</sys:String>
     <sys:String x:Key="EthernetUnconnect">Ethernet尚未連線，請先進行接口測試</sys:String>
@@ -241,8 +241,9 @@
     <sys:String x:Key="BurningFailed">燒寫失敗，請檢查</sys:String>
     <sys:String x:Key="UpdateToROM">更新代碼到ROM</sys:String>
     <sys:String x:Key="BaudChangeWarning">DIP設定完成，請記得同步串口通訊的波特率</sys:String>
+    <sys:String x:Key="ParaSettingDone">參數設定命令已傳送完畢</sys:String>
 
-    
+
     <!--Printer Status-->
     <sys:String x:Key="Ready">就緒</sys:String>
     <sys:String x:Key="HeadOpen">開蓋</sys:String>

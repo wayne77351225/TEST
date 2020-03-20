@@ -241,6 +241,7 @@
     <sys:String x:Key="BurningFailed">烧写失败，请检查</sys:String>
     <sys:String x:Key="UpdateToROM">更新代码到ROM</sys:String>
     <sys:String x:Key="BaudChangeWarning">DIP设定完成，请記得同步串口通讯的波特率</sys:String>
+    <sys:String x:Key="ParaSettingDone">參數設置命令已傳送完畢</sys:String>
     
     <!--Printer Status-->
     <sys:String x:Key="Ready">就绪</sys:String>
