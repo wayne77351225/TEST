@@ -243,6 +243,7 @@ namespace G80Utility
                     App.Current.Properties["BaudRateSetting"] = 115200;
                     break;
             }
+            RS232Connect.CloseSerialPort(); //切換完PORT要先關閉，避免判斷已經開啟但仍連線失敗，下次無法正常RUN
             Console.WriteLine(App.Current.Properties["BaudRateSetting"]);
         }
         #endregion
@@ -1006,7 +1007,7 @@ namespace G80Utility
             PrinterSNFacTxt.Text = sn;
             PrinterSNTxt.Text = sn;
             PrinterModuleFac.Content = moudle.Replace(" ", "") + sfvesion + "：" + date;
-            PrinterModule.Content = moudle.Replace(" ", "")+ sfvesion + "：" + date;
+            PrinterModule.Content = moudle.Replace(" ", "") + sfvesion + "：" + date;
 
         }
         #endregion
@@ -1580,7 +1581,7 @@ namespace G80Utility
                 }
             }
             //一樣傳送命令前確認開通通道再關閉，避免前面測試完通道已經關閉造成錯誤
-            DifferInterfaceConnectChkAndSend("Send3Empty"); 
+            DifferInterfaceConnectChkAndSend("Send3Empty");
 
         }
         #endregion
@@ -1588,7 +1589,7 @@ namespace G80Utility
         #region 重啟印表機按鈕事件
         private void Restart_Click(object sender, RoutedEventArgs e)
         {
-            DifferInterfaceConnectChkAndSend("Restart");        
+            DifferInterfaceConnectChkAndSend("Restart");
         }
         #endregion
 
@@ -2007,11 +2008,36 @@ namespace G80Utility
         //維護維修按鈕
         #region 打印機維護維修tab按鈕事件
         private void MaintainTab_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        {
+        {   //判斷連線成功才執行命令避免重複跳出錯誤訊息
             QueryNowStatusPosition = "maintain";
-            DifferInterfaceConnectChkAndSend("PrinterInfoRead");
-            DifferInterfaceConnectChkAndSend("PrinterNowStatus");
-            DifferInterfaceConnectChkAndSend("queryPrinterStatus");
+            DifferInterfaceConnectChkAndSend("PrinterInfoRead"); //第一筆確認正常以後才執行第二筆，避免重複跳出錯誤訊息
+            switch (DeviceType)
+            {
+                case "RS232":
+                    if (isRS232Connected)
+                    {
+                        DifferInterfaceConnectChkAndSend("PrinterNowStatus");
+                        DifferInterfaceConnectChkAndSend("queryPrinterStatus");
+                    }
+                    break;
+                case "USB":
+                    if (isUSBConnected)
+                    {
+
+                        DifferInterfaceConnectChkAndSend("PrinterNowStatus");
+                        DifferInterfaceConnectChkAndSend("queryPrinterStatus");
+                    }
+                    break;
+                case "Ethernet":
+                    if (isEthernetConnected)
+                    {
+
+                        DifferInterfaceConnectChkAndSend("PrinterNowStatus");
+                        DifferInterfaceConnectChkAndSend("queryPrinterStatus");
+                    }
+                    break;
+            }
+
         }
         #endregion
 
@@ -2232,7 +2258,7 @@ namespace G80Utility
         #region 打印logo按鈕事件
         private void PrintLogoBtn_Click(object sender, RoutedEventArgs e)
         {
-            DifferInterfaceConnectChkAndSend("PrintLogo");         
+            DifferInterfaceConnectChkAndSend("PrintLogo");
         }
         #endregion
 
@@ -4640,7 +4666,7 @@ namespace G80Utility
         #endregion
 
         //======================通訊介面連線狀態檢查並執行命令傳送=======================
-        
+
         #region 檢查通訊介面並傳送命令
         public void DifferInterfaceConnectChkAndSend(string cmdType)
         {
@@ -4672,7 +4698,8 @@ namespace G80Utility
                         {
                             checkUSBCommunitcation();
                         }
-                        if (isUSBConnected) {
+                        if (isUSBConnected)
+                        {
                             AllFunctionCollection(cmdType);
                             USBConnect.closeHandle(); //最後關閉
                         }
@@ -4687,12 +4714,12 @@ namespace G80Utility
                     if (isOK)
                     {
                         int connectStatus = EthernetConnect.EthernetConnectStatus();
-                        checkEthernetCommunitcation(connectStatus); 
+                        checkEthernetCommunitcation(connectStatus);
                         if (isEthernetConnected)
                         {
                             AllFunctionCollection(cmdType);
                             EthernetConnect.disconnect(); //最後關閉
-                        }                    
+                        }
                     }
                     break;
             }
@@ -4720,6 +4747,8 @@ namespace G80Utility
             }
             else //serial open port failed
             {
+                stopStatusMonitorTimer();
+                stopSendCmdTimer();
                 isRS232Connected = false;
                 connectFailUI(RS232ConnectImage, FindResource("CannotOpenComport") as string);
             }
@@ -4728,6 +4757,7 @@ namespace G80Utility
         #endregion
 
         #region USB通訊測試
+        //有開啟TIMER都要關閉，否則會一直跳出錯誤訊息導致卡住UI畫面
         public void checkUSBCommunitcation()
         {
             int result = USBConnect.ConnectUSBDevice(USBpath);
@@ -4735,7 +4765,6 @@ namespace G80Utility
             {
 
                 byte[] sendArray = StringToByteArray(TEST_SEND_CMD);
-                //USBConnectAndSendCmd("CommunicationTest", sendArray, 8);
                 USBConnect.USBSendCMD("NeedReceive", sendArray, null, 9);
                 while (!USBConnect.isReceiveData)
                 {
@@ -4749,6 +4778,8 @@ namespace G80Utility
             }
             else //USB CreateFile失敗
             {
+                stopSendCmdTimer();
+                stopStatusMonitorTimer();
                 isUSBConnected = false;
                 connectFailUI(USBConnectImage, FindResource("NotSettingUSBport") as string);
             }
@@ -4762,12 +4793,13 @@ namespace G80Utility
             switch (connectStatus)
             {
                 case 0: //fail
+                    stopStatusMonitorTimer();
+                    stopSendCmdTimer();
                     isEthernetConnected = false;
                     connectFailUI(EthernetConnectImage, FindResource("NotSettingEthernetport") as string);
                     break;
                 case 1: //success
-                    byte[] sendArray = StringToByteArray(TEST_SEND_CMD);
-                    //EthernetConnectAndSendCmd("CommunicationTest", sendArray, 8);
+                    byte[] sendArray = StringToByteArray(TEST_SEND_CMD);       
                     EthernetConnect.EthernetSendCmd("NeedReceive", sendArray, null, 9);
                     while (!EthernetConnect.isReceiveData)
                     {
@@ -4780,6 +4812,8 @@ namespace G80Utility
                     SendCmdFail("E");
                     break;
                 case 2: //timeout
+                    stopStatusMonitorTimer();
+                    stopSendCmdTimer();
                     isEthernetConnected = false;
                     connectFailUI(EthernetConnectImage, FindResource("ConnectTimeout") as string);
                     break;
@@ -5185,7 +5219,7 @@ namespace G80Utility
                         EthernetConnect.EthernetSendCmd("NoReceive", data, null, 0);
                         break;
                 }
-               // SendCmdFail("E");
+                // SendCmdFail("E");
             }
         }
         #endregion
@@ -5227,14 +5261,20 @@ namespace G80Utility
                     EthernetConnect.EthernetIPAddress = EthernetIPAddress;
                     isOK = true;
                 }
-                else
+                else //有定時傳送時，若有錯誤會重複跳出訊息，要先關閉定時傳送
                 {
+                    stopStatusMonitorTimer();
+                    stopSendCmdTimer();
+                    EthernetConnectImage.Source = new BitmapImage(new Uri("Images/red_circle.png", UriKind.Relative)); //欄位錯誤連線也會錯誤
                     EthernetIPAddress = null;
                     MessageBox.Show(FindResource("ErrorFormat") as string);
                 }
             }
             else
             {
+                stopStatusMonitorTimer();
+                stopSendCmdTimer();
+                EthernetConnectImage.Source = new BitmapImage(new Uri("Images/red_circle.png", UriKind.Relative)); //欄位空白連線也會錯誤
                 MessageBox.Show(FindResource("ColumnEmpty") as string);
             }
             return isOK;
@@ -5679,7 +5719,8 @@ namespace G80Utility
             //增加判斷如果切換通道時未連線進行提醒
             if (USBRadio.IsChecked == true)
             {
-                DeviceType = "USB";            }
+                DeviceType = "USB";
+            }
             else if (EhernetRadio.IsChecked == true)
             {
                 DeviceType = "Ethernet";
