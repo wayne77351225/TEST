@@ -1011,8 +1011,8 @@ namespace G80Utility
 
             PrinterSNFacTxt.Text = sn;
             PrinterSNTxt.Text = sn;
-            PrinterModuleFac.Content = moudle + sfvesion + "：" + date;
-            PrinterModule.Content = moudle + sfvesion + "：" + date;
+            PrinterModuleFac.Content = moudle.Replace(" ", "") + sfvesion + "：" + date;
+            PrinterModule.Content = moudle.Replace(" ", "")+ sfvesion + "：" + date;
 
         }
         #endregion
