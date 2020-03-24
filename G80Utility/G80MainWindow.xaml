@@ -604,7 +604,7 @@
                             <GroupBox Grid.Column="1" Grid.RowSpan="2" Header="打印机状态信息" Margin="10,10,5,0" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14">
                                 <StackPanel Margin="15,15,0,0">
                                     <Label Content="打印机状态：" Padding="0,5,0,0" Margin="0,0,0,10"/>
-                                    <TextBox VerticalScrollBarVisibility="Auto" Text="就绪"  Width="190" Height="40" Margin="0,0,0,20" IsEnabled="False" TextWrapping="Wrap" Name="PrinterStatusText" VerticalAlignment="Center"  HorizontalAlignment="Left"/>
+                                    <TextBox VerticalScrollBarVisibility="Auto"  Width="190" Height="40" Margin="0,0,0,20" IsEnabled="False" TextWrapping="Wrap" Name="PrinterStatusText" VerticalAlignment="Center"  HorizontalAlignment="Left"/>
                                     <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
                                         <TextBlock Text="电源电压：" VerticalAlignment="Center" />
                                         <TextBox Name="voltageTxt"  Margin="17,0,2,0" IsEnabled="False"  FontSize="14" Width="80" Height="22"/>
