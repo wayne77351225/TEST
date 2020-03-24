@@ -44,7 +44,6 @@
                                 DisplayMemberPath="DisplayName"
                                 SelectionChanged="DeviceSelectUSB_SelectionChanged"
                             />
-                            <Button Content="串口關閉" Padding="5" Margin="10" Width="110" Name="ConnectClose" Click="ConnectClose_Click" />
                         </StackPanel>
                         <!--乙太網-->
                         <StackPanel>

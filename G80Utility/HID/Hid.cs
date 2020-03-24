@@ -104,7 +104,7 @@ namespace G80Utility.HID
                 foreach (String hidPath in rkUsbPrint.GetSubKeyNames())
                 {
                     path = "\\\\?\\" + hidPath.ToLower().Substring(4);
-                    Console.WriteLine(path);
+                    //Console.WriteLine(path);
                     if (!(path.Contains(VID) && path.Contains(PID)))
                     {
                         path = null;
