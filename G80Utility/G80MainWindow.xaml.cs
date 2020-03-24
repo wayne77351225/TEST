@@ -124,6 +124,9 @@ namespace G80Utility
 
         //判斷sn設定位置
         string SNTxtSettingPosition;
+
+        //暫存上次選定通道選項
+        int lastRS232SelectedIndex = -1;
         #endregion
 
         public G80MainWindow()
@@ -5409,8 +5412,8 @@ namespace G80Utility
                 if (portName != null)
                 {
                     RS232PortName = portName;
-
                 }
+                lastRS232SelectedIndex = DeviceSelectRS232.SelectedIndex; //紀錄上次使用選項
             }
         }
         #endregion
@@ -5666,7 +5669,14 @@ namespace G80Utility
             getSerialPort();
             getUSBInfoandUpdateView();
             viewmodel.getDeviceObserve("rs232");
-            DeviceSelectRS232.SelectedIndex = viewmodel.RS232Device.Count - 1;
+            if (lastRS232SelectedIndex != -1)
+            {
+                DeviceSelectRS232.SelectedIndex = lastRS232SelectedIndex;
+            }
+            else if (lastRS232SelectedIndex == -1)
+            { //預設
+                DeviceSelectRS232.SelectedIndex = viewmodel.RS232Device.Count - 1;
+            }
             viewmodel.getDeviceObserve("usb");
             DeviceSelectUSB.SelectedIndex = viewmodel.USBDevice.Count - 1;//設定選取第一筆      
 
