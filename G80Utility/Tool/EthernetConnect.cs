@@ -45,7 +45,7 @@ namespace G80Utility.Tool
                 IPEndPoint ipe = new IPEndPoint(ip, port);
                 SocketClient = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                 IAsyncResult ConnectResult = SocketClient.BeginConnect(ipe, CallBackMethod, SocketClient);
-                bool success = ConnectResult.AsyncWaitHandle.WaitOne(3000, true);
+                bool success = ConnectResult.AsyncWaitHandle.WaitOne(100, true); //測試連線的TIMEOUT時間改為1/10秒，這樣在TIMER斷線時才不會因為等待TIMEOUT的時間太長導致跳出太多訊息
                 EthernetIPAddressOld = EthernetIPAddress;
                 if (success)
                 {
