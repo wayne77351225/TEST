@@ -94,9 +94,6 @@ namespace G80Utility
         //判斷SN是否已登入
         bool isLoginSN;
 
-        //判斷是否剛開啟視窗，避免一開啟視窗就跳出訊息
-        bool isOpenWindow;
-
         // iap object
         IAP_download iap_download;
 
@@ -136,8 +133,6 @@ namespace G80Utility
 
             this.Closing += Window_Closing;
 
-            isOpenWindow = true;
-
             //預設參數設定與導入參數等不可使用
             isParaSettingBtnEnabled(false);
 
@@ -161,7 +156,6 @@ namespace G80Utility
         private void WindowThd_ContentRendered(object sender, EventArgs e)
         {
             registerUSBdetect();
-            isOpenWindow = false;
         }
 
         //window視窗關閉事件
@@ -948,32 +942,32 @@ namespace G80Utility
         }
         #endregion
 
-        #region dip switch切換時和點參數設定tab時控制軟體dip設置使否可使用
-        private void DIPSwitchCom_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (DIPSwitchCom.SelectedIndex == 0 && DIPGroupBox != null) //software
-            {
-                DIPGroupBox.IsEnabled = true;
-            }
-            else if (DIPSwitchCom.SelectedIndex == 1 && DIPGroupBox != null) //hardware
-            {
-                DIPGroupBox.IsEnabled = false;
-            }
+        //#region dip switch切換時和點參數設定tab時控制軟體dip設置使否可使用
+        //private void DIPSwitchCom_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        //{
+        //    if (DIPSwitchCom.SelectedIndex == 0 && DIPGroupBox != null) //software
+        //    {
+        //        DIPGroupBox.IsEnabled = true;
+        //    }
+        //    else if (DIPSwitchCom.SelectedIndex == 1 && DIPGroupBox != null) //hardware
+        //    {
+        //        DIPGroupBox.IsEnabled = false;
+        //    }
 
-        }
-        //參數設定tab點擊事件，再此判斷一次避免畫面剛生成DIPGroupBox為null無法disabled的問題
-        private void ParaSettingTab_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            if (DIPSwitchCom.SelectedIndex == 0) //software
-            {
-                DIPGroupBox.IsEnabled = true;
-            }
-            else if (DIPSwitchCom.SelectedIndex == 1) //hardware
-            {
-                DIPGroupBox.IsEnabled = false;
-            }
-        }
-        #endregion
+        //}
+        ////參數設定tab點擊事件，再此判斷一次避免畫面剛生成DIPGroupBox為null無法disabled的問題
+        //private void ParaSettingTab_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        //{
+        //    if (DIPSwitchCom.SelectedIndex == 0) //software
+        //    {
+        //        DIPGroupBox.IsEnabled = true;
+        //    }
+        //    else if (DIPSwitchCom.SelectedIndex == 1) //hardware
+        //    {
+        //        DIPGroupBox.IsEnabled = false;
+        //    }
+        //}
+        //#endregion
 
         //========================取得資料後設定UI=================
 
@@ -3368,10 +3362,12 @@ namespace G80Utility
                 if (DIPSwitchCom.SelectedIndex == 0) //software
                 {
                     sendArray = StringToByteArray(Command.DIP_OFF_SETTING);
+                    DIPGroupBox.IsEnabled = true;
                 }
                 else if (DIPSwitchCom.SelectedIndex == 1) //hardware
                 {
                     sendArray = StringToByteArray(Command.DIP_ON_SETTING);
+                    DIPGroupBox.IsEnabled = false;
                 }
                 SendCmd(sendArray, "BeepOrSetting", 0);
             }

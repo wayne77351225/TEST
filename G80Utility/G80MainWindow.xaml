@@ -161,7 +161,7 @@
             <TabItem  FontSize="14">
                 <TabItem.Header>
                     <Label Content="{DynamicResource PrinterConfig}"
-                            Name="ParaSettingTab" MouseLeftButtonDown="ParaSettingTab_MouseLeftButtonDown"
+                            Name="ParaSettingTab"
                             Padding="0" Margin="0"
                     />
                 </TabItem.Header>
@@ -417,7 +417,7 @@
                                 <!--column3-->
                                 <StackPanel  Grid.Column="2" Grid.RowSpan="2"  >
                                     <StackPanel  Margin="0,18,0,3" Orientation="Horizontal">
-                                        <ComboBox  Margin="0,0,5,0" SelectedIndex="1"  Name="DIPSwitchCom" SelectionChanged="DIPSwitchCom_SelectionChanged" Width="100" Height="26" Foreground="#BDBDBD">
+                                        <ComboBox  Margin="0,0,5,0" SelectedIndex="1"  Name="DIPSwitchCom" Width="100" Height="26" Foreground="#BDBDBD">
                                             <ComboBoxItem>不使用硬件DIP</ComboBoxItem>
                                             <ComboBoxItem>使用硬件DIP</ComboBoxItem>
                                         </ComboBox>
