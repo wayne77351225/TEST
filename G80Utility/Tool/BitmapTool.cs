@@ -42,7 +42,7 @@ namespace G80Utility.Tool
             }
             //FileInfo fi = new FileInfo(filename);
             int totalPixs = bmpWidth * bmpHeight;
-            if (totalPixs > 64000) { //大小超過flash下載限制
+            if (totalPixs > 2048000) { //大小超過flash下載限制
                 MessageBox.Show(Application.Current.FindResource("ExceedMaxSize") as string);
                 return false;
             }

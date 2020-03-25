@@ -4518,6 +4518,9 @@ namespace G80Utility
                 case "MACShow":
                     MACShow();
                     break;
+                case "QRCode":
+                    QRCode();
+                    break;
                 case "LogoPrintControl":
                     LogoPrintControl();
                     break;
