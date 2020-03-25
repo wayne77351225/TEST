@@ -1387,27 +1387,27 @@ namespace G80Utility
             }
             receiveInt = byteArraytoHexStringtoInt(receiveArray4Bytes);
             PrintedLinesTxt.Text = receiveInt.ToString();
-            for (int i = 16; i < 18; i++) //切紙次數
+            for (int i = 16; i < 20; i++) //切紙次數
             {
-                receiveArray2Bytes[i - 16] = data[i];
+                receiveArray4Bytes[i - 16] = data[i];
             }
             receiveInt = byteArraytoHexStringtoInt(receiveArray2Bytes);
             CutPaperTimesTxt.Text = receiveInt.ToString();
-            for (int i = 18; i < 20; i++) //開蓋次數
-            {
-                receiveArray2Bytes[i - 18] = data[i];
-            }
-            receiveInt = byteArraytoHexStringtoInt(receiveArray2Bytes);
-            HeadOpenTimesTxt.Text = receiveInt.ToString();
-            for (int i = 20; i < 22; i++) //缺紙次數
+            for (int i = 20; i < 22; i++) //開蓋次數
             {
                 receiveArray2Bytes[i - 20] = data[i];
             }
             receiveInt = byteArraytoHexStringtoInt(receiveArray2Bytes);
-            PaperOutTimesTxt.Text = receiveInt.ToString();
-            for (int i = 22; i < 24; i++) //故障次數
+            HeadOpenTimesTxt.Text = receiveInt.ToString();
+            for (int i = 22; i < 24; i++) //缺紙次數
             {
                 receiveArray2Bytes[i - 22] = data[i];
+            }
+            receiveInt = byteArraytoHexStringtoInt(receiveArray2Bytes);
+            PaperOutTimesTxt.Text = receiveInt.ToString();
+            for (int i = 24; i < 26; i++) //故障次數
+            {
+                receiveArray2Bytes[i - 24] = data[i];
             }
             receiveInt = byteArraytoHexStringtoInt(receiveArray2Bytes);
             ErrorTimesTxt.Text = receiveInt.ToString();
@@ -3817,7 +3817,7 @@ namespace G80Utility
         private void PrinterInfoRead()
         {
             byte[] sendArray = StringToByteArray(Command.READ_PRINTINFO);
-            SendCmd(sendArray, "ReadPrinterInfo", 28);
+            SendCmd(sendArray, "ReadPrinterInfo", 30);
         }
         #endregion
 
@@ -4402,7 +4402,7 @@ namespace G80Utility
                     EthernetSpeed();
                     break;
                 case "DHCPMode":
-                    AutoDisconnect();
+                    DHCPMode();
                     break;
                 case "USBMode":
                     USBMode();
