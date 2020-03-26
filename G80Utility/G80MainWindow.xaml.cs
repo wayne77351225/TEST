@@ -622,14 +622,14 @@ namespace G80Utility
             {
                 Config.isPaperOutTimesChecked = false;
             }
-            if (ErrorTimesCheckbox.IsChecked == true)
-            {
-                Config.iErrorTimesChecked = true;
-            }
-            else
-            {
-                Config.iErrorTimesChecked = false;
-            }
+            //if (ErrorTimesCheckbox.IsChecked == true)
+            //{
+            //    Config.iErrorTimesChecked = true;
+            //}
+            //else
+            //{
+            //    Config.iErrorTimesChecked = false;
+            //}
         }
         #endregion
 
@@ -1405,12 +1405,12 @@ namespace G80Utility
             }
             receiveInt = byteArraytoHexStringtoInt(receiveArray2Bytes);
             PaperOutTimesTxt.Text = receiveInt.ToString();
-            for (int i = 24; i < 26; i++) //故障次數
-            {
-                receiveArray2Bytes[i - 24] = data[i];
-            }
-            receiveInt = byteArraytoHexStringtoInt(receiveArray2Bytes);
-            ErrorTimesTxt.Text = receiveInt.ToString();
+            //for (int i = 24; i < 26; i++) //故障次數
+            //{
+            //    receiveArray2Bytes[i - 24] = data[i];
+            //}
+            //receiveInt = byteArraytoHexStringtoInt(receiveArray2Bytes);
+            //ErrorTimesTxt.Text = receiveInt.ToString();
         }
         #endregion
 
@@ -2076,10 +2076,10 @@ namespace G80Utility
             {
                 PaperOutTimesCheckbox.IsChecked = true;
             }
-            if (!Config.iErrorTimesChecked)
-            {
-                ErrorTimesCheckbox.IsChecked = true;
-            }
+            //if (!Config.iErrorTimesChecked)
+            //{
+            //    ErrorTimesCheckbox.IsChecked = true;
+            //}
 
         }
         #endregion
@@ -3033,11 +3033,11 @@ namespace G80Utility
 
                 if (FontBSettingCom.SelectedIndex == 0)
                 {
-                    sendArray = StringToByteArray(Command.FONTB_OFF_SETTING);
+                    sendArray = StringToByteArray(Command.FONTB_ON_SETTING);
                 }
                 else if (FontBSettingCom.SelectedIndex == 1)
                 {
-                    sendArray = StringToByteArray(Command.FONTB_ON_SETTING);
+                    sendArray = StringToByteArray(Command.FONTB_OFF_SETTING);
                 }
                 SendCmd(sendArray, "BeepOrSetting", 0);
             }
@@ -3461,13 +3461,13 @@ namespace G80Utility
                     dipArray.Set(6, true);
                     dipArray.Set(7, true);
                     break;
-                case 1: //9600 01取反10
-                    dipArray.Set(6, true);
-                    dipArray.Set(7, false);
-                    break;
-                case 2: //115200 10取反 01
+                case 1: //9600 01取反10，但因為這兩個bit高位要在前?所以=>0(第8位)1(第7位)
                     dipArray.Set(6, false);
                     dipArray.Set(7, true);
+                    break;
+                case 2: //115200 10取反 01，但因為這兩個bit高位要在前?所以=>1(第8位)0(第7位)
+                    dipArray.Set(6, true);
+                    dipArray.Set(7, false);
                     break;
                 case 3: //38400 11取反00
                     dipArray.Set(6, false);
@@ -4018,6 +4018,7 @@ namespace G80Utility
             {
                 DeviceStatusTxt.Text = FindResource("DeviceDisconnected") as string;
                 WriteStatusLabel.Content = FindResource("UpgradeCompleted") as string;
+                MessageBox.Show(FindResource("CloseHead") as string);
             }
         }
         #endregion
@@ -5278,7 +5279,7 @@ namespace G80Utility
                 stopStatusMonitorTimer();
                 stopSendCmdTimer();
                 EthernetConnectImage.Source = new BitmapImage(new Uri("Images/red_circle.png", UriKind.Relative)); //欄位空白連線也會錯誤
-                MessageBox.Show(FindResource("ColumnEmpty") as string);
+                MessageBox.Show(FindResource("IPEmpty") as string);
             }
             return isOK;
         }

@@ -126,17 +126,23 @@
     <sys:String x:Key="ErrorTimes">故障次数</sys:String>
     <sys:String x:Key="Lines">行</sys:String>
     <sys:String x:Key="Times">次</sys:String>
-    <sys:String x:Key="CutSetting">切纸设置</sys:String>
-    <sys:String x:Key="CutNumber">切纸次数(100以内)</sys:String>
-    <sys:String x:Key="Cut">切纸</sys:String>
-    <sys:String x:Key="CommandTest">指令测试</sys:String>
-    <sys:String x:Key="CommandTestBtn">测试</sys:String>
-    <sys:String x:Key="PrintTestPage">打印自检页</sys:String>
-    <sys:String x:Key="ConnectTest">联机测试</sys:String>
-    <sys:String x:Key="PowerTest">电源测试</sys:String>
+    
+    <sys:String x:Key="PrinterStatusInformation">打印机状态信息</sys:String>
+    <sys:String x:Key="PrinterStatus">打印机状态</sys:String>
+    <sys:String x:Key="PowerSupplyVoltage">电压电源</sys:String>
+    <sys:String x:Key="TPHTemperature">打印头温度</sys:String>
+    <sys:String x:Key="degree">度</sys:String>
+    <sys:String x:Key="Test">测试</sys:String>
+    <sys:String x:Key="TestPageShort">自检页(短)</sys:String>
+    <sys:String x:Key="TestPageLong">自检页(长)</sys:String>
     <sys:String x:Key="PrintEvenTest">打印均匀测试</sys:String>
-    <sys:String x:Key="OpenCashDrawer">下踢钱箱</sys:String>
-    <sys:String x:Key="RestartPirnter">重启打印机</sys:String>
+    <sys:String x:Key="ContinuousCutting">连续切纸</sys:String>
+    <sys:String x:Key="BeeperTest">蜂鸣器测试</sys:String>
+    <sys:String x:Key="OpenDrawer">打开钱箱</sys:String>
+    <sys:String x:Key="QRCodePrinterInfo">二维码</sys:String>
+    <sys:String x:Key="GeneralCommand">通用指令</sys:String>
+    <sys:String x:Key="PageMode">页模式</sys:String>
+    <sys:String x:Key="CommandTest">指令测试</sys:String>
 
     <!--黑标设定-->
     <sys:String x:Key="SetBLineBillMaxLen">设置黑标票据最大长度</sys:String>
@@ -240,9 +246,11 @@
     <sys:String x:Key="SendingData">发送代码数据</sys:String>
     <sys:String x:Key="BurningFailed">烧写失败，请检查</sys:String>
     <sys:String x:Key="UpdateToROM">更新代码到ROM</sys:String>
+    <sys:String x:Key="CloseHead">请盖好上盖</sys:String>
     <sys:String x:Key="BaudChangeWarning">DIP设定完成，请記得同步串口通讯的波特率</sys:String>
     <sys:String x:Key="ParaSettingDone">參數設置命令已傳送完畢</sys:String>
-    
+    <sys:String x:Key="IPEmpty">IP地址为空，请先输入IP地址</sys:String>
+
     <!--Printer Status-->
     <sys:String x:Key="Ready">就绪</sys:String>
     <sys:String x:Key="HeadOpen">开盖</sys:String>

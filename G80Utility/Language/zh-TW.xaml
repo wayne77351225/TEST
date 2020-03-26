@@ -126,18 +126,23 @@
     <sys:String x:Key="ErrorTimes">故障次數</sys:String>
     <sys:String x:Key="Lines">行</sys:String>
     <sys:String x:Key="Times">次</sys:String>
-    <sys:String x:Key="CutSetting">裁切設定</sys:String>
-    <sys:String x:Key="CutNumber">裁切次數(100以內)</sys:String>
-    <sys:String x:Key="Cut">裁切</sys:String>
+    
+    <sys:String x:Key="PrinterStatusInformation">打印機狀態信息</sys:String>
+    <sys:String x:Key="PrinterStatus">打印機狀態</sys:String>
+    <sys:String x:Key="PowerSupplyVoltage">電壓電源</sys:String>
+    <sys:String x:Key="TPHTemperature">打印頭溫度</sys:String>
+    <sys:String x:Key="degree">度</sys:String>
+    <sys:String x:Key="Test">測試</sys:String>
+    <sys:String x:Key="TestPageShort">自檢頁(短)</sys:String>
+    <sys:String x:Key="TestPageLong">自檢頁(長)</sys:String>
+    <sys:String x:Key="PrintEvenTest">打印均勻測試</sys:String>
+    <sys:String x:Key="ContinuousCutting">連續切紙</sys:String>
+    <sys:String x:Key="BeeperTest">蜂鳴器測試</sys:String>
+    <sys:String x:Key="OpenDrawer">打開錢箱</sys:String>
+    <sys:String x:Key="QRCodePrinterInfo">二維碼</sys:String>
+    <sys:String x:Key="GeneralCommand">通用指令</sys:String>
+    <sys:String x:Key="PageMode">頁模式</sys:String>
     <sys:String x:Key="CommandTest">指令測試</sys:String>
-    <sys:String x:Key="CommandTestBtn">測試</sys:String>
-    <sys:String x:Key="PrintTestPage">列印測試頁</sys:String>
-    <sys:String x:Key="ConnectTest">連線測試</sys:String>
-    <sys:String x:Key="PowerTest">電源測試</sys:String>
-    <sys:String x:Key="PrintEvenTest">列印均勻測試</sys:String>
-    <sys:String x:Key="OpenCashDrawer">開啟收銀箱</sys:String>
-    <sys:String x:Key="RestartPirnter">重啟印表機</sys:String>
-
     <!--黑標設定-->
     <sys:String x:Key="SetBLineBillMaxLen">設定黑標票據最大長度</sys:String>
     <sys:String x:Key="DetectBlineFeedPrintTest">檢測到黑標後吐紙列印測試</sys:String>
@@ -240,8 +245,10 @@
     <sys:String x:Key="SendingData">發送代碼數據</sys:String>
     <sys:String x:Key="BurningFailed">燒寫失敗，請檢查</sys:String>
     <sys:String x:Key="UpdateToROM">更新代碼到ROM</sys:String>
+    <sys:String x:Key="CloseHead">請關閉上蓋</sys:String>
     <sys:String x:Key="BaudChangeWarning">DIP設定完成，請記得同步串口通訊的波特率</sys:String>
     <sys:String x:Key="ParaSettingDone">參數設定命令已傳送完畢</sys:String>
+    <sys:String x:Key="IPEmpty">IP地址未填寫，請先輸入IP地址</sys:String>
 
 
     <!--Printer Status-->
