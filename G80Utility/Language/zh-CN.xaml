@@ -126,7 +126,7 @@
     <sys:String x:Key="ErrorTimes">故障次数</sys:String>
     <sys:String x:Key="Lines">行</sys:String>
     <sys:String x:Key="Times">次</sys:String>
-    
+
     <sys:String x:Key="PrinterStatusInformation">打印机状态信息</sys:String>
     <sys:String x:Key="PrinterStatus">打印机状态</sys:String>
     <sys:String x:Key="PowerSupplyVoltage">电压电源</sys:String>
@@ -247,8 +247,8 @@
     <sys:String x:Key="BurningFailed">烧写失败，请检查</sys:String>
     <sys:String x:Key="UpdateToROM">更新代码到ROM</sys:String>
     <sys:String x:Key="CloseHead">请盖好上盖</sys:String>
-    <sys:String x:Key="BaudChangeWarning">DIP设定完成，请記得同步串口通讯的波特率</sys:String>
-    <sys:String x:Key="ParaSettingDone">參數設置命令已傳送完畢</sys:String>
+    <sys:String x:Key="BaudChangeWarning">DIP设定完成，请记得同步串口通讯的波特率</sys:String>
+    <sys:String x:Key="ParaSettingDone">参数设置命令已传送完毕</sys:String>
     <sys:String x:Key="IPEmpty">IP地址为空，请先输入IP地址</sys:String>
 
     <!--Printer Status-->

@@ -5851,13 +5851,14 @@ namespace G80Utility
                 //case 0:
                 //    LoadLanguage("zh-TW");
                 //    break;
-                //case 1:
-                //    LoadLanguage("zh-CN");
-                //    break;
                 case 0:
-                    LoadLanguage("en-US");
-                    nowLanguage = "en-US";
+                    LoadLanguage("zh-CN");
+                    nowLanguage = "zh-CN";
                     break;
+                    //case 2:
+                    //    LoadLanguage("en-US");
+                    //    nowLanguage = "en-US";
+                    //    break;
             }
         }
       
@@ -5904,19 +5905,19 @@ namespace G80Utility
         //暫時關閉繁中
         private void setDefaultLanguage()
         {
-            string lan = "en-US";
+            string lan = "zh-CN";
             //string lan = CultureInfo.CurrentCulture.Name;          
             switch (lan)
             {
                 //case "zh-TW":
                 //    language.SelectedIndex = 0;
                 //    break;
-                //case "zh-CN":
-                //    language.SelectedIndex = 1;
-                //    break;
-                case "en-US":
+                case "zh-CN":
                     language.SelectedIndex = 0;
                     break;
+                    //case "en-US":
+                    //    language.SelectedIndex = 1;
+                    //    break;
             }
 
         }

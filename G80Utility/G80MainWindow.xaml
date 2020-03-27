@@ -9,10 +9,10 @@
         ResizeMode="CanMinimize"
         Title="{DynamicResource WindowTitle}" Height="740" Width="1035">
     <StackPanel  Background="#333333">
-        <!--Top 通訊-->
+        <!--Top 通讯-->
         <Border Margin="5,10,5,3" >
             <StackPanel Background="#595959" Orientation="Horizontal" >
-                <!--通訊介面-->
+                <!--通讯介面-->
                 <GroupBox Header="{DynamicResource ConnectionInterface}" Margin="10,10,0,10" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14"  Height="150">
                     <StackPanel Orientation="Horizontal">
                         <!--RS232-->
@@ -31,7 +31,7 @@
                                 <ComboBoxItem Content="38400"/>
                                 <ComboBoxItem Content="115200"/>
                             </ComboBox>
-                           
+
                         </StackPanel>
                         <!--USB-->
                         <StackPanel>
@@ -45,7 +45,7 @@
                                 SelectionChanged="DeviceSelectUSB_SelectionChanged"
                             />
                         </StackPanel>
-                        <!--乙太網-->
+                        <!--乙太网-->
                         <StackPanel>
                             <StackPanel Margin="10" Orientation="Horizontal">
                                 <RadioButton FontSize="14" Name="EhernetRadio" GroupName="connection" Content="{DynamicResource Ethernet}" VerticalAlignment="Center"  Checked="ConnectType_SelectionChanged"/>
@@ -53,7 +53,7 @@
                             </StackPanel>
                             <TextBox Margin="10,0,10,0" Name="EhternetIPTxt"   FontSize="14"  Height="30"  Width="110" Foreground="#BDBDBD" Padding="5"/>
                         </StackPanel>
-                        <!--通訊測試-->
+                        <!--通讯测试-->
                         <StackPanel Margin="10,0,10,0" VerticalAlignment="Center">
                             <CheckBox Content="串口" Margin="0,0,0,5" Name="rs232Checkbox" IsChecked="True"/>
                             <CheckBox Content="USB打印设备" Margin="0,0,0,5" Name="USBCheckbox" IsChecked="True"/>
@@ -62,7 +62,7 @@
                         </StackPanel>
                     </StackPanel>
                 </GroupBox>
-                <!--機器信息-->
+                <!--机器信息-->
                 <GroupBox Header="机器信息" Margin="10,5,0,10" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14" Height="150" Width="250">
                     <StackPanel VerticalAlignment="Top">
                         <Label Content="机器序列号:" FontSize="14" Margin="5,0,0,0"/>
@@ -74,7 +74,7 @@
                         </StackPanel>
                     </StackPanel>
                 </GroupBox>
-                <!--其他設定-->
+                <!--其他设定-->
                 <GroupBox Header="其他设定" Margin="10,5,10,10" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14"  Height="150">
                     <StackPanel>
                         <!--Change Language-->
@@ -99,27 +99,27 @@
             </StackPanel>
         </Border>
 
-        <!--Tap分頁-->
+        <!--Tap分页-->
         <TabControl Height="470" TabStripPlacement="Top" Margin="5,3,5,0" >
-            <!--數據傳輸-->
+            <!--数据传输-->
             <TabItem Header="{DynamicResource DataTransfer}"  FontSize="14" >
                 <Border Margin="5,5,5,1" Name="DataSendTab"   >
                     <StackPanel  Height="445" Margin="10,0,0,0" >
-                        <GroupBox  Header="發送數據" Width="985" Height="260" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14"  HorizontalAlignment="Left" >
+                        <GroupBox  Header="发送数据" Width="985" Height="260" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14"  HorizontalAlignment="Left" >
                             <TextBox Name="CmdContentTxt" Text="输入需要打印的数据，输入完成后，点击发送按键" Width="970" Height="236"  AcceptsReturn="True" TextWrapping="Wrap"  VerticalScrollBarVisibility="Auto"/>
                         </GroupBox>
                         <StackPanel Orientation="Horizontal" Margin="0,20,0,0"  >
                             <StackPanel Margin="5,20,0,0" >
                                 <StackPanel  Margin="0,0,10,10" Orientation="Horizontal">
-                                    <Button Width="100" Name="SendCmdBtn" Click="SendCmdBtn_Click" Content="發送" Margin="0,0,10,0" Padding="0,5,0,5" FontSize="14" />
+                                    <Button Width="100" Name="SendCmdBtn" Click="SendCmdBtn_Click" Content="发送" Margin="0,0,10,0" Padding="0,5,0,5" FontSize="14" />
                                     <Button Width="100" Name="SendEnterBtn" Click="SendEnterBtn_Click" Content="打印" Margin="0,0,10,0" Padding="0,5,0,5" FontSize="14" />
                                     <Button Width="100" Name="ClearCmdBtn" Click="ClearCmdBtn_Click" Content="清空" Margin="0,0,10,0" Padding="0,5,0,5" FontSize="14" />
-                                    <Button Width="100" Name="OepnFileBtn" Click="OepnFileBtn_Click" Content="打開文件" Margin="0,0,10,0" Padding="0,5,0,5" FontSize="14" />
+                                    <Button Width="100" Name="OepnFileBtn" Click="OepnFileBtn_Click" Content="打开文件" Margin="0,0,10,0" Padding="0,5,0,5" FontSize="14" />
                                 </StackPanel>
                                 <StackPanel Orientation="Horizontal" Margin="0,0,0,0"  >
                                     <CheckBox Name="HexModeCheckbox" Checked="HexModeCheckbox_Checked" Unchecked="HexModeCheckbox_Unchecked" Content="十六进制模式" Margin="0,0,20,0"  Height="22" Padding="5,0,0,0"  VerticalAlignment="Center" FontSize="14"/>
-                                    <!--<CheckBox Content="二維碼模式" Padding="5,0,0,0" VerticalAlignment="Center"  FontSize="14"/>
-                                    <Label Content="二維碼大小：" Margin="25,0,0,0" VerticalAlignment="Top"  FontSize="14"/>
+                                    <!--<CheckBox Content="二维码模式" Padding="5,0,0,0" VerticalAlignment="Center"  FontSize="14"/>
+                                    <Label Content="二维码大小：" Margin="25,0,0,0" VerticalAlignment="Top"  FontSize="14"/>
                                     <TextBox Width="50"  FontSize="14" Height="22"/>-->
                                 </StackPanel>
                                 <StackPanel  Margin="-2,10,10,15" Orientation="Horizontal">
@@ -133,22 +133,22 @@
                             <!--<GroupBox Header="打印小票测试"  Width="520"  Margin="5,0,10,5" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14">
                                 <StackPanel  >
                                     <StackPanel Orientation="Horizontal" Margin="10,20,5,10" >
-                                        <RadioButton Content="一鍵測試" Margin="0,0,15,0" Padding="5,0,0,0"  VerticalAlignment="Center" FontSize="14"/>
-                                        <RadioButton Content="時間戳記" Padding="5,0,0,0" VerticalAlignment="Center"  FontSize="14"/>
+                                        <RadioButton Content="一键测试" Margin="0,0,15,0" Padding="5,0,0,0"  VerticalAlignment="Center" FontSize="14"/>
+                                        <RadioButton Content="时间戳记" Padding="5,0,0,0" VerticalAlignment="Center"  FontSize="14"/>
                                     </StackPanel>
                                     <StackPanel Orientation="Horizontal" Margin="0,5,5,10">
                                         <StackPanel Orientation="Horizontal" Margin="10,5,5,0">
-                                            <Label Content="從" VerticalAlignment="Top"  FontSize="14"/>
+                                            <Label Content="从" VerticalAlignment="Top"  FontSize="14"/>
                                             <TextBox Width="80"  FontSize="14" Height="22"/>
-                                            <Label Content="張開始"  FontSize="14"/>
+                                            <Label Content="张开始"  FontSize="14"/>
                                         </StackPanel>
                                         <StackPanel Orientation="Horizontal" Margin="0,5,5,0">
                                             <Label Content="到"  VerticalAlignment="Top"  FontSize="14"/>
                                             <TextBox Width="80"  FontSize="14" Height="22"/>
-                                            <Label Content="張結束" FontSize="14"/>
+                                            <Label Content="张结束" FontSize="14"/>
                                         </StackPanel>
-                                        <Button Content="開始計數" Height="26" FontSize="14" Width="75" Margin="5,0,10,0"/>
-                                        <Button Content="停止計數" Height="26" FontSize="14" Width="75"/>
+                                        <Button Content="开始计数" Height="26" FontSize="14" Width="75" Margin="5,0,10,0"/>
+                                        <Button Content="停止计数" Height="26" FontSize="14" Width="75"/>
                                     </StackPanel>
                                 </StackPanel>
                             </GroupBox>-->
@@ -157,7 +157,7 @@
                 </Border>
             </TabItem>
 
-            <!--參數設定-->
+            <!--参数设定-->
             <TabItem  FontSize="14">
                 <TabItem.Header>
                     <Label Content="{DynamicResource PrinterConfig}"
@@ -265,7 +265,7 @@
                                     <RowDefinition Height="85"/>
                                     <RowDefinition/>
                                 </Grid.RowDefinitions>
-                                <!--代碼頁-->
+                                <!--代码页-->
                                 <GroupBox  Margin="10,5,0,10" Grid.ColumnSpan="2" Height="65"  Width="485" Header="代码页" VerticalAlignment="Center" HorizontalAlignment="Left" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14" >
                                     <StackPanel  Margin="10,0,0,0" Orientation="Horizontal">
                                         <ComboBox  Margin="0,0,10,0" SelectedIndex="0"  Name="CodePageCom" Width="130" Height="28" Text="IP Address" Foreground="#BDBDBD"/>
@@ -424,7 +424,7 @@
                                         <Button  Margin="0,0,5,0" Content="DIP开关" Name="DIPSwitchBtn" Click="DIPSwitchBtn_Click" Width="70" Height="26"/>
                                         <CheckBox VerticalAlignment="Center" IsChecked="True" Name="DIPSwitchCheckbox"/>
                                     </StackPanel>
-                                    <!--dip設置-->
+                                    <!--dip设置-->
                                     <GroupBox Name="DIPGroupBox" VerticalAlignment="Top" Margin="0,10,0,0" Header="软件 DIP 设置" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14" Height="340" Width="180" HorizontalAlignment="Left">
                                         <StackPanel Name="DipSettingStackPanel">
                                             <CheckBox Content="切刀" Name="CutterCheckBox" FontSize="14" Padding="5,0,0,0" Margin="10,15,0,0"/>
@@ -493,7 +493,7 @@
                 </StackPanel>
             </TabItem>
 
-            <!--黑標功能-->
+            <!--黑标功能-->
             <TabItem Header="{DynamicResource BLineSetting}"  FontSize="14" Visibility="Collapsed">
                 <StackPanel Height="380"  Margin="20,50,0,0"  Name="BlineTab" >
                     <Grid >
@@ -654,7 +654,7 @@
                 </Border>
             </TabItem>
 
-            <!--工廠生產-->
+            <!--工厂生产-->
             <TabItem Header="工厂生产"  FontSize="14">
                 <Border CornerRadius="5" Background="#595959" Margin="0,0,1,2"  Name="FactoryTab" >
                     <StackPanel Height="445">
@@ -689,7 +689,7 @@
                                 </StackPanel>
                             </GroupBox>
                             <StackPanel Grid.Column="1" Grid.Row="0">
-                                <!--機器信息-->
+                                <!--机器信息-->
                                 <GroupBox  Header="机器信息" Margin="20,0,0,20" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14" Height="150">
                                     <StackPanel VerticalAlignment="Top" HorizontalAlignment="Center">
                                         <Label Content="机器序列号:" FontSize="14" Margin="5,0,0,0"/>
@@ -708,7 +708,7 @@
                 </Border>
             </TabItem>
 
-            <!--升級程序-->
+            <!--升级程序-->
             <TabItem FontSize="14" Visibility="Visible">
                 <TabItem.Header>
                     <Label Content="{DynamicResource FWUpdate}"
@@ -720,41 +720,41 @@
                 <Border CornerRadius="5" Background="#595959" Margin="0,0,1,2"  Name="FWUpgradeTab" >
                     <StackPanel  Margin="0,40,0,0" HorizontalAlignment="Center" >
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
-                            <Label Content="HID設備連接狀況" Margin="0,0,5,0"/>
+                            <Label Content="HID设备连接状况" Margin="0,0,5,0"/>
                             <TextBox Name="DeviceStatusTxt" Width="210" Height="25"/>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
                             <TextBox  Name="FilePathTxt" Width="450" Height="25"/>
                             <Button  Name="OpenFWfileBtn" Click="OpenFWfileBtn_Click" Margin="10,5,5,5" Content="打开文件" Padding="5" FontSize="14" Width="100"/>
                         </StackPanel>
-                        <!--解析文件數據-->
-                        <GroupBox Margin="0,0,0,25" Header="解析文件數據" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14" Height="120" Width="565" HorizontalAlignment="Left">
+                        <!--解析文件数据-->
+                        <GroupBox Margin="0,0,0,25" Header="解析文件数据" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14" Height="120" Width="565" HorizontalAlignment="Left">
                             <StackPanel Margin="10,10,0,10" HorizontalAlignment="Left">
                                 <ProgressBar Name="ReadFileProgress" Height="25" Width="445"  Margin="0,10,0,15" HorizontalAlignment="Left"/>
                                 <StackPanel Orientation="Horizontal">
-                                    <Label>狀態:</Label>
+                                    <Label>状态:</Label>
                                     <Label Name="StatusLabel" Margin="0,0,5,0" Width="80"></Label>
-                                    <Label>寫入地址:</Label>
+                                    <Label>写入地址:</Label>
                                     <Label Name="AddrLabel" Margin="0,0,5,0" Width="100"></Label>
-                                    <Label>代碼大小:</Label>
+                                    <Label>代码大小:</Label>
                                     <Label Name="CodeSizeLabel" Margin="0,0,5,0" Width="60"></Label>
-                                    <Label Content="時間"/>
+                                    <Label Content="时间"/>
                                     <TextBox Name="ConverTimeTxt"  Height="25"  Width="40"/>
                                     <Label>秒</Label>
                                 </StackPanel>
                             </StackPanel>
                         </GroupBox>
-                        <!--下載數據-->
-                        <GroupBox  Header="下載數據" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14" Height="120" Width="565" HorizontalAlignment="Left">
+                        <!--下载数据-->
+                        <GroupBox  Header="下载数据" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14" Height="120" Width="565" HorizontalAlignment="Left">
                             <StackPanel  Margin="10,10,0,10" HorizontalAlignment="Left" >
                                 <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
                                     <ProgressBar Name="DownloadProgress" Height="25" Width="445" Margin="0,0,10,0"/>
                                     <Button Name="DownloadFWBtn" Click="DownloadFWBtn_Click" Content="下载固件" Padding="5" FontSize="14" Width="80"/>
                                 </StackPanel>
                                 <StackPanel Orientation="Horizontal">
-                                    <Label>狀態:</Label>
+                                    <Label>状态:</Label>
                                     <Label Name="WriteStatusLabel" Margin="0,0,5,0" Width="80"></Label>
-                                    <Label>時間:</Label>
+                                    <Label>时间:</Label>
                                     <TextBox Name="DownloadTimeTxt" Height="25"  Width="40"/>
                                     <Label>秒</Label>
                                 </StackPanel>
@@ -765,7 +765,7 @@
             </TabItem>
         </TabControl>
 
-        <!--Bottom 狀態列-->
+        <!--Bottom 状态列-->
         <Border Margin="5,5,5,5" Height="45" >
             <StackPanel Background="#595959"  Orientation="Horizontal" >
                 <Label Content="状态信息：" Height="25" FontSize="14" Margin="5,0,0,0" />
