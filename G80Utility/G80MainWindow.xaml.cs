@@ -124,6 +124,9 @@ namespace G80Utility
 
         //暫存上次選定通道選項
         int lastRS232SelectedIndex = -1;
+
+        //傳送目前語系給bitmaptoolclass
+        string nowLanguage;
         #endregion
 
         public G80MainWindow()
@@ -2306,7 +2309,7 @@ namespace G80Utility
                     Uri url = new Uri(fileNameArray[i]);
                     BitmapImage bmpImg = new BitmapImage(url);
                     Bitmap bmp = BitmapTool.BitmapImageToBitmap(bmpImg);
-                    if (!BitmapTool.checkBitmapRange(fileNameArray[i], bmp.Width, bmp.Height)) //判斷寬高是否超過標準
+                    if (!BitmapTool.checkBitmapRange(fileNameArray[i], bmp.Width, bmp.Height, nowLanguage)) //判斷寬高是否超過標準
                     {
                         fileNameArray = Array.FindAll(fileNameArray, val => val != fileNameArray[i]).ToArray();
                     }
@@ -4692,6 +4695,8 @@ namespace G80Utility
                     }
                     else
                     {
+                        stopStatusMonitorTimer();
+                        stopSendCmdTimer();
                         MessageBox.Show(FindResource("NotSettingComport") as string);
                     }
                     break;
@@ -4710,6 +4715,8 @@ namespace G80Utility
                     }
                     else
                     {
+                        stopStatusMonitorTimer();
+                        stopSendCmdTimer();
                         MessageBox.Show(FindResource("NotSettingUSBport") as string);
                     }
                     break;
@@ -4961,6 +4968,8 @@ namespace G80Utility
                 case "R": //RS232
                     if (!RS232Connect.IsConnect)
                     {
+                        stopStatusMonitorTimer();
+                        stopSendCmdTimer();
                         isRS232Connected = false;
                         connectFailUI(RS232ConnectImage, FindResource("ConnectTimeout") as string);
                     }
@@ -4968,6 +4977,8 @@ namespace G80Utility
                 case "U": //USB
                     if (!USBConnect.IsConnect)
                     {
+                        stopStatusMonitorTimer();
+                        stopSendCmdTimer();
                         isUSBConnected = false;
                         connectFailUI(USBConnectImage, FindResource("ConnectTimeout") as string);
                         USBConnect.closeHandle();
@@ -4976,6 +4987,8 @@ namespace G80Utility
                 case "E":
                     if (EthernetConnect.connectStatus != 1)
                     {
+                        stopStatusMonitorTimer();
+                        stopSendCmdTimer();
                         isEthernetConnected = false;
                         connectFailUI(EthernetConnectImage, FindResource("ConnectTimeout") as string);
                     }
@@ -5753,9 +5766,11 @@ namespace G80Utility
                 //    break;
                 case 0:
                     LoadLanguage("en-US");
+                    nowLanguage = "en-US";
                     break;
             }
         }
+      
         //load language resource
         private void LoadLanguage(String name)
         {

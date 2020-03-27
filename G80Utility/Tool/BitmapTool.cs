@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Windows;
@@ -27,8 +28,11 @@ namespace G80Utility.Tool
 
         #region 判斷bitmap範圍 
         //80mm的紙寬，200dpi的解析度=>1mm=8 dots=>max width=80*8=640
-        public static bool checkBitmapRange(string filename ,int bmpWidth, int bmpHeight)
+        public static bool checkBitmapRange(string filename, int bmpWidth, int bmpHeight, string language)
         {
+            //設定語系
+            LoadLanguage(language);
+
             if (bmpHeight > 288 * 8)
             { //高超過 
               // 高 = (yL + yH × 256)*8 ,   (yL + yH × 256)≤288  => 高 ≤288*8
@@ -287,6 +291,45 @@ namespace G80Utility.Tool
                 Bitmap bitmap = new Bitmap(outStream);
 
                 return new Bitmap(bitmap);
+            }
+        }
+        #endregion
+
+        #region 針對開啟的messagebox做語系設定
+        public static void LoadLanguage(String name)
+        {
+            //用來取得作業系統資訊
+            CultureInfo currentCultureInfo = CultureInfo.CurrentCulture;
+
+            //用來取得資源字典內容
+            ResourceDictionary langRd = null;
+
+            try
+            {
+                //currentCultureInfo.Name可以取得目前作業系統語系(ex:zh-TW, zh-CN...)
+                //抓取後設定為使用的資源字典內容
+                langRd = Application.LoadComponent(
+                new Uri(@"Language\" + name + ".xaml ", UriKind.Relative)) as ResourceDictionary;
+
+            }
+            catch
+            {
+
+            }
+
+            if (langRd != null)
+            {
+                int ResourceCount = Application.Current.Resources.MergedDictionaries.Count;
+                if (ResourceCount > 0)
+                {
+                    for (int i = 1; i < ResourceCount; i++)
+                    {
+
+                        //remove index!=0的所有recources，因為index=0的resource是themes
+                        Application.Current.Resources.MergedDictionaries.RemoveAt(i);
+                    }
+                }
+                Application.Current.Resources.MergedDictionaries.Add(langRd); //把抓取到的語系資源檔加入
             }
         }
         #endregion
