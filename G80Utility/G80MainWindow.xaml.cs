@@ -2667,26 +2667,34 @@ namespace G80Utility
 
         //============================數據傳輸發送命令功能=================
 
-        public void SendCmd()
+        #region 取得數據傳輸欄位資料
+        public byte[] getTransferData()
         {
             String dataString = CmdContentTxt.Text;
             if (CmdContentTxt.Text == "")
             {
                 CmdContentTxt.Text = dataString = FindResource("DefaultText") as string;
             }
-            byte[] sendArray = null;
+            byte[] dataArray = null;
             if (HexModeCheckbox.IsChecked == true)
             {
                 dataString = dataString.Replace(" ", "");
-                if (StringToByteArray(dataString) == null) return;//hex string中包含錯誤返回
-                sendArray = StringToByteArray(dataString);
+                if (StringToByteArray(dataString) == null) return dataArray;//hex string中包含錯誤返回
+                dataArray = StringToByteArray(dataString);
             }
             else
             {
                 Encoding result = convertEncoding();
-                sendArray = result.GetBytes(dataString);
+                dataArray = result.GetBytes(dataString);
             }
+            return dataArray;
+        }
+        #endregion
 
+        #region 只發送一次命令
+        public void SendCmd()
+        {
+            byte[] sendArray = getTransferData();
 
             switch (DeviceType)
             {
@@ -2721,10 +2729,109 @@ namespace G80Utility
                     }
                     break;
             }
+        }
+        #endregion
 
+        #region 定時發送命令 
+        //避免卡住不做通訊測試
+        public void SendCmdWithInterval()
+        {
+            byte[] sendArray = getTransferData();
 
+            switch (DeviceType)
+            {
+                case "RS232":
+                    if (RS232PortName != null) //先判斷是否有get prot name
+                    {    //已斷線，重新測試連線
+                        if (!RS232Connect.RS232ConnectStatus())
+                        {
+                            bool isError = RS232Connect.OpenSerialPort(RS232PortName, FindResource("CannotOpenComport") as string);
+                            if (!isError)
+                            {
+                                RS232Connect.SerialPortSendCMD("NoReceive", sendArray, null, 0);
+                                SendCmdFail("R"); //避免傳輸時突然有問題
+                            }
+                            else //serial open port failed
+                            {
+                                stopStatusMonitorTimer();
+                                stopSendCmdTimer();
+                                connectFailUI(RS232ConnectImage, FindResource("CannotOpenComport") as string);
+                            }
+                        }
+                        else
+                        {
+                            RS232Connect.SerialPortSendCMD("NoReceive", sendArray, null, 0);
+                            SendCmdFail("R");//避免傳輸時突然有問題
+                        }
+                        //SendCmdFail("R");
+                    }
+                    else
+                    {
+                        stopSendCmdTimer();
+                        stopStatusMonitorTimer();
+                        MessageBox.Show(FindResource("NotSettingComport") as string);
+                    }
+                    break;
+                case "USB":
+                    if (USBpath != null) //先判斷是否有USBpath
+                    {    //已斷線，重新測試連線
+                        if (USBConnect.USBHandle == -1)
+                        {
+                            int result = USBConnect.ConnectUSBDevice(USBpath);
+                            if (result == 1)
+                            {
+                                USBConnect.USBSendCMD("NoReceive", sendArray, null, 0);
+                                SendCmdFail("U");//避免傳輸時突然有問題
+                            }
+                            else
+                            {
+                                stopSendCmdTimer();
+                                stopStatusMonitorTimer();
+                                connectFailUI(USBConnectImage, FindResource("NotSettingUSBport") as string);
+                            }
+                        }
+                        else
+                        {
+                            USBConnect.USBSendCMD("NoReceive", sendArray, null, 0);
+                            SendCmdFail("U");//避免傳輸時突然有問題
+                        }
+
+                    }
+                    else
+                    {
+                        stopStatusMonitorTimer();
+                        stopSendCmdTimer();
+                        MessageBox.Show(FindResource("NotSettingUSBport") as string);
+                    }
+                    break;
+                case "Ethernet":
+                    bool isOK = chekckEthernetIPText();
+                    if (isOK)
+                    {
+                        int connectStatus = EthernetConnect.EthernetConnectStatus();
+                        switch (connectStatus)
+                        {
+                            case 0: //fail
+                                stopStatusMonitorTimer();
+                                stopSendCmdTimer();
+                                connectFailUI(EthernetConnectImage, FindResource("NotSettingEthernetport") as string);
+                                break;
+                            case 1: //success
+                                EthernetConnect.EthernetSendCmd("NeedReceive", sendArray, null, 9);
+                                SendCmdFail("E");
+                                break;
+                            case 2: //timeout
+                                stopStatusMonitorTimer();
+                                stopSendCmdTimer();
+                                connectFailUI(EthernetConnectImage, FindResource("ConnectTimeout") as string);
+                                break;
+                        }
+                    }
+                    break;
+            }
 
         }
+        #endregion
 
         //========================參數設置每個寫入命令功能=================
 
@@ -4237,7 +4344,8 @@ namespace G80Utility
         {
             Dispatcher.BeginInvoke(new Action(() =>
             {
-                DifferInterfaceConnectChkAndSend("SendCmd");
+                SendCmdWithInterval();
+                //DifferInterfaceConnectChkAndSend("SendCmd");
             }), null);
         }
         #endregion
@@ -4249,6 +4357,18 @@ namespace G80Utility
             {
                 sendCmdTimer.Dispose();
                 SendCmdItervalBtn.Content = FindResource("StartSendCmd") as string;
+                switch (DeviceType)
+                {
+                    case "RS232":
+                        RS232Connect.CloseSerialPort(); //最後關閉
+                        break;
+                    case "USB":
+                        USBConnect.closeHandle();
+                        break;
+                    case "Ethernet":
+                        EthernetConnect.disconnect();
+                        break;
+                }
             }
         }
         #endregion
@@ -5051,7 +5171,6 @@ namespace G80Utility
                         RS232Connect.SerialPortSendCMD("NoReceive", data, null, 0);
                         break;
                 }
-                //SendCmdFail("R");
             }
         }
         #endregion
@@ -5130,7 +5249,6 @@ namespace G80Utility
                         USBConnect.USBSendCMD("NoReceive", data, null, 0);
                         break;
                 }
-                //SendCmdFail("U");
             }
         }
         #endregion
@@ -5209,7 +5327,6 @@ namespace G80Utility
                         EthernetConnect.EthernetSendCmd("NoReceive", data, null, 0);
                         break;
                 }
-                // SendCmdFail("E");
             }
         }
         #endregion
