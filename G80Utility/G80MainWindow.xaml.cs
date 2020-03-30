@@ -3125,11 +3125,12 @@ namespace G80Utility
 
                 if (FontBSettingCom.SelectedIndex == 0)
                 {
-                    sendArray = StringToByteArray(Command.FONTB_ON_SETTING);
+                    sendArray = StringToByteArray(Command.FONTB_OFF_SETTING);
+                    
                 }
                 else if (FontBSettingCom.SelectedIndex == 1)
                 {
-                    sendArray = StringToByteArray(Command.FONTB_OFF_SETTING);
+                    sendArray = StringToByteArray(Command.FONTB_ON_SETTING);
                 }
                 SendCmd(sendArray, "BeepOrSetting", 0);
             }
