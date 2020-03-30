@@ -3062,10 +3062,7 @@ namespace G80Utility
                 //取得設定代碼
                 string HexCode = CodePageCom.SelectedItem.ToString();
                 HexCode = HexCode.Split(':')[0];
-                if (HexCode.Length < 2)
-                {
-                    HexCode = "0" + HexCode;
-                }
+                HexCode = Int32.Parse(HexCode).ToString("X2");
                 byte[] sendArray = StringToByteArray(Command.CODEPAGE_SETTING_HEADER + HexCode);
                 SendCmd(sendArray, "BeepOrSetting", 0);
             }
