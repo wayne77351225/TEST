@@ -1367,7 +1367,7 @@ namespace G80Utility
             {
                 receiveArray4Bytes[i - 16] = data[i];
             }
-            receiveInt = byteArraytoHexStringtoInt(receiveArray2Bytes);
+            receiveInt = byteArraytoHexStringtoInt(receiveArray4Bytes);
             CutPaperTimesTxt.Text = receiveInt.ToString();
             for (int i = 20; i < 22; i++) //開蓋次數
             {
