@@ -93,8 +93,6 @@ namespace G80Utility.Tool
         }
         #endregion
 
-
-
         #region 取得資料
         public static void USBReceiveData(int size)
         {
