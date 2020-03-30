@@ -1228,11 +1228,11 @@ namespace G80Utility
                     case "11": //19200
                         DIPBaudRateCom.SelectedIndex = 0;
                         break;
-                    case "10": //9600
-                        DIPBaudRateCom.SelectedIndex = 1;
-                        break;
-                    case "01": //115200
+                    case "10": //115200 10取反 01，但因為這兩個bit高位要在前?所以=>1(第8位)0(第7位)
                         DIPBaudRateCom.SelectedIndex = 2;
+                        break;
+                    case "01": // 9600 01取反10，但因為這兩個bit高位要在前?所以=>0(第8位)1(第7位)
+                        DIPBaudRateCom.SelectedIndex = 1;
                         break;
                     case "00": //38400
                         DIPBaudRateCom.SelectedIndex = 3;
