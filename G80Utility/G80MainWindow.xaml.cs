@@ -1019,7 +1019,7 @@ namespace G80Utility
 
             if (receiveData.Contains(Command.RE_AUTODISCONNECT_CLASSFY))
             {
-                checkIsGetData(null, AutoDisconnectCom, data, FindResource("AutomaticDisconnectTime") as string, false, 8);
+                checkIsGetData(null, AutoDisconnectCom, data, FindResource("AutomaticDisconnectTime") as string, false, 10);
             }
 
             if (receiveData.Contains(Command.RE_CLIENTCOUNT_CLASSFY))
@@ -2935,6 +2935,18 @@ namespace G80Utility
                         break;
                     case 5: //5min=>33 05
                         sendArray = StringToByteArray(Command.NETWORK_AUTODICONNECTED_SETTING_HEADER + "33 05");
+                        break;
+                    case 6: //6min=>33 06
+                        sendArray = StringToByteArray(Command.NETWORK_AUTODICONNECTED_SETTING_HEADER + "33 06");
+                        break;
+                    case 7: //7min=>33 07
+                        sendArray = StringToByteArray(Command.NETWORK_AUTODICONNECTED_SETTING_HEADER + "33 07");
+                        break;
+                    case 8: //8min=>33 08
+                        sendArray = StringToByteArray(Command.NETWORK_AUTODICONNECTED_SETTING_HEADER + "33 08");
+                        break;
+                    case 9: //9min=>33 09
+                        sendArray = StringToByteArray(Command.NETWORK_AUTODICONNECTED_SETTING_HEADER + "33 09");
                         break;
                 }
                 SendCmd(sendArray, "BeepOrSetting", 0);
