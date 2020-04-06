@@ -225,6 +225,8 @@ namespace G80Utility
             LoadLastIP();
 
             collectMacAddress();
+
+            DipContentChk();
         }
         #endregion
 
@@ -908,20 +910,28 @@ namespace G80Utility
             //軟體dip設置
             foreach (UIElement child in DipSettingStackPanel.Children)
             {
+                if (child.GetType().ToString().Contains("StackPanel")) //因為其他child並非StackPanel所以要加判斷
+                {
+                    foreach (UIElement grandChild in ((StackPanel)child).Children)
+                    {
 
-                if (child.GetType().ToString().Contains("Button"))
-                {
-                    ((Button)child).IsEnabled = isEnabled;
+                        if (grandChild.GetType().ToString().Contains("Button"))
+                        {
+                            ((Button)grandChild).IsEnabled = isEnabled;
+                        }
+
+                        if (grandChild.GetType().ToString().Contains("CheckBox"))
+                        {
+                            ((CheckBox)grandChild).IsEnabled = isEnabled;
+                        }
+                        if (grandChild.GetType().ToString().Contains("ComboBox"))
+                        {
+                            ((ComboBox)grandChild).IsEnabled = isEnabled;
+                        }
+                    }
+
                 }
 
-                if (child.GetType().ToString().Contains("CheckBox"))
-                {
-                    ((CheckBox)child).IsEnabled = isEnabled;
-                }
-                if (child.GetType().ToString().Contains("ComboBox"))
-                {
-                    ((ComboBox)child).IsEnabled = isEnabled;
-                }
             }
 
         }
@@ -943,6 +953,78 @@ namespace G80Utility
             byte[] sendArray = StringToByteArray(Command.MAC_ADDRESS_SETTING_HEADER + "00 47 50" + hexMac4 + hexMac5 + hexMac6);
             SetMACText.Text = "00:47:50:" + hexMac4 + ":" + hexMac5 + ":" + hexMac6;
             return sendArray;
+        }
+        #endregion
+
+        #region 軟體dip值checkbox切換事件
+        private void CheckBoxChanged(object sender, RoutedEventArgs e)
+        {
+            DipContentChk();
+        }
+        #endregion
+
+        #region dip值設定的顯示控制
+        private void DipContentChk()
+        {
+            //切刀
+            if (CutterCheckBox.IsChecked == true)
+            {
+                CutterLabel.Content = FindResource("Disable") as string;
+            }
+            else if (CutterCheckBox.IsChecked == false)
+            {
+                CutterLabel.Content = FindResource("Enable") as string;
+            }
+
+            //蜂鳴器
+            if (BeepCheckBox.IsChecked == true)
+            {
+                BeepLabel.Content = FindResource("Enable") as string;
+            }
+            else if (BeepCheckBox.IsChecked == false)
+            {
+                BeepLabel.Content = FindResource("Disable") as string;
+            }
+
+            //濃度
+            if (DensityCheckBox.IsChecked == true)
+            {
+                DensityLabel.Content = FindResource("Dark") as string;
+            }
+            else if (DensityCheckBox.IsChecked == false)
+            {
+                DensityLabel.Content = FindResource("Normal") as string;
+            }
+
+            //中文禁止
+            if (ChineseForbiddenCheckBox.IsChecked == true)
+            {
+                ChineseForbiddenLabel.Content = FindResource("YES") as string;
+            }
+            else if (ChineseForbiddenCheckBox.IsChecked == false)
+            {
+                ChineseForbiddenLabel.Content = FindResource("No") as string;
+            }
+
+            //48/42
+            if (CharNumberCheckBox.IsChecked == true)
+            {
+                CharNumberLabel.Content = FindResource("42") as string;
+            }
+            else if (CharNumberCheckBox.IsChecked == false)
+            {
+                CharNumberLabel.Content = FindResource("48") as string;
+            }
+
+            //錢箱
+            if (CashboxCheckBox.IsChecked == true)
+            {
+                CashboxLabel.Content = FindResource("OpenAndCut") as string;
+            }
+            else if (CashboxCheckBox.IsChecked == false)
+            {
+                CashboxLabel.Content = FindResource("OpenNotCut") as string;
+            }
         }
         #endregion
 
@@ -3126,7 +3208,7 @@ namespace G80Utility
                 if (FontBSettingCom.SelectedIndex == 0)
                 {
                     sendArray = StringToByteArray(Command.FONTB_OFF_SETTING);
-                    
+
                 }
                 else if (FontBSettingCom.SelectedIndex == 1)
                 {
@@ -4913,7 +4995,7 @@ namespace G80Utility
                     connectFailUI(EthernetConnectImage, FindResource("NotSettingEthernetport") as string);
                     break;
                 case 1: //success
-                    byte[] sendArray = StringToByteArray(TEST_SEND_CMD);       
+                    byte[] sendArray = StringToByteArray(TEST_SEND_CMD);
                     EthernetConnect.EthernetSendCmd("NeedReceive", sendArray, null, 9);
                     while (!EthernetConnect.isReceiveData)
                     {
@@ -5871,7 +5953,7 @@ namespace G80Utility
                     //    break;
             }
         }
-      
+
         //load language resource
         private void LoadLanguage(String name)
         {

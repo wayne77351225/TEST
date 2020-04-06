@@ -250,7 +250,6 @@
     <sys:String x:Key="ParaSettingDone">參數設定命令已傳送完畢</sys:String>
     <sys:String x:Key="IPEmpty">IP地址未填寫，請先輸入IP地址</sys:String>
 
-
     <!--Printer Status-->
     <sys:String x:Key="Ready">就緒</sys:String>
     <sys:String x:Key="HeadOpen">開蓋</sys:String>
@@ -259,6 +258,18 @@
     <sys:String x:Key="DrawerOpen">錢箱開啟</sys:String>
     <sys:String x:Key="TPHOverheadted">打印頭過熱</sys:String>
     <sys:String x:Key="ErrorOccured">已發生錯誤</sys:String>
+
+    <!--DIP Display-->
+    <sys:String x:Key="Disable">使用</sys:String>
+    <sys:String x:Key="Enable">停用</sys:String>
+    <sys:String x:Key="Normal">正常</sys:String>
+    <sys:String x:Key="Dark">較濃</sys:String>
+    <sys:String x:Key="YES">不支持中文</sys:String>
+    <sys:String x:Key="No">支持中文</sys:String>
+    <sys:String x:Key="42">42</sys:String>
+    <sys:String x:Key="48">48</sys:String>
+    <sys:String x:Key="OpenAndCut">開錢箱切纸</sys:String>
+    <sys:String x:Key="OpenNotCut">開錢箱不切纸</sys:String>
 
 
     <!--button-->
