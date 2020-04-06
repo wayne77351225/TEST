@@ -5,6 +5,8 @@ VisualStudioVersion = 16.0.29519.87
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "G80 Utility_Factory", "G80Utility\G80 Utility_Factory.csproj", "{60111FEC-7298-4DE7-89C0-F6E7BF807FD2}"
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "G80 for Factory Project", "G80 for Factory Project\G80 for Factory Project.vdproj", "{F86E6D4D-1401-440B-B5C9-0F2786AEC4BE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{60111FEC-7298-4DE7-89C0-F6E7BF807FD2}.Release|Any CPU.Build.0 = Release|Any CPU
 		{60111FEC-7298-4DE7-89C0-F6E7BF807FD2}.Release|x86.ActiveCfg = Release|x86
 		{60111FEC-7298-4DE7-89C0-F6E7BF807FD2}.Release|x86.Build.0 = Release|x86
+		{F86E6D4D-1401-440B-B5C9-0F2786AEC4BE}.Debug|Any CPU.ActiveCfg = Debug
+		{F86E6D4D-1401-440B-B5C9-0F2786AEC4BE}.Debug|x86.ActiveCfg = Debug
+		{F86E6D4D-1401-440B-B5C9-0F2786AEC4BE}.Release|Any CPU.ActiveCfg = Release
+		{F86E6D4D-1401-440B-B5C9-0F2786AEC4BE}.Release|x86.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
