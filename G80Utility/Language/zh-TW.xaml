@@ -260,8 +260,8 @@
     <sys:String x:Key="ErrorOccured">已發生錯誤</sys:String>
 
     <!--DIP Display-->
-    <sys:String x:Key="Disable">使用</sys:String>
-    <sys:String x:Key="Enable">停用</sys:String>
+    <sys:String x:Key="Disable">停用</sys:String>
+    <sys:String x:Key="Enable">使用</sys:String>
     <sys:String x:Key="Normal">正常</sys:String>
     <sys:String x:Key="Dark">較濃</sys:String>
     <sys:String x:Key="YES">不支持中文</sys:String>

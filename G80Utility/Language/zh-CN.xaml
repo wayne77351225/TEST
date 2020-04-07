@@ -261,16 +261,16 @@
     <sys:String x:Key="ErrorOccured">已发生错误</sys:String>
 
     <!--DIP Display-->
-    <sys:String x:Key="Disable">使用</sys:String>
-    <sys:String x:Key="Enable">停用</sys:String>
+    <sys:String x:Key="Disable">停用</sys:String>
+    <sys:String x:Key="Enable">使用</sys:String>
     <sys:String x:Key="Normal">正常</sys:String>
     <sys:String x:Key="Dark">较浓</sys:String>
     <sys:String x:Key="YES">不支持中文</sys:String>
     <sys:String x:Key="No">支持中文</sys:String>
     <sys:String x:Key="42">42</sys:String>
     <sys:String x:Key="48">48</sys:String>
-    <sys:String x:Key="OpenAndCut">开钱箱切纸</sys:String>
-    <sys:String x:Key="OpenNotCut">开钱箱不切纸</sys:String>
+    <sys:String x:Key="OpenAndCut">开箱切纸</sys:String>
+    <sys:String x:Key="OpenNotCut">开箱不切纸</sys:String>
 
     <!--button-->
     <sys:String x:Key="SelectAll">全选</sys:String>
