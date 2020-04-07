@@ -182,6 +182,50 @@
                             </GroupBox>
                             <!--通讯参数设置-->
                             <GroupBox Header="通讯参数设置" Margin="5,0,0,0" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14" Width="270">
+                                <!--針對特定BUTTON調整格式帶入所有設定-->
+                                <GroupBox.Resources>
+                                    <Style TargetType="{x:Type Button}">
+                                        <Setter Property="FocusVisualStyle" Value="{StaticResource ButtonFocusVisual}"/>
+                                        <Setter Property="Background" Value="{StaticResource ButtonBackground}"/>
+                                        <Setter Property="BorderBrush" Value="{StaticResource ButtonBorder}"/>
+                                        <Setter Property="BorderThickness" Value="1"/>
+                                        <Setter Property="Foreground" Value="{StaticResource ButtonForeground}"/>
+                                        <Setter Property="HorizontalContentAlignment" Value="Left"/>
+                                        <Setter Property="VerticalContentAlignment" Value="Center"/>
+                                        <Setter Property="Padding" Value="1"/>
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="{x:Type Button}">
+                                                    <Border 
+						                                Background="{TemplateBinding Background}" 
+						                                BorderBrush="{TemplateBinding BorderBrush}"
+						                                BorderThickness="{TemplateBinding BorderThickness}"
+						                                CornerRadius="3">
+                                                        <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+							                            Margin="{TemplateBinding Padding}" 
+							                            RecognizesAccessKey="True" 
+							                            SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" 
+							                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                                                    </Border>
+                                                    <ControlTemplate.Triggers>
+                                                        <Trigger Property="IsMouseOver" Value="true">
+                                                            <Setter Property="Background" Value="{StaticResource MouseOverButtonBackground}"/>
+                                                            <Setter Property="Foreground" Value="{StaticResource MouseOverButtonForeground}"/>
+                                                        </Trigger>
+                                                        <Trigger Property="IsPressed" Value="true">
+                                                            <Setter Property="Background" Value="{StaticResource PressedButtonBackground}"/>
+                                                            <Setter Property="Foreground" Value="{StaticResource ButtonForeground}"/>
+                                                        </Trigger>
+                                                        <Trigger Property="IsEnabled" Value="false">
+                                                            <Setter Property="Foreground" Value="{StaticResource DisabledButtonForeground}"/>
+                                                            <Setter Property="Background" Value="{StaticResource DisabledButtonBackground}"/>
+                                                        </Trigger>
+                                                    </ControlTemplate.Triggers>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Style>
+                                </GroupBox.Resources>
                                 <StackPanel Margin="3,5,5,5" Name="CommunicatePanel">
                                     <StackPanel  Margin="0,0,0,6" Orientation="Horizontal">
                                         <TextBox  Margin="0,0,5,0" Text="192.168.123.123" Name="SetIPText" Width="117" Height="26"  Foreground="#BDBDBD"/>
@@ -261,6 +305,50 @@
                         </StackPanel>
                         <!--打印机属性设置-->
                         <GroupBox Header="打印机属性设置" Margin="10,6,10,5" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14" Height="433" Width="720" VerticalAlignment="Top">
+                            <!--針對特定BUTTON調整格式帶入所有設定-->
+                            <GroupBox.Resources>
+                                <Style TargetType="{x:Type Button}">
+                                    <Setter Property="FocusVisualStyle" Value="{StaticResource ButtonFocusVisual}"/>
+                                    <Setter Property="Background" Value="{StaticResource ButtonBackground}"/>
+                                    <Setter Property="BorderBrush" Value="{StaticResource ButtonBorder}"/>
+                                    <Setter Property="BorderThickness" Value="1"/>
+                                    <Setter Property="Foreground" Value="{StaticResource ButtonForeground}"/>
+                                    <Setter Property="HorizontalContentAlignment" Value="Left"/>
+                                    <Setter Property="VerticalContentAlignment" Value="Center"/>
+                                    <Setter Property="Padding" Value="1"/>
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="{x:Type Button}">
+                                                <Border 
+						                                Background="{TemplateBinding Background}" 
+						                                BorderBrush="{TemplateBinding BorderBrush}"
+						                                BorderThickness="{TemplateBinding BorderThickness}"
+						                                CornerRadius="3">
+                                                    <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+							                            Margin="{TemplateBinding Padding}" 
+							                            RecognizesAccessKey="True" 
+							                            SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" 
+							                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                                                </Border>
+                                                <ControlTemplate.Triggers>
+                                                    <Trigger Property="IsMouseOver" Value="true">
+                                                        <Setter Property="Background" Value="{StaticResource MouseOverButtonBackground}"/>
+                                                        <Setter Property="Foreground" Value="{StaticResource MouseOverButtonForeground}"/>
+                                                    </Trigger>
+                                                    <Trigger Property="IsPressed" Value="true">
+                                                        <Setter Property="Background" Value="{StaticResource PressedButtonBackground}"/>
+                                                        <Setter Property="Foreground" Value="{StaticResource ButtonForeground}"/>
+                                                    </Trigger>
+                                                    <Trigger Property="IsEnabled" Value="false">
+                                                        <Setter Property="Foreground" Value="{StaticResource DisabledButtonForeground}"/>
+                                                        <Setter Property="Background" Value="{StaticResource DisabledButtonBackground}"/>
+                                                    </Trigger>
+                                                </ControlTemplate.Triggers>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </GroupBox.Resources>
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="28*" />
@@ -408,7 +496,7 @@
                                             <ComboBoxItem>无效</ComboBoxItem>
                                             <ComboBoxItem>有效</ComboBoxItem>
                                         </ComboBox>
-                                        <Button  Margin="0,0,5,0" Content="二维码功能" Name="QRCodeBtn" Click="QRCodeBtn_Click" Padding="5" Width="125"/>
+                                        <Button  Margin="0,0,5,0" Content="二维码功能" Name="QRCodeBtn" Click="QRCodeBtn_Click" Padding="10,5,10,5" Width="125"/>
                                         <CheckBox VerticalAlignment="Center" IsChecked="True" Name="QRCodeCheckbox"/>
                                     </StackPanel>
                                     <StackPanel  Margin="0,0,0,10" Orientation="Horizontal">
@@ -435,15 +523,15 @@
                                         <StackPanel Name="DipSettingStackPanel">
                                             <StackPanel Orientation="Horizontal"  Margin="10,15,0,0">
                                                 <CheckBox Content="{DynamicResource Cutter}" Checked="CheckBoxChanged" Unchecked="CheckBoxChanged" Name="CutterCheckBox"  FontSize="14" Padding="5,0,0,0"  ></CheckBox>
-                                                <Label Name="CutterLabel" FontSize="14" Padding="0" Margin="10,0,0,0" Foreground="#FFEF7171"/>
+                                                <Label Name="CutterLabel" FontSize="14" Padding="0" Margin="39,0,0,0" Foreground="#FFEF7171"/>
                                             </StackPanel>
                                             <StackPanel Orientation="Horizontal" Margin="10,10,0,0">
                                                 <CheckBox Content="{DynamicResource Beeper}" Checked="CheckBoxChanged" Unchecked="CheckBoxChanged"  Name="BeepCheckBox" FontSize="14" Padding="5,0,0,0"  />
-                                                <Label Name="BeepLabel" FontSize="14" Padding="0" Margin="10,0,0,0" Foreground="#FFEF7171"/>
+                                                <Label Name="BeepLabel" FontSize="14" Padding="0" Margin="24,0,0,0" Foreground="#FFEF7171"/>
                                             </StackPanel>
                                             <StackPanel Orientation="Horizontal" Margin="10,10,0,0"  >
                                                 <CheckBox Content="{DynamicResource DensityDIP}" Checked="CheckBoxChanged" Unchecked="CheckBoxChanged" Name="DensityCheckBox" FontSize="14" Padding="5,0,0,0" />
-                                                <Label Name="DensityLabel" FontSize="14" Padding="0" Margin="10,0,0,0" Foreground="#FFEF7171"/>
+                                                <Label Name="DensityLabel" FontSize="14" Padding="0" Margin="39,0,0,0" Foreground="#FFEF7171"/>
                                             </StackPanel>
                                             <StackPanel Orientation="Horizontal" Margin="10,10,0,0">
                                                 <CheckBox Content="{DynamicResource ChineseProhibited}" Name="ChineseForbiddenCheckBox" Checked="CheckBoxChanged" Unchecked="CheckBoxChanged" FontSize="14"  Padding="5,0,0,0" />
@@ -455,7 +543,7 @@
                                             </StackPanel>
                                             <StackPanel Orientation="Horizontal" Margin="10,10,0,0">
                                                 <CheckBox Content="{DynamicResource Drawer}" Name="CashboxCheckBox" Checked="CheckBoxChanged" Unchecked="CheckBoxChanged" FontSize="14"  Padding="5,0,0,0" />
-                                                <Label Name="CashboxLabel" FontSize="14" Padding="0" Margin="10,0,0,0" Foreground="#FFEF7171"/>
+                                                <Label Name="CashboxLabel" FontSize="14" Padding="0" Margin="38,0,0,0" Foreground="#FFEF7171"/>
                                             </StackPanel>
                                             <Label  Content="串口波特率："  FontSize="14"  VerticalAlignment="Center"  Margin="5,10,0,0" />
                                             <ComboBox Name="DIPBaudRateCom"  Margin="10,3,0,0" FontSize="14" Width="140" Height="22" HorizontalAlignment="Left" >
