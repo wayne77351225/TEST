@@ -1132,16 +1132,13 @@ namespace G80Utility
             if (receiveData.Contains(Command.RE_CODEPAGE_CLASSFY))
             {
                 string code = receiveData.Substring(receiveData.Length - 2, 2); //取得收到hex string
+                int result = Convert.ToInt32(code, 16);
                 List<string> codeList = CodePage.getCodePageList();
                 int index = 99; //設這個數代表沒有符合的選項就是讀取不到資料
                 for (int i = 0; i < codeList.Count; i++)
                 { //取得的會是個位數，前面要補0否則比對會有錯
                     string getItemCode = codeList[i].Split(':')[0];
-                    if (getItemCode.Length < 2)
-                    {
-                        getItemCode = "0" + getItemCode;
-                    }
-                    if (getItemCode.Contains(code))
+                    if (getItemCode.Contains(result.ToString()))
                     {
                         index = i;
                         break;
