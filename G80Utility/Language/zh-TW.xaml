@@ -2,7 +2,7 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                      xmlns:sys="clr-namespace:System;assembly=mscorlib">
     <!--Window Title-->
-    <sys:String x:Key="WindowTitle">G80 Utility Factory Beta v2.5</sys:String>
+    <sys:String x:Key="WindowTitle">G80 Utility Factory Beta v2.6</sys:String>
 
     <!--Top通訊介面-->
     <sys:String x:Key="ConnectionInterface">通訊介面</sys:String>
@@ -112,7 +112,7 @@
     <sys:String x:Key="DensityDIP">濃度</sys:String>
     <sys:String x:Key="ChineseProhibited">中文禁止</sys:String>
     <sys:String x:Key="LineCharacters">48/42字符數</sys:String>
-    <sys:String x:Key="Drawer">錢箱</sys:String>
+    <sys:String x:Key="Drawer">錢箱功能</sys:String>
     <sys:String x:Key="BaudRateDIP">串口波特率</sys:String>
     <sys:String x:Key="SetDIP">設置DIP值</sys:String>
 
@@ -268,8 +268,8 @@
     <sys:String x:Key="No">支持中文</sys:String>
     <sys:String x:Key="42">42</sys:String>
     <sys:String x:Key="48">48</sys:String>
-    <sys:String x:Key="OpenAndCut">開錢箱切纸</sys:String>
-    <sys:String x:Key="OpenNotCut">開錢箱不切纸</sys:String>
+    <sys:String x:Key="OpenAndCut">開啟</sys:String>
+    <sys:String x:Key="OpenNotCut">關閉</sys:String>
 
 
     <!--button-->
