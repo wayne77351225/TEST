@@ -4109,46 +4109,85 @@ namespace G80Utility
         #region 設置機器序列號
         private void SetPrinterSN()
         {
-            string sn = null;
+            string sn_reg = null;
+            string sn_input = null;
             //建立註冊機碼目錄
             createSNRegistry();
-
+            switch (SNTxtSettingPosition)
+            {
+                case "factory":
+                    sn_input = PrinterSNFacTxt.Text;
+                    break;
+                case "communication":
+                    sn_input = PrinterSNTxt.Text;
+                    break;
+            }
             //初次未記錄,抓取user輸入值
             if (getRegistry("SN") == null)
-            {
-                switch (SNTxtSettingPosition)
+            {               
+                if (printerSNInputChk())
                 {
-                    case "factory":
-                        sn = PrinterSNFacTxt.Text;
-                        break;
-                    case "communication":
-                        sn = PrinterSNTxt.Text;
-                        break;
+                    sn_reg = sn_input;
+                    snWriteInPrinter(sn_reg);
+                }
+                else
+                {
+                    MessageBox.Show(FindResource("SNFormatError") as string);
                 }
             }
-            else
-            { //已經有紀錄，抓取最後一次序號值
-                sn = getRegistry("SN");
-                string number = sn.Substring(10, 6);
-                sn = sn.Remove(10, 6);
-                int lastNumber = Int32.Parse(number);
-                lastNumber += 1; //sn每次加1
-                number = lastNumber.ToString();
-                if (number.Length < 6)
+            else //已經有紀錄
+            {
+                sn_reg = getRegistry("SN");
+              
+                if (sn_input != sn_reg)//註冊與輸入的不同要重新寫入
                 {
-                    //不能直接使用nubmer.Length，因為在迴圈的過程中length會越來越大
-                    int nLen = number.Length;
-                    for (int i = 1; i <= 6 - nLen; i++)
-                    { //不足6位前面要補0
-                        number = "0" + number;
+                    if (printerSNInputChk())
+                    {
+                        sn_reg = sn_input;
+                        snWriteInPrinter(sn_reg);
+                    }
+                    else
+                    {
+                        MessageBox.Show(FindResource("SNFormatError") as string);
                     }
                 }
-                sn = sn + number;
-            }
+                else
+                { //註冊與輸入的相同直接+1
+                    if (printerSNInputChk())
+                    {
+                        string number = sn_reg.Substring(10, 6);
+                        sn_reg = sn_reg.Remove(10, 6);
+                        int lastNumber = Int32.Parse(number);
+                        lastNumber += 1; //sn每次加1
+                        number = lastNumber.ToString();
+                        if (number.Length < 6)
+                        {
+                            //不能直接使用nubmer.Length，因為在迴圈的過程中length會越來越大
+                            int nLen = number.Length;
+                            for (int i = 1; i <= 6 - nLen; i++)
+                            { //不足6位前面要補0
+                                number = "0" + number;
+                            }
+                        }
+                        sn_reg = sn_reg + number;
+                        snWriteInPrinter(sn_reg);
+                    }
+                    else
+                    {
+                        MessageBox.Show(FindResource("SNFormatError") as string);
+                    }
+                }
 
-            if (sn != "" && sn.Length == 16) //寫入序號到打印機
+            }
+        }
+        #endregion
+
+        #region 寫入序號到打印機
+        private void snWriteInPrinter(string sn_reg)
+        {
+            if (sn_reg != "" && sn_reg.Length == 16)
             {
-                byte[] snArray = Encoding.Default.GetBytes(sn);
+                byte[] snArray = Encoding.Default.GetBytes(sn_reg);
                 byte[] sendArray = StringToByteArray(Command.SN_SETTING_HEADER);
                 int sendLen = sendArray.Length;
                 int snLen = snArray.Length;
@@ -4158,18 +4197,69 @@ namespace G80Utility
                     sendArray[i] = snArray[i - sendLen];
                 }
                 SendCmd(sendArray, "BeepOrSetting", 0);
-                setRegistry("SN", sn); //寫入序號到註冊機碼
+                setRegistry("SN", sn_reg); //寫入序號到註冊機碼
                 //寫入序號到畫面
-                PrinterSNFacTxt.Text = sn;
-                PrinterSNTxt.Text = sn;
+                PrinterSNFacTxt.Text = sn_reg;
+                PrinterSNTxt.Text = sn_reg;
             }
-            else if (sn.Length < 16 || sn.Length > 16)
+            else if (sn_reg.Length < 16 || sn_reg.Length > 16)
             {
                 MessageBox.Show(FindResource("LessLength") as string);
             }
         }
         #endregion
 
+        #region 輸入的機器序列號檢查
+        private bool printerSNInputChk()
+        {
+            bool isOK = true;
+            string sn = null;
+            switch (SNTxtSettingPosition)
+            {
+                case "factory":
+                    sn = PrinterSNFacTxt.Text;
+                    break;
+                case "communication":
+                    sn = PrinterSNTxt.Text;
+                    break;
+            }
+            if (sn == "")
+            { //cloumn is empty
+                isOK = false;
+            }
+            else
+            {
+                try
+                {
+                    string area = sn.Substring(0, 2);
+                    DateTime date = DateTime.ParseExact(sn.Substring(2, 8), "yyyyMMdd", null); //轉換成date就自動判斷月日是否正確
+                    int year = date.Year;
+                    string codeString = sn.Substring(10, 6);
+                    int codeInt = Int32.Parse(codeString); //如果pare錯誤就是非數字，會丟到catch
+                    if ((area == "HW" || area == "GN"))
+                    {
+                        if (year >= 2020 && year <= 2030)
+                        {
+                            isOK = true;
+                        }
+                        else {
+                            isOK = false;
+                        }
+                    }
+                    else
+                    {
+                        isOK = false;
+                    }
+
+                }
+                catch (Exception) //日期格式或代碼格式錯誤
+                {
+                    isOK = false;
+                }
+            }
+            return isOK;
+        }
+        #endregion
         //========================IAP 升級Firmware相關===================
 
         #region hid裝置連線狀態
@@ -5318,7 +5408,7 @@ namespace G80Utility
                                 break;
                             }
                         }
-                        break;                
+                        break;
                     case "CommunicationTest": //通訊測試
 
                         break;
@@ -5380,7 +5470,7 @@ namespace G80Utility
                                 break;
                             }
                         }
-                        break;                  
+                        break;
                     case "BeepOrSetting":
                         USBConnect.USBSendCMD("NoReceive", data, null, 0);
                         break;
@@ -5439,7 +5529,7 @@ namespace G80Utility
                                 break;
                             }
                         }
-                        break;                       
+                        break;
                     case "BeepOrSetting":
                         EthernetConnect.EthernetSendCmd("NoReceive", data, null, 0);
                         break;

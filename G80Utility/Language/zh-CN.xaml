@@ -250,6 +250,7 @@
     <sys:String x:Key="BaudChangeWarning">DIP设定完成，请记得同步串口通讯的波特率</sys:String>
     <sys:String x:Key="ParaSettingDone">参数设置命令已传送完毕</sys:String>
     <sys:String x:Key="IPEmpty">IP地址为空，请先输入IP地址</sys:String>
+    <sys:String x:Key="SNFormatError">序号格式错误</sys:String>
 
     <!--Printer Status-->
     <sys:String x:Key="Ready">就绪</sys:String>

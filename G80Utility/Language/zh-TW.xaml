@@ -249,7 +249,8 @@
     <sys:String x:Key="BaudChangeWarning">DIP設定完成，請記得同步串口通訊的波特率</sys:String>
     <sys:String x:Key="ParaSettingDone">參數設定命令已傳送完畢</sys:String>
     <sys:String x:Key="IPEmpty">IP地址未填寫，請先輸入IP地址</sys:String>
-
+    <sys:String x:Key="SNFormatError">序號格式錯誤</sys:String>
+    
     <!--Printer Status-->
     <sys:String x:Key="Ready">就緒</sys:String>
     <sys:String x:Key="HeadOpen">開蓋</sys:String>
