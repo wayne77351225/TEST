@@ -1636,8 +1636,9 @@ namespace G80Utility
                 }
             }
             //一樣傳送命令前確認開通通道再關閉，避免前面測試完通道已經關閉造成錯誤
-            DifferInterfaceConnectChkAndSend("Send3Empty");
-
+            //DifferInterfaceConnectChkAndSend("Send3Empty");
+            //因為機器狀態為故障時不能傳送正常命令
+            send3empty();
         }
         #endregion
 
@@ -2521,6 +2522,85 @@ namespace G80Utility
             thread.Start(this);
         }
         #endregion
+        //========================傳輸三個空白===========================
+
+        public void send3empty()
+        {
+            byte[] empty3Array = { 0x0a, 0x0a, 0x0a };
+            switch (DeviceType)
+            {
+                case "RS232":
+                    if (RS232PortName != null) //先判斷是否有get prot name
+                    {
+                        bool isError = RS232Connect.OpenSerialPort(RS232PortName, FindResource("CannotOpenComport") as string);
+                        if (!isError)
+                        {
+                            RS232Connect.SerialPortSendCMD("BeepOrSetting", empty3Array, null, 9);
+
+                            SendCmdFail("R"); //避免傳輸時突然有問題
+                        }
+                        else //serial open port failed
+                        {
+                            stopStatusMonitorTimer();
+                            stopSendCmdTimer();
+                            connectFailUI(RS232ConnectImage, FindResource("CannotOpenComport") as string);
+                        }
+                    }
+                    else
+                    {
+                        stopSendCmdTimer();
+                        stopStatusMonitorTimer();
+                        MessageBox.Show(FindResource("NotSettingComport") as string);
+                    }
+                    break;
+                case "USB":
+                    if (USBpath != null) //先判斷是否有USBpath
+                    {
+                        int result = USBConnect.ConnectUSBDevice(USBpath);
+                        if (result == 1)
+                        {
+                            USBConnect.USBSendCMD("NeedReceive", empty3Array, null, 9);
+                            SendCmdFail("U");//避免傳輸時突然有問題
+                        }
+                        else
+                        {
+                            stopSendCmdTimer();
+                            stopStatusMonitorTimer();
+                            connectFailUI(USBConnectImage, FindResource("NotSettingUSBport") as string);
+                        }
+                    }
+                    else
+                    {
+                        stopStatusMonitorTimer();
+                        stopSendCmdTimer();
+                        MessageBox.Show(FindResource("NotSettingUSBport") as string);
+                    }
+                    break;
+                case "Ethernet":
+                    bool isOK = chekckEthernetIPText();
+                    if (isOK)
+                    {
+                        int connectStatus = EthernetConnect.EthernetConnectStatus();
+                        switch (connectStatus)
+                        {
+                            case 0: //fail
+                                stopStatusMonitorTimer();
+                                stopSendCmdTimer();
+                                connectFailUI(EthernetConnectImage, FindResource("NotSettingEthernetport") as string);
+                                break;
+                            case 1: //success                           
+                                EthernetConnect.EthernetSendCmd("BeepOrSetting", empty3Array, null, 9);
+                                break;
+                            case 2: //timeout
+                                stopStatusMonitorTimer();
+                                stopSendCmdTimer();
+                                connectFailUI(EthernetConnectImage, FindResource("ConnectTimeout") as string);
+                                break;
+                        }
+                    }
+                    break;
+            }
+        }
 
         //========================紀錄和讀取最後一次設定IP=================
         #region 紀錄最後一次輸入IP
@@ -4741,10 +4821,10 @@ namespace G80Utility
                     byte[] emptyArray = { 0x0a };
                     SendCmd(emptyArray, "BeepOrSetting", 0);
                     break;
-                case "Send3Empty": //通訊測試後連送三個0x0a
-                    byte[] empty3Array = { 0x0a, 0x0a, 0x0a };
-                    SendCmd(empty3Array, "BeepOrSetting", 0);
-                    break;
+                //case "Send3Empty": //通訊測試後連送三個0x0a
+                //    byte[] empty3Array = { 0x0a, 0x0a, 0x0a };
+                //    SendCmd(empty3Array, "BeepOrSetting", 0);
+                //    break;
                 case "SendCmd":
                     SendCmd();
                     break;
