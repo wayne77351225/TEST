@@ -251,7 +251,8 @@
     <sys:String x:Key="ParaSettingDone">参数设置命令已传送完毕</sys:String>
     <sys:String x:Key="IPEmpty">IP地址为空，请先输入IP地址</sys:String>
     <sys:String x:Key="SNFormatError">序号格式错误</sys:String>
-
+    <sys:String x:Key="CanNotParse">文件无法解析，请重新选择文件!</sys:String>
+    
     <!--Printer Status-->
     <sys:String x:Key="Ready">就绪</sys:String>
     <sys:String x:Key="HeadOpen">开盖</sys:String>

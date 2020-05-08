@@ -161,49 +161,57 @@ namespace G80Utility.HID
                 file_start_addr.Append(szLine.Substring(3, 4));
             }
             win.Dispatcher.Invoke(win.setCallBack, (byte)3, "0X" + file_start_addr.ToString());
-
-            this.download_addr = (UInt32)Convert.ToUInt32(file_start_addr.ToString().Substring(0, 8), 16);
-            int count = 16;
-            current_line = 2;
-            int baud = 0;
-            while ((szLine != null) && (szLine.Substring(0, 9) != ":00000001"))
+            try
             {
-                if (szLine.Substring(0, 1) == ":") //判断第1字符是否是:
+                this.download_addr = (UInt32)Convert.ToUInt32(file_start_addr.ToString().Substring(0, 8), 16);
+                int count = 16;
+                current_line = 2;
+                int baud = 0;
+                while ((szLine != null) && (szLine.Substring(0, 9) != ":00000001"))
                 {
-                    if (szLine.Substring(1, 1) == "1")
+                    if (szLine.Substring(0, 1) == ":") //判断第1字符是否是:
                     {
-                        szHex += szLine.Substring(9, szLine.Length - 11); //读取有效字符：后0和1
+                        if (szLine.Substring(1, 1) == "1")
+                        {
+                            szHex += szLine.Substring(9, szLine.Length - 11); //读取有效字符：后0和1
+                        }
+                    }
+                    szLine = HexReader.ReadLine(); //读取一行数据
+                    count += szLine.Length - 11;
+                    current_line++;
+
+                    if (baud != current_line * 100 / line_num)
+                    {
+                        baud = current_line * 100 / line_num;
+                        win.Dispatcher.Invoke(win.setCallBack, (byte)4, baud.ToString());
                     }
                 }
-                szLine = HexReader.ReadLine(); //读取一行数据
-                count += szLine.Length - 11;
-                current_line++;
+                win.Dispatcher.Invoke(win.setCallBack, (byte)4, "100");
 
-                if (baud != current_line * 100 / line_num)
+                Int32 Length = Encoding.Default.GetByteCount(szHex);
+                code_data_bin = new byte[Length / 2];
+                for (Int32 i = 0; i < code_data_bin.Length; i += 1) //两字符合并成一个16进制字节
                 {
-                    baud = current_line * 100 / line_num;
-                    win.Dispatcher.Invoke(win.setCallBack, (byte)4, baud.ToString());
+                    code_data_bin[i] = Convert.ToByte(szHex.Substring(i * 2, 2), 16);
+                    if (baud != i * 100 / code_data_bin.Length)
+                    {
+                        baud = i * 100 / code_data_bin.Length;
+                        win.Dispatcher.Invoke(win.setCallBack, (byte)4, baud.ToString());
+                    }
                 }
+                win.Dispatcher.Invoke(win.setCallBack, (byte)4, "100");
+                UInt32 code_size = (UInt32)(code_data_bin.Length / 1024);
+                win.Dispatcher.Invoke(win.setCallBack, (byte)2, code_size.ToString() + "KB");
+                win.Dispatcher.Invoke(win.setCallBack, (byte)1, win.FindResource("ParseCompleted") as string);
+                this.run_step = 0;
+                this.convert_bin_done = true;
             }
-            win.Dispatcher.Invoke(win.setCallBack, (byte)4, "100");
-
-            Int32 Length = Encoding.Default.GetByteCount(szHex);
-            code_data_bin = new byte[Length / 2];
-            for (Int32 i = 0; i < code_data_bin.Length; i += 1) //两字符合并成一个16进制字节
+            catch (Exception )
             {
-                code_data_bin[i] = Convert.ToByte(szHex.Substring(i * 2, 2), 16);
-                if (baud != i * 100 / code_data_bin.Length)
-                {
-                    baud = i * 100 / code_data_bin.Length;
-                    win.Dispatcher.Invoke(win.setCallBack, (byte)4, baud.ToString());
-                }
+                this.run_step = 0;//恢復default
+                win.Dispatcher.Invoke(win.setCallBack, (byte)1, "");//恢復default
+                win.Dispatcher.Invoke(win.setCallBack, (byte)7, win.FindResource("CanNotParse") as string);
             }
-            win.Dispatcher.Invoke(win.setCallBack, (byte)4, "100");
-            UInt32 code_size = (UInt32)(code_data_bin.Length / 1024);
-            win.Dispatcher.Invoke(win.setCallBack, (byte)2, code_size.ToString() + "KB");
-            win.Dispatcher.Invoke(win.setCallBack, (byte)1, win.FindResource("ParseCompleted") as string);
-            this.run_step = 0;
-            this.convert_bin_done = true;
         }
 
 
@@ -322,7 +330,7 @@ namespace G80Utility.HID
         public void download_code(object sender)
         {
 
-         
+
             G80MainWindow win = (G80MainWindow)sender;
             if (!this.convert_bin_done)
             {
@@ -342,7 +350,7 @@ namespace G80Utility.HID
                 MessageBox.Show(win.FindResource("ChipIsLocked") as string);
                 return;
             }
-            win.Dispatcher.Invoke(win.setCallBack, (byte)5, win.FindResource("ReadChipAddress") as string );
+            win.Dispatcher.Invoke(win.setCallBack, (byte)5, win.FindResource("ReadChipAddress") as string);
             if (!get_erasure_addr(out receive_data))
             {
                 MessageBox.Show(win.FindResource("EraseAddressFailed") as string);
@@ -354,7 +362,7 @@ namespace G80Utility.HID
                 MessageBox.Show(win.FindResource("AddressError") as string);
                 return;
             }
-            win.Dispatcher.Invoke(win.setCallBack, (byte)5, win.FindResource("CheckChipSector") as string );
+            win.Dispatcher.Invoke(win.setCallBack, (byte)5, win.FindResource("CheckChipSector") as string);
             if (!erasure_section(write_addr, (UInt32)code_data_bin.Length))
             {
                 MessageBox.Show(win.FindResource("EraseMemoryError") as string);
@@ -367,7 +375,7 @@ namespace G80Utility.HID
                 return;
             }
             GD32HIDIAP_LeaveIAP();
-            win.Dispatcher.Invoke(win.setCallBack, (byte)5, win.FindResource("UpdateToROM") as string );
+            win.Dispatcher.Invoke(win.setCallBack, (byte)5, win.FindResource("UpdateToROM") as string);
 
             this.run_step = 0;
         }

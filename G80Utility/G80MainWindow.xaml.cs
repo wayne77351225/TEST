@@ -4328,6 +4328,9 @@ namespace G80Utility
                 case 6:
                     DownloadProgress.Value = int.Parse(text);
                     break;
+                case 7:
+                    MessageBox.Show(text);
+                    break;
             }
         }
         #endregion

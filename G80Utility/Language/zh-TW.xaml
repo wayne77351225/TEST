@@ -250,6 +250,7 @@
     <sys:String x:Key="ParaSettingDone">參數設定命令已傳送完畢</sys:String>
     <sys:String x:Key="IPEmpty">IP地址未填寫，請先輸入IP地址</sys:String>
     <sys:String x:Key="SNFormatError">序號格式錯誤</sys:String>
+    <sys:String x:Key="CanNotParse">檔案無法解析，請重新選擇檔案！</sys:String>
     
     <!--Printer Status-->
     <sys:String x:Key="Ready">就緒</sys:String>
