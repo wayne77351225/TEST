@@ -250,10 +250,10 @@
                                             <ComboBoxItem>3分钟</ComboBoxItem>
                                             <ComboBoxItem>4分钟</ComboBoxItem>
                                             <ComboBoxItem>5分钟</ComboBoxItem>
-                                            <ComboBoxItem >6Mins</ComboBoxItem>
-                                            <ComboBoxItem >7Mins</ComboBoxItem>
-                                            <ComboBoxItem >8Mins</ComboBoxItem>
-                                            <ComboBoxItem >9Mins</ComboBoxItem>
+                                            <ComboBoxItem>6分钟</ComboBoxItem>
+                                            <ComboBoxItem>7分钟</ComboBoxItem>
+                                            <ComboBoxItem>8分钟</ComboBoxItem>
+                                            <ComboBoxItem>9分钟</ComboBoxItem>
                                         </ComboBox>
                                         <Button  Margin="0,0,5,0" Content="自动断线时间" Name="AutoDisconnectBtn" Click="AutoDisconnectBtn_Click" Padding="10,5,10,5" Width="110"/>
                                         <CheckBox VerticalAlignment="Center" IsChecked="True" Name="AutoDisconnectheckbox"/>
