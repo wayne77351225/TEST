@@ -5880,7 +5880,14 @@ namespace G80Utility
                 getSerialPort();
                 getUSBInfoandUpdateView();
                 viewmodel.getDeviceObserve("rs232");
-                DeviceSelectRS232.SelectedIndex = viewmodel.RS232Device.Count - 1;
+                if (lastRS232SelectedIndex != -1)
+                {
+                    DeviceSelectRS232.SelectedIndex = lastRS232SelectedIndex;
+                }
+                else if (lastRS232SelectedIndex == -1)
+                { //預設
+                    DeviceSelectRS232.SelectedIndex = viewmodel.RS232Device.Count - 1;
+                }
                 viewmodel.getDeviceObserve("usb");
                 DeviceSelectUSB.SelectedIndex = viewmodel.USBDevice.Count - 1;//設定選取第一筆
 
