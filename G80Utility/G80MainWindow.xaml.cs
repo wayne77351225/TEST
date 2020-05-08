@@ -2071,7 +2071,7 @@ namespace G80Utility
                 case "RS232":
                     if (isRS232Connected)
                     {
-                        DifferInterfaceConnectChkAndSend("PrinterNowStatus");
+                        PrinterNowStatus();
                         DifferInterfaceConnectChkAndSend("queryPrinterStatus");
                     }
                     break;
@@ -2079,7 +2079,7 @@ namespace G80Utility
                     if (isUSBConnected)
                     {
 
-                        DifferInterfaceConnectChkAndSend("PrinterNowStatus");
+                        PrinterNowStatus();
                         DifferInterfaceConnectChkAndSend("queryPrinterStatus");
                     }
                     break;
@@ -2087,7 +2087,7 @@ namespace G80Utility
                     if (isEthernetConnected)
                     {
 
-                        DifferInterfaceConnectChkAndSend("PrinterNowStatus");
+                        PrinterNowStatus();
                         DifferInterfaceConnectChkAndSend("queryPrinterStatus");
                     }
                     break;
@@ -2161,7 +2161,7 @@ namespace G80Utility
         private void PrinterStatusQueryBtn_Click(object sender, RoutedEventArgs e)
         {
             QueryNowStatusPosition = "maintain";
-            DifferInterfaceConnectChkAndSend("PrinterNowStatus");
+            PrinterNowStatus();
             DifferInterfaceConnectChkAndSend("queryPrinterStatus");
         }
         #endregion
@@ -4285,46 +4285,131 @@ namespace G80Utility
         //==============================打印機實時狀態============================
 
         #region 打印機即時狀態
-        private void PrinterNowStatus()
+        //因為機器故障時只能收到實時狀態命令，故移除確認通訊的命令傳輸
+        public void PrinterNowStatus()
         {
+            byte[] sendArray = StringToByteArray(Command.STATUS_MONITOR);
+
             switch (DeviceType)
             {
                 case "RS232":
-                    if (isRS232Connected)
+                    if (RS232PortName != null) //先判斷是否有get prot name
                     {
-                        byte[] sendArray = StringToByteArray(Command.STATUS_MONITOR);
-                        SendCmd(sendArray, "ReadNowStatus", 9);
+                        bool isError = RS232Connect.OpenSerialPort(RS232PortName, FindResource("CannotOpenComport") as string);
+                        if (!isError)
+                        {
+                            RS232Connect.SerialPortSendCMD("NeedReceive", sendArray, null, 9);
+                            while (!RS232Connect.isReceiveData)
+                            {
+                                if (RS232Connect.mRecevieData != null)
+                                {
+                                    switch (QueryNowStatusPosition)
+                                    {
+                                        case "bottom":
+                                            showPrinteNowStatus(RS232Connect.mRecevieData, StatusMonitorLabel);
+                                            break;
+                                        case "maintain":
+                                            showPrinteNowStatus(RS232Connect.mRecevieData, PrinterStatusText);
+                                            break;
+                                    }
+                                    break;
+                                }
+                            }
+                            SendCmdFail("R"); //避免傳輸時突然有問題
+                        }
+                        else //serial open port failed
+                        {
+                            stopStatusMonitorTimer();
+                            stopSendCmdTimer();
+                            connectFailUI(RS232ConnectImage, FindResource("CannotOpenComport") as string);
+                        }
                     }
                     else
                     {
+                        stopSendCmdTimer();
                         stopStatusMonitorTimer();
+                        MessageBox.Show(FindResource("NotSettingComport") as string);
                     }
                     break;
                 case "USB":
-                    if (isUSBConnected)
+                    if (USBpath != null) //先判斷是否有USBpath
                     {
-                        byte[] sendArray = StringToByteArray(Command.STATUS_MONITOR);
-                        SendCmd(sendArray, "ReadNowStatus", 9);
+                        int result = USBConnect.ConnectUSBDevice(USBpath);
+                        if (result == 1)
+                        {
+                            USBConnect.USBSendCMD("NeedReceive", sendArray, null, 9);
+                            while (!USBConnect.isReceiveData)
+                            {
+                                if (USBConnect.mRecevieData != null)
+                                {
+                                    switch (QueryNowStatusPosition)
+                                    {
+                                        case "bottom":
+                                            showPrinteNowStatus(USBConnect.mRecevieData, StatusMonitorLabel);
+                                            break;
+                                        case "maintain":
+                                            showPrinteNowStatus(USBConnect.mRecevieData, PrinterStatusText);
+                                            break;
+                                    }
+                                    break;
+                                }
+                            }
+                            SendCmdFail("U");//避免傳輸時突然有問題
+                        }
+                        else
+                        {
+                            stopSendCmdTimer();
+                            stopStatusMonitorTimer();
+                            connectFailUI(USBConnectImage, FindResource("NotSettingUSBport") as string);
+                        }
                     }
                     else
                     {
                         stopStatusMonitorTimer();
+                        stopSendCmdTimer();
+                        MessageBox.Show(FindResource("NotSettingUSBport") as string);
                     }
                     break;
                 case "Ethernet":
-                    if (isEthernetConnected)
+                    bool isOK = chekckEthernetIPText();
+                    if (isOK)
                     {
-                        byte[] sendArray = StringToByteArray(Command.STATUS_MONITOR);
-                        SendCmd(sendArray, "ReadNowStatus", 9);
-                    }
-                    else
-                    {
-                        stopStatusMonitorTimer();
+                        int connectStatus = EthernetConnect.EthernetConnectStatus();
+                        switch (connectStatus)
+                        {
+                            case 0: //fail
+                                stopStatusMonitorTimer();
+                                stopSendCmdTimer();
+                                connectFailUI(EthernetConnectImage, FindResource("NotSettingEthernetport") as string);
+                                break;
+                            case 1: //success                           
+                                bool isReceiveNowStatus = EthernetConnect.EthernetSendCmd("NeedReceive", sendArray, null, 9);
+                                while (!EthernetConnect.isReceiveData)
+                                {
+                                    if (EthernetConnect.mRecevieData != null)
+                                    {
+                                        switch (QueryNowStatusPosition)
+                                        {
+                                            case "bottom":
+                                                showPrinteNowStatus(EthernetConnect.mRecevieData, StatusMonitorLabel);
+                                                break;
+                                            case "maintain":
+                                                showPrinteNowStatus(EthernetConnect.mRecevieData, PrinterStatusText);
+                                                break;
+                                        }
+                                        break;
+                                    }
+                                }
+                                break;
+                            case 2: //timeout
+                                stopStatusMonitorTimer();
+                                stopSendCmdTimer();
+                                connectFailUI(EthernetConnectImage, FindResource("ConnectTimeout") as string);
+                                break;
+                        }
                     }
                     break;
-
             }
-
         }
         #endregion
 
@@ -4399,7 +4484,8 @@ namespace G80Utility
         {
             Dispatcher.BeginInvoke(new Action(() =>
             {
-                DifferInterfaceConnectChkAndSend("PrinterNowStatus");
+                PrinterNowStatus();
+                //DifferInterfaceConnectChkAndSend("PrinterNowStatus");
             }), null);
         }
         #endregion
@@ -4811,9 +4897,9 @@ namespace G80Utility
                 case "SetPrinterSN":
                     SetPrinterSN();
                     break;
-                case "PrinterNowStatus":
-                    PrinterNowStatus();
-                    break;
+                //case "PrinterNowStatus":
+                //    PrinterNowStatus();
+                //    break;
                 case "PrintLogo":
                     nvLogoRadioBtnChecked();
                     int number;
@@ -5232,27 +5318,7 @@ namespace G80Utility
                                 break;
                             }
                         }
-                        break;
-                    case "ReadNowStatus": //即時狀態
-                        RS232Connect.SerialPortSendCMD("NeedReceive", data, null, receiveLength);
-                        while (!RS232Connect.isReceiveData)
-                        {
-                            if (RS232Connect.mRecevieData != null)
-                            {
-                                switch (QueryNowStatusPosition)
-                                {
-                                    case "bottom":
-                                        showPrinteNowStatus(RS232Connect.mRecevieData, StatusMonitorLabel);
-                                        break;
-                                    case "maintain":
-                                        showPrinteNowStatus(RS232Connect.mRecevieData, PrinterStatusText);
-                                        break;
-                                }
-
-                                break;
-                            }
-                        }
-                        break;
+                        break;                
                     case "CommunicationTest": //通訊測試
 
                         break;
@@ -5314,26 +5380,7 @@ namespace G80Utility
                                 break;
                             }
                         }
-                        break;
-                    case "ReadNowStatus":
-                        USBConnect.USBSendCMD("NeedReceive", data, null, receiveLength);
-                        while (!USBConnect.isReceiveData)
-                        {
-                            if (USBConnect.mRecevieData != null)
-                            {
-                                switch (QueryNowStatusPosition)
-                                {
-                                    case "bottom":
-                                        showPrinteNowStatus(USBConnect.mRecevieData, StatusMonitorLabel);
-                                        break;
-                                    case "maintain":
-                                        showPrinteNowStatus(USBConnect.mRecevieData, PrinterStatusText);
-                                        break;
-                                }
-                                break;
-                            }
-                        }
-                        break;
+                        break;                  
                     case "BeepOrSetting":
                         USBConnect.USBSendCMD("NoReceive", data, null, 0);
                         break;
@@ -5392,26 +5439,7 @@ namespace G80Utility
                                 break;
                             }
                         }
-                        break;
-                    case "ReadNowStatus":
-                        bool isReceiveNowStatus = EthernetConnect.EthernetSendCmd("NeedReceive", data, null, receiveLength);
-                        while (!EthernetConnect.isReceiveData)
-                        {
-                            if (EthernetConnect.mRecevieData != null)
-                            {
-                                switch (QueryNowStatusPosition)
-                                {
-                                    case "bottom":
-                                        showPrinteNowStatus(EthernetConnect.mRecevieData, StatusMonitorLabel);
-                                        break;
-                                    case "maintain":
-                                        showPrinteNowStatus(EthernetConnect.mRecevieData, PrinterStatusText);
-                                        break;
-                                }
-                                break;
-                            }
-                        }
-                        break;
+                        break;                       
                     case "BeepOrSetting":
                         EthernetConnect.EthernetSendCmd("NoReceive", data, null, 0);
                         break;
