@@ -2535,9 +2535,9 @@ namespace G80Utility
                         bool isError = RS232Connect.OpenSerialPort(RS232PortName, FindResource("CannotOpenComport") as string);
                         if (!isError)
                         {
-                            RS232Connect.SerialPortSendCMD("BeepOrSetting", empty3Array, null, 9);
-
+                            RS232Connect.SerialPortSendCMD("BeepOrSetting", empty3Array, null, 0);
                             SendCmdFail("R"); //避免傳輸時突然有問題
+                            RS232Connect.CloseSerialPort(); //最後關閉
                         }
                         else //serial open port failed
                         {
@@ -2559,7 +2559,8 @@ namespace G80Utility
                         int result = USBConnect.ConnectUSBDevice(USBpath);
                         if (result == 1)
                         {
-                            USBConnect.USBSendCMD("NeedReceive", empty3Array, null, 9);
+                            USBConnect.USBSendCMD("BeepOrSetting", empty3Array, null, 0);
+                            USBConnect.closeHandle();
                             SendCmdFail("U");//避免傳輸時突然有問題
                         }
                         else
@@ -2589,7 +2590,8 @@ namespace G80Utility
                                 connectFailUI(EthernetConnectImage, FindResource("NotSettingEthernetport") as string);
                                 break;
                             case 1: //success                           
-                                EthernetConnect.EthernetSendCmd("BeepOrSetting", empty3Array, null, 9);
+                                EthernetConnect.EthernetSendCmd("BeepOrSetting", empty3Array, null, 0);
+                                EthernetConnect.disconnect();
                                 break;
                             case 2: //timeout
                                 stopStatusMonitorTimer();
