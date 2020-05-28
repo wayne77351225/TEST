@@ -1660,6 +1660,7 @@ namespace G80Utility
             else
             {
                 stopStatusMonitorTimer();
+                StatusMonitorLabel.Content = "";
             }
         }
         #endregion
