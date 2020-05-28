@@ -115,9 +115,9 @@ namespace G80Utility
         //文件解析與下載計時器 
         Timer timer;
 
-        //測試連線命令(用自動斷線命令來測試是否通)
-        string TEST_SEND_CMD = "1F 1B 1F 53 5A 4A 42 5A 46 30 13 01";
-        string TEST_RECEIVE_CMD = "1F-1B-1F-48-46-30-13-01";
+        //測試連線命令(用自動斷線命令來測試是否通,，改用時實命令印表機有狀況時卡住)
+        string TEST_SEND_CMD = "1F 1B 10 04 00";
+        string TEST_RECEIVE_CMD = "1F-1B-1F-48-46-10-04-00";
 
         //判斷sn設定位置
         string SNTxtSettingPosition;
@@ -5169,7 +5169,10 @@ namespace G80Utility
                     if (isOK)
                     {
                         int connectStatus = EthernetConnect.EthernetConnectStatus();
-                        checkEthernetCommunitcation(connectStatus);
+                        if (connectStatus != 1)
+                        {
+                            checkEthernetCommunitcation(connectStatus);
+                        }
                         if (isEthernetConnected)
                         {
                             AllFunctionCollection(cmdType);
