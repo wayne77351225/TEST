@@ -348,7 +348,7 @@ namespace G80Utility.HID
             if (receive_data[1] != 0xaa)
             {
                 MessageBox.Show(win.FindResource("ChipIsLocked") as string);
-                return;
+                //return;
             }
             win.Dispatcher.Invoke(win.setCallBack, (byte)5, win.FindResource("ReadChipAddress") as string);
             if (!get_erasure_addr(out receive_data))

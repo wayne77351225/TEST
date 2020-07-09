@@ -6040,7 +6040,7 @@ namespace G80Utility
                     //seletedItem!=null,要加判斷選取項目不為null不然找不到時會出現錯誤
                     //因為rkUsbPrint.GetSubKeyNames()撈出來的資料是所有有註冊的印表機資料，要比對選取項目的sn
                     //因為傳送路徑時前面##?#要改為\\?\，並且除了sn全部小寫
-                    if (seletedItem != null && usbTypePath.Contains(seletedItem.USBVIDPID))
+                    if (seletedItem != null && usbTypePath.Contains(seletedItem.USBVIDPID) && usbTypePath.Contains(seletedItem.USBSN))
                     {
                         usbpath = "\\\\?\\" + usbTypePath.ToLower().Substring(4);
                         break;
