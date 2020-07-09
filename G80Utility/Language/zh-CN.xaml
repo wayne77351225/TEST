@@ -223,7 +223,8 @@
     <sys:String x:Key="RS232Unconnect">串口尚未连接，请先进行接口测试</sys:String>
     <sys:String x:Key="USBUnconnect">USB尚未连接，请先进行接口测试</sys:String>
     <sys:String x:Key="EthernetUnconnect">网口尚未连接，请先进行接口测试</sys:String>
-    <sys:String x:Key="WaitforRedLight">Flash写入数据中，请待打印机红灯停止闪烁后再行执行其他命令!</sys:String>
+    <!--<sys:String x:Key="WaitforRedLight">Flash写入数据中，请待打印机红灯停止闪烁后再行执行其他命令!</sys:String>-->
+    <sys:String x:Key="WaitforRedLight">请等待一段时间!</sys:String>
     <sys:String x:Key="DeviceConnected">设备已连接</sys:String>
     <sys:String x:Key="DeviceDisconnected">设备断开</sys:String>
     <sys:String x:Key="UpgradeCompleted">升级完成</sys:String>
