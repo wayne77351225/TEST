@@ -112,6 +112,9 @@
     <Compile Include="HID\Hid.cs" />
     <Compile Include="HID\HIDInterface.cs" />
     <Compile Include="HID\IAP.cs" />
+    <Compile Include="IAPDialog.xaml.cs">
+      <DependentUpon>IAPDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Models\Device.cs" />
     <Compile Include="Models\ParaSettings.cs" />
     <Compile Include="Themes\LeftMarginMultiplierConverter.cs" />
@@ -132,6 +135,10 @@
       <DependentUpon>G80MainWindow.xaml</DependentUpon>
     </Compile>
     <Page Include="Dialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="IAPDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

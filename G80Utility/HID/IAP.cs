@@ -329,8 +329,6 @@ namespace G80Utility.HID
 
         public void download_code(object sender)
         {
-
-
             G80MainWindow win = (G80MainWindow)sender;
             if (!this.convert_bin_done)
             {
@@ -347,7 +345,8 @@ namespace G80Utility.HID
             }
             if (receive_data[1] != 0xaa)
             {
-                MessageBox.Show(win.FindResource("ChipIsLocked") as string);
+                win.Dispatcher.Invoke(win.setCallBack, (byte)8, win.FindResource("ChipIsLocked") as string);
+                //MessageBox.Show(win.FindResource("ChipIsLocked") as string);
                 //return;
             }
             win.Dispatcher.Invoke(win.setCallBack, (byte)5, win.FindResource("ReadChipAddress") as string);

@@ -4414,6 +4414,12 @@ namespace G80Utility
                 case 7:
                     MessageBox.Show(text);
                     break;
+                case 8://使用show就不會影響後方執行
+                    IAPDialog iapDlg = new IAPDialog();
+                    iapDlg.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+                    iapDlg.Owner = this;
+                    iapDlg.Show();
+                    break;
             }
         }
         #endregion
