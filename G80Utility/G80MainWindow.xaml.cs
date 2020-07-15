@@ -5155,7 +5155,14 @@ namespace G80Utility
                     {    //已斷線，重新測試連線
                         if (USBConnect.USBHandle == -1)
                         {
-                            checkUSBCommunitcation();
+                            if (cmdType.Equals("PrintLogo")) //usb在打印logo時如果確認通訊會來不及反應，這邊bypass掉
+                            {
+                                USBConnect.ConnectUSBDevice(USBpath);
+                            }
+                            else
+                            {
+                                checkUSBCommunitcation();
+                            }
                         }
                         if (isUSBConnected)
                         {
