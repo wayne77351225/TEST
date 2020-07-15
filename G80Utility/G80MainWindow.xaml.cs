@@ -5158,6 +5158,7 @@ namespace G80Utility
                             if (cmdType.Equals("PrintLogo")) //usb在打印logo時如果確認通訊會來不及反應，這邊bypass掉
                             {
                                 USBConnect.ConnectUSBDevice(USBpath);
+                                isUSBConnected = true;
                             }
                             else
                             {
