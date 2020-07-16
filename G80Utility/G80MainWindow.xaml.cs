@@ -5154,8 +5154,9 @@ namespace G80Utility
                     if (USBpath != null) //先判斷是否有USBpath
                     {    //已斷線，重新測試連線
                         if (USBConnect.USBHandle == -1)
-                        {
-                            if (cmdType.Equals("PrintLogo")) //usb在打印logo時如果確認通訊會來不及反應，這邊bypass掉
+                        {   //usb在打印logo時如果確認通訊會來不及反應，這邊bypass掉
+                            //主要是因為部分命令必須執行完成後才能回應後續命令，如切刀命令和打印nvlogo命令有這個問題
+                            if (cmdType.Equals("PrintLogo") || cmdType.Equals("CodePagePrint") || cmdType.Equals("CutTimesFactory") || cmdType.Equals("CutTimesMaintain")) 
                             {
                                 USBConnect.ConnectUSBDevice(USBpath);
                                 isUSBConnected = true;
