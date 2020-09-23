@@ -57,8 +57,8 @@ namespace G80Utility.HID
             hid.DataReceived = DataReceived;
 
             HIDInterface.HidDevice hidDevice = new HIDInterface.HidDevice();
-            hidDevice.vID = 0x28E9; //固定寫死
-            hidDevice.pID = 0x028B; //固定寫死
+            hidDevice.vID = 0x0471; //固定寫死 0x28E9
+            hidDevice.pID = 0x0055; //固定寫死 0x028B
             hidDevice.serial = "";
             hid.AutoConnect(hidDevice);
             pushReceiveData += read_data;
