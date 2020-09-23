@@ -2,8 +2,8 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                      xmlns:sys="clr-namespace:System;assembly=mscorlib">
     <!--Window Title-->
-    <sys:String x:Key="WindowTitle">G80 Utility Factory v1.0.0(r)</sys:String>
-    <!--<sys:String x:Key="WindowTitle">G80 Utility Factory Beta v2.13</sys:String>-->
+    <!--<sys:String x:Key="WindowTitle">G80 Utility Factory v1.0.0(r)</sys:String>-->
+    <sys:String x:Key="WindowTitle">G80 Utility Factory Beta v2.14</sys:String>
     <!--Top通訊介面-->
     <sys:String x:Key="ConnectionInterface">通訊介面</sys:String>
     <sys:String x:Key="USB">USB</sys:String>
@@ -246,7 +246,7 @@
     <sys:String x:Key="SendingData">發送代碼數據</sys:String>
     <sys:String x:Key="BurningFailed">燒寫失敗，請檢查</sys:String>
     <sys:String x:Key="UpdateToROM">更新代碼到ROM</sys:String>
-    <sys:String x:Key="CloseHead">請關閉上蓋</sys:String>
+    <sys:String x:Key="CloseHead">已更新成功，請關閉上蓋並且重啟印表機</sys:String>
     <sys:String x:Key="BaudChangeWarning">DIP設定完成，請記得同步串口通訊的波特率</sys:String>
     <sys:String x:Key="ParaSettingDone">參數設定命令已傳送完畢</sys:String>
     <sys:String x:Key="IPEmpty">IP地址未填寫，請先輸入IP地址</sys:String>

@@ -2,8 +2,8 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                      xmlns:sys="clr-namespace:System;assembly=mscorlib">
     <!--Window Title-->
-    <!--<sys:String x:Key="WindowTitle">G80 Utility Factory Beta v2.13</sys:String>-->
-    <sys:String x:Key="WindowTitle">G80 Utility Factory v1.0.0(r)</sys:String>
+    <sys:String x:Key="WindowTitle">G80 Utility Factory Beta v2.14</sys:String>
+    <!--<sys:String x:Key="WindowTitle">G80 Utility Factory v1.0.0(r)</sys:String>-->
 
     <!--Top通讯介面-->
     <sys:String x:Key="ConnectionInterface">通讯介面</sys:String>
@@ -248,7 +248,7 @@
     <sys:String x:Key="SendingData">发送代码数据</sys:String>
     <sys:String x:Key="BurningFailed">烧写失败，请检查</sys:String>
     <sys:String x:Key="UpdateToROM">更新代码到ROM</sys:String>
-    <sys:String x:Key="CloseHead">请盖好上盖</sys:String>
+    <sys:String x:Key="CloseHead">已更新成功，请关闭上盖并且重启打印机</sys:String>
     <sys:String x:Key="BaudChangeWarning">DIP设定完成，请记得同步串口通讯的波特率</sys:String>
     <sys:String x:Key="ParaSettingDone">参数设置命令已传送完毕</sys:String>
     <sys:String x:Key="IPEmpty">IP地址为空，请先输入IP地址</sys:String>
