@@ -49,6 +49,14 @@
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:2"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+            }
         }
         "Release"
         {
@@ -186,15 +194,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:G80 for Factory"
-        "ProductCode" = "8:{56A8A9DD-E573-4089-B30D-BA9895061CA5}"
-        "PackageCode" = "8:{8597DA8B-5D6A-4055-A502-DC67618D005C}"
+        "ProductCode" = "8:{24EB8552-ABD7-4FD7-8243-426537D14610}"
+        "PackageCode" = "8:{A810C1AC-91F4-452E-A402-E39A905E0716}"
         "UpgradeCode" = "8:{E5B2E590-2F42-4A59-A00A-6AA7632ED8FE}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:1.0.0"
+        "ProductVersion" = "8:1.1.0"
         "Manufacturer" = "8:Gainscha"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
