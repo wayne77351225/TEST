@@ -98,8 +98,8 @@ namespace G80Utility.HID
             string path = null;
             if (rkUsbPrint != null)
             {
-                string VID = "0471"; //28e9
-                string PID = "0055"; //028b
+                string VID = "28e9"; //28e9
+                string PID = "028b"; //028b
 
                 foreach (String hidPath in rkUsbPrint.GetSubKeyNames())
                 {
