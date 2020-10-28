@@ -1469,6 +1469,49 @@ namespace G80Utility
         }
         #endregion
 
+        #region 藍牙名稱設定至畫面
+        private void setBTNametoUI(byte[] data)
+        {
+            string btname = null;
+            ////(0~7)前8個是無意義資料
+            for (int i = 8; i < 24; i++)
+            {
+                btname += Convert.ToChar(data[i]);
+            }
+            btname.Replace("\0", "");
+            BTName_Txt.Text = btname;
+            //Console.WriteLine("bt:" + btname);
+        }
+        #endregion
+
+        #region WIFI名稱設定至畫面
+        private void setWIFINametoUI(byte[] data)
+        {
+            string WIFIname = null;
+            //(0~7)前8個是無意義資料
+            for (int i = 8; i < 24; i++)
+            {
+                WIFIname += Convert.ToChar(data[i]);      
+            }
+            WIFIName_Txt.Text = WIFIname;
+            Console.WriteLine("WIFIname:" + WIFIname);
+        }
+        #endregion
+
+        #region WIFI名稱設定至畫面
+        private void setWIFIPwdtoUI(byte[] data)
+        {
+            string WIFIPWD = null;
+            //(0~7)前8個是無意義資料
+            for (int i = 8; i < 24; i++)
+            {
+                WIFIPWD += Convert.ToChar(data[i]);
+            }
+            WIFIPwd_Txt.Text = WIFIPWD;
+            //Console.WriteLine("WIFIPWD:" + WIFIPWD);
+        }
+        #endregion
+
         #region 判斷參數設定欄位是否取得資料
         private void checkIsGetData(TextBox SelectedText, ComboBox SelectedCom, byte[] data, string msg, bool isSubtractOne, int itemFinalNo)
         {
@@ -2231,6 +2274,40 @@ namespace G80Utility
         }
         #endregion
 
+        #region 取得藍牙名稱按鈕事件
+        private void BTName_Btn_Click(object sender, RoutedEventArgs e)
+        {
+            DifferInterfaceConnectChkAndSend("ReadBT");
+        }
+        #endregion
+
+        #region 取得WIFI名稱按鈕事件
+        private void WIFINameLoad_Btn_Click(object sender, RoutedEventArgs e)
+        {
+            DifferInterfaceConnectChkAndSend("ReadWIFIName");
+        }
+        #endregion
+
+        #region 寫入WIFI名稱按鈕事件
+        private void WIFINameWirte_Btn_Click(object sender, RoutedEventArgs e)
+        {
+            DifferInterfaceConnectChkAndSend("WriteWIFIName");
+        }
+        #endregion
+
+        #region 取得WIFI密碼按鈕事件
+        private void wIFIPwdLoad_Btn_Click(object sender, RoutedEventArgs e)
+        {
+            DifferInterfaceConnectChkAndSend("ReadWIFIPwd");
+        }
+        #endregion
+
+        #region 寫入WIFI密碼按鈕事件
+        private void wIFIPwdWrite_Btn_Click(object sender, RoutedEventArgs e)
+        {
+            DifferInterfaceConnectChkAndSend("WriteWIFIPwd");
+        }
+        #endregion
         //工廠生產按鈕
         #region 打印自檢頁(短)-工廠-按鈕事件
         private void PrintTest_S_Click(object sender, RoutedEventArgs e)
@@ -4092,6 +4169,86 @@ namespace G80Utility
         }
         #endregion
 
+        #region 讀取BT名稱
+        private void LoadBTName()
+        {
+            byte[] sendArray = StringToByteArray(Command.BT_LAOD);
+            SendCmd(sendArray, "ReadBTName", 24);
+        }
+        #endregion
+
+        #region 讀取WIFI名稱
+        private void LoadWIFIName()
+        {
+            byte[] sendArray = StringToByteArray(Command.WIFI_NAME_LOAD);
+            SendCmd(sendArray, "ReadWIFIName", 24);
+        }
+        #endregion
+
+
+        #region 讀取WIFI密碼
+        private void LoadWIFIPwd()
+        {
+            byte[] sendArray = StringToByteArray(Command.WIFI_PWD_LOAD);
+            SendCmd(sendArray, "ReadWIFIPwd", 24);
+        }
+        #endregion
+
+        #region 設定WIFI名稱
+        private void SetWIFIName()
+        {
+            byte[] sendArray = null;
+            string name;
+            if (WIFIName_Txt.Text != "")
+            {
+                name = WIFIName_Txt.Text.Replace("\0", "");
+
+                String result = ConvertStringToHex(name);
+                if (result != null)
+                {
+                    sendArray = StringToByteArray(Command.WIFI_NAME_SET + result);
+                    SendCmd(sendArray, "BeepOrSetting", 0);
+                }
+                else {
+                    MessageBox.Show(FindResource("WIFINameTooLarge") as string);
+                }
+
+            }
+            else
+            {
+                MessageBox.Show(FindResource("ColumnEmpty") as string);
+            }
+        }
+        #endregion
+
+        #region 設定WIFI密碼
+        private void SetWIFIPWD()
+        {
+            byte[] sendArray = null;
+            string pwd;
+            if (WIFIPwd_Txt.Text != "")
+            {
+                pwd = WIFIPwd_Txt.Text.Replace("\0","");
+
+                String result = ConvertStringToHex(pwd);
+                if (result != null)
+                {
+                    sendArray = StringToByteArray(Command.WIFI_PWD_SET + result);
+                    SendCmd(sendArray, "BeepOrSetting", 0);
+                }
+                else
+                {
+                    MessageBox.Show(FindResource("WIFIPwdTooLarge") as string);
+                }
+
+            }
+            else
+            {
+                MessageBox.Show(FindResource("ColumnEmpty") as string);
+            }
+        }
+        #endregion
+
         //==============================工廠生產功能=============================
 
         #region 打印自檢頁
@@ -4207,7 +4364,7 @@ namespace G80Utility
             }
             //初次未記錄,抓取user輸入值
             if (getRegistry("SN") == null)
-            {               
+            {
                 if (printerSNInputChk())
                 {
                     sn_reg = sn_input;
@@ -4221,7 +4378,7 @@ namespace G80Utility
             else //已經有紀錄
             {
                 sn_reg = getRegistry("SN");
-              
+
                 if (sn_input != sn_reg)//註冊與輸入的不同要重新寫入
                 {
                     if (printerSNInputChk())
@@ -4325,7 +4482,8 @@ namespace G80Utility
                         {
                             isOK = true;
                         }
-                        else {
+                        else
+                        {
                             isOK = false;
                         }
                     }
@@ -5118,6 +5276,21 @@ namespace G80Utility
                         MessageBox.Show(FindResource("WaitforRedLight") as string);
                     }
                     break;
+                case "ReadBT":
+                    LoadBTName();
+                    break;
+                case "ReadWIFIName":
+                    LoadWIFIName();
+                    break;
+                case "WriteWIFIName":
+                    SetWIFIName();
+                    break;
+                case "ReadWIFIPwd":
+                    LoadWIFIPwd();
+                    break;
+                case "WriteWIFIPwd":
+                    SetWIFIPWD();
+                    break;
             }
         }
         #endregion
@@ -5156,7 +5329,7 @@ namespace G80Utility
                         if (USBConnect.USBHandle == -1)
                         {   //usb在打印logo時如果確認通訊會來不及反應，這邊bypass掉
                             //主要是因為部分命令必須執行完成後才能回應後續命令，如切刀命令和打印nvlogo命令有這個問題
-                            if (cmdType.Equals("PrintLogo") || cmdType.Equals("CodePagePrint") || cmdType.Equals("CutTimesFactory") || cmdType.Equals("CutTimesMaintain")) 
+                            if (cmdType.Equals("PrintLogo") || cmdType.Equals("CodePagePrint") || cmdType.Equals("CutTimesFactory") || cmdType.Equals("CutTimesMaintain"))
                             {
                                 USBConnect.ConnectUSBDevice(USBpath);
                                 isUSBConnected = true;
@@ -5513,8 +5686,38 @@ namespace G80Utility
                             }
                         }
                         break;
-                    case "CommunicationTest": //通訊測試
-
+                    case "ReadBTName": //藍牙名稱
+                        RS232Connect.SerialPortSendCMD("NeedReceive", data, null, receiveLength);
+                        while (!RS232Connect.isReceiveData)
+                        {
+                            if (RS232Connect.mRecevieData != null)
+                            {
+                                setBTNametoUI(RS232Connect.mRecevieData);
+                                break;
+                            }
+                        }
+                        break;
+                    case "ReadWIFIName": //wifi名稱
+                        RS232Connect.SerialPortSendCMD("NeedReceive", data, null, receiveLength);
+                        while (!RS232Connect.isReceiveData)
+                        {
+                            if (RS232Connect.mRecevieData != null)
+                            {
+                                setWIFINametoUI(RS232Connect.mRecevieData);
+                                break;
+                            }
+                        }
+                        break;
+                    case "ReadWIFIPwd": //wifi密碼
+                        RS232Connect.SerialPortSendCMD("NeedReceive", data, null, receiveLength);
+                        while (!RS232Connect.isReceiveData)
+                        {
+                            if (RS232Connect.mRecevieData != null)
+                            {
+                                setWIFIPwdtoUI(RS232Connect.mRecevieData);
+                                break;
+                            }
+                        }
                         break;
                     case "BeepOrSetting":
                         RS232Connect.SerialPortSendCMD("NoReceive", data, null, 0);
@@ -5575,6 +5778,39 @@ namespace G80Utility
                             }
                         }
                         break;
+                    case "ReadBTName": //藍牙名稱
+                        USBConnect.USBSendCMD("NeedReceive", data, null, receiveLength);
+                        while (!USBConnect.isReceiveData)
+                        {
+                            if (USBConnect.mRecevieData != null)
+                            {
+                                setBTNametoUI(USBConnect.mRecevieData);
+                                break;
+                            }
+                        }
+                        break;
+                    case "ReadWIFIName": //wifi名稱
+                        USBConnect.USBSendCMD("NeedReceive", data, null, receiveLength);
+                        while (!USBConnect.isReceiveData)
+                        {
+                            if (USBConnect.mRecevieData != null)
+                            {
+                                setWIFINametoUI(USBConnect.mRecevieData);
+                                break;
+                            }
+                        }
+                        break;
+                    case "ReadWIFIPwd": //wifi密碼
+                        USBConnect.USBSendCMD("NeedReceive", data, null, receiveLength);
+                        while (!USBConnect.isReceiveData)
+                        {
+                            if (USBConnect.mRecevieData != null)
+                            {
+                                setWIFIPwdtoUI(USBConnect.mRecevieData);
+                                break;
+                            }
+                        }
+                        break;
                     case "BeepOrSetting":
                         USBConnect.USBSendCMD("NoReceive", data, null, 0);
                         break;
@@ -5630,6 +5866,39 @@ namespace G80Utility
                             if (EthernetConnect.mRecevieData != null)
                             {
                                 setPrinterStatus(EthernetConnect.mRecevieData);
+                                break;
+                            }
+                        }
+                        break;
+                    case "ReadBTName": //藍牙名稱
+                        bool isReceivebt = EthernetConnect.EthernetSendCmd("NeedReceive", data, null, receiveLength);
+                        while (!EthernetConnect.isReceiveData)
+                        {
+                            if (EthernetConnect.mRecevieData != null)
+                            {
+                                setBTNametoUI(EthernetConnect.mRecevieData);
+                                break;
+                            }
+                        }
+                        break;
+                    case "ReadWIFIName": //wifi名稱
+                        bool isReceiveWifiName = EthernetConnect.EthernetSendCmd("NeedReceive", data, null, receiveLength);
+                        while (!EthernetConnect.isReceiveData)
+                        {
+                            if (EthernetConnect.mRecevieData != null)
+                            {
+                                setWIFINametoUI(EthernetConnect.mRecevieData);
+                                break;
+                            }
+                        }
+                        break;
+                    case "ReadWIFIPwd": //wifi密碼
+                        bool isReceiveWifiPwd = EthernetConnect.EthernetSendCmd("NeedReceive", data, null, receiveLength);
+                        while (!EthernetConnect.isReceiveData)
+                        {
+                            if (EthernetConnect.mRecevieData != null)
+                            {
+                                setWIFIPwdtoUI(EthernetConnect.mRecevieData);
                                 break;
                             }
                         }
@@ -5805,6 +6074,35 @@ namespace G80Utility
                 sbBytes.AppendFormat("{0:X2}", b);
             }
             return sbBytes.ToString();
+        }
+        #endregion
+
+        #region string to hex string without endoding
+        public string ConvertStringToHex(String input)
+        {
+            Byte[] stringBytes = Encoding.Default.GetBytes(input);
+            int stringLength = stringBytes.Length;
+            if (stringLength > 16)
+            {
+
+                return null;
+            }
+            else {
+                StringBuilder sbBytes = new StringBuilder(16);
+                for (int i = 0; i < 16; i++) {
+                    
+                    if (i > stringLength - 1)
+                    {
+                        sbBytes.AppendFormat("{0:X2}", 0);
+                    }
+                    else {
+                        sbBytes.AppendFormat("{0:X2}", stringBytes.ElementAt(i));
+                    }
+                }
+                Console.WriteLine(sbBytes.Length);
+                return sbBytes.ToString();
+            }
+           
         }
         #endregion
 

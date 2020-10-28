@@ -260,6 +260,15 @@ namespace G80Utility.Tool
         //收到dip值的命令分類
         public static string RE_DIPVALUE_CLASSFY = "31-35";
 
+        //收到BT NAME的命令分類
+        public static string RE_BT_NAME = "30-19";
+
+        //收到WIFI NAME的命令分類
+        public static string RE_WIFI_NAME = "30-20";
+
+        //收到WIFI PWD的命令分類
+        public static string RE_WIFI_PWD = "30-21";
+
         #region 維護維修
         //清除打印機所有信息
         public static string CLEAN_ALL_PRINTINFO = "1F 1B 1F 53 5A 4A 42 5A 46 41 30 02";
@@ -293,6 +302,21 @@ namespace G80Utility.Tool
 
         //FALSH測試
         public static string FLASH_TEST = "1F 1B 1F 53 5A 4A 42 5A 46 44 11 00";
+
+        //讀取藍牙名稱
+        public static string BT_LAOD = "1F 1B 1F 53 5A 4A 42 5A 46 30 19 01";
+
+        //讀取WIFI名稱
+        public static string WIFI_NAME_LOAD = "1F 1B 1F 53 5A 4A 42 5A 46 30 20 01";
+
+        //寫入WIFI名稱
+        public static string WIFI_NAME_SET = "1F 1B 1F 53 5A 4A 42 5A 46 30 20 02";
+
+        //讀取WIFI密碼
+        public static string WIFI_PWD_LOAD = "1F 1B 1F 53 5A 4A 42 5A 46 30 21 01";
+
+        //寫入WIFI密碼
+        public static string WIFI_PWD_SET = "1F 1B 1F 53 5A 4A 42 5A 46 30 21 02";
         #endregion
 
         #region 工廠生產

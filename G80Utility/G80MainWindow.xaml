@@ -655,12 +655,12 @@
                 </TabItem.Header>
                 <Border CornerRadius="5" Background="#595959" Margin="0,0,1,2"  Name="MaintaiTab" >
                     <StackPanel Height="445">
-                        <Grid Margin="15">
+                        <Grid Margin="15,5,15,10">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="20*"/>
-                                <ColumnDefinition Width="20*"/>
-                                <ColumnDefinition Width="20*"/>
-                                <ColumnDefinition Width="18*"/>
+                                <ColumnDefinition Width="19*"/>
+                                <ColumnDefinition Width="19*"/>
+                                <ColumnDefinition Width="19*"/>
+                                <ColumnDefinition Width="22*"/>
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
                                 <RowDefinition/>
@@ -669,31 +669,31 @@
                             <!--打印机统计信息-->
                             <GroupBox Header="打印机统计信息" Grid.RowSpan="2" Margin="0,10,5,0" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14" >
                                 <StackPanel >
-                                    <StackPanel  Margin="10,15,0,5" Orientation="Horizontal">
+                                    <StackPanel  Margin="5,15,0,5" Orientation="Horizontal">
                                         <Label Content="走纸总行数：" FontSize="14" />
                                         <TextBox Width="50" IsEnabled="False" Name="FeedLinesTxt" />
                                         <Label Content="行" FontSize="14"/>
                                         <CheckBox VerticalAlignment="Center" Name="FeedLinesCheckbox"  Margin="18,0,0,0"/>
                                     </StackPanel>
-                                    <StackPanel  Margin="10,5,0,5"  Orientation="Horizontal">
+                                    <StackPanel  Margin="5,5,0,5"  Orientation="Horizontal">
                                         <Label Content="打印行数：" FontSize="14" Margin="0,0,12,0"/>
                                         <TextBox Width="50" IsEnabled="False"  Name="PrintedLinesTxt" />
                                         <Label Content="行" FontSize="14"/>
                                         <CheckBox VerticalAlignment="Center" Name="PrintedLinesCheckbox"  Margin="20,0,0,0"/>
                                     </StackPanel>
-                                    <StackPanel  Margin="10,5,0,5"  Orientation="Horizontal">
+                                    <StackPanel  Margin="5,5,0,5"  Orientation="Horizontal">
                                         <Label Content="切纸次数：" FontSize="14"   Margin="0,0,12,0"/>
                                         <TextBox Width="50" IsEnabled="False" Name="CutPaperTimesTxt"/>
                                         <Label Content="次" FontSize="14"/>
                                         <CheckBox VerticalAlignment="Center" Name="CutPaperTimesCheckbox" Margin="20,0,0,0"/>
                                     </StackPanel>
-                                    <StackPanel  Margin="10,5,0,5"  Orientation="Horizontal">
+                                    <StackPanel  Margin="5,5,0,5"  Orientation="Horizontal">
                                         <Label Content="开盖次数：" FontSize="14"  Margin="0,0,12,0"/>
                                         <TextBox Width="50" IsEnabled="False" Name="HeadOpenTimesTxt"/>
                                         <Label Content="次" FontSize="14"/>
                                         <CheckBox VerticalAlignment="Center" Name="HeadOpenTimesCheckbox" Margin="20,0,0,0"/>
                                     </StackPanel>
-                                    <StackPanel  Margin="10,5,0,5"  Orientation="Horizontal">
+                                    <StackPanel  Margin="5,5,0,5"  Orientation="Horizontal">
                                         <Label Content="缺纸次数：" FontSize="14"  Margin="0,0,12,0"/>
                                         <TextBox Width="50" IsEnabled="False" Name="PaperOutTimesTxt"/>
                                         <Label Content="次" FontSize="14"/>
@@ -714,7 +714,7 @@
                             </GroupBox>
                             <!--打印机状态信息-->
                             <GroupBox Grid.Column="1" Grid.RowSpan="2" Header="打印机状态信息" Margin="10,10,5,0" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14">
-                                <StackPanel Margin="15,15,0,0">
+                                <StackPanel Margin="10,15,0,0">
                                     <Label Content="打印机状态：" Padding="0,5,0,0" Margin="0,0,0,10"/>
                                     <TextBox VerticalScrollBarVisibility="Auto"  Width="190" Height="40" Margin="0,0,0,20" IsEnabled="False" TextWrapping="Wrap" Name="PrinterStatusText" VerticalAlignment="Center"  HorizontalAlignment="Left"/>
                                     <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
@@ -752,13 +752,33 @@
                                     </StackPanel>
                                 </StackPanel>
                             </GroupBox>
-                            <!--高级测试-->
-                            <GroupBox Grid.Column="3" Grid.RowSpan="2" Header="高级测试" Margin="10,10,0,0" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14">
+                            <!--Wifi/bt設定-->
+                            <GroupBox Grid.Column="3" Grid.Row="0" Header="高级测试" Margin="10,10,0,0" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14">
                                 <StackPanel HorizontalAlignment="Center" >
-                                    <Button Margin="0,15,0,20" Name="SDRAMTestBtn" Click="SDRAMTestBtn_Click" Content="SDRAM测试" Padding="5" FontSize="14"  Width="110"/>
-                                    <Button  Margin="0,0,0,40" Name="FlashTestBtn" Click="FlashTestBtn_Click"   Content="FLASH测试" Padding="5" FontSize="14" Width="110"/>
-                                    <Label Margin="0,0,0,10" Content="测试成功：蜂鸣器鸣叫一声"/>
-                                    <Label  Content="测试失败：蜂鸣器鸣叫三声"/>
+                                    <Button Margin="0,10,0,10" Name="SDRAMTestBtn" Click="SDRAMTestBtn_Click" Content="SDRAM测试" Padding="5" FontSize="14"  Width="110"/>
+                                    <Button  Margin="0,0,0,10" Name="FlashTestBtn" Click="FlashTestBtn_Click"   Content="FLASH测试" Padding="5" FontSize="14" Width="110"/>
+                                    <Label Margin="0,0,0,5" Content="测试成功：蜂鸣器鸣叫一声" HorizontalAlignment="Center"/>
+                                    <Label  Content="测试失败：蜂鸣器鸣叫三声" HorizontalAlignment="Center"/>
+                                </StackPanel>
+                            </GroupBox>
+                            <GroupBox Grid.Column="3" Grid.Row="1" Header="WIFI/蓝牙" Margin="10,10,0,0" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14">
+                                <StackPanel >
+                                    <StackPanel   Margin="10,5,5,10" Orientation="Horizontal" HorizontalAlignment="Left" >
+                                        <TextBox  FontSize="14" Width="100" Text="" Name="BTName_Txt" Padding="5"/>
+                                        <Button  Margin="10,0,0,0" Name="BTName_Btn" Click="BTName_Btn_Click" Content="读取蓝牙名称" Padding="5" FontSize="14"  Width="120"/>
+                                </StackPanel>
+                                <Label Margin="10,0,0,0" Content="WIFI名称：" HorizontalAlignment="Left"/>
+                                <StackPanel   Margin="10,0,5,10" Orientation="Horizontal" HorizontalAlignment="Center" >
+                                    <TextBox  FontSize="14" Width="100" Text="" Name="WIFIName_Txt" Padding="5"/>
+                                    <Button  Margin="10,0,0,0" Name="WIFINameLoad_Btn" Click="WIFINameLoad_Btn_Click" Content="读取" Padding="5" FontSize="14"  Width="55"/>
+                                    <Button  Margin="10,0,0,0" Name="WIFINameWirte_Btn" Click="WIFINameWirte_Btn_Click" Content="设置" Padding="5" FontSize="14"  Width="55"/>
+                                </StackPanel>
+                                <Label Margin="10,0,0,0" Content="WIFI密码：" HorizontalAlignment="Left"/>
+                                <StackPanel Margin="10,0,5,5" Orientation="Horizontal" HorizontalAlignment="Center" >
+                                    <TextBox  FontSize="14" Width="100" Text="" Name="WIFIPwd_Txt" Padding="5"/>
+                                    <Button  Margin="10,0,0,0" Name="wIFIPwdLoad_Btn" Click="wIFIPwdLoad_Btn_Click" Content="读取" Padding="5" FontSize="14"  Width="55"/>
+                                    <Button  Margin="10,0,0,0" Name="wIFIPwdWrite_Btn" Click="wIFIPwdWrite_Btn_Click" Content="设置" Padding="5" FontSize="14"  Width="55"/>
+                                </StackPanel>
                                 </StackPanel>
                             </GroupBox>
                         </Grid>
