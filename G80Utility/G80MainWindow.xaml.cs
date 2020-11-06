@@ -2382,6 +2382,7 @@ namespace G80Utility
             //根据参数设置界面的复选框进行所有参数的下载
             IsParaSettingChecked();
             DifferInterfaceConnectChkAndSend("sendALL");
+            Thread.Sleep(1000); //要等一下不然命令會來不及送
 
             //发送打印自检页（长）命令
             DifferInterfaceConnectChkAndSend("PrintTestLong");
@@ -4300,6 +4301,7 @@ namespace G80Utility
             if (Config.isCMDQRCodeChecked)
             {
                 byte[] qrcode = Command.CMD_TEST_QRCODE;
+                SendCmd(qrcode, "BeepOrSetting", 0);
             }
 
             if (Config.isCMDGeneralChecked)
