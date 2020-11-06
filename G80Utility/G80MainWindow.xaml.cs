@@ -2619,7 +2619,7 @@ namespace G80Utility
                             RS232Connect.SerialPortSendCMD("BeepOrSetting", cut, null, 0);
                             SendCmdFail("R"); //避免傳輸時突然有問題
                             RS232Connect.CloseSerialPort(); //最後關閉
-                            Thread.Sleep(1000);
+                            Thread.Sleep(1000); //串口要停一下避免等下讀取又誤
                         }
                         else //serial open port failed
                         {
