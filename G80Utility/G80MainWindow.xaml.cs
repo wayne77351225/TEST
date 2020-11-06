@@ -2606,6 +2606,7 @@ namespace G80Utility
         public void send3empty()
         {
             byte[] empty3Array = { 0x0a, 0x0a, 0x0a };
+            byte[] cut = StringToByteArray(Command.CUT_TIMES);
             switch (DeviceType)
             {
                 case "RS232":
@@ -2614,9 +2615,11 @@ namespace G80Utility
                         bool isError = RS232Connect.OpenSerialPort(RS232PortName, FindResource("CannotOpenComport") as string);
                         if (!isError)
                         {
-                            RS232Connect.SerialPortSendCMD("BeepOrSetting", empty3Array, null, 0);
+                            RS232Connect.SerialPortSendCMD("BeepOrSetting", empty3Array, null, 0);                       
+                            RS232Connect.SerialPortSendCMD("BeepOrSetting", cut, null, 0);
                             SendCmdFail("R"); //避免傳輸時突然有問題
                             RS232Connect.CloseSerialPort(); //最後關閉
+                            Thread.Sleep(1000);
                         }
                         else //serial open port failed
                         {
@@ -2639,6 +2642,7 @@ namespace G80Utility
                         if (result == 1)
                         {
                             USBConnect.USBSendCMD("BeepOrSetting", empty3Array, null, 0);
+                            USBConnect.USBSendCMD("BeepOrSetting", cut, null, 0);
                             USBConnect.closeHandle();
                             SendCmdFail("U");//避免傳輸時突然有問題
                         }
@@ -2670,6 +2674,7 @@ namespace G80Utility
                                 break;
                             case 1: //success                           
                                 EthernetConnect.EthernetSendCmd("BeepOrSetting", empty3Array, null, 0);
+                                EthernetConnect.EthernetSendCmd("BeepOrSetting", cut, null, 0);
                                 EthernetConnect.disconnect();
                                 break;
                             case 2: //timeout
