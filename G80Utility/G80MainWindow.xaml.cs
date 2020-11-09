@@ -2562,6 +2562,33 @@ namespace G80Utility
         }
         #endregion
 
+        #region 重新連接打印機按鈕事件
+        private void ReconnectBtn_Click(object sender, RoutedEventArgs e)
+        {
+            UIintial();
+            //iap初始化
+            iap_download = new IAP_download();
+            iap_download.Initial();
+            iap_download.isConnectedFunc = device_connect_status;
+            set_connect_status += device_connect_status_ui;
+
+            //啟動ipa計時器   
+            if (timer != null)
+            {
+                timer.Close();
+            }
+            else
+            {
+                timer = new Timer();
+            }
+
+            timer.Interval = 1000;
+            timer.Elapsed += timer_1s_Tick;
+            timer.Start();
+
+        }
+        #endregion
+
         #region 開啟FW檔案按鈕事件
         private void OpenFWfileBtn_Click(object sender, EventArgs e)
         {
@@ -2615,8 +2642,8 @@ namespace G80Utility
                         bool isError = RS232Connect.OpenSerialPort(RS232PortName, FindResource("CannotOpenComport") as string);
                         if (!isError)
                         {
-                            RS232Connect.SerialPortSendCMD("BeepOrSetting", empty3Array, null, 0);                       
-                            RS232Connect.SerialPortSendCMD("BeepOrSetting", cut, null, 0);
+                            RS232Connect.SerialPortSendCMD("NoReceive", empty3Array, null, 0);                       
+                            RS232Connect.SerialPortSendCMD("NoReceive", cut, null, 0);
                             SendCmdFail("R"); //避免傳輸時突然有問題
                             RS232Connect.CloseSerialPort(); //最後關閉
                             Thread.Sleep(1000); //串口要停一下避免等下讀取又誤
@@ -2641,8 +2668,8 @@ namespace G80Utility
                         int result = USBConnect.ConnectUSBDevice(USBpath);
                         if (result == 1)
                         {
-                            USBConnect.USBSendCMD("BeepOrSetting", empty3Array, null, 0);
-                            USBConnect.USBSendCMD("BeepOrSetting", cut, null, 0);
+                            USBConnect.USBSendCMD("NoReceive", empty3Array, null, 0);
+                            USBConnect.USBSendCMD("NoReceive", cut, null, 0);
                             USBConnect.closeHandle();
                             SendCmdFail("U");//避免傳輸時突然有問題
                         }
@@ -2673,8 +2700,8 @@ namespace G80Utility
                                 connectFailUI(EthernetConnectImage, FindResource("NotSettingEthernetport") as string);
                                 break;
                             case 1: //success                           
-                                EthernetConnect.EthernetSendCmd("BeepOrSetting", empty3Array, null, 0);
-                                EthernetConnect.EthernetSendCmd("BeepOrSetting", cut, null, 0);
+                                EthernetConnect.EthernetSendCmd("NoReceive", empty3Array, null, 0);
+                                EthernetConnect.EthernetSendCmd("NoReceive", cut, null, 0);
                                 EthernetConnect.disconnect();
                                 break;
                             case 2: //timeout
@@ -4190,7 +4217,6 @@ namespace G80Utility
             SendCmd(sendArray, "ReadWIFIName", 24);
         }
         #endregion
-
 
         #region 讀取WIFI密碼
         private void LoadWIFIPwd()
@@ -6545,6 +6571,7 @@ namespace G80Utility
 
         }
         #endregion
+
 
     }
 }

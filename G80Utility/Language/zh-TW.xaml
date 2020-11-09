@@ -179,6 +179,7 @@
     <sys:String x:Key="Seconds">秒</sys:String>
     <sys:String x:Key="DownloadData">下載數據</sys:String>
     <sys:String x:Key="DownloadFirmware">下載固件</sys:String>
+    <sys:String x:Key="ReconnectAnother">連接另一台打印機</sys:String>
 
     <!--***************************************************************權限登入**************************************************************************-->
     <sys:String x:Key="EnterAdminPwd">請輸入管理員密碼</sys:String>
