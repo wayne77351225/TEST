@@ -129,11 +129,13 @@ namespace G80Utility
         string nowLanguage;
 
         //是否更新成功
-        public static bool isUpgradeSuccess;
+        public static bool isUpgradeSuccess,isBinUpgradeSuccess;
         //儲存檔案路徑
         public static string hex_file_name;
         //儲存檔案內容
-        public static byte[] code_array;  
+        public static byte[] code_array;
+        //判斷是否為 bin檔
+        public static bool isBin;
         #endregion
 
         public G80MainWindow()
@@ -2585,20 +2587,20 @@ namespace G80Utility
             //啟動ipa計時器   
             if (timer != null)
             {
-                timer.Close();
+                timer.Dispose();  //避免重複設定
+                timer.Close();                
             }
-            else
-            {
-                timer = new Timer();
-            }
-
-            if (!isUpgradeSuccess) { //避免重複設定
-                set_connect_status += device_connect_status_ui;
-                timer.Interval = 1000;
-                timer.Elapsed += timer_1s_Tick;
-            }
-
+            timer = new Timer();
+            timer.Interval = 1000;
+            timer.Elapsed += timer_1s_Tick;
             timer.Start();
+
+            if (!isUpgradeSuccess && !isBinUpgradeSuccess) {
+                set_connect_status += device_connect_status_ui;
+             
+            }
+
+         
         }
         #endregion
 
@@ -2606,7 +2608,9 @@ namespace G80Utility
         private void OpenFWfileBtn_Click(object sender, EventArgs e)
         {
             string file_name = "";
+            isBin = false;
             isUpgradeSuccess = false;//打開文件需要重新解析，這邊把此變數恢復預設
+            isBinUpgradeSuccess = false;
             OpenFileDialog dialog = new OpenFileDialog();
             dialog.Multiselect = false;//该值确定是否可以选择多个文件
             dialog.Title = FindResource("SelectFolder") as string;
@@ -2614,6 +2618,9 @@ namespace G80Utility
             if (dialog.ShowDialog() == true)
             {
                 file_name = dialog.FileName;
+                if (file_name.Contains(".bin")) {
+                    isBin = true;
+                }
                 FilePathTxt.Text = file_name;
                 iap_download.hex_file_name = file_name;
                 updata_file_button_Click(sender, e);
@@ -2633,7 +2640,7 @@ namespace G80Utility
             hex_to_bin_time = 0;
             //实例化回调
             setCallBack = new setTextValueCallBack(updata_ui_status_text);
-            if(isUpgradeSuccess)
+            if(isUpgradeSuccess || isBinUpgradeSuccess)
             updata_file_button_Click(sender, e);
             //创建一个线程去执行这个方法:创建的线程默认是前台线程
             Thread thread = new Thread(new ParameterizedThreadStart(iap_download.download_code));
@@ -4569,7 +4576,14 @@ namespace G80Utility
             {
                 DeviceStatusTxt.Text = FindResource("DeviceDisconnected") as string;
                 WriteStatusLabel.Content = FindResource("UpgradeCompleted") as string;
-                isUpgradeSuccess = true;
+               
+                if (isBin)
+                {
+                    isBinUpgradeSuccess = true;
+                }
+                else {
+                    isUpgradeSuccess = true;
+                }
                 MessageBox.Show(FindResource("CloseHead") as string);
             }
         }
@@ -4638,11 +4652,15 @@ namespace G80Utility
             hex_to_bin_time = 0;
             //实例化回调
             setCallBack = new setTextValueCallBack(updata_ui_status_text);
-            if (isUpgradeSuccess)
+            if (!isBin && isUpgradeSuccess)
             {
-                 iap_download.hex_file_to_bin_array_no_progerss(sender);　//重複更新時run這段
+                iap_download.hex_file_to_bin_array_no_progerss(sender);　//重複更新時run這段
             }
-            else {
+            else if (isBin || isBinUpgradeSuccess) {
+                iap_download.get_bin_array(sender);
+            }
+            else
+            {
                 Thread thread = new Thread(new ParameterizedThreadStart(iap_download.hex_file_to_bin_array));
                 thread.IsBackground = true;
                 thread.Start(this);
@@ -4669,6 +4687,14 @@ namespace G80Utility
                     Dispatcher.BeginInvoke(new Action(() =>
                     {
                         ConverTimeTxt.Text = hex_to_bin_time.ToString();
+                    }), null);
+
+                    break;
+                case 3:
+                    download_time=0;
+                    Dispatcher.BeginInvoke(new Action(() =>
+                    {
+                        DownloadTimeTxt.Text = "";
                     }), null);
 
                     break;

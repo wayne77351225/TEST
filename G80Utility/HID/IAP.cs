@@ -129,7 +129,7 @@ namespace G80Utility.HID
             }
 
             if (!G80MainWindow.isUpgradeSuccess) {
-                G80MainWindow.hex_file_name= this.hex_file_name;
+                G80MainWindow.hex_file_name= this.hex_file_name; //紀錄filename
             }
             try
             {
@@ -204,7 +204,7 @@ namespace G80Utility.HID
                 }
                 if (!G80MainWindow.isUpgradeSuccess)
                 {
-                    G80MainWindow.code_array = this.code_data_bin;
+                    G80MainWindow.code_array = this.code_data_bin; //紀錄檔案
                 }
                 win.Dispatcher.Invoke(win.setCallBack, (byte)4, "100");
                 UInt32 code_size = (UInt32)(code_data_bin.Length / 1024);
@@ -221,7 +221,7 @@ namespace G80Utility.HID
             }
         }
 
-        //同一檔案更新時，不解析檔案，只抓取部分內容後直接進入更新
+        //同一hex檔案更新時，不解析檔案，只抓取部分內容後直接進入更新
         public void hex_file_to_bin_array_no_progerss(object sender)
         {
             this.run_step = 1;
@@ -273,9 +273,42 @@ namespace G80Utility.HID
             }
             catch (Exception)
             {
-                this.run_step = 0;//恢復default
+                this.run_step = 3;//恢復default
             }
         }
+
+        //更新bin時，不解析檔案
+        public void get_bin_array(object sender)
+        {
+            if (!G80MainWindow.isBinUpgradeSuccess) { //更新成功就不用再跑這段
+                this.run_step = 1;
+                this.convert_bin_done = false;
+                if (this.hex_file_name == null)
+                {
+                    return;
+                }
+                G80MainWindow.hex_file_name = this.hex_file_name; //紀錄filename
+                try
+                {
+                    FileStream input = new FileStream(this.hex_file_name, FileMode.Open);
+                    BinaryReader binReader = new BinaryReader(input);
+                    int dl = Convert.ToInt32(input.Length);
+                    code_data_bin = binReader.ReadBytes(dl);
+                    G80MainWindow.code_array = this.code_data_bin; //紀錄data array
+                }
+                catch
+                {
+                    EventArgs ex = new EventArgs();
+                    return;
+                }
+            }
+                     
+            this.download_addr = 0X08004000;
+            this.run_step = 0;
+            this.convert_bin_done = true;
+　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　
+        }
+     
 
         private bool read_opt_byte(out byte[] option)
         {
@@ -342,6 +375,7 @@ namespace G80Utility.HID
 
             return false;
         }
+
         private bool download_code(byte[] code_array, G80MainWindow win1)
         {
             G80MainWindow win = (G80MainWindow)win1;
@@ -406,6 +440,7 @@ namespace G80Utility.HID
             if (!read_opt_byte(out receive_data))
             {
                 MessageBox.Show(win.FindResource("FailedReadChipOption") as string);
+                this.run_step = 3;
                 return;
             }
             //if (receive_data[1] != 0xaa)
@@ -418,32 +453,35 @@ namespace G80Utility.HID
             if (!get_erasure_addr(out receive_data))
             {
                 MessageBox.Show(win.FindResource("EraseAddressFailed") as string);
+                this.run_step = 3;
                 return;
             }
             UInt32 write_addr = (UInt32)receive_data[0] << 0 | (UInt32)receive_data[1] << 8 | (UInt32)receive_data[2] << 16 | (UInt32)receive_data[3] << 24;
             if (this.download_addr != write_addr)
             {
                 MessageBox.Show(win.FindResource("AddressError") as string);
+                this.run_step = 3;
                 return;
             }
             win.Dispatcher.Invoke(win.setCallBack, (byte)5, win.FindResource("CheckChipSector") as string);
-            if (G80MainWindow.isUpgradeSuccess) {
-                code_data_bin = G80MainWindow.code_array;
+            if (G80MainWindow.isUpgradeSuccess || G80MainWindow.isBinUpgradeSuccess) {
+                code_data_bin = G80MainWindow.code_array; //不需要重新抓資料
             }
             if (!erasure_section(write_addr, (UInt32)code_data_bin.Length))
             {
                 MessageBox.Show(win.FindResource("EraseMemoryError") as string);
+                this.run_step = 3;
                 return;
             }
             win.Dispatcher.Invoke(win.setCallBack, (byte)5, win.FindResource("SendingData") as string);
             if (!download_code(code_data_bin, win))
             {
                 MessageBox.Show(win.FindResource("BurningFailed") as string);
+                this.run_step = 3;
                 return;
             }
             GD32HIDIAP_LeaveIAP();
-            win.Dispatcher.Invoke(win.setCallBack, (byte)5, win.FindResource("UpdateToROM") as string);
-            G80MainWindow.isUpgradeSuccess = true;
+            //win.Dispatcher.Invoke(win.setCallBack, (byte)5, win.FindResource("UpdateToROM") as string);
             this.run_step = 0;
         }
     }
