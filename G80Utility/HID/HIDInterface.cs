@@ -61,7 +61,7 @@ namespace G80Utility.HID
             if (null != StatusConnected) StatusConnected(this, isConnect);
         }
 
-        protected virtual void RaiseEventDataReceived(byte[] buf)
+        protected virtual void RaiseEventDataReceived(byte[] buf) //這邊停住就會晶片讀取失敗
         {
             if (null != DataReceived) DataReceived(this, buf);
         }

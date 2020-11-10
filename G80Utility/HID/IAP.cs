@@ -22,7 +22,7 @@ namespace G80Utility.HID
 
         //private Form main_win;
         public byte run_step = 0;
-        bool convert_bin_done = false;
+        public bool convert_bin_done = false;
         public string hex_file_name = null;
         UInt32 download_addr;
         byte[] code_data_bin;
@@ -128,6 +128,9 @@ namespace G80Utility.HID
                 return;
             }
 
+            if (!G80MainWindow.isUpgradeSuccess) {
+                G80MainWindow.hex_file_name= this.hex_file_name;
+            }
             try
             {
                 HexReader = new StreamReader(this.hex_file_name);
@@ -199,6 +202,10 @@ namespace G80Utility.HID
                         win.Dispatcher.Invoke(win.setCallBack, (byte)4, baud.ToString());
                     }
                 }
+                if (!G80MainWindow.isUpgradeSuccess)
+                {
+                    G80MainWindow.code_array = this.code_data_bin;
+                }
                 win.Dispatcher.Invoke(win.setCallBack, (byte)4, "100");
                 UInt32 code_size = (UInt32)(code_data_bin.Length / 1024);
                 win.Dispatcher.Invoke(win.setCallBack, (byte)2, code_size.ToString() + "KB");
@@ -215,33 +222,140 @@ namespace G80Utility.HID
         }
 
 
+        public void hex_file_to_bin_array_no_progerss(object sender)
+        {
+            this.run_step = 1;
+            this.convert_bin_done = false;
+           // G80MainWindow win = (G80MainWindow)sender;
+            int line_num = 0, current_line = 0;
+            string szLine;
+            string szHex = "";
+            StreamReader HexReader;
+            StreamReader cal_line_num;
+            if (G80MainWindow.hex_file_name == null)
+            {
+               // win.Dispatcher.Invoke(win.setCallBack, (byte)1, win.FindResource("SelectFileFirst") as string);
+                return;
+            }
+
+            try
+            {
+                HexReader = new StreamReader(G80MainWindow.hex_file_name);
+                cal_line_num = new StreamReader(G80MainWindow.hex_file_name);
+            }
+            catch
+            {
+                EventArgs ex = new EventArgs();
+                //win.Dispatcher.Invoke(win.setCallBack, (byte)1, win.FindResource("FileError") as string);
+                return;
+            }
+            //win.Dispatcher.Invoke(win.setCallBack, (byte)1, win.FindResource("Parsing") as string);
+            do
+            {
+                line_num++;
+            }
+            while (null != cal_line_num.ReadLine());
+
+            /* 第一行数据是 */
+            StringBuilder file_start_addr = new StringBuilder();
+
+            szLine = HexReader.ReadLine();
+            if (szLine.Substring(0, 3) == ":02")//数据结束
+            {
+                file_start_addr.Append(szLine.Substring(9, szLine.Length - 11));
+            }
+
+            szLine = HexReader.ReadLine();
+            if (szLine.Substring(0, 3) == ":10")//数据结束
+            {
+                file_start_addr.Append(szLine.Substring(3, 4));
+            }
+            //win.Dispatcher.Invoke(win.setCallBack, (byte)3, "0X" + file_start_addr.ToString());
+            try
+            {
+                this.download_addr = (UInt32)Convert.ToUInt32(file_start_addr.ToString().Substring(0, 8), 16);
+               // int count = 16;
+               // current_line = 2;
+               //// int baud = 0;
+               // while ((szLine != null) && (szLine.Substring(0, 9) != ":00000001"))
+               // {
+               //     if (szLine.Substring(0, 1) == ":") //判断第1字符是否是:
+               //     {
+               //         if (szLine.Substring(1, 1) == "1")
+               //         {
+               //             szHex += szLine.Substring(9, szLine.Length - 11); //读取有效字符：后0和1
+               //         }
+               //     }
+               //     szLine = HexReader.ReadLine(); //读取一行数据
+               //     count += szLine.Length - 11;
+               //     current_line++;
+
+               //     //if (baud != current_line * 100 / line_num)
+               //     //{
+               //     //    baud = current_line * 100 / line_num;
+               //     //    win.Dispatcher.Invoke(win.setCallBack, (byte)4, baud.ToString());
+               //     //}
+               // }
+               // //win.Dispatcher.Invoke(win.setCallBack, (byte)4, "100");
+
+               // Int32 Length = Encoding.Default.GetByteCount(szHex);
+               // code_data_bin = new byte[Length / 2];
+               // for (Int32 i = 0; i < code_data_bin.Length; i += 1) //两字符合并成一个16进制字节
+               // {
+               //     code_data_bin[i] = Convert.ToByte(szHex.Substring(i * 2, 2), 16);
+               //     //if (baud != i * 100 / code_data_bin.Length)
+               //     //{
+               //     //    baud = i * 100 / code_data_bin.Length;
+               //     //    win.Dispatcher.Invoke(win.setCallBack, (byte)4, baud.ToString());
+               //     //}
+               // }
+                //win.Dispatcher.Invoke(win.setCallBack, (byte)4, "100");
+                //UInt32 code_size = (UInt32)(code_data_bin.Length / 1024);
+                //win.Dispatcher.Invoke(win.setCallBack, (byte)2, code_size.ToString() + "KB");
+                //win.Dispatcher.Invoke(win.setCallBack, (byte)1, win.FindResource("ParseCompleted") as string);
+                this.run_step = 0;
+                this.convert_bin_done = true;
+            }
+            catch (Exception)
+            {
+                this.run_step = 0;//恢復default
+               // win.Dispatcher.Invoke(win.setCallBack, (byte)1, "");//恢復default
+               // win.Dispatcher.Invoke(win.setCallBack, (byte)7, win.FindResource("CanNotParse") as string);
+            }
+        }
+
         private bool read_opt_byte(out byte[] option)
         {
             option = null;
 
-            TimeoutObject.Reset();
+           // if (!G80MainWindow.isUpgradeSuccess)
+                TimeoutObject.Reset();
             byte[] send = new byte[] { 0x01 };
             SendBytes(send);
-
-            if (TimeoutObject.WaitOne(1000, false))
+            Thread.Sleep(500);
+            if (TimeoutObject.WaitOne(3000, false)) //timout是不是要拉長
             {
                 option = receive_data;
                 return true;
             }
+
             return false;
         }
 
         private bool get_erasure_addr(out byte[] option)
         {
             option = null;
+            //if (!G80MainWindow.isUpgradeSuccess)
             TimeoutObject.Reset();
             byte[] send = new byte[] { 0x05 };
             SendBytes(send);
-            if (TimeoutObject.WaitOne(1000, false))
+            Thread.Sleep(500);
+            if (TimeoutObject.WaitOne(3000, false))
             {
                 option = receive_data;
                 return true;
             }
+          
             return false;
         }
 
@@ -262,13 +376,13 @@ namespace G80Utility.HID
             TimeoutObject.Reset();
 
             SendBytes(send_data);
-
+            Thread.Sleep(500);
             if (TimeoutObject.WaitOne(10000, false))
             {
                 if (receive_data[0] == 0x01)
                 {
                     return true;
-                }
+                }              
                 else
                 {
                     return false;
@@ -330,7 +444,7 @@ namespace G80Utility.HID
         public void download_code(object sender)
         {
             G80MainWindow win = (G80MainWindow)sender;
-            if (!this.convert_bin_done)
+            if (!this.convert_bin_done && !G80MainWindow.isUpgradeSuccess)
             {
                 MessageBox.Show(win.FindResource("ParseFirst") as string);
                 return;
@@ -362,6 +476,9 @@ namespace G80Utility.HID
                 return;
             }
             win.Dispatcher.Invoke(win.setCallBack, (byte)5, win.FindResource("CheckChipSector") as string);
+            if (G80MainWindow.isUpgradeSuccess) {
+                code_data_bin = G80MainWindow.code_array;
+            }
             if (!erasure_section(write_addr, (UInt32)code_data_bin.Length))
             {
                 MessageBox.Show(win.FindResource("EraseMemoryError") as string);
@@ -375,7 +492,7 @@ namespace G80Utility.HID
             }
             GD32HIDIAP_LeaveIAP();
             win.Dispatcher.Invoke(win.setCallBack, (byte)5, win.FindResource("UpdateToROM") as string);
-
+            G80MainWindow.isUpgradeSuccess = true;
             this.run_step = 0;
         }
     }

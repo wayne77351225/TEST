@@ -127,6 +127,11 @@ namespace G80Utility
 
         //傳送目前語系給bitmaptoolclass
         string nowLanguage;
+
+        //是否更新成功
+        public static bool isUpgradeSuccess;
+        public static string hex_file_name;
+        public static byte[] code_array;
         #endregion
 
         public G80MainWindow()
@@ -2567,10 +2572,13 @@ namespace G80Utility
         {
             UIintial();
             //iap初始化
-            iap_download = new IAP_download();
+            //if(iap_download==null)
+            iap_download = new IAP_download(); 
             iap_download.Initial();
             iap_download.isConnectedFunc = device_connect_status;
-            set_connect_status += device_connect_status_ui;
+          
+
+            iap_download.convert_bin_done = true;//因為重新連線不用解析文件
 
             //啟動ipa計時器   
             if (timer != null)
@@ -2582,10 +2590,14 @@ namespace G80Utility
                 timer = new Timer();
             }
 
-            timer.Interval = 1000;
-            timer.Elapsed += timer_1s_Tick;
-            timer.Start();
+            if (!isUpgradeSuccess) {
+                set_connect_status += device_connect_status_ui;
+                timer.Interval = 1000;
+                timer.Elapsed += timer_1s_Tick;
 
+            }
+
+            timer.Start();
         }
         #endregion
 
@@ -2593,11 +2605,11 @@ namespace G80Utility
         private void OpenFWfileBtn_Click(object sender, EventArgs e)
         {
             string file_name = "";
-
+            isUpgradeSuccess = false;//打開文件需要重新解析，這邊把此變數恢復預設
             OpenFileDialog dialog = new OpenFileDialog();
             dialog.Multiselect = false;//该值确定是否可以选择多个文件
             dialog.Title = FindResource("SelectFolder") as string;
-            dialog.Filter = FindResource("AllFiles") as string + "(*.hex)|*.hex";
+            dialog.Filter = FindResource("AllFiles") as string + "(*.hex)|*.hex|" + FindResource("AllFiles") as string + "(*.bin)|*.bin";
             if (dialog.ShowDialog() == true)
             {
                 file_name = dialog.FileName;
@@ -2620,6 +2632,8 @@ namespace G80Utility
             hex_to_bin_time = 0;
             //实例化回调
             setCallBack = new setTextValueCallBack(updata_ui_status_text);
+            if(isUpgradeSuccess)
+            updata_file_button_Click(sender, e);
             //创建一个线程去执行这个方法:创建的线程默认是前台线程
             Thread thread = new Thread(new ParameterizedThreadStart(iap_download.download_code));
             //Start方法标记这个线程就绪了，可以随时被执行，具体什么时候执行这个线程，由CPU决定
@@ -4554,6 +4568,7 @@ namespace G80Utility
             {
                 DeviceStatusTxt.Text = FindResource("DeviceDisconnected") as string;
                 WriteStatusLabel.Content = FindResource("UpgradeCompleted") as string;
+                isUpgradeSuccess = true;
                 MessageBox.Show(FindResource("CloseHead") as string);
             }
         }
@@ -4622,12 +4637,24 @@ namespace G80Utility
             hex_to_bin_time = 0;
             //实例化回调
             setCallBack = new setTextValueCallBack(updata_ui_status_text);
+          // Thread thread=null;
             //创建一个线程去执行这个方法:创建的线程默认是前台线程
-            Thread thread = new Thread(new ParameterizedThreadStart(iap_download.hex_file_to_bin_array));
-            //Start方法标记这个线程就绪了，可以随时被执行，具体什么时候执行这个线程，由CPU决定
-            //将线程设置为后台线程
-            thread.IsBackground = true;
-            thread.Start(this);
+            if (isUpgradeSuccess)
+            {
+                 iap_download.hex_file_to_bin_array_no_progerss(sender);
+                //thread = new Thread(new ParameterizedThreadStart(iap_download.hex_file_to_bin_array_no_progerss));
+
+            }
+            else {
+                Thread thread = new Thread(new ParameterizedThreadStart(iap_download.hex_file_to_bin_array));
+                //Start方法标记这个线程就绪了，可以随时被执行，具体什么时候执行这个线程，由CPU决定
+                //将线程设置为后台线程
+
+                thread.IsBackground = true;
+                thread.Start(this);
+
+            }
+
         }
         #endregion
 
