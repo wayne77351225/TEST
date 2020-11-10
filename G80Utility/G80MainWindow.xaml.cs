@@ -130,8 +130,10 @@ namespace G80Utility
 
         //是否更新成功
         public static bool isUpgradeSuccess;
+        //儲存檔案路徑
         public static string hex_file_name;
-        public static byte[] code_array;
+        //儲存檔案內容
+        public static byte[] code_array;  
         #endregion
 
         public G80MainWindow()
@@ -2590,11 +2592,10 @@ namespace G80Utility
                 timer = new Timer();
             }
 
-            if (!isUpgradeSuccess) {
+            if (!isUpgradeSuccess) { //避免重複設定
                 set_connect_status += device_connect_status_ui;
                 timer.Interval = 1000;
                 timer.Elapsed += timer_1s_Tick;
-
             }
 
             timer.Start();
@@ -4637,19 +4638,12 @@ namespace G80Utility
             hex_to_bin_time = 0;
             //实例化回调
             setCallBack = new setTextValueCallBack(updata_ui_status_text);
-          // Thread thread=null;
-            //创建一个线程去执行这个方法:创建的线程默认是前台线程
             if (isUpgradeSuccess)
             {
-                 iap_download.hex_file_to_bin_array_no_progerss(sender);
-                //thread = new Thread(new ParameterizedThreadStart(iap_download.hex_file_to_bin_array_no_progerss));
-
+                 iap_download.hex_file_to_bin_array_no_progerss(sender);　//重複更新時run這段
             }
             else {
                 Thread thread = new Thread(new ParameterizedThreadStart(iap_download.hex_file_to_bin_array));
-                //Start方法标记这个线程就绪了，可以随时被执行，具体什么时候执行这个线程，由CPU决定
-                //将线程设置为后台线程
-
                 thread.IsBackground = true;
                 thread.Start(this);
 

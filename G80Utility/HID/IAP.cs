@@ -111,7 +111,7 @@ namespace G80Utility.HID
         }
 
 
-
+        //解析檔案
         public void hex_file_to_bin_array(object sender)
         {
             this.run_step = 1;
@@ -221,23 +221,20 @@ namespace G80Utility.HID
             }
         }
 
-
+        //同一檔案更新時，不解析檔案，只抓取部分內容後直接進入更新
         public void hex_file_to_bin_array_no_progerss(object sender)
         {
             this.run_step = 1;
             this.convert_bin_done = false;
-           // G80MainWindow win = (G80MainWindow)sender;
             int line_num = 0, current_line = 0;
             string szLine;
             string szHex = "";
             StreamReader HexReader;
             StreamReader cal_line_num;
             if (G80MainWindow.hex_file_name == null)
-            {
-               // win.Dispatcher.Invoke(win.setCallBack, (byte)1, win.FindResource("SelectFileFirst") as string);
+            {              
                 return;
             }
-
             try
             {
                 HexReader = new StreamReader(G80MainWindow.hex_file_name);
@@ -246,10 +243,8 @@ namespace G80Utility.HID
             catch
             {
                 EventArgs ex = new EventArgs();
-                //win.Dispatcher.Invoke(win.setCallBack, (byte)1, win.FindResource("FileError") as string);
                 return;
             }
-            //win.Dispatcher.Invoke(win.setCallBack, (byte)1, win.FindResource("Parsing") as string);
             do
             {
                 line_num++;
@@ -270,57 +265,15 @@ namespace G80Utility.HID
             {
                 file_start_addr.Append(szLine.Substring(3, 4));
             }
-            //win.Dispatcher.Invoke(win.setCallBack, (byte)3, "0X" + file_start_addr.ToString());
             try
             {
                 this.download_addr = (UInt32)Convert.ToUInt32(file_start_addr.ToString().Substring(0, 8), 16);
-               // int count = 16;
-               // current_line = 2;
-               //// int baud = 0;
-               // while ((szLine != null) && (szLine.Substring(0, 9) != ":00000001"))
-               // {
-               //     if (szLine.Substring(0, 1) == ":") //判断第1字符是否是:
-               //     {
-               //         if (szLine.Substring(1, 1) == "1")
-               //         {
-               //             szHex += szLine.Substring(9, szLine.Length - 11); //读取有效字符：后0和1
-               //         }
-               //     }
-               //     szLine = HexReader.ReadLine(); //读取一行数据
-               //     count += szLine.Length - 11;
-               //     current_line++;
-
-               //     //if (baud != current_line * 100 / line_num)
-               //     //{
-               //     //    baud = current_line * 100 / line_num;
-               //     //    win.Dispatcher.Invoke(win.setCallBack, (byte)4, baud.ToString());
-               //     //}
-               // }
-               // //win.Dispatcher.Invoke(win.setCallBack, (byte)4, "100");
-
-               // Int32 Length = Encoding.Default.GetByteCount(szHex);
-               // code_data_bin = new byte[Length / 2];
-               // for (Int32 i = 0; i < code_data_bin.Length; i += 1) //两字符合并成一个16进制字节
-               // {
-               //     code_data_bin[i] = Convert.ToByte(szHex.Substring(i * 2, 2), 16);
-               //     //if (baud != i * 100 / code_data_bin.Length)
-               //     //{
-               //     //    baud = i * 100 / code_data_bin.Length;
-               //     //    win.Dispatcher.Invoke(win.setCallBack, (byte)4, baud.ToString());
-               //     //}
-               // }
-                //win.Dispatcher.Invoke(win.setCallBack, (byte)4, "100");
-                //UInt32 code_size = (UInt32)(code_data_bin.Length / 1024);
-                //win.Dispatcher.Invoke(win.setCallBack, (byte)2, code_size.ToString() + "KB");
-                //win.Dispatcher.Invoke(win.setCallBack, (byte)1, win.FindResource("ParseCompleted") as string);
                 this.run_step = 0;
                 this.convert_bin_done = true;
             }
             catch (Exception)
             {
                 this.run_step = 0;//恢復default
-               // win.Dispatcher.Invoke(win.setCallBack, (byte)1, "");//恢復default
-               // win.Dispatcher.Invoke(win.setCallBack, (byte)7, win.FindResource("CanNotParse") as string);
             }
         }
 
@@ -328,12 +281,11 @@ namespace G80Utility.HID
         {
             option = null;
 
-           // if (!G80MainWindow.isUpgradeSuccess)
-                TimeoutObject.Reset();
+           TimeoutObject.Reset();
             byte[] send = new byte[] { 0x01 };
             SendBytes(send);
-            Thread.Sleep(500);
-            if (TimeoutObject.WaitOne(3000, false)) //timout是不是要拉長
+            Thread.Sleep(500);　//為了避免太快收不到資料
+            if (TimeoutObject.WaitOne(3000, false)) 
             {
                 option = receive_data;
                 return true;
@@ -345,11 +297,10 @@ namespace G80Utility.HID
         private bool get_erasure_addr(out byte[] option)
         {
             option = null;
-            //if (!G80MainWindow.isUpgradeSuccess)
             TimeoutObject.Reset();
             byte[] send = new byte[] { 0x05 };
             SendBytes(send);
-            Thread.Sleep(500);
+            Thread.Sleep(500);//為了避免太快收不到資料
             if (TimeoutObject.WaitOne(3000, false))
             {
                 option = receive_data;
@@ -376,7 +327,7 @@ namespace G80Utility.HID
             TimeoutObject.Reset();
 
             SendBytes(send_data);
-            Thread.Sleep(500);
+            Thread.Sleep(500);//為了避免太快收不到資料
             if (TimeoutObject.WaitOne(10000, false))
             {
                 if (receive_data[0] == 0x01)
