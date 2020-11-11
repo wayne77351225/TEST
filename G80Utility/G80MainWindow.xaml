@@ -870,10 +870,10 @@
                                 <StackPanel Orientation="Horizontal">
                                     <Label>状态:</Label>
                                     <Label Name="StatusLabel" Margin="0,0,5,0" Width="80"></Label>
-                                    <Label>写入地址:</Label>
-                                    <Label Name="AddrLabel" Margin="0,0,5,0" Width="100"></Label>
-                                    <Label>代码大小:</Label>
-                                    <Label Name="CodeSizeLabel" Margin="0,0,5,0" Width="60"></Label>
+                                    <Label Visibility="Collapsed">写入地址:</Label>
+                                    <Label  Visibility="Collapsed" Name="AddrLabel" Margin="0,0,5,0" Width="100"></Label>
+                                    <Label  Visibility="Collapsed">代码大小:</Label>
+                                    <Label  Visibility="Collapsed" Name="CodeSizeLabel" Margin="0,0,5,0" Width="60"></Label>
                                     <Label Content="时间"/>
                                     <TextBox Name="ConverTimeTxt"  Height="25"  Width="40"/>
                                     <Label>秒</Label>
