@@ -556,6 +556,11 @@ namespace G80Utility
                 }
 
             }
+            if (CutBeepSettingCheck.IsChecked == now)
+            {
+                CutBeepSettingCheck.IsChecked = changeTo;
+            }
+
             if (CodePageSetCheckbox.IsChecked == now)
             {
                 CodePageSetCheckbox.IsChecked = changeTo;
@@ -1343,8 +1348,22 @@ namespace G80Utility
                         DIPBaudRateCom.SelectedIndex = 3;
                         break;
                 }
-                Console.WriteLine(binary);
             }
+
+            if (receiveData.Contains(Command.RE_CUT_BEEP))
+            {
+                byte[] oneByteData = new byte[1];
+                //is enabled
+                oneByteData[0] = data[8];
+                checkIsGetData(null, EnableCutBeepCom, oneByteData, FindResource("BeepEnable") as string, false, 1);
+                //beep times
+                oneByteData[0] = data[9];
+                checkIsGetData(null, CutBeepTimesCom, oneByteData, FindResource("BeepTimes") as string, true, 10);
+                //beep duration
+                oneByteData[0] = data[10];
+                checkIsGetData(null, CutBeepDurationgCom, oneByteData, FindResource("BeepDurationg") as string, true, 10);
+            }
+           
         }
         #endregion
 
@@ -1446,7 +1465,6 @@ namespace G80Utility
                     break;
             }
         }
-
         #endregion
 
         #region 打印機信息設定至畫面功能
@@ -3963,6 +3981,32 @@ namespace G80Utility
         }
         #endregion
 
+        #region 切刀鳴叫開關/次數/時間
+        private void CutBeepSettings()
+        {
+            if (EnableCutBeepCom.SelectedIndex != -1 || CutBeepTimesCom.SelectedIndex != -1 || CutBeepDurationgCom.SelectedIndex != -1)
+            {
+                List<byte> tempList = new List<byte>();
+                tempList = StringToByteArray(Command.SET_CUT_BEEP).ToList();
+                if (EnableCutBeepCom.SelectedIndex == 0)
+                {
+                    tempList.Add(0x00);
+                }
+                else if (EnableCutBeepCom.SelectedIndex == 1)
+                {
+                    tempList.Add(0x01);
+                }
+                int times = CutBeepTimesCom.SelectedIndex + 1;
+                tempList.Add(Convert.ToByte(times));
+                int Duration = CutBeepDurationgCom.SelectedIndex + 1;
+                tempList.Add(Convert.ToByte(Duration));
+                SendCmd(tempList.ToArray(), "BeepOrSetting", 0);
+
+            }
+            else { MessageBox.Show(FindResource("ColumnEmpty") as string); }
+        }
+        #endregion
+
         #region 傳送所有讀取指令
         private void readALL()
         {
@@ -4136,6 +4180,13 @@ namespace G80Utility
                 sendArray = StringToByteArray(Command.READ_ALL_HEADER + "31 35 01");
                 SendCmd(sendArray, "ReadPara", 9);
             }
+
+            //切刀鳴叫設定讀取
+            if (Config.isCutBeepChecked)
+            {
+                sendArray = StringToByteArray(Command.READ_ALL_HEADER + "31 32 01");
+                SendCmd(sendArray, "ReadPara", 11);
+            }
         }
         #endregion
 
@@ -4280,6 +4331,11 @@ namespace G80Utility
             if (DIPSwitchCom.SelectedIndex == 0) //設定為軟體dip時才寫入
             {
                 DIPSetting();
+            }
+
+            if (Config.isCutBeepChecked)
+            {
+                CutBeepSettings();
             }
         }
         #endregion
@@ -5483,6 +5539,9 @@ namespace G80Utility
                     break;
                 case "WriteWIFIPwd":
                     SetWIFIPWD();
+                    break;
+                case "CutBeepSettings":
+                    CutBeepSettings();
                     break;
             }
         }
