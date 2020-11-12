@@ -115,6 +115,11 @@
     <sys:String x:Key="Drawer">錢箱功能</sys:String>
     <sys:String x:Key="BaudRateDIP">串口波特率</sys:String>
     <sys:String x:Key="SetDIP">設置DIP值</sys:String>
+    <sys:String x:Key="SetCutBeepTitle">切刀鳴叫設定</sys:String>
+    <sys:String x:Key="BeepEnable">鳴叫開關</sys:String>
+    <sys:String x:Key="BeepTimes">鳴叫次數</sys:String>
+    <sys:String x:Key="BeepDurationg">鳴叫時間</sys:String>
+
 
     <!--維護維修/工廠測試-->
     <sys:String x:Key="PrinterStatistics">打印機統計信息</sys:String>

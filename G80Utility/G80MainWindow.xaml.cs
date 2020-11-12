@@ -2114,6 +2114,27 @@ namespace G80Utility
         }
         #endregion
 
+        #region 切刀鳴叫開關按鈕事件
+        private void EnableCutBeepBtn_Click(object sender, RoutedEventArgs e)
+        {
+            DifferInterfaceConnectChkAndSend("CutBeepSettings");
+        }
+        #endregion
+
+        #region 切刀鳴叫次數按鈕事件
+        private void CutBeepTimesBtn_Click(object sender, RoutedEventArgs e)
+        {
+            DifferInterfaceConnectChkAndSend("CutBeepSettings");
+        }
+        #endregion
+
+        #region 切刀鳴叫時間按鈕事件
+        private void CutBeepDurationgBtn_Click(object sender, RoutedEventArgs e)
+        {
+            DifferInterfaceConnectChkAndSend("CutBeepSettings");
+        }
+        #endregion
+
         //維護維修按鈕
         #region 打印機維護維修tab按鈕事件
         private void MaintainTab_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)

@@ -356,12 +356,50 @@
                                     <ColumnDefinition Width="24*"/>
                                 </Grid.ColumnDefinitions>
                                 <Grid.RowDefinitions>
-                                    <RowDefinition Height="85"/>
+                                    <RowDefinition Height="67"/>
+                                    <RowDefinition Height="67"/>
                                     <RowDefinition/>
                                 </Grid.RowDefinitions>
+                                <!--切刀鳴叫設定-->
+                                <GroupBox  Margin="5,5,0,0" Grid.ColumnSpan="2" Height="58"  Width="485" Header="{DynamicResource SetCutBeepTitle}" VerticalAlignment="Center" HorizontalAlignment="Left" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14" >
+                                    <StackPanel  Margin="5,0,0,0" Orientation="Horizontal">
+                                        <ComboBox  Margin="0,0,5,0" SelectedIndex="1"  Name="EnableCutBeepCom" Width="60" Height="28" Text="IP Address" Foreground="#BDBDBD">
+                                            <ComboBoxItem Content="{DynamicResource Off}"></ComboBoxItem>
+                                            <ComboBoxItem Content="{DynamicResource On}"></ComboBoxItem>
+                                        </ComboBox>
+                                        <Button  Margin="0,0,10,0" Name="EnableCutBeepBtn" Click="EnableCutBeepBtn_Click" Content="{DynamicResource BeepEnable}" Padding="5,5,0,5" Width="80" Height="30"/>
+                                        <ComboBox  Margin="0,0,5,0" SelectedIndex="0"  Name="CutBeepTimesCom" Width="50" Height="28"  Foreground="#BDBDBD">
+                                            <ComboBoxItem >1</ComboBoxItem>
+                                            <ComboBoxItem >2</ComboBoxItem>
+                                            <ComboBoxItem >3</ComboBoxItem>
+                                            <ComboBoxItem >4</ComboBoxItem>
+                                            <ComboBoxItem >5</ComboBoxItem>
+                                            <ComboBoxItem >6</ComboBoxItem>
+                                            <ComboBoxItem >7</ComboBoxItem>
+                                            <ComboBoxItem >8</ComboBoxItem>
+                                            <ComboBoxItem >9</ComboBoxItem>
+                                            <ComboBoxItem >10</ComboBoxItem>
+                                        </ComboBox>
+                                        <Button  Margin="0,0,10,0" Name="CutBeepTimesBtn" Click="CutBeepTimesBtn_Click" Content="{DynamicResource BeepTimes}" Padding="5,5,0,5" Width="80" Height="30"/>
+                                        <ComboBox  Margin="0,0,5,0" SelectedIndex="5"  Name="CutBeepDurationgCom" Width="50" Height="28" Text="IP Address" Foreground="#BDBDBD">
+                                            <ComboBoxItem >1</ComboBoxItem>
+                                            <ComboBoxItem >2</ComboBoxItem>
+                                            <ComboBoxItem >3</ComboBoxItem>
+                                            <ComboBoxItem >4</ComboBoxItem>
+                                            <ComboBoxItem >5</ComboBoxItem>
+                                            <ComboBoxItem >6</ComboBoxItem>
+                                            <ComboBoxItem >7</ComboBoxItem>
+                                            <ComboBoxItem >8</ComboBoxItem>
+                                            <ComboBoxItem >9</ComboBoxItem>
+                                            <ComboBoxItem >10</ComboBoxItem>
+                                        </ComboBox>
+                                        <Button  Margin="0,0,10,0" Name="CutBeepDurationgBtn" Click="CutBeepDurationgBtn_Click"  Content="{DynamicResource BeepDurationg}" Padding="10,5,0,5" Width="80" Height="30"/>
+                                        <CheckBox VerticalAlignment="Center" IsChecked="True" Name="CutBeepSettingCheck"/>
+                                    </StackPanel>
+                                </GroupBox>
                                 <!--代码页-->
-                                <GroupBox  Margin="10,5,0,10" Grid.ColumnSpan="2" Height="65"  Width="485" Header="代码页" VerticalAlignment="Center" HorizontalAlignment="Left" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14" >
-                                    <StackPanel  Margin="10,0,0,0" Orientation="Horizontal">
+                                <GroupBox   Margin="5,0,0,0" Grid.Row="1" Grid.ColumnSpan="2" Height="65"  Width="485" Header="代码页" VerticalAlignment="Center" HorizontalAlignment="Left" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14" >
+                                    <StackPanel  Margin="5,0,0,0" Orientation="Horizontal">
                                         <ComboBox  Margin="0,0,10,0" SelectedIndex="0"  Name="CodePageCom" Width="130" Height="28" Text="IP Address" Foreground="#BDBDBD"/>
                                         <Button  Margin="0,0,10,0" Name="CodePageSetBtn" Click="CodePageSetBtn_Click" Content="设置代码页" Padding="10,5,10,5" Width="130" Height="28"/>
                                         <Button  Margin="0,0,10,0" Name="CodePagePrintBtn" Click="CodePagePrintBtn_Click"  Content="打印代码页" Padding="10,5,10,5" Width="130" Height="28"/>
@@ -369,7 +407,7 @@
                                     </StackPanel>
                                 </GroupBox>
                                 <!--column1-->
-                                <StackPanel Grid.Row="1" Grid.RowSpan="2" Margin="10,10,5,0"  Name="PropertyColumn1" >
+                                <StackPanel Grid.Row="2"  Margin="5,5,5,0"  Name="PropertyColumn1" >
                                     <StackPanel  Margin="0,0,0,10" Orientation="Horizontal">
                                         <ComboBox SelectedIndex="0"  Margin="0,0,5,0" Name="LanguageSetCom" Width="100" Height="26" Foreground="#BDBDBD">
                                             <ComboBoxItem>简体GB18030</ComboBoxItem>
@@ -445,7 +483,7 @@
 
                                 </StackPanel>
                                 <!--column2-->
-                                <StackPanel Grid.Column="1" Grid.Row="1" Margin="10,10,0,0"  Name="PropertyColumn2">
+                                <StackPanel Grid.Column="1" Grid.Row="2" Margin="5,5,0,0"  Name="PropertyColumn2">
                                     <StackPanel  Margin="0,0,0,10" Orientation="Horizontal">
                                         <ComboBox  Margin="0,0,5,0" SelectedIndex="6"  Width="100" Height="26" Name="DensityCom" Foreground="#BDBDBD"/>
                                         <Button  Margin="0,0,5,0" Content="浓度调节" Name="DensityBtn" Click="DensityBtn_Click" Padding="10,5,10,5" Width="125" />
@@ -509,7 +547,7 @@
                                     </StackPanel>
                                 </StackPanel>
                                 <!--column3-->
-                                <StackPanel  Grid.Column="2" Grid.RowSpan="2"  >
+                                <StackPanel  Grid.Column="2" Grid.RowSpan="3"  >
                                     <StackPanel  Margin="0,18,0,3" Orientation="Horizontal">
                                         <ComboBox  Margin="0,0,5,0" SelectedIndex="1"  Name="DIPSwitchCom" Width="100" Height="26" Foreground="#BDBDBD">
                                             <ComboBoxItem>不使用硬件DIP</ComboBoxItem>
