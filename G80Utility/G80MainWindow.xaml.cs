@@ -418,14 +418,14 @@ namespace G80Utility
                 Config.isPrintSpeedChecked = false;
             }
 
-            if (DensityModeCheckbox.IsChecked == true)
-            {
-                Config.isDensityModeChecked = true;
-            }
-            else
-            {
-                Config.isDensityModeChecked = false;
-            }
+            //if (DensityModeCheckbox.IsChecked == true)
+            //{
+            //    Config.isDensityModeChecked = true;
+            //}
+            //else
+            //{
+            //    Config.isDensityModeChecked = false;
+            //}
 
             if (DensityCheckbox.IsChecked == true)
             {
@@ -454,14 +454,14 @@ namespace G80Utility
                 Config.isPaperWidthChecked = false;
             }
 
-            if (HeadCloseCutCheckbox.IsChecked == true)
-            {
-                Config.isHeadCloseCutChecked = true;
-            }
-            else
-            {
-                Config.isHeadCloseCutChecked = false;
-            }
+            //if (HeadCloseCutCheckbox.IsChecked == true)
+            //{
+            //    Config.isHeadCloseCutChecked = true;
+            //}
+            //else
+            //{
+            //    Config.isHeadCloseCutChecked = false;
+            //}
 
             if (YOffsetCheckbox.IsChecked == true)
             {
@@ -830,7 +830,15 @@ namespace G80Utility
             LoadParaSettingFIleBtn.IsEnabled = isEnabled;
             WriteParaSettingFIleBtn.IsEnabled = isEnabled;
 
-            //代碼頁btn
+            //切刀鳴叫設定btn/com
+            EnableCutBeepBtn.IsEnabled = isEnabled;
+            EnableCutBeepCom.IsEnabled = isEnabled;
+            CutBeepTimesBtn.IsEnabled = isEnabled;
+            CutBeepTimesCom.IsEnabled = isEnabled;
+            CutBeepDurationgBtn.IsEnabled = isEnabled;
+            CutBeepDurationgCom.IsEnabled = isEnabled;
+
+            //代碼頁btn/com
             CodePageSetBtn.IsEnabled = isEnabled;
             CodePagePrintBtn.IsEnabled = isEnabled;
             CodePageCom.IsEnabled = isEnabled;
@@ -1236,10 +1244,10 @@ namespace G80Utility
 
             }
 
-            if (receiveData.Contains(Command.RE_DENSITY_MODE_CLASSFY))
-            {
-                checkIsGetData(null, DensityModeCom, data, FindResource("DensityMode") as string, false, 1);
-            }
+            //if (receiveData.Contains(Command.RE_DENSITY_MODE_CLASSFY))
+            //{
+            //    checkIsGetData(null, DensityModeCom, data, FindResource("DensityMode") as string, false, 1);
+            //}
 
             if (receiveData.Contains(Command.RE_DENSITY_CLASSFY))
             {
@@ -1256,10 +1264,10 @@ namespace G80Utility
                 checkIsGetData(null, PaperWidthCom, data, FindResource("PaperWidth") as string, false, 1);
             }
 
-            if (receiveData.Contains(Command.RE_HEADCLOSE_CUT_CLASSFY))
-            {
-                checkIsGetData(null, HeadCloseCutCom, data, FindResource("AutomaticallyCut") as string, false, 1);
-            }
+            //if (receiveData.Contains(Command.RE_HEADCLOSE_CUT_CLASSFY))
+            //{
+            //    checkIsGetData(null, HeadCloseCutCom, data, FindResource("AutomaticallyCut") as string, false, 1);
+            //}
 
             if (receiveData.Contains(Command.RE_YOFFSET_CLASSFY))
             {
@@ -2867,11 +2875,11 @@ namespace G80Utility
             parasetting.MotorAccControlIndex = MotorAccControlCom.SelectedIndex;
             parasetting.AccMotorIndex = AccMotorCom.SelectedIndex;
             parasetting.PrintSpeedIndex = PrintSpeedCom.SelectedIndex;
-            parasetting.DensityModeIndex = DensityModeCom.SelectedIndex;
+            //parasetting.DensityModeIndex = DensityModeCom.SelectedIndex;
             parasetting.DensityIndex = DensityCom.SelectedIndex;
             parasetting.PaperOutReprintIndex = PaperOutReprintCom.SelectedIndex;
             parasetting.PaperWidthIndex = PaperWidthCom.SelectedIndex;
-            parasetting.HeadCloseCutIndex = HeadCloseCutCom.SelectedIndex;
+            //parasetting.HeadCloseCutIndex = HeadCloseCutCom.SelectedIndex;
             parasetting.YOffsetIndex = YOffsetCom.SelectedIndex;
             parasetting.MACShowIndex = MACShowCom.SelectedIndex;
             parasetting.QRCodeIndex = QRCodeCom.SelectedIndex;
@@ -2893,14 +2901,14 @@ namespace G80Utility
             {
                 parasetting.BeepCheck = true;
             }
-            if (DensityCheckBox.IsChecked == true)
-            {
-                parasetting.DensityCheck = false;
-            }
-            else
-            {
-                parasetting.DensityCheck = true;
-            }
+            //if (DensityCheckBox.IsChecked == true)
+            //{
+            //    parasetting.DensityCheck = false;
+            //}
+            //else
+            //{
+            //    parasetting.DensityCheck = true;
+            //}
             if (ChineseForbiddenCheckBox.IsChecked == true)
             {
                 parasetting.ChineseForbiddenCheck = false;
@@ -2952,11 +2960,11 @@ namespace G80Utility
             MotorAccControlCom.SelectedIndex = parasetting.MotorAccControlIndex;
             AccMotorCom.SelectedIndex = parasetting.AccMotorIndex;
             PrintSpeedCom.SelectedIndex = parasetting.PrintSpeedIndex;
-            DensityModeCom.SelectedIndex = parasetting.DensityModeIndex;
+            //DensityModeCom.SelectedIndex = parasetting.DensityModeIndex;
             DensityCom.SelectedIndex = parasetting.DensityIndex;
             PaperOutReprintCom.SelectedIndex = parasetting.PaperOutReprintIndex;
             PaperWidthCom.SelectedIndex = parasetting.PaperWidthIndex;
-            HeadCloseCutCom.SelectedIndex = parasetting.HeadCloseCutIndex;
+            //HeadCloseCutCom.SelectedIndex = parasetting.HeadCloseCutIndex;
             YOffsetCom.SelectedIndex = parasetting.YOffsetIndex;
             MACShowCom.SelectedIndex = parasetting.MACShowIndex;
             QRCodeCom.SelectedIndex = parasetting.QRCodeIndex;
@@ -2978,14 +2986,14 @@ namespace G80Utility
             {
                 BeepCheckBox.IsChecked = false;
             }
-            if (parasetting.DensityCheck == false)
-            {
-                DensityCheckBox.IsChecked = true;
-            }
-            else
-            {
-                DensityCheckBox.IsChecked = false;
-            }
+            //if (parasetting.DensityCheck == false)
+            //{
+            //    DensityCheckBox.IsChecked = true;
+            //}
+            //else
+            //{
+            //    DensityCheckBox.IsChecked = false;
+            //}
             if (parasetting.ChineseForbiddenCheck == false)
             {
                 ChineseForbiddenCheckBox.IsChecked = true;
@@ -3605,6 +3613,7 @@ namespace G80Utility
         }
         #endregion
 
+        /*
         #region 設定濃度模式
         private void DensityMode()
         {
@@ -3625,6 +3634,7 @@ namespace G80Utility
             else { MessageBox.Show(FindResource("ColumnEmpty") as string); }
         }
         #endregion
+        */
 
         #region 設定濃度調節
         private void Density()
@@ -3714,6 +3724,7 @@ namespace G80Utility
         }
         #endregion
 
+        /*
         #region 設定合蓋自動切紙
         private void HeadCloseCut()
         {
@@ -3734,6 +3745,7 @@ namespace G80Utility
             else { MessageBox.Show(FindResource("ColumnEmpty") as string); }
         }
         #endregion
+        */
 
         #region 設定垂直移動單位
         private void YOffset()
@@ -4039,11 +4051,11 @@ namespace G80Utility
                 SendCmd(sendArray, "ReadPara", 10);
             }
 
-            if (Config.isDensityModeChecked)
-            {
-                sendArray = StringToByteArray(Command.READ_ALL_HEADER + "31 26 01");
-                SendCmd(sendArray, "ReadPara", 9);
-            }
+            //if (Config.isDensityModeChecked)
+            //{
+            //    sendArray = StringToByteArray(Command.READ_ALL_HEADER + "31 26 01");
+            //    SendCmd(sendArray, "ReadPara", 9);
+            //}
 
             if (Config.isDensityChecked)
             {
@@ -4063,11 +4075,11 @@ namespace G80Utility
                 SendCmd(sendArray, "ReadPara", 9);
             }
 
-            if (Config.isHeadCloseCutChecked)
-            {
-                sendArray = StringToByteArray(Command.READ_ALL_HEADER + "31 17 01");
-                SendCmd(sendArray, "ReadPara", 9);
-            }
+            //if (Config.isHeadCloseCutChecked)
+            //{
+            //    sendArray = StringToByteArray(Command.READ_ALL_HEADER + "31 17 01");
+            //    SendCmd(sendArray, "ReadPara", 9);
+            //}
 
             if (Config.isYOffsetChecked)
             {
@@ -4196,10 +4208,10 @@ namespace G80Utility
                 PrintSpeed();
             }
 
-            if (Config.isDensityModeChecked)
-            {
-                DensityMode();
-            }
+            //if (Config.isDensityModeChecked)
+            //{
+            //    DensityMode();
+            //}
 
             if (Config.isDensityChecked)
             {
@@ -4216,10 +4228,10 @@ namespace G80Utility
                 PaperWidth();
             }
 
-            if (Config.isHeadCloseCutChecked)
-            {
-                HeadCloseCut();
-            }
+            //if (Config.isHeadCloseCutChecked)
+            //{
+            //    HeadCloseCut();
+            //}
 
             if (Config.isYOffsetChecked)
             {
@@ -5271,9 +5283,9 @@ namespace G80Utility
                 case "PrintSpeed":
                     PrintSpeed();
                     break;
-                case "DensityMode":
-                    DensityMode();
-                    break;
+                //case "DensityMode":
+                //    DensityMode();
+                //    break;
                 case "Density":
                     Density();
                     break;
@@ -5283,9 +5295,9 @@ namespace G80Utility
                 case "PaperWidth":
                     PaperWidth();
                     break;
-                case "HeadCloseCut":
-                    HeadCloseCut();
-                    break;
+                //case "HeadCloseCut":
+                //    HeadCloseCut();
+                //    break;
                 case "YOffset":
                     YOffset();
                     break;

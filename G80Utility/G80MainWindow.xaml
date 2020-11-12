@@ -363,7 +363,7 @@
                                 <!--切刀鳴叫設定-->
                                 <GroupBox  Margin="5,5,0,0" Grid.ColumnSpan="2" Height="58"  Width="485" Header="{DynamicResource SetCutBeepTitle}" VerticalAlignment="Center" HorizontalAlignment="Left" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14" >
                                     <StackPanel  Margin="5,0,0,0" Orientation="Horizontal">
-                                        <ComboBox  Margin="0,0,5,0" SelectedIndex="1"  Name="EnableCutBeepCom" Width="60" Height="28" Text="IP Address" Foreground="#BDBDBD">
+                                        <ComboBox  Margin="0,0,5,0" SelectedIndex="0"  Name="EnableCutBeepCom" Width="60" Height="28" Text="IP Address" Foreground="#BDBDBD">
                                             <ComboBoxItem Content="{DynamicResource Off}"></ComboBoxItem>
                                             <ComboBoxItem Content="{DynamicResource On}"></ComboBoxItem>
                                         </ComboBox>
@@ -472,14 +472,14 @@
                                         <Button  Margin="0,0,5,0" Content="打印速度"  Name="PrintSpeedBtn" Click="PrintSpeedBtn_Click" Padding="10,5,10,5" Width="100" />
                                         <CheckBox VerticalAlignment="Center" IsChecked="True" Name="PrintSpeedCheckbox"/>
                                     </StackPanel>
-                                    <StackPanel  Margin="0,0,0,10" Orientation="Horizontal">
+                                    <!--<StackPanel  Margin="0,0,0,10" Orientation="Horizontal">
                                         <ComboBox  Margin="0,0,5,0" SelectedIndex="1"  Name="DensityModeCom" Width="100" Height="26" Foreground="#BDBDBD">
                                             <ComboBoxItem>低</ComboBoxItem>
                                             <ComboBoxItem>高</ComboBoxItem>
                                         </ComboBox>
                                         <Button  Margin="0,0,5,0"  Name="DensityModeBtn" Click="DensityModeBtn_Click" Content="浓度模式" Padding="10,5,10,5" Width="100"/>
                                         <CheckBox VerticalAlignment="Center" IsChecked="True" Name="DensityModeCheckbox"/>
-                                    </StackPanel>
+                                    </StackPanel>-->
 
                                 </StackPanel>
                                 <!--column2-->
@@ -505,14 +505,14 @@
                                         <Button  Margin="0,0,5,0" Content="打印纸宽" Name="PaperWidthBtn" Click="PaperWidthBtn_Click" Padding="10,5,10,5" Width="125"/>
                                         <CheckBox VerticalAlignment="Center" IsChecked="True" Name="PaperWidthCheckbox" />
                                     </StackPanel>
-                                    <StackPanel  Margin="0,0,0,10" Orientation="Horizontal">
+                                    <!--<StackPanel  Margin="0,0,0,10" Orientation="Horizontal">
                                         <ComboBox  Margin="0,0,5,0" SelectedIndex="0"  Name="HeadCloseCutCom" Width="100" Height="26" Foreground="#BDBDBD">
                                             <ComboBoxItem>不切纸</ComboBoxItem>
                                             <ComboBoxItem>切纸</ComboBoxItem>
                                         </ComboBox>
                                         <Button  Margin="0,0,5,0" Name="HeadCloseCutBtn" Click="HeadCloseCutBtn_Click" Content="合盖后自动切纸" Padding="10,5,10,5" Width="125"/>
                                         <CheckBox VerticalAlignment="Center" IsChecked="True" Name="HeadCloseCutCheckbox"/>
-                                    </StackPanel>
+                                    </StackPanel>-->
                                     <StackPanel  Margin="0,0,0,10" Orientation="Horizontal">
                                         <ComboBox  Margin="0,0,5,0" SelectedIndex="1"  Name="YOffsetCom" Width="100" Height="26"  Foreground="#BDBDBD">
                                             <ComboBoxItem>1.0</ComboBoxItem>

@@ -25,12 +25,12 @@ namespace G80Utility.Tool
         public static bool isMotorAccControlChecked;
         public static bool isAccMotorChecked;
         public static bool isPrintSpeedChecked;
-        public static bool isDensityModeChecked;
+        //public static bool isDensityModeChecked;
 
         public static bool isDensityChecked;
         public static bool isPaperOutReprintChecked;
         public static bool isPaperWidthChecked;
-        public static bool isHeadCloseCutChecked;
+        //public static bool isHeadCloseCutChecked;
         public static bool isYOffsetChecked;
         public static bool isMACShowChecked;
         public static bool isQRCodeChecked;

@@ -29,7 +29,7 @@ namespace G80Utility.Models
         public int DensityIndex;
         public int PaperOutReprintIndex;
         public int PaperWidthIndex;
-        public int HeadCloseCutIndex;
+        //public int HeadCloseCutIndex;
         public int YOffsetIndex;
         public int MACShowIndex;
         public int QRCodeIndex;
@@ -37,7 +37,7 @@ namespace G80Utility.Models
         public int DIPSwitchIndex;
         public bool CutterCheck;
         public bool BeepCheck;
-        public bool DensityCheck;
+        //public bool DensityCheck;
         public bool ChineseForbiddenCheck;
         public bool CharNumberCheck;
         public bool CashboxCheck;
