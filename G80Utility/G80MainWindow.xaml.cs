@@ -507,6 +507,15 @@ namespace G80Utility
             {
                 Config.isDIPSwitchChecked = false;
             }
+
+            if (CutBeepSettingCheck.IsChecked == true)
+            {
+                Config.isCutBeepChecked = true;
+            }
+            else
+            {
+                Config.isCutBeepChecked = false;
+            }
         }
         #endregion
 
@@ -2884,6 +2893,11 @@ namespace G80Utility
             parasetting.MACShowIndex = MACShowCom.SelectedIndex;
             parasetting.QRCodeIndex = QRCodeCom.SelectedIndex;
             parasetting.LogoPrintControlIndex = LogoPrintControlCom.SelectedIndex;
+
+            parasetting.CutBeepEnable = EnableCutBeepCom.SelectedIndex;
+            parasetting.CutBeepTimes = CutBeepTimesCom.SelectedIndex;
+            parasetting.CutBeepDuration = CutBeepDurationgCom.SelectedIndex;
+
             parasetting.DIPSwitchIndex = DIPSwitchCom.SelectedIndex;
             if (CutterCheckBox.IsChecked == true)
             {
@@ -2901,14 +2915,14 @@ namespace G80Utility
             {
                 parasetting.BeepCheck = true;
             }
-            //if (DensityCheckBox.IsChecked == true)
-            //{
-            //    parasetting.DensityCheck = false;
-            //}
-            //else
-            //{
-            //    parasetting.DensityCheck = true;
-            //}
+            if (DensityCheckBox.IsChecked == true)
+            {
+                parasetting.DensityCheck = false;
+            }
+            else
+            {
+                parasetting.DensityCheck = true;
+            }
             if (ChineseForbiddenCheckBox.IsChecked == true)
             {
                 parasetting.ChineseForbiddenCheck = false;
@@ -2969,6 +2983,11 @@ namespace G80Utility
             MACShowCom.SelectedIndex = parasetting.MACShowIndex;
             QRCodeCom.SelectedIndex = parasetting.QRCodeIndex;
             LogoPrintControlCom.SelectedIndex = parasetting.LogoPrintControlIndex;
+
+            EnableCutBeepCom.SelectedIndex = parasetting.CutBeepEnable;
+            CutBeepTimesCom.SelectedIndex = parasetting.CutBeepTimes;
+            CutBeepDurationgCom.SelectedIndex = parasetting.CutBeepDuration;
+
             DIPSwitchCom.SelectedIndex = parasetting.DIPSwitchIndex;
             if (parasetting.CutterCheck == false)
             {
@@ -2986,14 +3005,14 @@ namespace G80Utility
             {
                 BeepCheckBox.IsChecked = false;
             }
-            //if (parasetting.DensityCheck == false)
-            //{
-            //    DensityCheckBox.IsChecked = true;
-            //}
-            //else
-            //{
-            //    DensityCheckBox.IsChecked = false;
-            //}
+            if (parasetting.DensityCheck == false)
+            {
+                DensityCheckBox.IsChecked = true;
+            }
+            else
+            {
+                DensityCheckBox.IsChecked = false;
+            }
             if (parasetting.ChineseForbiddenCheck == false)
             {
                 ChineseForbiddenCheckBox.IsChecked = true;

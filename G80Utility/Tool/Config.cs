@@ -36,6 +36,7 @@ namespace G80Utility.Tool
         public static bool isQRCodeChecked;
         public static bool isLogoPrintControlhecked;
         public static bool isDIPSwitchChecked;
+        public static bool isCutBeepChecked;
 
         //for maintail
         public static bool isCMDQRCodeMaintainChecked;

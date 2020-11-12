@@ -151,16 +151,16 @@ namespace G80Utility.Tool
         public static string CUSTOMIZED_FONT_ON_SETTING = "1F 1B 1F 53 5A 4A 42 5A 46 31 29 02 01";
 
         //設定濃度模式
-        public static string DENSITY_MODE_LOW_SETTING = "1F 1B 1F 53 5A 4A 42 5A 46 31 26 02 00";
-        public static string DENSITY_MODE_HIGH_SETTING = "1F 1B 1F 53 5A 4A 42 5A 46 31 26 02 01";
+        //public static string DENSITY_MODE_LOW_SETTING = "1F 1B 1F 53 5A 4A 42 5A 46 31 26 02 00";
+        //public static string DENSITY_MODE_HIGH_SETTING = "1F 1B 1F 53 5A 4A 42 5A 46 31 26 02 01";
 
         //設定紙盡重打
         public static string PAPEROUT_REPRINT_OFF_SETTING = "1F 1B 1F F4 11 22 33 33";
         public static string PAPEROUT_REPRINT_ON_SETTING = "1F 1B 1F F4 11 22 33 55";
 
         //設定合蓋後自動切紙
-        public static string HEADCLOSE_AUTOCUT_OFF_SETTING = "1F 1B 1F 53 5A 4A 42 5A 46 31 17 02 00";
-        public static string HEADCLOSE_AUTOCUT_ON_SETTING = "1F 1B 1F 53 5A 4A 42 5A 46 31 17 02 01";
+        //public static string HEADCLOSE_AUTOCUT_OFF_SETTING = "1F 1B 1F 53 5A 4A 42 5A 46 31 17 02 00";
+        //public static string HEADCLOSE_AUTOCUT_ON_SETTING = "1F 1B 1F 53 5A 4A 42 5A 46 31 17 02 01";
 
         //設定垂直移動單位
         public static string Y_OFFSET_1_SETTING = "1F 1B 1F 53 5A 4A 42 5A 46 31 18 02 00";
@@ -170,7 +170,10 @@ namespace G80Utility.Tool
         public static string LOGO_PRINT_OFF_SETTING = "1F 1B 1F 53 5A 4A 42 5A 46 31 20 02 00";
         public static string LOGO_PRINT_ON_SETTING = "1F 1B 1F 53 5A 4A 42 5A 46 31 20 02 01";
 
-        //設定DIP值HEAER
+        //設定切紙鳴叫HEADER
+        public static string SET_CUT_BEEP = "1F 1B 1F 53 5A 4A 42 5A 46 31 32 02";
+
+        //設定DIP值HEADER
         public static string DIP_VALUE_SETTING_HEADER = "1F 1B 1F A1 10 11 12 13 14 15";
 
         //讀取所有欄位header
@@ -228,7 +231,7 @@ namespace G80Utility.Tool
         public static string RE_PRINT_SPEED_CLASSFY = "31-31";
 
         //收到設置濃度模式的命令分類
-        public static string RE_DENSITY_MODE_CLASSFY = "31-26";
+        //public static string RE_DENSITY_MODE_CLASSFY = "31-26";
 
         //收到設置濃度調節的命令分類
         public static string RE_DENSITY_CLASSFY = "31-27";
@@ -240,7 +243,7 @@ namespace G80Utility.Tool
         public static string RE_PAPERWIDTH_CLASSFY = "31-30";
 
         //收到合蓋後自動切紙的命令分類
-        public static string RE_HEADCLOSE_CUT_CLASSFY = "31-17";
+        //public static string RE_HEADCLOSE_CUT_CLASSFY = "31-17";
 
         //收到垂直移動單位的命令分類
         public static string RE_YOFFSET_CLASSFY = "31-18";
@@ -268,6 +271,9 @@ namespace G80Utility.Tool
 
         //收到WIFI PWD的命令分類
         public static string RE_WIFI_PWD = "30-21";
+
+        //收到切紙鳴叫的命令分類
+        public static string RE_CUT_BEEP = "31-32";
 
         #region 維護維修
         //清除打印機所有信息

@@ -25,7 +25,7 @@ namespace G80Utility.Models
         public int MotorAccControlIndex;
         public int AccMotorIndex;
         public int PrintSpeedIndex;
-        public int DensityModeIndex;
+        //public int DensityModeIndex;
         public int DensityIndex;
         public int PaperOutReprintIndex;
         public int PaperWidthIndex;
@@ -37,11 +37,14 @@ namespace G80Utility.Models
         public int DIPSwitchIndex;
         public bool CutterCheck;
         public bool BeepCheck;
-        //public bool DensityCheck;
+        public bool DensityCheck;
         public bool ChineseForbiddenCheck;
         public bool CharNumberCheck;
         public bool CashboxCheck;
         public int DIPBaudRateComIndex;
+        public int CutBeepEnable;
+        public int CutBeepTimes;
+        public int CutBeepDuration;
     }      
     
 }
