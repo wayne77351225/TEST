@@ -334,6 +334,7 @@ namespace G80Utility.HID
             return false;
         }
 
+        /* 不讀取位址
         private bool get_erasure_addr(out byte[] option)
         {
             option = null;
@@ -349,7 +350,8 @@ namespace G80Utility.HID
           
             return false;
         }
-
+        */
+        
         private bool erasure_section(UInt32 Start_addr, UInt32 file_length)
         {
 
@@ -408,7 +410,6 @@ namespace G80Utility.HID
                 {
                     baud = offset * 100 / code_array.Length;
                     win.Dispatcher.Invoke(win.setCallBack, (byte)6, baud.ToString());
-                    //win.Dispatcher.Invoke(win.setCallBack, (byte)9,"sending");
                 }
             }
 
@@ -437,7 +438,7 @@ namespace G80Utility.HID
         public void download_code(object sender)
         {
             G80MainWindow win = (G80MainWindow)sender;
-            if (!this.convert_bin_done && !G80MainWindow.isUpgradeSuccess)
+            if (!this.convert_bin_done && !G80MainWindow.isLoadHexSuccess)
             {
                 MessageBox.Show(win.FindResource("ParseFirst") as string);
                 this.run_step = 3;
@@ -454,27 +455,29 @@ namespace G80Utility.HID
                 this.run_step = 3;
                 return;
             }
-            //if (receive_data[1] != 0xaa)
-            //{
-            //    win.Dispatcher.Invoke(win.setCallBack, (byte)8, win.FindResource("ChipIsLocked") as string);
-            //    //MessageBox.Show(win.FindResource("ChipIsLocked") as string);
-            //    //return;
-            //}
-            //win.Dispatcher.Invoke(win.setCallBack, (byte)5, win.FindResource("ReadChipAddress") as string);
-            //if (!get_erasure_addr(out receive_data))
-            //{
-            //    MessageBox.Show(win.FindResource("EraseAddressFailed") as string);
-            //    this.run_step = 3;
-            //    return;
-            //}
-            //UInt32 write_addr = (UInt32)receive_data[0] << 0 | (UInt32)receive_data[1] << 8 | (UInt32)receive_data[2] << 16 | (UInt32)receive_data[3] << 24;
-            //if (this.download_addr != write_addr)
-            //{
-            //    MessageBox.Show(win.FindResource("AddressError") as string);
-            //    this.run_step = 3;
-            //    return;
-            //}
-            //win.Dispatcher.Invoke(win.setCallBack, (byte)5, win.FindResource("CheckChipSector") as string);
+            /* 不讀取位址
+            if (receive_data[1] != 0xaa)
+            {
+                win.Dispatcher.Invoke(win.setCallBack, (byte)8, win.FindResource("ChipIsLocked") as string);
+                //MessageBox.Show(win.FindResource("ChipIsLocked") as string);
+                //return;
+            }
+            win.Dispatcher.Invoke(win.setCallBack, (byte)5, win.FindResource("ReadChipAddress") as string);
+            if (!get_erasure_addr(out receive_data))
+            {
+                MessageBox.Show(win.FindResource("EraseAddressFailed") as string);
+                this.run_step = 3;
+                return;
+            }
+            UInt32 write_addr = (UInt32)receive_data[0] << 0 | (UInt32)receive_data[1] << 8 | (UInt32)receive_data[2] << 16 | (UInt32)receive_data[3] << 24;
+            if (this.download_addr != write_addr)
+            {
+                MessageBox.Show(win.FindResource("AddressError") as string);
+                this.run_step = 3;
+                return;
+            }
+            win.Dispatcher.Invoke(win.setCallBack, (byte)5, win.FindResource("CheckChipSector") as string);
+            */
             if ((G80MainWindow.isBin==false && G80MainWindow.isLoadHexSuccess) || (G80MainWindow.isBin == true && G80MainWindow.isLoadBinSuccess)) {
                 code_data_bin = G80MainWindow.code_array; //不需要重新抓資料
             }
