@@ -570,6 +570,11 @@ namespace G80Utility
             {
                 DIPSwitchCheckbox.IsChecked = changeTo;
             }
+
+            if (HeadCloseCutCheckbox.IsChecked == now)
+            {
+                HeadCloseCutCheckbox.IsChecked = changeTo;
+            }
         }
         #endregion
 
