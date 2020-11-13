@@ -159,10 +159,11 @@ namespace G80Utility.Tool
         public static string PAPEROUT_REPRINT_ON_SETTING = "1F 1B 1F F4 11 22 33 55";
 
         //設定合蓋後自動切紙
-        //public static string HEADCLOSE_AUTOCUT_OFF_SETTING = "1F 1B 1F 53 5A 4A 42 5A 46 31 17 02 00";
-        //public static string HEADCLOSE_AUTOCUT_ON_SETTING = "1F 1B 1F 53 5A 4A 42 5A 46 31 17 02 01";
+        public static string HEADCLOSE_AUTOCUT_OFF_SETTING = "1F 1B 1F 53 5A 4A 42 5A 46 31 17 02 00";
+        public static string HEADCLOSE_AUTOCUT_ON_SETTING = "1F 1B 1F 53 5A 4A 42 5A 46 31 17 02 01";
 
         //設定垂直移動單位
+        
         public static string Y_OFFSET_1_SETTING = "1F 1B 1F 53 5A 4A 42 5A 46 31 18 02 00";
         public static string Y_OFFSET_05_SETTING = "1F 1B 1F 53 5A 4A 42 5A 46 31 18 02 01";
 
@@ -234,6 +235,7 @@ namespace G80Utility.Tool
         //public static string RE_DENSITY_MODE_CLASSFY = "31-26";
 
         //收到設置濃度調節的命令分類
+        
         public static string RE_DENSITY_CLASSFY = "31-27";
 
         //收到紙盡重打的命令分類
@@ -243,7 +245,7 @@ namespace G80Utility.Tool
         public static string RE_PAPERWIDTH_CLASSFY = "31-30";
 
         //收到合蓋後自動切紙的命令分類
-        //public static string RE_HEADCLOSE_CUT_CLASSFY = "31-17";
+        public static string RE_HEADCLOSE_CUT_CLASSFY = "31-17";
 
         //收到垂直移動單位的命令分類
         public static string RE_YOFFSET_CLASSFY = "31-18";

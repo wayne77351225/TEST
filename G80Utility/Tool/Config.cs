@@ -30,7 +30,7 @@ namespace G80Utility.Tool
         public static bool isDensityChecked;
         public static bool isPaperOutReprintChecked;
         public static bool isPaperWidthChecked;
-        //public static bool isHeadCloseCutChecked;
+        public static bool isHeadCloseCutChecked;
         public static bool isYOffsetChecked;
         public static bool isMACShowChecked;
         public static bool isQRCodeChecked;

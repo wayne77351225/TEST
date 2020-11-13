@@ -454,14 +454,14 @@ namespace G80Utility
                 Config.isPaperWidthChecked = false;
             }
 
-            //if (HeadCloseCutCheckbox.IsChecked == true)
-            //{
-            //    Config.isHeadCloseCutChecked = true;
-            //}
-            //else
-            //{
-            //    Config.isHeadCloseCutChecked = false;
-            //}
+            if (HeadCloseCutCheckbox.IsChecked == true)
+            {
+                Config.isHeadCloseCutChecked = true;
+            }
+            else
+            {
+                Config.isHeadCloseCutChecked = false;
+            }
 
             if (YOffsetCheckbox.IsChecked == true)
             {
@@ -1278,10 +1278,10 @@ namespace G80Utility
                 checkIsGetData(null, PaperWidthCom, data, FindResource("PaperWidth") as string, false, 1);
             }
 
-            //if (receiveData.Contains(Command.RE_HEADCLOSE_CUT_CLASSFY))
-            //{
-            //    checkIsGetData(null, HeadCloseCutCom, data, FindResource("AutomaticallyCut") as string, false, 1);
-            //}
+            if (receiveData.Contains(Command.RE_HEADCLOSE_CUT_CLASSFY))
+            {
+                checkIsGetData(null, HeadCloseCutCom, data, FindResource("AutomaticallyCut") as string, false, 1);
+            }
 
             if (receiveData.Contains(Command.RE_YOFFSET_CLASSFY))
             {
@@ -2898,7 +2898,7 @@ namespace G80Utility
             parasetting.DensityIndex = DensityCom.SelectedIndex;
             parasetting.PaperOutReprintIndex = PaperOutReprintCom.SelectedIndex;
             parasetting.PaperWidthIndex = PaperWidthCom.SelectedIndex;
-            //parasetting.HeadCloseCutIndex = HeadCloseCutCom.SelectedIndex;
+            parasetting.HeadCloseCutIndex = HeadCloseCutCom.SelectedIndex;
             parasetting.YOffsetIndex = YOffsetCom.SelectedIndex;
             parasetting.MACShowIndex = MACShowCom.SelectedIndex;
             parasetting.QRCodeIndex = QRCodeCom.SelectedIndex;
@@ -2988,7 +2988,7 @@ namespace G80Utility
             DensityCom.SelectedIndex = parasetting.DensityIndex;
             PaperOutReprintCom.SelectedIndex = parasetting.PaperOutReprintIndex;
             PaperWidthCom.SelectedIndex = parasetting.PaperWidthIndex;
-            //HeadCloseCutCom.SelectedIndex = parasetting.HeadCloseCutIndex;
+            HeadCloseCutCom.SelectedIndex = parasetting.HeadCloseCutIndex;
             YOffsetCom.SelectedIndex = parasetting.YOffsetIndex;
             MACShowCom.SelectedIndex = parasetting.MACShowIndex;
             QRCodeCom.SelectedIndex = parasetting.QRCodeIndex;
@@ -3753,7 +3753,7 @@ namespace G80Utility
         }
         #endregion
 
-        /*
+        
         #region 設定合蓋自動切紙
         private void HeadCloseCut()
         {
@@ -3774,7 +3774,7 @@ namespace G80Utility
             else { MessageBox.Show(FindResource("ColumnEmpty") as string); }
         }
         #endregion
-        */
+        
 
         #region 設定垂直移動單位
         private void YOffset()
@@ -4130,11 +4130,11 @@ namespace G80Utility
                 SendCmd(sendArray, "ReadPara", 9);
             }
 
-            //if (Config.isHeadCloseCutChecked)
-            //{
-            //    sendArray = StringToByteArray(Command.READ_ALL_HEADER + "31 17 01");
-            //    SendCmd(sendArray, "ReadPara", 9);
-            //}
+            if (Config.isHeadCloseCutChecked)
+            {
+                sendArray = StringToByteArray(Command.READ_ALL_HEADER + "31 17 01");
+                SendCmd(sendArray, "ReadPara", 9);
+            }
 
             if (Config.isYOffsetChecked)
             {
@@ -4290,10 +4290,10 @@ namespace G80Utility
                 PaperWidth();
             }
 
-            //if (Config.isHeadCloseCutChecked)
-            //{
-            //    HeadCloseCut();
-            //}
+            if (Config.isHeadCloseCutChecked)
+            {
+                HeadCloseCut();
+            }
 
             if (Config.isYOffsetChecked)
             {
@@ -5351,9 +5351,9 @@ namespace G80Utility
                 case "PaperWidth":
                     PaperWidth();
                     break;
-                //case "HeadCloseCut":
-                //    HeadCloseCut();
-                //    break;
+                case "HeadCloseCut":
+                    HeadCloseCut();
+                    break;
                 case "YOffset":
                     YOffset();
                     break;
