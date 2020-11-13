@@ -2685,6 +2685,7 @@ namespace G80Utility
         private void OpenFWfileBtn_Click(object sender, EventArgs e)
         {
             string file_name = "";
+            string ext_name = "";
             isBin = false;
             isLoadHexSuccess = false;//打開文件需要重新解析，這邊把此變數恢復預設
             isLoadBinSuccess = false;
@@ -2695,7 +2696,8 @@ namespace G80Utility
             if (dialog.ShowDialog() == true)
             {
                 file_name = dialog.FileName;
-                if (file_name.Contains(".bin")) {
+                ext_name = Path.GetExtension(file_name);
+                if (ext_name.Equals(".bin")) {
                     isBin = true;
                 }
                 FilePathTxt.Text = file_name;
