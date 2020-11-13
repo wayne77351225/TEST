@@ -146,7 +146,7 @@ namespace G80Utility
             this.Closing += Window_Closing;
 
             //預設參數設定與導入參數等不可使用
-            isParaSettingBtnEnabled(false);
+            //isParaSettingBtnEnabled(false);
 
             //語系選單default設定
             setDefaultLanguage();
@@ -1818,6 +1818,7 @@ namespace G80Utility
         }
         #endregion
 
+        /*
         #region 管理員登入按鈕事件
         private void AdminLoginBtn_Click(object sender, RoutedEventArgs e)
         {
@@ -1844,6 +1845,7 @@ namespace G80Utility
             }
         }
         #endregion
+        */
 
         //數據傳輸按鈕
         #region 發送命令按鈕事件

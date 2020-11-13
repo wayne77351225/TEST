@@ -94,7 +94,7 @@
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
                             <Button  Margin="10,5,5,5" Name="WriteParaSettingFIleBtn" Click="WriteParaSettingFIleBtn_Click" Content="保存参数" Padding="5" FontSize="14" Width="85"/>
-                            <Button  Margin="5,5,10,5" Name="AdminLoginBtn" Click="AdminLoginBtn_Click" Content="登录管理员" Padding="5" FontSize="14" Width="85"/>
+                            <!--<Button  Margin="5,5,10,5" Name="AdminLoginBtn" Click="AdminLoginBtn_Click" Content="登录管理员" Padding="5" FontSize="14" Width="85"/>-->
                         </StackPanel>
                     </StackPanel>
                 </GroupBox>
