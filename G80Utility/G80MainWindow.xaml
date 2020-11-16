@@ -368,19 +368,6 @@
                                             <ComboBoxItem Content="{DynamicResource On}"></ComboBoxItem>
                                         </ComboBox>
                                         <Button  Margin="0,0,10,0" Name="EnableCutBeepBtn" Click="EnableCutBeepBtn_Click" Content="{DynamicResource BeepEnable}" Padding="5,5,0,5" Width="80" Height="30"/>
-                                        <ComboBox  Margin="0,0,5,0" SelectedIndex="0"  Name="CutBeepTimesCom" Width="50" Height="28"  Foreground="#BDBDBD">
-                                            <ComboBoxItem >1</ComboBoxItem>
-                                            <ComboBoxItem >2</ComboBoxItem>
-                                            <ComboBoxItem >3</ComboBoxItem>
-                                            <ComboBoxItem >4</ComboBoxItem>
-                                            <ComboBoxItem >5</ComboBoxItem>
-                                            <ComboBoxItem >6</ComboBoxItem>
-                                            <ComboBoxItem >7</ComboBoxItem>
-                                            <ComboBoxItem >8</ComboBoxItem>
-                                            <ComboBoxItem >9</ComboBoxItem>
-                                            <ComboBoxItem >10</ComboBoxItem>
-                                        </ComboBox>
-                                        <Button  Margin="0,0,10,0" Name="CutBeepTimesBtn" Click="CutBeepTimesBtn_Click" Content="{DynamicResource BeepTimes}" Padding="5,5,0,5" Width="80" Height="30"/>
                                         <ComboBox  Margin="0,0,5,0" SelectedIndex="5"  Name="CutBeepDurationgCom" Width="50" Height="28" Text="IP Address" Foreground="#BDBDBD">
                                             <ComboBoxItem >1</ComboBoxItem>
                                             <ComboBoxItem >2</ComboBoxItem>
@@ -394,6 +381,19 @@
                                             <ComboBoxItem >10</ComboBoxItem>
                                         </ComboBox>
                                         <Button  Margin="0,0,10,0" Name="CutBeepDurationgBtn" Click="CutBeepDurationgBtn_Click"  Content="{DynamicResource BeepDurationg}" Padding="10,5,0,5" Width="80" Height="30"/>
+                                        <ComboBox  Margin="0,0,5,0" SelectedIndex="0"  Name="CutBeepTimesCom" Width="50" Height="28"  Foreground="#BDBDBD">
+                                            <ComboBoxItem >1</ComboBoxItem>
+                                            <ComboBoxItem >2</ComboBoxItem>
+                                            <ComboBoxItem >3</ComboBoxItem>
+                                            <ComboBoxItem >4</ComboBoxItem>
+                                            <ComboBoxItem >5</ComboBoxItem>
+                                            <ComboBoxItem >6</ComboBoxItem>
+                                            <ComboBoxItem >7</ComboBoxItem>
+                                            <ComboBoxItem >8</ComboBoxItem>
+                                            <ComboBoxItem >9</ComboBoxItem>
+                                            <ComboBoxItem >10</ComboBoxItem>
+                                        </ComboBox>
+                                        <Button  Margin="0,0,10,0" Name="CutBeepTimesBtn" Click="CutBeepTimesBtn_Click" Content="{DynamicResource BeepTimes}" Padding="5,5,0,5" Width="80" Height="30"/>
                                         <CheckBox VerticalAlignment="Center" IsChecked="True" Name="CutBeepSettingCheck"/>
                                     </StackPanel>
                                 </GroupBox>

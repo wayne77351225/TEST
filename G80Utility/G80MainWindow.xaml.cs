@@ -1361,10 +1361,10 @@ namespace G80Utility
                 //is enabled
                 oneByteData[0] = data[8];
                 checkIsGetData(null, EnableCutBeepCom, oneByteData, FindResource("BeepEnable") as string, false, 1);
-                //beep times
+                //讀取時第二個字節為次數 beep times
                 oneByteData[0] = data[9];
                 checkIsGetData(null, CutBeepTimesCom, oneByteData, FindResource("BeepTimes") as string, true, 10);
-                //beep duration
+                //讀取時第三個字節為時間 beep duration
                 oneByteData[0] = data[10];
                 checkIsGetData(null, CutBeepDurationgCom, oneByteData, FindResource("BeepDurationg") as string, true, 10);
             }
@@ -3993,10 +3993,10 @@ namespace G80Utility
                 {
                     tempList.Add(0x01);
                 }
-                int times = CutBeepTimesCom.SelectedIndex + 1;
-                tempList.Add(Convert.ToByte(times));
-                int Duration = CutBeepDurationgCom.SelectedIndex + 1;
+                int Duration = CutBeepDurationgCom.SelectedIndex + 1; //時間是byte 2
                 tempList.Add(Convert.ToByte(Duration));
+                int times = CutBeepTimesCom.SelectedIndex + 1; //次數是byte 3
+                tempList.Add(Convert.ToByte(times));
                 SendCmd(tempList.ToArray(), "BeepOrSetting", 0);
 
             }
