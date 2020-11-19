@@ -129,13 +129,20 @@ namespace G80Utility
         string nowLanguage;
 
         //是否更新成功
-        public static bool isLoadHexSuccess,isLoadBinSuccess;
+        public static bool isLoadHexSuccess, isLoadBinSuccess;
         //儲存檔案路徑
         public static string hex_file_name;
         //儲存檔案內容
         public static byte[] code_array;
         //判斷是否為 bin檔
         public static bool isBin;
+
+        public bool isIAPMode;
+        public bool isUSBLink;
+        public string file_name = "";
+        public string ext_name = "";
+        public int successCount = 0;
+        public bool isStopUpdate;
         #endregion
 
         public G80MainWindow()
@@ -1368,7 +1375,7 @@ namespace G80Utility
                 oneByteData[0] = data[10];
                 checkIsGetData(null, CutBeepDurationgCom, oneByteData, FindResource("BeepDurationg") as string, true, 10);
             }
-           
+
         }
         #endregion
 
@@ -1540,7 +1547,7 @@ namespace G80Utility
             //(0~7)前8個是無意義資料
             for (int i = 8; i < 24; i++)
             {
-                WIFIname += Convert.ToChar(data[i]);      
+                WIFIname += Convert.ToChar(data[i]);
             }
             WIFIName_Txt.Text = WIFIname;
             Console.WriteLine("WIFIname:" + WIFIname);
@@ -2614,12 +2621,61 @@ namespace G80Utility
         }
         #endregion
 
+        //偵測目前tab focus是否為fwupdate
+        #region tabControl點擊偵測事件
+        private void AllTabTC_GotFocus(object sender, RoutedEventArgs e)
+        {
+            if (AllTabTC.SelectedItem.ToString().Contains(FindResource("FWUpdate") as string))
+            {
+                isIAPMode = true;
+            }
+            else
+            {
+                isIAPMode = false;
+            }
+
+        }
+        #endregion
+
         //升級程序按鈕
         #region 升級程序tab按鈕事件
         private void FWUpdateTab_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {   //初始化
-            UIintial();
+        {
+            initialIAP();
+        }
+        #endregion
 
+        #region 中止自動更新按鈕事件
+        private void StopUpdateBtn_Click(object sender, RoutedEventArgs e)
+        {
+            isStopUpdate = true;
+            stopConnect(false);
+        }
+        #endregion
+
+        public void stopConnect(bool isError) {
+            iap_download.GD32HIDIAP_LeaveIAPStop();
+            device_connect_status_ui(false);
+            iap_download.Close();
+
+            initialIAP();
+
+            if (!isError) {
+                updata_ui_status_text(8, "程序中止需要幾秒，若要更換檔案，請選取正確的檔案之後重開打印機");
+                openfileAndDownloadUIControl(true); //開啟button
+            } 
+            //else if(isError ){
+            //    updata_ui_status_text(8, "請重開打印機");
+            //}
+
+         
+        }
+
+        /*
+        #region 重新連接打印機按鈕事件
+        private void ReconnectBtn_Click(object sender, RoutedEventArgs e)
+        {
+            UIintial();
             //iap初始化
             if (iap_download != null)
             {
@@ -2628,52 +2684,22 @@ namespace G80Utility
             iap_download = new IAP_download();
             iap_download.Initial();
             iap_download.isConnectedFunc = device_connect_status;
-            set_connect_status += device_connect_status_ui;
-
-            //啟動ipa計時器   
-            timer = new Timer();
-            timer.Interval = 1000;
-            timer.Elapsed += timer_1s_Tick;
-            timer.Start();
-
-            //未連接設備不可以下載
-            if (DeviceStatusTxt.Text == "" || DeviceStatusTxt.Text == FindResource("DeviceDisconnected") as string) 
-            {
-                openfileAndDownloadUIControl(false);
-            }
-            else {
-                openfileAndDownloadUIControl(true);
-            }
-        }
-        #endregion
-
-        #region 重新連接打印機按鈕事件
-        private void ReconnectBtn_Click(object sender, RoutedEventArgs e)
-        {
-            UIintial();
-            //iap初始化
-            if (iap_download != null) {
-                iap_download.Close();
-            }
-            iap_download = new IAP_download(); 
-            iap_download.Initial();
-            iap_download.isConnectedFunc = device_connect_status;        
 
             //啟動ipa計時器   
             if (timer != null)
             {
                 timer.Dispose();  //避免重複設定
-                timer.Close();                
+                timer.Close();
             }
             timer = new Timer();
             timer.Interval = 1000;
             timer.Elapsed += timer_1s_Tick;
             timer.Start();
 
-            if (!isLoadBinSuccess && !isLoadHexSuccess)
-            {
-                set_connect_status += device_connect_status_ui;
-            }
+            //if (!isLoadBinSuccess && !isLoadHexSuccess)
+            //{
+            set_connect_status += device_connect_status_ui;
+            //}
 
             //未連接設備不可以下載
             if (DeviceStatusTxt.Text == "" || DeviceStatusTxt.Text == FindResource("DeviceDisconnected") as string)
@@ -2687,12 +2713,13 @@ namespace G80Utility
 
         }
         #endregion
+        */
 
         #region 開啟FW檔案按鈕事件
         private void OpenFWfileBtn_Click(object sender, EventArgs e)
         {
-            string file_name = "";
-            string ext_name = "";
+            file_name = "";
+            ext_name = "";
             isBin = false;
             isLoadHexSuccess = false;//打開文件需要重新解析，這邊把此變數恢復預設
             isLoadBinSuccess = false;
@@ -2704,12 +2731,13 @@ namespace G80Utility
             {
                 file_name = dialog.FileName;
                 ext_name = Path.GetExtension(file_name);
-                if (ext_name.Equals(".bin")) {
+                if (ext_name.Equals(".bin"))
+                {
                     isBin = true;
                 }
                 FilePathTxt.Text = file_name;
                 iap_download.hex_file_name = file_name;
-                updata_file_button_Click(sender, e);
+                updata_file_button_Click(sender);
                 DownloadFWBtn.IsEnabled = true;
             }
             else
@@ -2725,18 +2753,27 @@ namespace G80Utility
         #region 更新FW程序按鈕事件
         private void DownloadFWBtn_Click(object sender, RoutedEventArgs e)
         {
-            download_time = 0;
-            hex_to_bin_time = 0;
-            //实例化回调
-            setCallBack = new setTextValueCallBack(updata_ui_status_text);
-            if (isLoadHexSuccess || isLoadBinSuccess || isBin)
-                updata_file_button_Click(sender, e);
-            //创建一个线程去执行这个方法:创建的线程默认是前台线程
-            Thread thread = new Thread(new ParameterizedThreadStart(iap_download.download_code));
-            thread.IsBackground = true;
-            thread.Start(this);
+            if (DeviceStatusTxt.Text == "" || DeviceStatusTxt.Text == FindResource("DeviceDisconnected") as string)　//避免中斷沒注意直接更新
+            {
+               updata_ui_status_text(8, "打印機未連線或未重啟");
+               
+            }
+            else {
+                download_time = 0;
+                hex_to_bin_time = 0;
+                //实例化回调
+                setCallBack = new setTextValueCallBack(updata_ui_status_text);
+                if (isLoadHexSuccess || isLoadBinSuccess || isBin)
+                    updata_file_button_Click(sender);
+                //创建一个线程去执行这个方法:创建的线程默认是前台线程
+                Thread thread = new Thread(new ParameterizedThreadStart(iap_download.download_code));
+                thread.IsBackground = true;
+                thread.Start(this);
+            }
+            
         }
         #endregion
+
         //========================傳輸三個空白===========================
 
         public void send3empty()
@@ -2751,7 +2788,7 @@ namespace G80Utility
                         bool isError = RS232Connect.OpenSerialPort(RS232PortName, FindResource("CannotOpenComport") as string);
                         if (!isError)
                         {
-                            RS232Connect.SerialPortSendCMD("NoReceive", empty3Array, null, 0);                       
+                            RS232Connect.SerialPortSendCMD("NoReceive", empty3Array, null, 0);
                             RS232Connect.SerialPortSendCMD("NoReceive", cut, null, 0);
                             SendCmdFail("R"); //避免傳輸時突然有問題
                             RS232Connect.CloseSerialPort(); //最後關閉
@@ -3758,7 +3795,6 @@ namespace G80Utility
         }
         #endregion
 
-        
         #region 設定合蓋自動切紙
         private void HeadCloseCut()
         {
@@ -3779,7 +3815,6 @@ namespace G80Utility
             else { MessageBox.Show(FindResource("ColumnEmpty") as string); }
         }
         #endregion
-        
 
         #region 設定垂直移動單位
         private void YOffset()
@@ -4402,7 +4437,8 @@ namespace G80Utility
                     sendArray = StringToByteArray(Command.WIFI_NAME_SET + result);
                     SendCmd(sendArray, "BeepOrSetting", 0);
                 }
-                else {
+                else
+                {
                     MessageBox.Show(FindResource("WIFINameTooLarge") as string);
                 }
 
@@ -4421,7 +4457,7 @@ namespace G80Utility
             string pwd;
             if (WIFIPwd_Txt.Text != "")
             {
-                pwd = WIFIPwd_Txt.Text.Replace("\0","");
+                pwd = WIFIPwd_Txt.Text.Replace("\0", "");
 
                 String result = ConvertStringToHex(pwd);
                 if (result != null)
@@ -4697,6 +4733,50 @@ namespace G80Utility
         #endregion
         //========================IAP 升級Firmware相關===================
 
+        #region IAP初始化
+        private void initialIAP()
+        {
+
+            //初始化
+            UIintial();
+
+            //iap初始化
+            if (iap_download != null)
+            {
+                iap_download.Close();
+            }
+            iap_download = new IAP_download();
+            iap_download.Initial();
+            iap_download.isConnectedFunc = device_connect_status;
+
+            if (!isLoadBinSuccess && !isLoadHexSuccess)
+            {
+                set_connect_status += device_connect_status_ui;
+            }
+            //啟動ipa計時器   
+            if (timer != null)
+            {
+                timer.Dispose();  //避免重複設定
+                timer.Close();
+            }
+            //啟動ipa計時器   
+            timer = new Timer();
+            timer.Interval = 1000;
+            timer.Elapsed += timer_1s_Tick;
+            timer.Start();
+
+            //未連接設備不可以下載
+            if (DeviceStatusTxt.Text == "" || DeviceStatusTxt.Text == FindResource("DeviceDisconnected") as string)
+            {
+                openfileAndDownloadUIControl(false);
+            }
+            else
+            {
+                openfileAndDownloadUIControl(true);
+            }
+        }
+        #endregion
+
         #region hid裝置連線狀態
         public void device_connect_status(bool con)
         {
@@ -4711,33 +4791,40 @@ namespace G80Utility
             {
                 DeviceStatusTxt.Text = FindResource("DeviceConnected") as string;
                 openfileAndDownloadUIControl(true);
-                ReconnectBtn.IsEnabled = false;
+                //ReconnectBtn.IsEnabled = false;
+                isUSBLink = false;
+                if (file_name != null && file_name != "") //自動更新
+                {
+                    Thread.Sleep(1000);
+                    DownloadFWBtn_Click(null, null);                    
+                }
+
             }
             else
             {
                 DeviceStatusTxt.Text = FindResource("DeviceDisconnected") as string;
-                ReconnectBtn.IsEnabled = true;
-
                 if (isBin)
                 {
-                     //isBinUpgradeSuccess = true; 
-                        isLoadBinSuccess = true;
+                    isLoadBinSuccess = true;
                 }
-                else {
-                    //isUpgradeSuccess = true;
+                else
+                {
                     isLoadHexSuccess = true;
                 }
-                openfileAndDownloadUIControl(false);
+                DownloadFWBtn.IsEnabled=false;
+               
+
             }
         }
         #endregion
 
         #region fw更新畫面初始化
         private void UIintial()
-        {   
+        {
+            isIAPMode = true;
             StatusLabel.Content = "";
-            CodeSizeLabel.Content = "";
-            AddrLabel.Content = "";
+            //CodeSizeLabel.Content = "";
+            //AddrLabel.Content = "";
             ReadFileProgress.Value = 0;
             WriteStatusLabel.Content = "";
             DownloadProgress.Value = 0;
@@ -4769,6 +4856,12 @@ namespace G80Utility
 
                 case 5:
                     WriteStatusLabel.Content = text;
+                    if (text.Equals(FindResource("UpgradeCompleted") as string))
+                    {
+                        successCount++;
+                        SuccessCountLabel.Content = successCount.ToString();
+                        isStopUpdate = false;
+                    }
                     break;
 
                 case 6:
@@ -4781,17 +4874,22 @@ namespace G80Utility
                     IAPDialog iapDlg = new IAPDialog();
                     iapDlg.WindowStartupLocation = WindowStartupLocation.CenterOwner;
                     iapDlg.Owner = this;
+                    iapDlg.IAPLabel.Content = text;
                     iapDlg.Show();
                     break;
                 case 9://傳輸資料與完畢判斷關閉開啟button
                     if (text.Equals("finish"))
                     {
                         openfileAndDownloadUIControl(true);
-                        ReconnectBtn.IsEnabled = true;
+                        if (file_name != null && file_name != "" ) //錯誤自動更新
+                        {
+                            stopConnect(true);
+                            OpenFWfileBtn.IsEnabled = true;
+                        }
                     }
-                    else if (text.Equals("sending")) {          
+                    else if (text.Equals("sending"))
+                    {
                         openfileAndDownloadUIControl(false);
-                        ReconnectBtn.IsEnabled = false;
                     }
                     break;
             }
@@ -4799,14 +4897,14 @@ namespace G80Utility
         #endregion
 
         #region 執行檔案解析
-        private void updata_file_button_Click(object sender, EventArgs e)
+        private void updata_file_button_Click(object sender)
         {
             download_time = 0;
             hex_to_bin_time = 0;
             //实例化回调
             setCallBack = new setTextValueCallBack(updata_ui_status_text);
-            if (isBin || isLoadBinSuccess) 
-            { 
+            if (isBin || isLoadBinSuccess)
+            {
                 iap_download.get_bin_array(sender);
             }
             else
@@ -4839,7 +4937,7 @@ namespace G80Utility
 
                     break;
                 case 3: //下載秒數歸0
-                    download_time=0;
+                    download_time = 0;
                     Dispatcher.BeginInvoke(new Action(() =>
                     {
                         DownloadTimeTxt.Text = "";
@@ -4851,10 +4949,11 @@ namespace G80Utility
         #endregion
 
         #region 是否開啟打開文件與下載button
-        public void openfileAndDownloadUIControl(bool isEnable) {
+        public void openfileAndDownloadUIControl(bool isEnable)
+        {
             DownloadFWBtn.IsEnabled = isEnable;
             OpenFWfileBtn.IsEnabled = isEnable;
-           
+
         }
         #endregion
         //==============================打印機實時狀態============================
@@ -6325,22 +6424,25 @@ namespace G80Utility
 
                 return null;
             }
-            else {
+            else
+            {
                 StringBuilder sbBytes = new StringBuilder(16);
-                for (int i = 0; i < 16; i++) {
-                    
+                for (int i = 0; i < 16; i++)
+                {
+
                     if (i > stringLength - 1)
                     {
                         sbBytes.AppendFormat("{0:X2}", 0);
                     }
-                    else {
+                    else
+                    {
                         sbBytes.AppendFormat("{0:X2}", stringBytes.ElementAt(i));
                     }
                 }
                 Console.WriteLine(sbBytes.Length);
                 return sbBytes.ToString();
             }
-           
+
         }
         #endregion
 
@@ -6449,9 +6551,11 @@ namespace G80Utility
                             if (Linked.GetValue("Linked").ToString() == "1")
                             {
                                 isLinked = true;
+                                isUSBLink = true;
                             }
                             else
                             {
+                                isUSBLink = false;
                                 isLinked = false;
                             }
                             portdescription = (string)Device.GetValue("Port Description");//取得port description
@@ -6535,9 +6639,14 @@ namespace G80Utility
                         if (device.USBDeviceInstance == (string)rkUsbPrint.GetValue(i.ToString()))
                         {
                             device.USBisLinked = true;
+                            isUSBLink = true;
                         }
                     }
                 }
+            }
+            else
+            {
+                isUSBLink = false;
             }
         }
         #endregion
@@ -6648,6 +6757,16 @@ namespace G80Utility
                 }
                 viewmodel.getDeviceObserve("usb");
                 DeviceSelectUSB.SelectedIndex = viewmodel.USBDevice.Count - 1;//設定選取第一筆
+                if ((int)wparam == USBDetector.UsbDeviceRemoved && isIAPMode && !isUSBLink)
+                {
+                    Console.WriteLine("IAP REMOVED");
+
+                }
+                else if ((int)wparam == USBDetector.NewUsbDeviceConnected && isIAPMode && !isUSBLink)
+                {
+                    Console.WriteLine("IAP detected");
+                    initialIAP();
+                }
 
             }
             handled = false;

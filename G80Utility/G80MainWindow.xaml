@@ -102,7 +102,7 @@
         </Border>
 
         <!--Tap分页-->
-        <TabControl Height="470" TabStripPlacement="Top" Margin="5,3,5,0" >
+        <TabControl Height="470" TabStripPlacement="Top" Margin="5,3,5,0"  Name="AllTabTC" GotFocus="AllTabTC_GotFocus">
             <!--数据传输-->
             <TabItem Header="{DynamicResource DataTransfer}"  FontSize="14" >
                 <Border Margin="5,5,5,1" Name="DataSendTab"   >
@@ -895,7 +895,8 @@
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
                             <Label Content="HID设备连接状况" Margin="0,0,5,0"/>
                             <TextBox Name="DeviceStatusTxt" Width="210" Height="25"/>
-                            <Button Name="ReconnectBtn" Width="220" Content="{DynamicResource ReconnectAnother}" Click="ReconnectBtn_Click" Margin="10,0,0,0"/>
+                            <Button Name="StopUpdateBtn" Width="220" Content="停止自动更新"  Click="StopUpdateBtn_Click" Margin="10,0,0,0"/>
+                            <!--<Button Name="ReconnectBtn" Width="220" Content="{DynamicResource ReconnectAnother}" Visibility="Collapsed" Click="ReconnectBtn_Click" Margin="10,0,0,0"/>-->
                         </StackPanel>
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
                             <TextBox  Name="FilePathTxt" Width="450" Height="25"/>
@@ -927,10 +928,12 @@
                                 </StackPanel>
                                 <StackPanel Orientation="Horizontal">
                                     <Label>状态:</Label>
-                                    <Label Name="WriteStatusLabel" Margin="0,0,5,0" Width="80"></Label>
+                                    <Label Name="WriteStatusLabel" Margin="0,0,5,0" Width="120"></Label>
                                     <Label>时间:</Label>
                                     <TextBox Name="DownloadTimeTxt" Height="25"  Width="40"/>
                                     <Label>秒</Label>
+                                    <Label Content="更新成功计数：" Margin="20,0,0,0"/>
+                                    <Label Name="SuccessCountLabel" Content="0" Margin="0,0,5,0" HorizontalAlignment="Right"/>
                                 </StackPanel>
                             </StackPanel>
                         </GroupBox>

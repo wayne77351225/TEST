@@ -110,7 +110,6 @@ namespace G80Utility.HID
             }
         }
 
-
         //解析檔案
         public void hex_file_to_bin_array(object sender)
         {
@@ -211,7 +210,7 @@ namespace G80Utility.HID
                // UInt32 code_size = (UInt32)(code_data_bin.Length / 1024);
                 //win.Dispatcher.Invoke(win.setCallBack, (byte)2, code_size.ToString() + "KB");
                 win.Dispatcher.Invoke(win.setCallBack, (byte)1, win.FindResource("ParseCompleted") as string);
-                    G80MainWindow.isLoadHexSuccess = true;
+                G80MainWindow.isLoadHexSuccess = true;
 
                 }
             catch (Exception )
@@ -226,7 +225,8 @@ namespace G80Utility.HID
             this.convert_bin_done = true;
         }
 
-        //同一hex檔案更新時，不解析檔案，只抓取部分內容後直接進入更新
+         /*
+        //同一hex檔案更新時，不解析檔案，只抓取部分內容後直接進入更新      
         public void hex_file_to_bin_array_no_progerss(object sender)
         {
             this.run_step = 1;
@@ -256,7 +256,7 @@ namespace G80Utility.HID
             //}
             //while (null != cal_line_num.ReadLine());
 
-            ///* 第一行数据是 */
+            //第一行数据是
             //StringBuilder file_start_addr = new StringBuilder();
 
             //szLine = HexReader.ReadLine();
@@ -281,7 +281,8 @@ namespace G80Utility.HID
             {
                 this.run_step = 3;//恢復default
             }
-        }
+        }*/
+
 
         //更新bin時，不解析檔案
         public void get_bin_array(object sender)
@@ -346,8 +347,7 @@ namespace G80Utility.HID
             {
                 option = receive_data;
                 return true;
-            }
-          
+            }         
             return false;
         }
         */
@@ -369,8 +369,18 @@ namespace G80Utility.HID
             TimeoutObject.Reset();
 
             SendBytes(send_data);
-            Thread.Sleep(500);//為了避免太快收不到資料
-            if (TimeoutObject.WaitOne(10000, false))
+
+            if (G80MainWindow.isLoadBinSuccess) {
+                Thread.Sleep(12000);//為了避免太快收不到資料
+
+            } else if (G80MainWindow.isLoadHexSuccess) {
+                Thread.Sleep(5000);//為了避免太快收不到資料
+            }
+            else {
+                Thread.Sleep(1000);//為了避免太快收不到資料
+            }
+           
+            if (TimeoutObject.WaitOne(3000, false))
             {
                 if (receive_data[0] == 0x01)
                 {
@@ -428,19 +438,25 @@ namespace G80Utility.HID
             return false;
         }
 
-        private bool GD32HIDIAP_LeaveIAP()
+        public bool GD32HIDIAP_LeaveIAPStop()
+        {
+            byte[] send_data = new byte[] { 0x04 };            
+            return SendBytes(send_data);
+        }
+
+        public bool GD32HIDIAP_LeaveIAP()
         {
             byte[] send_data = new byte[] { 0x04 };
             SendBytes(send_data);
             return true;
         }
-
         public void download_code(object sender)
         {
             G80MainWindow win = (G80MainWindow)sender;
             if (!this.convert_bin_done && !G80MainWindow.isLoadHexSuccess)
             {
-                MessageBox.Show(win.FindResource("ParseFirst") as string);
+                //MessageBox.Show(win.FindResource("ParseFirst") as string);
+                //Console.WriteLine(win.FindResource("FailedReadChipOption") as string);
                 this.run_step = 3;
                 return;
             }
@@ -450,7 +466,8 @@ namespace G80Utility.HID
             win.Dispatcher.Invoke(win.setCallBack, (byte)9, "sending");
             if (!read_opt_byte(out receive_data))
             {
-                MessageBox.Show(win.FindResource("FailedReadChipOption") as string);
+                //MessageBox.Show(win.FindResource("FailedReadChipOption") as string);
+                //Console.WriteLine(win.FindResource("FailedReadChipOption") as string);
                 win.Dispatcher.Invoke(win.setCallBack, (byte)9, "finish");
                 this.run_step = 3;
                 return;
@@ -483,14 +500,17 @@ namespace G80Utility.HID
             }
             if (!erasure_section(this.download_addr, (UInt32)code_data_bin.Length))
             {
-                MessageBox.Show(win.FindResource("EraseMemoryError") as string);
+                //MessageBox.Show(win.FindResource("EraseMemoryError") as string);
+               // Console.WriteLine(win.FindResource("EraseMemoryError") as string);
+                win.Dispatcher.Invoke(win.setCallBack, (byte)9, "finish");
                 this.run_step = 3;
                 return;
             }
             win.Dispatcher.Invoke(win.setCallBack, (byte)5, win.FindResource("SendingData") as string);
             if (!download_code(code_data_bin, win))
             {
-                MessageBox.Show(win.FindResource("BurningFailed") as string);
+                //MessageBox.Show(win.FindResource("BurningFailed") as string);
+                //Console.WriteLine(win.FindResource("BurningFailed") as string);
                 win.Dispatcher.Invoke(win.setCallBack, (byte)9, "finish");
                 this.run_step = 3;
                 return;
