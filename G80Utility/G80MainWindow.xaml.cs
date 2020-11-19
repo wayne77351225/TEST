@@ -1254,14 +1254,23 @@ namespace G80Utility
                 string speed = hexStringToInt(receiveData).ToString();
                 switch (speed)
                 {
-                    case "200":
+                    case "120":
                         PrintSpeedCom.SelectedIndex = 0;
                         break;
-                    case "250":
+                    case "160":
                         PrintSpeedCom.SelectedIndex = 1;
                         break;
-                    case "300":
+                    case "180":
                         PrintSpeedCom.SelectedIndex = 2;
+                        break;
+                    case "200":
+                        PrintSpeedCom.SelectedIndex = 3;
+                        break;
+                    case "250":
+                        PrintSpeedCom.SelectedIndex = 4;
+                        break;
+                    case "300":
+                        PrintSpeedCom.SelectedIndex = 5;
                         break;
                     default:
                         setSysStatusColorAndText(FindResource("Speed") as string + FindResource("NotReadParameterYet") as string, "#FFEF7171");
@@ -3668,13 +3677,22 @@ namespace G80Utility
                 byte[] sendArray = null;
                 switch (PrintSpeedCom.SelectedIndex)
                 {
-                    case 0: //200 mm/s
+                    case 0: //120 mm/s
+                        sendArray = StringToByteArray(Command.PRINT_SPEED_120_SETTING);
+                        break;
+                    case 1://160 mm/s
+                        sendArray = StringToByteArray(Command.PRINT_SPEED_160_SETTING);
+                        break;
+                    case 2://180 mm/s
+                        sendArray = StringToByteArray(Command.PRINT_SPEED_180_SETTING);
+                        break;
+                    case 3: //200 mm/s
                         sendArray = StringToByteArray(Command.PRINT_SPEED_200_SETTING);
                         break;
-                    case 1://250 mm/s
+                    case 4://250 mm/s
                         sendArray = StringToByteArray(Command.PRINT_SPEED_250_SETTING);
                         break;
-                    case 2://300 mm/s
+                    case 5://300 mm/s
                         sendArray = StringToByteArray(Command.PRINT_SPEED_300_SETTING);
                         break;
                 }

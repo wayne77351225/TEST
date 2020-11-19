@@ -141,6 +141,9 @@ namespace G80Utility.Tool
         public static string ACCELERATION_OF_MOTOR_ON_SETTING = "1F 1B 1F 53 5A 4A 42 5A 46 31 14 02 01";
 
         //設定打印速度
+        public static string PRINT_SPEED_120_SETTING = "1F 1B 1F 96 07 06 09 23";
+        public static string PRINT_SPEED_160_SETTING = "1F 1B 1F 96 07 06 09 32";
+        public static string PRINT_SPEED_180_SETTING = "1F 1B 1F 96 07 06 09 33";
         public static string PRINT_SPEED_200_SETTING = "1F 1B 1F 96 01 02 03 11 12 13 66";
         public static string PRINT_SPEED_250_SETTING = "1F 1B 1F 96 01 02 03 11 12 13 55";
         public static string PRINT_SPEED_300_SETTING = "1F 1B 1F 96 01 02 03 11 12 13 33";
