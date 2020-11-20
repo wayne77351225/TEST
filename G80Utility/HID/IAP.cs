@@ -203,10 +203,10 @@ namespace G80Utility.HID
                     }
                 }
 
-               G80MainWindow.code_array = this.code_data_bin; //紀錄檔案
+                G80MainWindow.code_array = this.code_data_bin; //紀錄檔案
 
                 win.Dispatcher.Invoke(win.setCallBack, (byte)4, "100");
-
+                Thread.Sleep(500);
                // UInt32 code_size = (UInt32)(code_data_bin.Length / 1024);
                 //win.Dispatcher.Invoke(win.setCallBack, (byte)2, code_size.ToString() + "KB");
                 win.Dispatcher.Invoke(win.setCallBack, (byte)1, win.FindResource("ParseCompleted") as string);
@@ -225,63 +225,6 @@ namespace G80Utility.HID
             this.convert_bin_done = true;
         }
 
-         /*
-        //同一hex檔案更新時，不解析檔案，只抓取部分內容後直接進入更新      
-        public void hex_file_to_bin_array_no_progerss(object sender)
-        {
-            this.run_step = 1;
-            this.convert_bin_done = false;
-            int line_num = 0, current_line = 0;
-            string szLine;
-            string szHex = "";
-            StreamReader HexReader;
-            StreamReader cal_line_num;
-            if (G80MainWindow.hex_file_name == null)
-            {              
-                return;
-            }
-            try
-            {
-                HexReader = new StreamReader(G80MainWindow.hex_file_name);
-                cal_line_num = new StreamReader(G80MainWindow.hex_file_name);
-            }
-            catch
-            {
-                EventArgs ex = new EventArgs();
-                return;
-            }
-            //do
-            //{
-            //    line_num++;
-            //}
-            //while (null != cal_line_num.ReadLine());
-
-            //第一行数据是
-            //StringBuilder file_start_addr = new StringBuilder();
-
-            //szLine = HexReader.ReadLine();
-            //if (szLine.Substring(0, 3) == ":02")//数据结束
-            //{
-            //    file_start_addr.Append(szLine.Substring(9, szLine.Length - 11));
-            //}
-
-            //szLine = HexReader.ReadLine();
-            //if (szLine.Substring(0, 3) == ":10")//数据结束
-            //{
-            //    file_start_addr.Append(szLine.Substring(3, 4));
-            //}
-            try
-            {
-                //this.download_addr = (UInt32)Convert.ToUInt32(file_start_addr.ToString().Substring(0, 8), 16);
-                this.download_addr = 0X08004000;
-                this.run_step = 0;
-                this.convert_bin_done = true;
-            }
-            catch (Exception)
-            {
-                this.run_step = 3;//恢復default
-            }
-        }*/
 
 
         //更新bin時，不解析檔案
@@ -314,7 +257,7 @@ namespace G80Utility.HID
             this.download_addr = 0X08004000;
             this.run_step = 0;
             this.convert_bin_done = true;
-　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　
+            //((G80MainWindow)Application.Current.MainWindow).Dispatcher.Invoke(((G80MainWindow)Application.Current.MainWindow).setCallBack, (byte)1, ((G80MainWindow)Application.Current.MainWindow).FindResource("ParseCompleted") as string);
         }
      
 

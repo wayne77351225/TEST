@@ -2663,6 +2663,7 @@ namespace G80Utility
         #endregion
 
         public void stopConnect(bool isError) {
+            try { 
             iap_download.GD32HIDIAP_LeaveIAPStop();
             device_connect_status_ui(false);
             iap_download.Close();
@@ -2672,12 +2673,13 @@ namespace G80Utility
             if (!isError) {
                 updata_ui_status_text(8, "程序中止需要幾秒，若要更換檔案，請選取正確的檔案之後重開打印機");
                 openfileAndDownloadUIControl(true); //開啟button
-            } 
-            //else if(isError ){
-            //    updata_ui_status_text(8, "請重開打印機");
-            //}
+            }
+            }
+            catch (Exception e){
+                Console.WriteLine(e.ToString());
+            }
 
-         
+
         }
 
         /*
@@ -2748,6 +2750,10 @@ namespace G80Utility
                 iap_download.hex_file_name = file_name;
                 updata_file_button_Click(sender);
                 DownloadFWBtn.IsEnabled = true;
+                if (isBin)
+                {
+                    DownloadFWBtn_Click(null, null);//bin不解析就直接更新
+                }
             }
             else
             {
@@ -4858,6 +4864,10 @@ namespace G80Utility
             {
                 case 1:
                     StatusLabel.Content = text;
+                    if (text.Equals(FindResource("ParseCompleted") as string)|| text.Equals("bin檔不需解析")){
+                        Thread.Sleep(500);
+                        DownloadFWBtn_Click(null, null);
+                    }
                     break;
 
                 case 2:
@@ -4871,7 +4881,6 @@ namespace G80Utility
                 case 4:
                     ReadFileProgress.Value = int.Parse(text);
                     break;
-
                 case 5:
                     WriteStatusLabel.Content = text;
                     if (text.Equals(FindResource("UpgradeCompleted") as string))
@@ -4924,6 +4933,7 @@ namespace G80Utility
             if (isBin || isLoadBinSuccess)
             {
                 iap_download.get_bin_array(sender);
+             
             }
             else
             {
