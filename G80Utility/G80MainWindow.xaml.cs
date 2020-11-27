@@ -4967,7 +4967,6 @@ namespace G80Utility
         }
         #endregion
 
-
         #region 停止自動更新功能
         public void stopConnect(bool isError)
         {

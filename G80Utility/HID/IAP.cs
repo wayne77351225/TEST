@@ -405,18 +405,14 @@ namespace G80Utility.HID
             return false;
         }
 
-        public bool GD32HIDIAP_LeaveIAPStop()
-        {
-            byte[] send_data = new byte[] { 0x04 };
-            return SendBytes(send_data);
-        }
-
+        //切回usb mode
         public bool GD32HIDIAP_LeaveIAP()
         {
             byte[] send_data = new byte[] { 0x04 };
             SendBytes(send_data);
             return true;
         }
+
         public void download_code(object sender)
         {
             G80MainWindow win = (G80MainWindow)sender;
