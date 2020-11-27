@@ -808,19 +808,19 @@
                                     <StackPanel   Margin="10,5,5,10" Orientation="Horizontal" HorizontalAlignment="Left" >
                                         <TextBox  FontSize="14" Width="100" Text="" Name="BTName_Txt" Padding="5"/>
                                         <Button  Margin="10,0,0,0" Name="BTName_Btn" Click="BTName_Btn_Click" Content="读取蓝牙名称" Padding="5" FontSize="14"  Width="120"/>
-                                </StackPanel>
-                                <Label Margin="10,0,0,0" Content="WIFI名称：" HorizontalAlignment="Left"/>
-                                <StackPanel   Margin="10,0,5,10" Orientation="Horizontal" HorizontalAlignment="Center" >
-                                    <TextBox  FontSize="14" Width="100" Text="" Name="WIFIName_Txt" Padding="5"/>
-                                    <Button  Margin="10,0,0,0" Name="WIFINameLoad_Btn" Click="WIFINameLoad_Btn_Click" Content="读取" Padding="5" FontSize="14"  Width="55"/>
-                                    <Button  Margin="10,0,0,0" Name="WIFINameWirte_Btn" Click="WIFINameWirte_Btn_Click" Content="设置" Padding="5" FontSize="14"  Width="55"/>
-                                </StackPanel>
-                                <Label Margin="10,0,0,0" Content="WIFI密码：" HorizontalAlignment="Left"/>
-                                <StackPanel Margin="10,0,5,5" Orientation="Horizontal" HorizontalAlignment="Center" >
-                                    <TextBox  FontSize="14" Width="100" Text="" Name="WIFIPwd_Txt" Padding="5"/>
-                                    <Button  Margin="10,0,0,0" Name="wIFIPwdLoad_Btn" Click="wIFIPwdLoad_Btn_Click" Content="读取" Padding="5" FontSize="14"  Width="55"/>
-                                    <Button  Margin="10,0,0,0" Name="wIFIPwdWrite_Btn" Click="wIFIPwdWrite_Btn_Click" Content="设置" Padding="5" FontSize="14"  Width="55"/>
-                                </StackPanel>
+                                    </StackPanel>
+                                    <Label Margin="10,0,0,0" Content="WIFI名称：" HorizontalAlignment="Left"/>
+                                    <StackPanel   Margin="10,0,5,10" Orientation="Horizontal" HorizontalAlignment="Center" >
+                                        <TextBox  FontSize="14" Width="100" Text="" Name="WIFIName_Txt" Padding="5"/>
+                                        <Button  Margin="10,0,0,0" Name="WIFINameLoad_Btn" Click="WIFINameLoad_Btn_Click" Content="读取" Padding="5" FontSize="14"  Width="55"/>
+                                        <Button  Margin="10,0,0,0" Name="WIFINameWirte_Btn" Click="WIFINameWirte_Btn_Click" Content="设置" Padding="5" FontSize="14"  Width="55"/>
+                                    </StackPanel>
+                                    <Label Margin="10,0,0,0" Content="WIFI密码：" HorizontalAlignment="Left"/>
+                                    <StackPanel Margin="10,0,5,5" Orientation="Horizontal" HorizontalAlignment="Center" >
+                                        <TextBox  FontSize="14" Width="100" Text="" Name="WIFIPwd_Txt" Padding="5"/>
+                                        <Button  Margin="10,0,0,0" Name="wIFIPwdLoad_Btn" Click="wIFIPwdLoad_Btn_Click" Content="读取" Padding="5" FontSize="14"  Width="55"/>
+                                        <Button  Margin="10,0,0,0" Name="wIFIPwdWrite_Btn" Click="wIFIPwdWrite_Btn_Click" Content="设置" Padding="5" FontSize="14"  Width="55"/>
+                                    </StackPanel>
                                 </StackPanel>
                             </GroupBox>
                         </Grid>
@@ -894,50 +894,58 @@
                     />
                 </TabItem.Header>
                 <Border CornerRadius="5" Background="#595959" Margin="0,0,1,2"  Name="FWUpgradeTab" >
-                    <StackPanel  Margin="0,40,0,0" HorizontalAlignment="Center" >
-                        <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
-                            <Label Content="HID设备连接状况" Margin="0,0,5,0"/>
-                            <TextBox Name="DeviceStatusTxt" Width="210" Height="25"/>
-                            <Button Name="StopUpdateBtn" Width="220" Content="停止自动更新"  Click="StopUpdateBtn_Click" Margin="10,0,0,0"/>
-                            <!--<Button Name="ReconnectBtn" Width="220" Content="{DynamicResource ReconnectAnother}" Visibility="Collapsed" Click="ReconnectBtn_Click" Margin="10,0,0,0"/>-->
-                        </StackPanel>
-                        <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
-                            <TextBox  Name="FilePathTxt" Width="450" Height="25"/>
-                            <Button  Name="OpenFWfileBtn" Click="OpenFWfileBtn_Click" Margin="10,5,5,5" Content="打开文件" Padding="5" FontSize="14" Width="100"/>
-                        </StackPanel>
-                        <!--解析文件数据-->
-                        <GroupBox Margin="0,0,0,25" Header="解析文件数据" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14" Height="120" Width="565" HorizontalAlignment="Left">
-                            <StackPanel Margin="10,10,0,10" HorizontalAlignment="Left">
-                                <ProgressBar Name="ReadFileProgress" Height="25" Width="445"  Margin="0,10,0,15" HorizontalAlignment="Left"/>
-                                <StackPanel Orientation="Horizontal">
-                                    <Label>状态:</Label>
-                                    <Label Name="StatusLabel" Margin="0,0,5,0" Width="130"></Label>
-                                    <Label Visibility="Collapsed">写入地址:</Label>
-                                    <Label  Visibility="Collapsed" Name="AddrLabel" Margin="0,0,5,0" Width="100"></Label>
-                                    <Label  Visibility="Collapsed">代码大小:</Label>
-                                    <Label  Visibility="Collapsed" Name="CodeSizeLabel" Margin="0,0,5,0" Width="60"></Label>
-                                    <Label Content="时间"/>
-                                    <TextBox Name="ConverTimeTxt"  Height="25"  Width="40"/>
-                                    <Label>秒</Label>
-                                </StackPanel>
+                    <StackPanel Orientation="Horizontal" >
+                        <StackPanel  Margin="150,40,0,0"  >
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
+                                <Label Content="HID设备连接状况" Margin="0,0,5,0"/>
+                                <TextBox Name="DeviceStatusTxt" Width="210" Height="25"/>
+                                <Button Name="StopUpdateBtn" Width="220" Content="停止自动更新" IsEnabled="False"  Click="StopUpdateBtn_Click" Margin="10,0,0,0"/>
+                                <!--<Button Name="ReconnectBtn" Width="220" Content="{DynamicResource ReconnectAnother}" Visibility="Collapsed" Click="ReconnectBtn_Click" Margin="10,0,0,0"/>-->
                             </StackPanel>
-                        </GroupBox>
-                        <!--下载数据-->
-                        <GroupBox  Header="下载数据" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14" Height="120" Width="565" HorizontalAlignment="Left">
-                            <StackPanel  Margin="10,10,0,10" HorizontalAlignment="Left" >
-                                <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
-                                    <ProgressBar Name="DownloadProgress" Height="25" Width="445" Margin="0,0,10,0"/>
-                                    <Button Name="DownloadFWBtn" Click="DownloadFWBtn_Click" Content="下载固件" Padding="5" FontSize="14" Width="80"/>
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
+                                <TextBox  Name="FilePathTxt" Width="450" Height="25"/>
+                                <Button  Name="OpenFWfileBtn" Click="OpenFWfileBtn_Click" Margin="10,5,5,5" Content="打开文件" Padding="5" FontSize="14" Width="100"/>
+                            </StackPanel>
+                            <!--解析文件数据-->
+                            <GroupBox Margin="0,0,0,25" Header="解析文件数据" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14" Height="120" Width="565" HorizontalAlignment="Left">
+                                <StackPanel Margin="10,10,0,10" HorizontalAlignment="Left">
+                                    <ProgressBar Name="ReadFileProgress" Height="25" Width="445"  Margin="0,10,0,15" HorizontalAlignment="Left"/>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Label>状态:</Label>
+                                        <Label Name="StatusLabel" Margin="0,0,5,0" Width="130"></Label>
+                                        <Label Visibility="Collapsed">写入地址:</Label>
+                                        <Label  Visibility="Collapsed" Name="AddrLabel" Margin="0,0,5,0" Width="100"></Label>
+                                        <Label  Visibility="Collapsed">代码大小:</Label>
+                                        <Label  Visibility="Collapsed" Name="CodeSizeLabel" Margin="0,0,5,0" Width="60"></Label>
+                                        <Label Content="时间"/>
+                                        <TextBox Name="ConverTimeTxt"  Height="25"  Width="40"/>
+                                        <Label>秒</Label>
+                                    </StackPanel>
                                 </StackPanel>
-                                <StackPanel Orientation="Horizontal">
-                                    <Label>状态:</Label>
-                                    <Label Name="WriteStatusLabel" Margin="0,0,5,0" Width="130"></Label>
-                                    <Label>时间:</Label>
-                                    <TextBox Name="DownloadTimeTxt" Height="25"  Width="40"/>
-                                    <Label>秒</Label>
-                                    <Label Content="更新成功计数：" Margin="20,0,0,0"/>
-                                    <Label Name="SuccessCountLabel" Content="0" Margin="0,0,5,0" HorizontalAlignment="Right"/>
+                            </GroupBox>
+                            <!--下载数据-->
+                            <GroupBox  Header="下载数据" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14" Height="120" Width="565" HorizontalAlignment="Left">
+                                <StackPanel  Margin="10,10,0,10" HorizontalAlignment="Left" >
+                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
+                                        <ProgressBar Name="DownloadProgress" Height="25" Width="445" Margin="0,0,10,0"/>
+                                        <Button Name="DownloadFWBtn" Click="DownloadFWBtn_Click" Content="下载固件" Padding="5" FontSize="14" Width="80" Visibility="Collapsed"/>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Label>状态:</Label>
+                                        <Label Name="WriteStatusLabel" Margin="0,0,5,0" Width="130"></Label>
+                                        <Label>时间:</Label>
+                                        <TextBox Name="DownloadTimeTxt" Height="25"  Width="40"/>
+                                        <Label>秒</Label>
+                                        <Label Content="更新成功计数：" Margin="20,0,0,0"/>
+                                        <Label Name="SuccessCountLabel" Content="0" Margin="0,0,5,0" HorizontalAlignment="Right"/>
+                                    </StackPanel>
                                 </StackPanel>
+                            </GroupBox>
+                        </StackPanel>
+                        <GroupBox Margin="50,0,0,25" Header="升級状态提示" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="20" Height="150"  Width="180" HorizontalAlignment="Left">
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="10,0,10,0" >
+                                <Image Margin="0,0,10,0"  Source="Images/grey_circle.png" Width="30" Name="UpgradeImg"/>
+                                <Label Name="UpgradeStatusLabel" Content=""/>
                             </StackPanel>
                         </GroupBox>
                     </StackPanel>

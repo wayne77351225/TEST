@@ -136,13 +136,18 @@ namespace G80Utility
         public static byte[] code_array;
         //判斷是否為 bin檔
         public static bool isBin;
-
+        //判斷是否進入iap
         public bool isIAPMode;
+        //判斷是否切回usb mode
         public bool isUSBLink;
+        //檔案名稱
         public string file_name = "";
+        //副檔名
         public string ext_name = "";
+        //更新成功計數
         public int successCount = 0;
-        public bool isStopUpdate;
+        //是否停止自動更新
+        public static bool isStopUpdate;
         #endregion
 
         public G80MainWindow()
@@ -2649,38 +2654,35 @@ namespace G80Utility
         //升級程序按鈕
         #region 升級程序tab按鈕事件
         private void FWUpdateTab_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
+        {         
             initialIAP();
         }
         #endregion
 
-        #region 中止自動更新按鈕事件
+        #region 中止/啟動自動更新按鈕事件
         private void StopUpdateBtn_Click(object sender, RoutedEventArgs e)
         {
-            isStopUpdate = true;
-            stopConnect(false);
+
+            if (StopUpdateBtn.Content.ToString().Contains("停止"))
+            {
+                isStopUpdate = true;
+                StopUpdateBtn.Content = "启动自动更新";
+                stopConnect(false);
+            }
+            else
+            {
+                isStopUpdate = false;
+                StopUpdateBtn.Content = "停止自动更新";
+                if (file_name != null && file_name != "") //自動更新
+                {
+                    Thread.Sleep(1000);
+                    DownloadFWBtn_Click(null, null);
+                }
+            }
+
+
         }
         #endregion
-
-        public void stopConnect(bool isError) {
-            try { 
-            iap_download.GD32HIDIAP_LeaveIAPStop();
-            device_connect_status_ui(false);
-            iap_download.Close();
-
-            initialIAP();
-
-            if (!isError) {
-                updata_ui_status_text(8, "程序中止需要幾秒，若要更換檔案，請選取正確的檔案之後重開打印機");
-                openfileAndDownloadUIControl(true); //開啟button
-            }
-            }
-            catch (Exception e){
-                Console.WriteLine(e.ToString());
-            }
-
-
-        }
 
         /*
         #region 重新連接打印機按鈕事件
@@ -2738,29 +2740,33 @@ namespace G80Utility
             dialog.Multiselect = false;//该值确定是否可以选择多个文件
             dialog.Title = FindResource("SelectFolder") as string;
             dialog.Filter = FindResource("AllFiles") as string + "(*.hex)|*.hex|" + FindResource("AllFiles") as string + "(*.bin)|*.bin";
-            if (dialog.ShowDialog() == true)
+            try
             {
-                file_name = dialog.FileName;
-                ext_name = Path.GetExtension(file_name);
-                if (ext_name.Equals(".bin"))
+                if (dialog.ShowDialog() == true)
                 {
-                    isBin = true;
-                }
-                FilePathTxt.Text = file_name;
-                iap_download.hex_file_name = file_name;
-                updata_file_button_Click(sender);
-                DownloadFWBtn.IsEnabled = true;
-                if (isBin)
-                {
-                    DownloadFWBtn_Click(null, null);//bin不解析就直接更新
-                }
-            }
-            else
-            {
-                FilePathTxt.Text = FindResource("Status") as string + FindResource("FailedOpen") as string;
-                DownloadFWBtn.IsEnabled = false;
+                    file_name = dialog.FileName;
+                    ext_name = Path.GetExtension(file_name);
+                    if (ext_name.Equals(".bin"))
+                    {
+                        isBin = true;
+                    }
+                    FilePathTxt.Text = file_name;
+                    iap_download.hex_file_name = file_name;
+                    //DownloadFWBtn.IsEnabled = true;
+                    updata_file_button_Click(sender);
 
+                    if ((isBin) && !isStopUpdate)
+                    {
+                        DownloadFWBtn_Click(null, null);//bin不解析就直接更新
+                    }
+                }
+                else
+                {
+                    FilePathTxt.Text = FindResource("Status") as string + FindResource("FailedOpen") as string;
+                    //DownloadFWBtn.IsEnabled = false;
+                }
             }
+            catch (Exception ex) { ex.ToString(); }
         }
 
         #endregion
@@ -2770,10 +2776,12 @@ namespace G80Utility
         {
             if (DeviceStatusTxt.Text == "" || DeviceStatusTxt.Text == FindResource("DeviceDisconnected") as string)　//避免中斷沒注意直接更新
             {
-               updata_ui_status_text(8, "打印機未連線或未重啟");
-               
+                updata_ui_status_text(8, "打印機未連線或未重啟");
+
             }
-            else {
+            else
+            {
+                StopUpdateBtn.IsEnabled = true; //下載時可以開啟
                 download_time = 0;
                 hex_to_bin_time = 0;
                 //实例化回调
@@ -2785,7 +2793,7 @@ namespace G80Utility
                 thread.IsBackground = true;
                 thread.Start(this);
             }
-            
+
         }
         #endregion
 
@@ -4817,12 +4825,11 @@ namespace G80Utility
                 openfileAndDownloadUIControl(true);
                 //ReconnectBtn.IsEnabled = false;
                 isUSBLink = false;
-                if (file_name != null && file_name != "") //自動更新
+                if (file_name != null && file_name != "" && !isStopUpdate) //自動更新
                 {
                     Thread.Sleep(1000);
-                    DownloadFWBtn_Click(null, null);                    
+                    DownloadFWBtn_Click(null, null);
                 }
-
             }
             else
             {
@@ -4835,9 +4842,7 @@ namespace G80Utility
                 {
                     isLoadHexSuccess = true;
                 }
-                DownloadFWBtn.IsEnabled=false;
-               
-
+                //DownloadFWBtn.IsEnabled = false;
             }
         }
         #endregion
@@ -4864,7 +4869,14 @@ namespace G80Utility
             {
                 case 1:
                     StatusLabel.Content = text;
-                    if (text.Equals(FindResource("ParseCompleted") as string)|| text.Equals("bin檔不需解析")){
+                    //解析完畢就開啟button
+                    if (text.Equals(FindResource("ParseCompleted") as string))
+                    {
+                        OpenImgFileBtn.IsEnabled = true;
+                        StopUpdateBtn.IsEnabled = true;
+                    }
+                    if ((text.Equals(FindResource("ParseCompleted") as string) || text.Equals("bin檔不需解析")) && !isStopUpdate)
+                    {
                         Thread.Sleep(500);
                         DownloadFWBtn_Click(null, null);
                     }
@@ -4887,7 +4899,13 @@ namespace G80Utility
                     {
                         successCount++;
                         SuccessCountLabel.Content = successCount.ToString();
-                        isStopUpdate = false;
+                        UpgradeStatusLabel.Content = "升級成功";
+                        UpgradeImg.Source = new BitmapImage(new Uri("Images/green_circle.png", UriKind.Relative));
+                    }
+                    else
+                    {
+                        UpgradeStatusLabel.Content = "更新中....";
+                        UpgradeImg.Source = new BitmapImage(new Uri("Images/grey_circle.png", UriKind.Relative));
                     }
                     break;
 
@@ -4904,11 +4922,13 @@ namespace G80Utility
                     iapDlg.IAPLabel.Content = text;
                     iapDlg.Show();
                     break;
-                case 9://傳輸資料與完畢判斷關閉開啟button
-                    if (text.Equals("finish"))
+                case 9:
+                    if (text.Equals("error"))
                     {
-                        openfileAndDownloadUIControl(true);
-                        if (file_name != null && file_name != "" ) //錯誤自動更新
+                        UpgradeStatusLabel.Content = "升级失败";
+                        UpgradeImg.Source = new BitmapImage(new Uri("Images/red_circle.png", UriKind.Relative));
+                        DeviceStatusTxt.Text = FindResource("DeviceDisconnected") as string;
+                        if (file_name != null && file_name != "" && !isStopUpdate) //錯誤自動更新
                         {
                             stopConnect(true);
                             OpenFWfileBtn.IsEnabled = true;
@@ -4926,20 +4946,46 @@ namespace G80Utility
         #region 執行檔案解析
         private void updata_file_button_Click(object sender)
         {
+
             download_time = 0;
             hex_to_bin_time = 0;
             //实例化回调
             setCallBack = new setTextValueCallBack(updata_ui_status_text);
-            if (isBin || isLoadBinSuccess)
+            if (isBin || isLoadBinSuccess || isLoadHexSuccess)
             {
                 iap_download.get_bin_array(sender);
-             
+
             }
             else
             {
+                StopUpdateBtn.IsEnabled = false; //解析時不可停止或啟動
+                OpenFWfileBtn.IsEnabled = false;
                 Thread thread = new Thread(new ParameterizedThreadStart(iap_download.hex_file_to_bin_array));
                 thread.IsBackground = true;
                 thread.Start(this);
+            }
+        }
+        #endregion
+
+
+        #region 停止自動更新功能
+        public void stopConnect(bool isError)
+        {
+            try
+            {
+                iap_download.Close();
+
+                initialIAP();
+
+                if (!isError)
+                {
+                    updata_ui_status_text(8, "中止自动更新请重启打印机，并确认断线后重新联机方可正常更新");
+                    openfileAndDownloadUIControl(true); //開啟button
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
             }
         }
         #endregion
@@ -4979,7 +5025,7 @@ namespace G80Utility
         #region 是否開啟打開文件與下載button
         public void openfileAndDownloadUIControl(bool isEnable)
         {
-            DownloadFWBtn.IsEnabled = isEnable;
+            //DownloadFWBtn.IsEnabled = isEnable;
             OpenFWfileBtn.IsEnabled = isEnable;
 
         }
