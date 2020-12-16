@@ -2908,32 +2908,32 @@ namespace G80Utility
 
         public void editSNAuthority()
         {
-            if (isLoginSN)
-            {
+            //if (isLoginSN) //關閉序列號密碼設定
+            //{
                 DifferInterfaceConnectChkAndSend("SetPrinterSN");
-            }
-            else
-            {
-                var dialog = new Dialog();
-                dialog.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-                dialog.Owner = this;
-                dialog.DiaglogLabel.Content = FindResource("EnterSnPwd") as string;
-                if (dialog.ShowDialog() == true)
-                {
-                    if (dialog.PwdText == Config.EDIT_SN_PWD)
-                    {
-                        isLoginSN = true;
-                        MessageBox.Show(FindResource("LoginSuccess") as string);
-                        DifferInterfaceConnectChkAndSend("SetPrinterSN");
-                        //SetPrinterSN();
-                    }
-                    else
-                    {
-                        MessageBox.Show(FindResource("PwdError") as string);
-                    }
+            //}
+            //else
+            //{
+            //    var dialog = new Dialog();
+            //    dialog.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            //    dialog.Owner = this;
+            //    dialog.DiaglogLabel.Content = FindResource("EnterSnPwd") as string;
+            //    if (dialog.ShowDialog() == true)
+            //    {
+            //        if (dialog.PwdText == Config.EDIT_SN_PWD)
+            //        {
+            //            isLoginSN = true;
+            //            MessageBox.Show(FindResource("LoginSuccess") as string);
+            //            DifferInterfaceConnectChkAndSend("SetPrinterSN");
+            //            //SetPrinterSN();
+            //        }
+            //        else
+            //        {
+            //            MessageBox.Show(FindResource("PwdError") as string);
+            //        }
 
-                }
-            }
+            //    }
+            //}
         }
 
         //============================儲存和寫入參數檔====================
@@ -4643,25 +4643,31 @@ namespace G80Utility
 
                 if (sn_input != sn_reg)//註冊與輸入的不同要重新寫入
                 {
-                    if (printerSNInputChk())
-                    {
+                    //if (printerSNInputChk())
+                    //{
                         sn_reg = sn_input;
                         snWriteInPrinter(sn_reg);
-                    }
-                    else
-                    {
-                        MessageBox.Show(FindResource("SNFormatError") as string);
-                    }
+                    //}
+                    //else
+                    //{
+                    //    MessageBox.Show(FindResource("SNFormatError") as string);
+                    //}
                 }
                 else
                 { //註冊與輸入的相同直接+1
-                    if (printerSNInputChk())
-                    {
-                        string number = sn_reg.Substring(10, 6);
-                        sn_reg = sn_reg.Remove(10, 6);
+                    //if (printerSNInputChk())
+                    //{  
+                    string codeString = sn_input.Substring(sn_input.Length-1);    
+                    int result;
+                    bool isNumber = Int32.TryParse(codeString, out result);
+                    Console.WriteLine("type:" + Int32.TryParse(codeString, out result));
+                    if (isNumber) { //非數字不加1
+                        string number = sn_reg.Substring(sn_reg.Length - 1); //取最後一碼
+                        sn_reg = sn_reg.Remove(sn_reg.Length - 1,1);
                         int lastNumber = Int32.Parse(number);
-                        lastNumber += 1; //sn每次加1
+                        lastNumber += 1; //sn每次加1                  
                         number = lastNumber.ToString();
+                        
                         if (number.Length < 6)
                         {
                             //不能直接使用nubmer.Length，因為在迴圈的過程中length會越來越大
@@ -4674,10 +4680,12 @@ namespace G80Utility
                         sn_reg = sn_reg + number;
                         snWriteInPrinter(sn_reg);
                     }
-                    else
-                    {
-                        MessageBox.Show(FindResource("SNFormatError") as string);
-                    }
+                    
+                    //}
+                    //else
+                    //{
+                    //    MessageBox.Show(FindResource("SNFormatError") as string);
+                    //}
                 }
 
             }
@@ -4687,7 +4695,7 @@ namespace G80Utility
         #region 寫入序號到打印機
         private void snWriteInPrinter(string sn_reg)
         {
-            if (sn_reg != "" && sn_reg.Length == 16)
+            if (sn_reg != "" && sn_reg.Length == 32)
             {
                 byte[] snArray = Encoding.Default.GetBytes(sn_reg);
                 byte[] sendArray = StringToByteArray(Command.SN_SETTING_HEADER);
@@ -4704,7 +4712,7 @@ namespace G80Utility
                 PrinterSNFacTxt.Text = sn_reg;
                 PrinterSNTxt.Text = sn_reg;
             }
-            else if (sn_reg.Length < 16 || sn_reg.Length > 16)
+            else if (sn_reg.Length > 32)
             {
                 MessageBox.Show(FindResource("LessLength") as string);
             }
@@ -4733,26 +4741,31 @@ namespace G80Utility
             {
                 try
                 {
-                    string area = sn.Substring(0, 2);
-                    DateTime date = DateTime.ParseExact(sn.Substring(2, 8), "yyyyMMdd", null); //轉換成date就自動判斷月日是否正確
-                    int year = date.Year;
-                    string codeString = sn.Substring(10, 6);
-                    int codeInt = Int32.Parse(codeString); //如果pare錯誤就是非數字，會丟到catch
-                    if ((area == "HW" || area == "GN"))
-                    {
-                        if (year >= 2020 && year <= 2030)
-                        {
-                            isOK = true;
-                        }
-                        else
-                        {
-                            isOK = false;
-                        }
-                    }
-                    else
-                    {
-                        isOK = false;
-                    }
+                    //string area = sn.Substring(0, 2);
+                    //DateTime date = DateTime.ParseExact(sn.Substring(2, 8), "yyyyMMdd", null); //轉換成date就自動判斷月日是否正確
+                    //int year = date.Year;
+                    //string codeString = sn.Substring(10, 6);
+                    //int codeInt = Int32.Parse(codeString); //如果pare錯誤就是非數字，會丟到catch
+                    string codeString = sn.Substring(sn.Length-1);
+                    isOK = true;
+                    int result;
+                    bool isNumber = Int32.TryParse(codeString, out result);
+                    Console.WriteLine("type:"+Int32.TryParse(codeString,out result));
+                    //if ((codeString == "HW" || area == "GN"))
+                    //{
+                    //    if (year >= 2020 && year <= 2030)
+                    //    {
+                    //        isOK = true;
+                    //    }
+                    //    else
+                    //    {
+                    //        isOK = false;
+                    //    }
+                    //}
+                    //else
+                    //{
+                    //    isOK = false;
+                    //}
 
                 }
                 catch (Exception) //日期格式或代碼格式錯誤
