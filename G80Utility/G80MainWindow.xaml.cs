@@ -1087,12 +1087,12 @@ namespace G80Utility
             string date = null;
 
             //(0~7)前8個是無意義資料
-            for (int i = 8; i < 24; i++)
+            for (int i = 8; i < 40; i++)
             {
                 sn += Convert.ToChar(buffer[i]);      //機器序列號
             }
             Console.WriteLine("sn:" + sn);
-            for (int i = 24; i < 34; i++)
+            for (int i = 40; i < 50; i++)
             {
                 moudle += Convert.ToChar(buffer[i]);    //機器型號
             }
@@ -1100,12 +1100,12 @@ namespace G80Utility
             { //移除機器型號開頭的底線
                 moudle = moudle.Remove(0, 1);
             }
-            for (int i = 34; i < 44; i++)
+            for (int i = 50; i < 60; i++)
             {
                 sfvesion += Convert.ToChar(buffer[i]);   //軟件版本    
             }
 
-            for (int i = 44; i < 54; i++)
+            for (int i = 60; i < 70; i++)
             {
                 date += Convert.ToChar(buffer[i]);    //多傳了一次軟件版本
             }
@@ -1782,6 +1782,7 @@ namespace G80Utility
         #region 讀取機器序列號(通訊)按鈕事件
         private void ReadSNBtn_Click(object sender, RoutedEventArgs e)
         {
+            
             DifferInterfaceConnectChkAndSend("RoadPrinterSN");
         }
         #endregion
@@ -2654,7 +2655,7 @@ namespace G80Utility
         //升級程序按鈕
         #region 升級程序tab按鈕事件
         private void FWUpdateTab_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {         
+        {
             initialIAP();
         }
         #endregion
@@ -2910,7 +2911,7 @@ namespace G80Utility
         {
             //if (isLoginSN) //關閉序列號密碼設定
             //{
-                DifferInterfaceConnectChkAndSend("SetPrinterSN");
+            DifferInterfaceConnectChkAndSend("SetPrinterSN");
             //}
             //else
             //{
@@ -4604,7 +4605,7 @@ namespace G80Utility
         private void RoadPrinterSN()
         {
             byte[] sendArray = StringToByteArray(Command.DEVICE_INFO_READING);
-            SendCmd(sendArray, "ReadSN", 54);
+            SendCmd(sendArray, "ReadSN", 70);
         }
         #endregion
 
@@ -4614,7 +4615,7 @@ namespace G80Utility
             string sn_reg = null;
             string sn_input = null;
             //建立註冊機碼目錄
-            createSNRegistry();
+            //createSNRegistry();
             switch (SNTxtSettingPosition)
             {
                 case "factory":
@@ -4625,97 +4626,147 @@ namespace G80Utility
                     break;
             }
             //初次未記錄,抓取user輸入值
-            if (getRegistry("SN") == null)
-            {
-                if (printerSNInputChk())
-                {
-                    sn_reg = sn_input;
-                    snWriteInPrinter(sn_reg);
-                }
-                else
-                {
-                    MessageBox.Show(FindResource("SNFormatError") as string);
-                }
-            }
-            else //已經有紀錄
-            {
-                sn_reg = getRegistry("SN");
+            //if (getRegistry("SN") == null)
+            //{
+            //if (printerSNInputChk())
+            //{
+            //sn_reg = sn_input;   
+            snWriteInPrinter(sn_input);
+            //}
+            //else
+            //{
+            //    MessageBox.Show(FindResource("SNFormatError") as string);
+            //}
+            //}
+            //else //已經有紀錄
+            //{
+            //    sn_reg = getRegistry("SN");
 
-                if (sn_input != sn_reg)//註冊與輸入的不同要重新寫入
-                {
-                    //if (printerSNInputChk())
-                    //{
-                        sn_reg = sn_input;
-                        snWriteInPrinter(sn_reg);
-                    //}
-                    //else
-                    //{
-                    //    MessageBox.Show(FindResource("SNFormatError") as string);
-                    //}
-                }
-                else
-                { //註冊與輸入的相同直接+1
-                    //if (printerSNInputChk())
-                    //{  
-                    string codeString = sn_input.Substring(sn_input.Length-1);    
-                    int result;
-                    bool isNumber = Int32.TryParse(codeString, out result);
-                    Console.WriteLine("type:" + Int32.TryParse(codeString, out result));
-                    if (isNumber) { //非數字不加1
-                        string number = sn_reg.Substring(sn_reg.Length - 1); //取最後一碼
-                        sn_reg = sn_reg.Remove(sn_reg.Length - 1,1);
-                        int lastNumber = Int32.Parse(number);
-                        lastNumber += 1; //sn每次加1                  
-                        number = lastNumber.ToString();
-                        
-                        if (number.Length < 6)
-                        {
-                            //不能直接使用nubmer.Length，因為在迴圈的過程中length會越來越大
-                            int nLen = number.Length;
-                            for (int i = 1; i <= 6 - nLen; i++)
-                            { //不足6位前面要補0
-                                number = "0" + number;
-                            }
-                        }
-                        sn_reg = sn_reg + number;
-                        snWriteInPrinter(sn_reg);
-                    }
-                    
-                    //}
-                    //else
-                    //{
-                    //    MessageBox.Show(FindResource("SNFormatError") as string);
-                    //}
-                }
+            //    if (sn_input != sn_reg)//註冊與輸入的不同要重新寫入
+            //    {
+            //        //if (printerSNInputChk())
+            //        //{
+            //        sn_reg = sn_input;
+            //        snWriteInPrinter(sn_reg);
+            //        //}
+            //        //else
+            //        //{
+            //        //    MessageBox.Show(FindResource("SNFormatError") as string);
+            //        //}
+            //}
+            //else//註冊與輸入的相同直接+1
+            //{ 
+            //if (printerSNInputChk())
+            //{  
+            //string lastString = sn_input.Substring(sn_input.Length-6,6);    //idea:取最後六碼判斷往前加1
+            //int result;
+            //bool isNumber = Int32.TryParse(lastString, out result);
+            //Console.WriteLine("type:" + Int32.TryParse(lastString, out result));
+            //if (isNumber) { //非數字不加1
+            //    string number = sn_reg.Substring(sn_reg.Length - 1); //取最後一碼
+            //    int lastNumber = Int32.Parse(number);
+            //    if (lastNumber == 9) 
+            //    { 
+            //        string last2numberStr = sn_reg.Substring(sn_reg.Length - 2); //超過9取最後2碼
+            //        int last2numberInt;
+            //        if (!Int32.TryParse(last2numberStr, out result))
+            //        {
+            //            last2numberStr = "0"; //倒數第二碼為非數字時改為0
+            //            last2numberInt = 1; //因為9+1=10
+            //        }
+            //        else
+            //        {
+            //            last2numberInt = Int32.Parse(last2numberStr)+1;
 
-            }
+            //        }
+            //        lastNumber = 0; //因為已經進位
+            //        number = last2numberInt.ToString() + lastNumber;
+            //    }
+            //    else {
+            //        lastNumber += 1; //sn每次加1       
+            //        number = lastNumber.ToString();
+            //    }
+
+            //    sn_reg = sn_reg.Remove(sn_reg.Length - number.Length, number.Length);//移除舊的
+
+
+            //if (number.Length < 6)
+            //{
+            //    //不能直接使用nubmer.Length，因為在迴圈的過程中length會越來越大
+            //    int nLen = number.Length;
+            //    for (int i = 1; i <= 6 - nLen; i++)
+            //    { //不足6位前面要補0
+            //        number = "0" + number;
+            //    }
+            //}
+            //  sn_reg = sn_reg + number;
+            // snWriteInPrinter(sn_reg);
+            // }
+
+            //}
+            //else
+            //{
+            //    MessageBox.Show(FindResource("SNFormatError") as string);
+            //}
+            //}
+
+            //}
         }
         #endregion
 
         #region 寫入序號到打印機
         private void snWriteInPrinter(string sn_reg)
         {
-            if (sn_reg != "" && sn_reg.Length == 32)
+            if (sn_reg != "" )
             {
                 byte[] snArray = Encoding.Default.GetBytes(sn_reg);
                 byte[] sendArray = StringToByteArray(Command.SN_SETTING_HEADER);
                 int sendLen = sendArray.Length;
                 int snLen = snArray.Length;
-                Array.Resize(ref sendArray, sendLen + snLen);
-                for (int i = sendLen; i < sendLen + snLen; i++)
+               
+                if (snArray.Length < 32)
                 {
-                    sendArray[i] = snArray[i - sendLen];
+                    Array.Resize(ref sendArray, 44);
+                    for (int i = sendLen; i < 44; i++)
+                    {
+                        if (i < sendLen + snArray.Length)
+                        { 
+                            sendArray[i] = snArray[i - sendLen];
+                        }
+                        else
+                        {//大於輸入序號的長度後補0
+                            sendArray[i] = 0x00;                               
+                        }                    
+                    }
                 }
+                else if (snArray.Length == 32)
+                {
+                    Array.Resize(ref sendArray, sendLen + snLen);
+                    for (int i = sendLen; i < sendLen + snLen; i++)
+                    {
+                        sendArray[i] = snArray[i - sendLen];
+                    }
+
+                }
+                else if (snArray.Length > 32) //超過32碼清空後面
+                {
+                    Array.Resize(ref sendArray, 44);
+                    for (int i = sendLen; i < 44; i++) //44以後不讀取
+                    {
+                        sendArray[i] = snArray[i - sendLen];
+                    }
+                    sn_reg.Remove(44, sn_reg.Length - 1);//多餘的移除
+                    //MessageBox.Show(FindResource("LessLength") as string);
+                    //return;
+                }
+                
                 SendCmd(sendArray, "BeepOrSetting", 0);
-                setRegistry("SN", sn_reg); //寫入序號到註冊機碼
-                //寫入序號到畫面
-                PrinterSNFacTxt.Text = sn_reg;
+                // setRegistry("SN", sn_reg); //寫入序號到註冊機碼
+                                          
+                PrinterSNFacTxt.Text = sn_reg;  //寫入序號到畫面
                 PrinterSNTxt.Text = sn_reg;
             }
-            else if (sn_reg.Length > 32)
-            {
-                MessageBox.Show(FindResource("LessLength") as string);
-            }
+          
         }
         #endregion
 
@@ -4746,11 +4797,11 @@ namespace G80Utility
                     //int year = date.Year;
                     //string codeString = sn.Substring(10, 6);
                     //int codeInt = Int32.Parse(codeString); //如果pare錯誤就是非數字，會丟到catch
-                    string codeString = sn.Substring(sn.Length-1);
+                    string codeString = sn.Substring(sn.Length - 1);
                     isOK = true;
                     int result;
                     bool isNumber = Int32.TryParse(codeString, out result);
-                    Console.WriteLine("type:"+Int32.TryParse(codeString,out result));
+                    Console.WriteLine("type:" + Int32.TryParse(codeString, out result));
                     //if ((codeString == "HW" || area == "GN"))
                     //{
                     //    if (year >= 2020 && year <= 2030)
