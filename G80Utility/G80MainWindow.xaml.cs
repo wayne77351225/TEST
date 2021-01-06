@@ -6701,7 +6701,7 @@ namespace G80Utility
                         }
                         else
                         {
-                            MessageBox.Show(FindResource("USBNotRegistYet") as string);
+                            //MessageBox.Show(FindResource("USBNotRegistYet") as string);
                         }
                     }
                     else
@@ -6725,7 +6725,7 @@ namespace G80Utility
             }
             else
             {
-                MessageBox.Show(FindResource("USBNotRegistYet") as string);
+                //MessageBox.Show(FindResource("USBNotRegistYet") as string);
             }
         }
         #endregion
@@ -6854,7 +6854,7 @@ namespace G80Utility
             }
             else
             {
-                MessageBox.Show(FindResource("USBNotRegistYet") as string);
+                //MessageBox.Show(FindResource("USBNotRegistYet") as string);
             }
         }
         #endregion
