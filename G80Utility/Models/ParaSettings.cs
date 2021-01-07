@@ -31,7 +31,8 @@ namespace G80Utility.Models
         public int PaperWidthIndex;
         public int HeadCloseCutIndex;
         public int YOffsetIndex;
-        public int MACShowIndex;
+        //public int MACShowIndex;
+        public int LEDIndex;
         public int QRCodeIndex;
         public int LogoPrintControlIndex;
         public int DIPSwitchIndex;

@@ -484,13 +484,13 @@ namespace G80Utility
                 Config.isYOffsetChecked = false;
             }
 
-            if (MACShowCheckbox.IsChecked == true)
+            if (LEDCheckbox.IsChecked == true)
             {
-                Config.isMACShowChecked = true;
+                Config.isLEDChecked = true;
             }
             else
             {
-                Config.isMACShowChecked = false;
+                Config.isLEDChecked = false;
             }
 
             if (QRCodeCheckbox.IsChecked == true)
@@ -1314,9 +1314,9 @@ namespace G80Utility
                 checkIsGetData(null, YOffsetCom, data, FindResource("VerticalOffsetUnit") as string, false, 1);
             }
 
-            if (receiveData.Contains(Command.RE_MACSHOW_CLASSFY))
+            if (receiveData.Contains(Command.RE_LED_ORDER))
             {
-                checkIsGetData(null, MACShowCom, data, FindResource("MacAddreessDisplay") as string, false, 1);
+                checkIsGetData(null, LEDCom, data, FindResource("LEDOrder") as string, true, 6);
             }
 
             if (receiveData.Contains(Command.RE_QRCODE_CLASSFY))
@@ -1582,7 +1582,7 @@ namespace G80Utility
         }
         #endregion
 
-        #region 判斷參數設定欄位是否取得資料
+        #region 判斷參數設定欄位是否取得資料 //itemFinalNo not index
         private void checkIsGetData(TextBox SelectedText, ComboBox SelectedCom, byte[] data, string msg, bool isSubtractOne, int itemFinalNo)
         {
             if (SelectedText != null) //判斷ip和gateway是否讀取到資料
@@ -2140,10 +2140,10 @@ namespace G80Utility
         }
         #endregion
 
-        #region 設定MAC顯示按鈕事件
-        private void MACShowBtn_Click(object sender, RoutedEventArgs e)
+        #region 設定LED燈序按鈕事件
+        private void LEDBtn_Click(object sender, RoutedEventArgs e)
         {
-            DifferInterfaceConnectChkAndSend("MACShow");
+            DifferInterfaceConnectChkAndSend("LED");
         }
         #endregion
 
@@ -2966,7 +2966,7 @@ namespace G80Utility
             parasetting.PaperWidthIndex = PaperWidthCom.SelectedIndex;
             parasetting.HeadCloseCutIndex = HeadCloseCutCom.SelectedIndex;
             parasetting.YOffsetIndex = YOffsetCom.SelectedIndex;
-            parasetting.MACShowIndex = MACShowCom.SelectedIndex;
+            parasetting.LEDIndex = LEDCom.SelectedIndex;
             parasetting.QRCodeIndex = QRCodeCom.SelectedIndex;
             parasetting.LogoPrintControlIndex = LogoPrintControlCom.SelectedIndex;
 
@@ -3056,7 +3056,7 @@ namespace G80Utility
             PaperWidthCom.SelectedIndex = parasetting.PaperWidthIndex;
             HeadCloseCutCom.SelectedIndex = parasetting.HeadCloseCutIndex;
             YOffsetCom.SelectedIndex = parasetting.YOffsetIndex;
-            MACShowCom.SelectedIndex = parasetting.MACShowIndex;
+            LEDCom.SelectedIndex = parasetting.LEDIndex;
             QRCodeCom.SelectedIndex = parasetting.QRCodeIndex;
             LogoPrintControlCom.SelectedIndex = parasetting.LogoPrintControlIndex;
 
@@ -3870,21 +3870,14 @@ namespace G80Utility
         }
         #endregion
 
-        #region 設定MAC顯示
-        private void MACShow()
+        #region 設定LED燈號
+        private void LED()
         {
-            if (MACShowCom.SelectedIndex != -1)
+            if (LEDCom.SelectedIndex != -1)
             {
-                byte[] sendArray = null;
 
-                if (MACShowCom.SelectedIndex == 0)
-                {
-                    sendArray = StringToByteArray(Command.MAC_SHOW_DEC_SETTING);
-                }
-                else if (MACShowCom.SelectedIndex == 1)
-                {
-                    sendArray = StringToByteArray(Command.MAC_SHOW_HEX_SETTING);
-                }
+                byte[] sendArray = StringToByteArray(Command.LED_ORDER_SETTING_HEAD +"0"+(LEDCom.SelectedIndex+1));
+    
                 SendCmd(sendArray, "BeepOrSetting", 0);
             }
             else { MessageBox.Show(FindResource("ColumnEmpty") as string); }
@@ -4215,9 +4208,9 @@ namespace G80Utility
                 SendCmd(sendArray, "ReadPara", 9);
             }
 
-            if (Config.isMACShowChecked)
+            if (Config.isLEDChecked) //取代MAC SHOW
             {
-                sendArray = StringToByteArray(Command.READ_ALL_HEADER + "31 24 01");
+                sendArray = StringToByteArray(Command.READ_ALL_HEADER + "31 22 01");
                 SendCmd(sendArray, "ReadPara", 9);
             }
 
@@ -4373,9 +4366,9 @@ namespace G80Utility
                 YOffset();
             }
 
-            if (Config.isMACShowChecked)
+            if (Config.isLEDChecked)
             {
-                MACShow();
+                LED();
             }
 
             if (Config.isQRCodeChecked)
@@ -5598,8 +5591,8 @@ namespace G80Utility
                 case "YOffset":
                     YOffset();
                     break;
-                case "MACShow":
-                    MACShow();
+                case "LED":
+                    LED();
                     break;
                 case "QRCode":
                     QRCode();

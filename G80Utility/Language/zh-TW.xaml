@@ -97,6 +97,7 @@
     <sys:String x:Key="NotCut">不切紙</sys:String>
     <sys:String x:Key="VerticalOffsetUnit">垂直移動單位</sys:String>
     <sys:String x:Key="MacAddreessDisplay">mac地址顯示</sys:String>
+    <sys:String x:Key="LEDOrder">LED 燈序</sys:String>
     <sys:String x:Key="Decimal">十進制</sys:String>
     <sys:String x:Key="Hexadecimal">十六進制</sys:String>
     <sys:String x:Key="QRCode">二維碼功能</sys:String>

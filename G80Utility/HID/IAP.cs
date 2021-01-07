@@ -324,18 +324,19 @@ namespace G80Utility.HID
                 return false;
             }
 
-            if (G80MainWindow.isLoadBinSuccess)
-            {
-                Thread.Sleep(12000);//為了避免太快收不到資料
-            }
-            else
-            {
-                Thread.Sleep(5000);
-            }
-
+            //if (G80MainWindow.isLoadBinSuccess)
+            //{
+            //    Thread.Sleep(12000);//為了避免太快收不到資料
+            //}
+            //else
+            //{
+            //    Thread.Sleep(5000);
+            //}
+            Thread.Sleep(12000);
 
             if (TimeoutObject.WaitOne(12000, false))
             {
+                MessageBox.Show("erase:"+receive_data[0].ToString());
                 if (receive_data[0] == 0x01)
                 {
                     return true;
@@ -391,6 +392,7 @@ namespace G80Utility.HID
 
             if (TimeoutObject.WaitOne(12000, false))
             {
+                MessageBox.Show("Burn:"+receive_data[0].ToString());
                 if (receive_data[0] == 0x02)
                 {
                     return true;
@@ -429,7 +431,7 @@ namespace G80Utility.HID
             win.Dispatcher.Invoke(win.setCallBack, (byte)9, "sending");
             if (!read_opt_byte(out receive_data))
             {
-                //MessageBox.Show(win.FindResource("FailedReadChipOption") as string);
+                MessageBox.Show(win.FindResource("FailedReadChipOption") as string);
                 Console.WriteLine(win.FindResource("FailedReadChipOption") as string);
                 win.Dispatcher.Invoke(win.setCallBack, (byte)9, "error");
                 this.run_step = 3;
@@ -465,7 +467,7 @@ namespace G80Utility.HID
 
             if (!erasure_section(this.download_addr, (UInt32)code_data_bin.Length))
             {
-                //MessageBox.Show(win.FindResource("EraseMemoryError") as string);
+                MessageBox.Show(win.FindResource("EraseMemoryError") as string);
                 Console.WriteLine(win.FindResource("EraseMemoryError") as string);
                 win.Dispatcher.Invoke(win.setCallBack, (byte)9, "error");
                 this.run_step = 3;
@@ -474,7 +476,7 @@ namespace G80Utility.HID
             win.Dispatcher.Invoke(win.setCallBack, (byte)5, win.FindResource("SendingData") as string);
             if (!download_code(code_data_bin, win))
             {
-                //MessageBox.Show(win.FindResource("BurningFailed") as string);
+                MessageBox.Show(win.FindResource("BurningFailed") as string);
                 Console.WriteLine(win.FindResource("BurningFailed") as string);
                 win.Dispatcher.Invoke(win.setCallBack, (byte)9, "error");
                 this.run_step = 3;

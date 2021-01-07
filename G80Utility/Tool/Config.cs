@@ -32,7 +32,8 @@ namespace G80Utility.Tool
         public static bool isPaperWidthChecked;
         public static bool isHeadCloseCutChecked;
         public static bool isYOffsetChecked;
-        public static bool isMACShowChecked;
+        //public static bool isMACShowChecked;
+        public static bool isLEDChecked;
         public static bool isQRCodeChecked;
         public static bool isLogoPrintControlhecked;
         public static bool isDIPSwitchChecked;

@@ -118,8 +118,12 @@ namespace G80Utility.Tool
                                                       0xfe, 0xff, 0x0a, 0x1d, 0x56, 0x42, 0x00, 0x1b, 0x40 };
 
         //設定MAC地址顯示模式
-        public static string MAC_SHOW_HEX_SETTING = "1F 1B 1F A5 04 05 06 09 08 07 22";
-        public static string MAC_SHOW_DEC_SETTING = "1F 1B 1F A5 04 05 06 09 08 07 23";
+        //public static string MAC_SHOW_HEX_SETTING = "1F 1B 1F A5 04 05 06 09 08 07 22";
+        //public static string MAC_SHOW_DEC_SETTING = "1F 1B 1F A5 04 05 06 09 08 07 23";
+
+        //設定LED燈序
+        public static string LED_ORDER_SETTING_HEAD = "1F 1B 1F 53 5A 4A 42 5A 46 31 22 02";    
+
 
         //設定二維碼功能
         public static string QRCODE_ON_SETTING = "1F 1B 1F 94 01 02 03 11 12 13 33";
@@ -192,6 +196,9 @@ namespace G80Utility.Tool
         //收到Mac的命令分類
         public static string RE_MAC_CLASSFY = "30-12";
 
+        //收到LED燈序的命令分類
+        public static string RE_LED_ORDER = "31-22";
+
         //收到自動斷線的命令分類
         public static string RE_AUTODISCONNECT_CLASSFY = "30-13";
 
@@ -254,7 +261,7 @@ namespace G80Utility.Tool
         public static string RE_YOFFSET_CLASSFY = "31-18";
 
         //收到mac地址顯示的命令分類
-        public static string RE_MACSHOW_CLASSFY = "31-24";
+        //public static string RE_MACSHOW_CLASSFY = "31-24";
 
         //收到二維碼功能的命令分類
         public static string RE_QRCODE_CLASSFY = "31-25";
