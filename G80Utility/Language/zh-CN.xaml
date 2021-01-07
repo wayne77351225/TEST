@@ -2,8 +2,8 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                      xmlns:sys="clr-namespace:System;assembly=mscorlib">
     <!--Window Title-->
-    <!--<sys:String x:Key="WindowTitle">G80 Utility Factory Beta v2.24</sys:String>-->
-    <sys:String x:Key="WindowTitle">G80 Utility Factory v1.3.1(r)</sys:String>
+    <sys:String x:Key="WindowTitle">G80 Utility Factory Beta v2.25</sys:String>
+    <!--<sys:String x:Key="WindowTitle">G80 Utility Factory v1.3.1(r)</sys:String>-->
 
     <!--Top通讯介面-->
     <sys:String x:Key="ConnectionInterface">通讯介面</sys:String>
