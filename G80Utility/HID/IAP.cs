@@ -274,8 +274,8 @@ namespace G80Utility.HID
             byte[] send = new byte[] { 0x01 };
             SendBytes(send);
 
-            Thread.Sleep(5000);　//為了避免太快收不到資料
-            if (TimeoutObject.WaitOne(12000, false))
+            Thread.Sleep(3000);　//為了避免太快收不到資料
+            if (TimeoutObject.WaitOne(3000, false))
             {
                 option = receive_data;
                 return true;
@@ -332,11 +332,11 @@ namespace G80Utility.HID
             //{
             //    Thread.Sleep(5000);
             //}
-            Thread.Sleep(12000);
+            Thread.Sleep(3000);
 
-            if (TimeoutObject.WaitOne(12000, false))
+            if (TimeoutObject.WaitOne(3000, false))
             {
-                MessageBox.Show("erase:"+receive_data[0].ToString());
+                //MessageBox.Show("erase:"+receive_data[0].ToString());
                 if (receive_data[0] == 0x01)
                 {
                     return true;
@@ -392,7 +392,7 @@ namespace G80Utility.HID
 
             if (TimeoutObject.WaitOne(12000, false))
             {
-                MessageBox.Show("Burn:"+receive_data[0].ToString());
+                //MessageBox.Show("Burn:"+receive_data[0].ToString());
                 if (receive_data[0] == 0x02)
                 {
                     return true;
