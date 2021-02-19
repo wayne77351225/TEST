@@ -150,6 +150,8 @@ namespace G80Utility
         public int successCount = 0;
         //是否停止自動更新
         public static bool isStopUpdate;
+        //是否正在更新
+        public static bool isRunning;
         #endregion
 
         public G80MainWindow()
@@ -2666,23 +2668,41 @@ namespace G80Utility
         #region 中止/啟動自動更新按鈕事件
         private void StopUpdateBtn_Click(object sender, RoutedEventArgs e)
         {
+            if (isRunning)  //執行時只有修改文字
+            {
+                if (StopUpdateBtn.Content.ToString().Contains("停止"))
+                {
+                    StopUpdateBtn.Content = "启动自动更新";
+                }
+                else
+                {
+                    StopUpdateBtn.Content = "停止自动更新";
+                }
+            }
+            else     //停止執行時按啟動可以讓他執行
+            {      
+                if (StopUpdateBtn.Content.ToString().Contains("停止"))
+                {
+                    //isStopUpdate = true;
+                    StopUpdateBtn.Content = "启动自动更新";
+                    //stopConnect(false);
+                }
+                else
+                {
+                    isStopUpdate = false;
+                    StopUpdateBtn.Content = "停止自动更新";
+                    isRunning = true;
+                    DownloadFWBtn_Click(null, null);
+                    //if (file_name != null && file_name != "") //自動更新
+                    //{
+                    //    Thread.Sleep(1000);
+                    //    DownloadFWBtn_Click(null, null);
+                    //}
+                }
 
-            if (StopUpdateBtn.Content.ToString().Contains("停止"))
-            {
-                //isStopUpdate = true;
-                StopUpdateBtn.Content = "启动自动更新";
-                //stopConnect(false);
+
             }
-            else
-            {
-                //isStopUpdate = false;
-                StopUpdateBtn.Content = "停止自动更新";
-                //if (file_name != null && file_name != "") //自動更新
-                //{
-                //    Thread.Sleep(1000);
-                //    DownloadFWBtn_Click(null, null);
-                //}
-            }
+            
 
 
         }
@@ -2744,6 +2764,7 @@ namespace G80Utility
             dialog.Multiselect = false;//该值确定是否可以选择多个文件
             dialog.Title = FindResource("SelectFolder") as string;
             dialog.Filter = FindResource("AllFiles") as string + "(*.hex)|*.hex|" + FindResource("AllFiles") as string + "(*.bin)|*.bin";
+            
             try
             {
                 if (dialog.ShowDialog() == true)
@@ -2759,7 +2780,7 @@ namespace G80Utility
                     //DownloadFWBtn.IsEnabled = true;
                     updata_file_button_Click(sender);
 
-                    if (isBin )     // if ((isBin) && !isStopUpdate)
+                    if ((isBin) && !isStopUpdate)     // if ((isBin) && !isStopUpdate)
                     {
                         DownloadFWBtn_Click(null, null);//bin不解析就直接更新
                     }
@@ -2769,14 +2790,7 @@ namespace G80Utility
                     FilePathTxt.Text = FindResource("Status") as string + FindResource("FailedOpen") as string;
                     //DownloadFWBtn.IsEnabled = false;
                 }
-                if (StopUpdateBtn.Content.ToString().Contains("启动"))
-                {
-                    isStopUpdate = false;
-                }
-                if (StopUpdateBtn.Content.ToString().Contains("停止") && isStopUpdate ==true)
-                {
-                    isStopUpdate = false;
-                }
+
             }
             catch (Exception ex) { ex.ToString(); }
         }
@@ -4898,10 +4912,12 @@ namespace G80Utility
                 if (StopUpdateBtn.Content.ToString().Contains("启动"))
                 {
                     isStopUpdate = true;
+                    isRunning = false;
                 }
                 if (StopUpdateBtn.Content.ToString().Contains("停止"))
                 {
                     isStopUpdate = false;
+                    isRunning = true;
                 }
 
                 if (file_name != null && file_name != "" && !isStopUpdate) //自動更新
@@ -5025,7 +5041,6 @@ namespace G80Utility
         #region 執行檔案解析
         private void updata_file_button_Click(object sender)
         {
-            isStopUpdate = false;
             download_time = 0;
             hex_to_bin_time = 0;
             //实例化回调
@@ -5033,7 +5048,7 @@ namespace G80Utility
             if (isBin || isLoadBinSuccess || isLoadHexSuccess)
             {
                 iap_download.get_bin_array(sender);
-
+                
             }
             else
             {
@@ -5043,7 +5058,7 @@ namespace G80Utility
                 thread.IsBackground = true;
                 thread.Start(this);
             }
-            isStopUpdate = false;
+            
         }
         #endregion
 
