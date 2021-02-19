@@ -138,6 +138,8 @@ namespace G80Utility
         public static bool isBin;
         //判斷是否進入iap
         public bool isIAPMode;
+        //判斷自動更新是否偵測到裝置
+        public bool isLink;
         //判斷是否切回usb mode
         public bool isUSBLink;
         //檔案名稱
@@ -2656,7 +2658,8 @@ namespace G80Utility
         #region 升級程序tab按鈕事件
         private void FWUpdateTab_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            initialIAP();
+            
+            //initialIAP();
         }
         #endregion
 
@@ -2666,19 +2669,19 @@ namespace G80Utility
 
             if (StopUpdateBtn.Content.ToString().Contains("停止"))
             {
-                isStopUpdate = true;
+                //isStopUpdate = true;
                 StopUpdateBtn.Content = "启动自动更新";
-                stopConnect(false);
+                //stopConnect(false);
             }
             else
             {
-                isStopUpdate = false;
+                //isStopUpdate = false;
                 StopUpdateBtn.Content = "停止自动更新";
-                if (file_name != null && file_name != "") //自動更新
-                {
-                    Thread.Sleep(1000);
-                    DownloadFWBtn_Click(null, null);
-                }
+                //if (file_name != null && file_name != "") //自動更新
+                //{
+                //    Thread.Sleep(1000);
+                //    DownloadFWBtn_Click(null, null);
+                //}
             }
 
 
@@ -2756,7 +2759,7 @@ namespace G80Utility
                     //DownloadFWBtn.IsEnabled = true;
                     updata_file_button_Click(sender);
 
-                    if ((isBin) && !isStopUpdate)
+                    if (isBin )     // if ((isBin) && !isStopUpdate)
                     {
                         DownloadFWBtn_Click(null, null);//bin不解析就直接更新
                     }
@@ -2765,6 +2768,14 @@ namespace G80Utility
                 {
                     FilePathTxt.Text = FindResource("Status") as string + FindResource("FailedOpen") as string;
                     //DownloadFWBtn.IsEnabled = false;
+                }
+                if (StopUpdateBtn.Content.ToString().Contains("启动"))
+                {
+                    isStopUpdate = false;
+                }
+                if (StopUpdateBtn.Content.ToString().Contains("停止") && isStopUpdate ==true)
+                {
+                    isStopUpdate = false;
                 }
             }
             catch (Exception ex) { ex.ToString(); }
@@ -4828,6 +4839,7 @@ namespace G80Utility
 
             //初始化
             UIintial();
+            
 
             //iap初始化
             if (iap_download != null)
@@ -4881,7 +4893,17 @@ namespace G80Utility
                 DeviceStatusTxt.Text = FindResource("DeviceConnected") as string;
                 openfileAndDownloadUIControl(true);
                 //ReconnectBtn.IsEnabled = false;
+                
                 isUSBLink = false;
+                if (StopUpdateBtn.Content.ToString().Contains("启动"))
+                {
+                    isStopUpdate = true;
+                }
+                if (StopUpdateBtn.Content.ToString().Contains("停止"))
+                {
+                    isStopUpdate = false;
+                }
+
                 if (file_name != null && file_name != "" && !isStopUpdate) //自動更新
                 {
                     Thread.Sleep(1000);
@@ -5003,7 +5025,7 @@ namespace G80Utility
         #region 執行檔案解析
         private void updata_file_button_Click(object sender)
         {
-
+            isStopUpdate = false;
             download_time = 0;
             hex_to_bin_time = 0;
             //实例化回调
@@ -5021,6 +5043,7 @@ namespace G80Utility
                 thread.IsBackground = true;
                 thread.Start(this);
             }
+            isStopUpdate = false;
         }
         #endregion
 
@@ -6860,6 +6883,7 @@ namespace G80Utility
 
             if (hwndSource != null)
             {
+                isLink = true;
                 IntPtr windowHandle = hwndSource.Handle;
                 hwndSource.AddHook(UsbNotificationHandler);
                 USBDetector.RegisterUsbDeviceNotification(windowHandle);
