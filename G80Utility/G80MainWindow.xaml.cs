@@ -5884,17 +5884,17 @@ namespace G80Utility
             if (!isError)
             {
 
-                byte[] sendArray = StringToByteArray(TEST_SEND_CMD);
-                RS232Connect.SerialPortSendCMD("NeedReceive", sendArray, null, 9);
-                while (!RS232Connect.isReceiveData)
-                {
-                    if (RS232Connect.mRecevieData != null)
-                    {
-                        isRS232CommunicateOK(RS232Connect.mRecevieData, "cmdSend");
-                        break;
-                    }
-                }
-                SendCmdFail("R");
+                //byte[] sendArray = StringToByteArray(TEST_SEND_CMD);
+                //RS232Connect.SerialPortSendCMD("NeedReceive", sendArray, null, 9);
+                //while (!RS232Connect.isReceiveData)
+                //{
+                //    if (RS232Connect.mRecevieData != null)
+                //    {
+                //        isRS232CommunicateOK(RS232Connect.mRecevieData, "cmdSend");
+                //        break;
+                //    }
+                //}
+                //SendCmdFail("R");
             }
             else //serial open port failed
             {
