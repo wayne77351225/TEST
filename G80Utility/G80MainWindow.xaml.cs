@@ -5980,10 +5980,12 @@ namespace G80Utility
         #region RS232通訊測試
         public void checkRS232Communitcation()
         {
+            RS232Connect.CloseSerialPort();
             bool isError = RS232Connect.OpenSerialPort(RS232PortName, FindResource("CannotOpenComport") as string);
             if (!isError)
             {
-
+                isRS232Connected = true;
+                connectSuccessUI(RS232ConnectImage);
                 //byte[] sendArray = StringToByteArray(TEST_SEND_CMD);
                 //RS232Connect.SerialPortSendCMD("NeedReceive", sendArray, null, 9);
                 //while (!RS232Connect.isReceiveData)
