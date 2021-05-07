@@ -3,7 +3,7 @@
                      xmlns:sys="clr-namespace:System;assembly=mscorlib">
     <!--Window Title-->
     <!--<sys:String x:Key="WindowTitle">G80 Utility Factory v1.3.2(r)</sys:String>-->
-    <sys:String x:Key="WindowTitle">G80 Utility Factory Beta v2.27.Tax</sys:String>
+    <sys:String x:Key="WindowTitle">G80 Utility Factory Beta v2.27.1Tax</sys:String>
     <!--Top通訊介面-->
     <sys:String x:Key="ConnectionInterface">通訊介面</sys:String>
     <sys:String x:Key="USB">USB</sys:String>
