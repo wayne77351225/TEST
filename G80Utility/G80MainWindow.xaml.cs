@@ -1091,33 +1091,34 @@ namespace G80Utility
             string date = null;
 
             //(0~7)前8個是無意義資料
-            for (int i = 8; i < 40; i++)
+            //此版只收12個字符的sn
+            for (int i = 0; i < 11; i++)
             {
                 sn += Convert.ToChar(buffer[i]);      //機器序列號
             }
-            Console.WriteLine("sn:" + sn);
-            for (int i = 40; i < 50; i++)
-            {
-                moudle += Convert.ToChar(buffer[i]);    //機器型號
-            }
-            if (moudle.Substring(0, 1) == "_")
-            { //移除機器型號開頭的底線
-                moudle = moudle.Remove(0, 1);
-            }
-            for (int i = 50; i < 60; i++)
-            {
-                sfvesion += Convert.ToChar(buffer[i]);   //軟件版本    
-            }
+            //Console.WriteLine("sn:" + sn);
+            //for (int i = 40; i < 50; i++)
+            //{
+            //    moudle += Convert.ToChar(buffer[i]);    //機器型號
+            //}
+            //if (moudle.Substring(0, 1) == "_")
+            //{ //移除機器型號開頭的底線
+            //    moudle = moudle.Remove(0, 1);
+            //}
+            //for (int i = 50; i < 60; i++)
+            //{
+            //    sfvesion += Convert.ToChar(buffer[i]);   //軟件版本    
+            //}
 
-            for (int i = 60; i < 70; i++)
-            {
-                date += Convert.ToChar(buffer[i]);    //多傳了一次軟件版本
-            }
+            //for (int i = 60; i < 70; i++)
+            //{
+            //    date += Convert.ToChar(buffer[i]);    //多傳了一次軟件版本
+            //}
             sn = sn.Replace(" ", "").Replace("\0", "");
             PrinterSNFacTxt.Text = sn;
             PrinterSNTxt.Text = sn;
-            PrinterModuleFac.Content = moudle.Replace(" ", "").Replace("\0", "") + sfvesion + "：" + date;
-            PrinterModule.Content = moudle.Replace(" ", "").Replace("\0", "") + sfvesion + "：" + date;
+            //PrinterModuleFac.Content = moudle.Replace(" ", "").Replace("\0", "") + sfvesion + "：" + date;
+            //PrinterModule.Content = moudle.Replace(" ", "").Replace("\0", "") + sfvesion + "：" + date;
 
         }
         #endregion
@@ -4630,7 +4631,7 @@ namespace G80Utility
         private void RoadPrinterSN()
         {
             byte[] sendArray = StringToByteArray(Command.DEVICE_INFO_READING);
-            SendCmd(sendArray, "ReadSN", 70);
+            SendCmd(sendArray, "ReadSN", 12);
         }
         #endregion
 
