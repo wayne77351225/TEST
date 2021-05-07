@@ -1787,6 +1787,9 @@ namespace G80Utility
         #region 讀取機器序列號(通訊)按鈕事件
         private void ReadSNBtn_Click(object sender, RoutedEventArgs e)
         {
+            //string cmd = "3231303432382D4830303031";
+            //byte[] test = StringToByteArray(cmd);
+            //SetPrinterInfo(test);
 
             DifferInterfaceConnectChkAndSend("RoadPrinterSN");
         }
@@ -6354,11 +6357,13 @@ namespace G80Utility
                         }
                         break;
                     case "ReadSN":
-                        USBConnect.USBSendCMD("NeedReceive", data, null, receiveLength);
+                       USBConnect.USBSendCMD("NeedReceive", data, null, receiveLength);
                         while (!USBConnect.isReceiveData)
                         {
                             if (USBConnect.mRecevieData != null)
                             {
+                                MessageBox.Show(USBConnect.mRecevieData.Length + "");
+                                MessageBox.Show(BitConverter.ToString(USBConnect.mRecevieData));
                                 SetPrinterInfo(USBConnect.mRecevieData);
                                 break;
                             }
@@ -6392,6 +6397,7 @@ namespace G80Utility
                         {
                             if (USBConnect.mRecevieData != null)
                             {
+
                                 setBTNametoUI(USBConnect.mRecevieData);
                                 break;
                             }
