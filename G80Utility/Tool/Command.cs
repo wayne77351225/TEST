@@ -38,7 +38,8 @@ namespace G80Utility.Tool
         public static string TAXSN_SETTING_HEADER = "1F 1B 1F 43 0D ";
 
         //讀取機器訊息
-        public static string DEVICE_INFO_READING = "1F 1B 1F 53 5A 4A 42 5A 46 12 01 01";
+        //public static string DEVICE_INFO_READING = "1F 1B 1F 53 5A 4A 42 5A 46 12 01 01";
+        public static string DEVICE_INFO_READING = "1D 49 81";
 
         //重啟打印機
         public static string RESTART = "1F 1B 1F 53 5A 4A 42 5A 46 11 00 00";
