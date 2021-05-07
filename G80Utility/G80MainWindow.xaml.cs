@@ -6026,18 +6026,19 @@ namespace G80Utility
             int result = USBConnect.ConnectUSBDevice(USBpath);
             if (result == 1)
             {
-
-                byte[] sendArray = StringToByteArray(TEST_SEND_CMD);
-                USBConnect.USBSendCMD("NeedReceive", sendArray, null, 9);
-                while (!USBConnect.isReceiveData)
-                {
-                    if (USBConnect.mRecevieData != null)
-                    {
-                        isUSBCommunicateOK(USBConnect.mRecevieData, "cmdSend");
-                        break;
-                    }
-                }
-                SendCmdFail("U");
+                isUSBConnected = true;
+                connectSuccessUI(USBConnectImage);
+                //byte[] sendArray = StringToByteArray(TEST_SEND_CMD);
+                //USBConnect.USBSendCMD("NeedReceive", sendArray, null, 9);
+                //while (!USBConnect.isReceiveData)
+                //{
+                //    if (USBConnect.mRecevieData != null)
+                //    {
+                //        isUSBCommunicateOK(USBConnect.mRecevieData, "cmdSend");
+                //        break;
+                //    }
+                //}
+                //SendCmdFail("U");
             }
             else //USB CreateFile失敗
             {
