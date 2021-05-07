@@ -28,8 +28,8 @@ namespace G80Utility.Tool
             mSerialPort.DataBits = 8;
             mSerialPort.StopBits = StopBits.One;
             mSerialPort.Handshake = Handshake.RequestToSend;
-            mSerialPort.ReadTimeout = 500;
-            mSerialPort.WriteTimeout = 500;
+            mSerialPort.ReadTimeout = 3000;
+            mSerialPort.WriteTimeout = 3000;
             //不加下面兩行就會無法開啟serialport
             mSerialPort.DtrEnable = true;
             mSerialPort.RtsEnable = true;
