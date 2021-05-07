@@ -4780,10 +4780,16 @@ namespace G80Utility
             int sendLen = sendArray.Length;
             int snLen = snArray.Length;
 
-            Array.Resize(ref sendArray, sendLen + snLen);
-            for (int i = sendLen; i < sendLen + snLen; i++)
+            Array.Resize(ref sendArray, sendLen + snLen+1);
+            for (int i = sendLen; i < sendLen + snLen+1; i++)
             {
-                sendArray[i] = snArray[i - sendLen];
+                if (i == sendLen + snLen)
+                {
+                    sendArray[i] = 0x00;
+                }
+                else {
+                    sendArray[i] = snArray[i - sendLen];
+                }
             }
 
             SendCmd(sendArray, "BeepOrSetting", 0);
@@ -6270,8 +6276,6 @@ namespace G80Utility
                         {
                             if (RS232Connect.mRecevieData != null)
                             {
-                                MessageBox.Show(RS232Connect.mRecevieData.Length + "");
-                                MessageBox.Show(BitConverter.ToString(RS232Connect.mRecevieData));
                                 SetPrinterInfo(RS232Connect.mRecevieData);
                                 break;
                             }
