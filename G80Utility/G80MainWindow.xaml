@@ -71,8 +71,8 @@
                             <Label Content="" Name="PrinterModule" />
                         </Viewbox>
                         <StackPanel Orientation="Horizontal">
-                            <Button  Margin="5,5,0,5" Name="ReadSNBtn" Click="ReadSNBtn_Click"  Content="读取信息" Padding="5" FontSize="14" Width="70"/>
-                            <Button  Margin="5,5,0,5" Name="SetSNBtn" Click="SetSNBtn_Click" Content="设置序列号" Padding="5" FontSize="14" Width="80"/>
+                            <Button  Margin="5,5,0,5" Name="ReadSNBtn" Click="ReadSNBtn_Click"  Content="读取信息" IsEnabled="False" Padding="5" FontSize="14" Width="70"/>
+                            <Button  Margin="5,5,0,5" Name="SetSNBtn" Click="SetSNBtn_Click" Content="设置序列号" IsEnabled="False" Padding="5" FontSize="14" Width="80"/>
                             <Button  Margin="5,5,0,5" Name="SetTaxSNBtn" Click="SetTaxSNBtn_Click" Content="税控序列号" Padding="5" FontSize="14" Width="80"/>
                         </StackPanel>
                     </StackPanel>
