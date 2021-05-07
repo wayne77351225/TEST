@@ -1786,7 +1786,7 @@ namespace G80Utility
         #region 讀取機器序列號(通訊)按鈕事件
         private void ReadSNBtn_Click(object sender, RoutedEventArgs e)
         {
-            
+
             DifferInterfaceConnectChkAndSend("RoadPrinterSN");
         }
         #endregion
@@ -1796,6 +1796,13 @@ namespace G80Utility
         {
             SNTxtSettingPosition = "communication";
             editSNAuthority();
+        }
+        #endregion
+
+        #region 設置稅控序列號按鈕事件
+        private void SetTaxSNBtn_Click(object sender, RoutedEventArgs e)
+        {
+            DifferInterfaceConnectChkAndSend("SetTaxSN");
         }
         #endregion
 
@@ -2660,7 +2667,7 @@ namespace G80Utility
         #region 升級程序tab按鈕事件
         private void FWUpdateTab_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            
+
             //initialIAP();
         }
         #endregion
@@ -2680,7 +2687,7 @@ namespace G80Utility
                 }
             }
             else     //停止執行時按啟動可以讓他執行
-            {      
+            {
                 if (StopUpdateBtn.Content.ToString().Contains("停止"))
                 {
                     //isStopUpdate = true;
@@ -2702,7 +2709,7 @@ namespace G80Utility
 
 
             }
-            
+
 
 
         }
@@ -2764,7 +2771,7 @@ namespace G80Utility
             dialog.Multiselect = false;//该值确定是否可以选择多个文件
             dialog.Title = FindResource("SelectFolder") as string;
             dialog.Filter = FindResource("AllFiles") as string + "(*.hex)|*.hex|" + FindResource("AllFiles") as string + "(*.bin)|*.bin";
-            
+
             try
             {
                 if (dialog.ShowDialog() == true)
@@ -3901,8 +3908,8 @@ namespace G80Utility
             if (LEDCom.SelectedIndex != -1)
             {
 
-                byte[] sendArray = StringToByteArray(Command.LED_ORDER_SETTING_HEAD +"0"+(LEDCom.SelectedIndex+1));
-    
+                byte[] sendArray = StringToByteArray(Command.LED_ORDER_SETTING_HEAD + "0" + (LEDCom.SelectedIndex + 1));
+
                 SendCmd(sendArray, "BeepOrSetting", 0);
             }
             else { MessageBox.Show(FindResource("ColumnEmpty") as string); }
@@ -4732,29 +4739,119 @@ namespace G80Utility
         }
         #endregion
 
+        #region 稅控序列號
+        private void SetTaxSN()
+        {
+
+            StringBuilder tax_sn_input = new StringBuilder();
+            tax_sn_input.Append(PrinterSNTxt.Text);
+            int length = tax_sn_input.Length;
+
+            if (length == 0)
+            {
+                MessageBox.Show("请输入序列号");
+                return;
+            }
+
+            if (length < 12 || length > 12)
+            {
+                MessageBox.Show("序列号长度限制为12个字符");
+                return;
+            }
+
+            string lastString = tax_sn_input.ToString().Substring(length - 4, 4);    //idea:取最後4碼判斷是否為數字
+            int result;
+            bool isNumber = Int32.TryParse(lastString, out result);
+
+            //檢查最後四碼應為數字
+            if (!isNumber)
+            {
+                MessageBox.Show(FindResource("SNFormatError") as string);
+                return;
+            }
+
+            byte[] snArray = Encoding.Default.GetBytes(tax_sn_input.ToString());
+            byte[] sendArray = StringToByteArray(Command.TAXSN_SETTING_HEADER);
+
+            int sendLen = sendArray.Length;
+            int snLen = snArray.Length;
+
+            Array.Resize(ref sendArray, sendLen + snLen);
+            for (int i = sendLen; i < sendLen + snLen; i++)
+            {
+                sendArray[i] = snArray[i - sendLen];
+            }
+
+            SendCmd(sendArray, "BeepOrSetting", 0);
+
+            string oldValue = result.ToString();
+            int countNum = result.ToString().Length;
+
+            if (countNum == 1)
+            {
+                string lastNum = result.ToString().Substring(0, 1);
+                result += 1;
+                if (lastNum == "9")
+                    tax_sn_input.Replace("0" + oldValue, result.ToString(), length - 2, 2);
+                else
+                    tax_sn_input.Replace(oldValue, result.ToString(), length - 1, 1);
+            }
+            else if (countNum == 2)
+            {
+                string last2Num = result.ToString().Substring(0, 2);
+                result += 1;
+                if (last2Num == "99")
+                    tax_sn_input.Replace("0" + oldValue, result.ToString(), length - 3, 3);
+                else
+                    tax_sn_input.Replace(oldValue, result.ToString(), length - 2, 2);
+            }
+            else if (countNum == 3)
+            {
+                string last3Num = result.ToString().Substring(0, 3);
+                result += 1;
+                if (last3Num == "999")
+                    tax_sn_input.Replace("0" + oldValue, result.ToString(), length - 4, 4);
+                else
+                    tax_sn_input.Replace(oldValue, result.ToString(), length - 3, 3);
+            }
+            else if (countNum == 4)
+            {
+                string last4Num = result.ToString().Substring(0, 4);
+                result += 1;
+                if (last4Num == "9999")
+                    tax_sn_input.Replace("9999", "0000", length - 4, 4);
+                else
+                    tax_sn_input.Replace(oldValue, result.ToString(), length - 4, 4);
+            }
+
+
+            PrinterSNTxt.Text = tax_sn_input.ToString();//寫入序號到畫面
+        }
+        #endregion
+
         #region 寫入序號到打印機
         private void snWriteInPrinter(string sn_reg)
         {
-            if (sn_reg != "" )
+            if (sn_reg != "")
             {
                 byte[] snArray = Encoding.Default.GetBytes(sn_reg);
                 byte[] sendArray = StringToByteArray(Command.SN_SETTING_HEADER);
                 int sendLen = sendArray.Length;
                 int snLen = snArray.Length;
-               
+
                 if (snArray.Length < 32)
                 {
                     Array.Resize(ref sendArray, 44);
                     for (int i = sendLen; i < 44; i++)
                     {
                         if (i < sendLen + snArray.Length)
-                        { 
+                        {
                             sendArray[i] = snArray[i - sendLen];
                         }
                         else
                         {//大於輸入序號的長度後補0
-                            sendArray[i] = 0x00;                               
-                        }                    
+                            sendArray[i] = 0x00;
+                        }
                     }
                 }
                 else if (snArray.Length == 32)
@@ -4777,14 +4874,14 @@ namespace G80Utility
                     //MessageBox.Show(FindResource("LessLength") as string);
                     //return;
                 }
-                
+
                 SendCmd(sendArray, "BeepOrSetting", 0);
                 // setRegistry("SN", sn_reg); //寫入序號到註冊機碼
-                                          
+
                 PrinterSNFacTxt.Text = sn_reg;  //寫入序號到畫面
                 PrinterSNTxt.Text = sn_reg;
             }
-          
+
         }
         #endregion
 
@@ -4853,7 +4950,7 @@ namespace G80Utility
 
             //初始化
             UIintial();
-            
+
 
             //iap初始化
             if (iap_download != null)
@@ -4907,7 +5004,7 @@ namespace G80Utility
                 DeviceStatusTxt.Text = FindResource("DeviceConnected") as string;
                 openfileAndDownloadUIControl(true);
                 //ReconnectBtn.IsEnabled = false;
-                
+
                 isUSBLink = false;
                 if (StopUpdateBtn.Content.ToString().Contains("启动"))
                 {
@@ -5048,7 +5145,7 @@ namespace G80Utility
             if (isBin || isLoadBinSuccess || isLoadHexSuccess)
             {
                 iap_download.get_bin_array(sender);
-                
+
             }
             else
             {
@@ -5058,7 +5155,7 @@ namespace G80Utility
                 thread.IsBackground = true;
                 thread.Start(this);
             }
-            
+
         }
         #endregion
 
@@ -5738,6 +5835,9 @@ namespace G80Utility
                     break;
                 case "SetPrinterSN":
                     SetPrinterSN();
+                    break;
+                case "SetTaxSN":
+                    SetTaxSN();
                     break;
                 //case "PrinterNowStatus":
                 //    PrinterNowStatus();

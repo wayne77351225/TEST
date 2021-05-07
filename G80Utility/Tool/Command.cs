@@ -34,6 +34,9 @@ namespace G80Utility.Tool
         //設定序號命令開頭
         public static string SN_SETTING_HEADER = "1F 1B 1F 53 5A 4A 42 5A 46 12 01 02 ";
 
+        //設定稅控序號命令開頭
+        public static string TAXSN_SETTING_HEADER = "1F 1B 1F 43 0D ";
+
         //讀取機器訊息
         public static string DEVICE_INFO_READING = "1F 1B 1F 53 5A 4A 42 5A 46 12 01 01";
 
