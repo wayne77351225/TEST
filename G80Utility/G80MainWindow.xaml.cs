@@ -1092,7 +1092,7 @@ namespace G80Utility
 
             //(0~7)前8個是無意義資料
             //此版只收12個字符的sn
-            for (int i = 0; i < 11; i++)
+            for (int i = 0; i < 12; i++)
             {
                 sn += Convert.ToChar(buffer[i]);      //機器序列號
             }
@@ -6270,6 +6270,8 @@ namespace G80Utility
                         {
                             if (RS232Connect.mRecevieData != null)
                             {
+                                MessageBox.Show(RS232Connect.mRecevieData.Length + "");
+                                MessageBox.Show(BitConverter.ToString(RS232Connect.mRecevieData));
                                 SetPrinterInfo(RS232Connect.mRecevieData);
                                 break;
                             }
@@ -6362,8 +6364,6 @@ namespace G80Utility
                         {
                             if (USBConnect.mRecevieData != null)
                             {
-                                MessageBox.Show(USBConnect.mRecevieData.Length + "");
-                                MessageBox.Show(BitConverter.ToString(USBConnect.mRecevieData));
                                 SetPrinterInfo(USBConnect.mRecevieData);
                                 break;
                             }
