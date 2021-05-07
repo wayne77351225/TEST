@@ -1113,11 +1113,11 @@ namespace G80Utility
             {
                 date += Convert.ToChar(buffer[i]);    //多傳了一次軟件版本
             }
-
+            sn = sn.Replace(" ", "").Replace("\0", "");
             PrinterSNFacTxt.Text = sn;
             PrinterSNTxt.Text = sn;
-            PrinterModuleFac.Content = moudle.Replace(" ", "") + sfvesion + "：" + date;
-            PrinterModule.Content = moudle.Replace(" ", "") + sfvesion + "：" + date;
+            PrinterModuleFac.Content = moudle.Replace(" ", "").Replace("\0", "") + sfvesion + "：" + date;
+            PrinterModule.Content = moudle.Replace(" ", "").Replace("\0", "") + sfvesion + "：" + date;
 
         }
         #endregion

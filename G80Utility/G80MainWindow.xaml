@@ -67,7 +67,7 @@
                     <StackPanel VerticalAlignment="Top">
                         <Label Content="机器序列号:" FontSize="14" Margin="5,0,0,0"/>
                         <TextBox Width="240" Height="30" FontSize="14" Name="PrinterSNTxt" HorizontalAlignment="Left" Margin="5,0,0,0"/>
-                        <Viewbox  Margin="5,0,0,0" >
+                        <Viewbox  Margin="5,0,0,0" Height="32" >
                             <Label Content="ZLPPT01  VER1.01.00：2020-03-25" Name="PrinterModule" />
                         </Viewbox>
                         <StackPanel Orientation="Horizontal">
