@@ -28,7 +28,8 @@ namespace G80Utility.Models
         //public int DensityModeIndex;
         public int DensityIndex;
         public int PaperOutReprintIndex;
-        public int PaperWidthIndex;
+        //public int PaperWidthIndex;
+        public int DrawerIndex;
         public int HeadCloseCutIndex;
         public int YOffsetIndex;
         //public int MACShowIndex;
@@ -46,6 +47,7 @@ namespace G80Utility.Models
         public int CutBeepEnable;
         public int CutBeepTimes;
         public int CutBeepDuration;
+        public bool PaperWidthCheck;
     }      
     
 }

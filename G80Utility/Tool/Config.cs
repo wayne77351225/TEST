@@ -29,7 +29,8 @@ namespace G80Utility.Tool
 
         public static bool isDensityChecked;
         public static bool isPaperOutReprintChecked;
-        public static bool isPaperWidthChecked;
+        //public static bool isPaperWidthChecked;
+        public static bool isDrawerChecked;
         public static bool isHeadCloseCutChecked;
         public static bool isYOffsetChecked;
         //public static bool isMACShowChecked;
@@ -38,6 +39,7 @@ namespace G80Utility.Tool
         public static bool isLogoPrintControlhecked;
         public static bool isDIPSwitchChecked;
         public static bool isCutBeepChecked;
+        public static bool isRollPositionChecked;
 
         //for maintail
         public static bool isCMDQRCodeMaintainChecked;

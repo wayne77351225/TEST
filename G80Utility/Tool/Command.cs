@@ -40,6 +40,11 @@ namespace G80Utility.Tool
         //重啟打印機
         public static string RESTART = "1F 1B 1F 53 5A 4A 42 5A 46 11 00 00";
 
+        //下發工具版本信息
+        public static string TOOL_VERSION_SEND_HEAD = "1F 1B 1F 53 5A 4A 42 5A 46 13 01 02";
+
+        //工具版本收到訊息
+        public static string TOOL_VERSION_RE = "1F 1B 1F 48 46 13 01 02 AA";
 
         //設定ip address HEADER
         public static string IP_SETTING_HEADER = "1F 1B 1F 91 00 49 50";
@@ -134,8 +139,13 @@ namespace G80Utility.Tool
         public static string DIP_OFF_SETTING = "1F 1B 1F C0 15 14 13 12 11 10 77";
 
         //設定紙寬
-        public static string PAPER_WIDTH_80MM_SETTING = "1F 1B 1F A4 01 02 03 11 12 13 55";
-        public static string PAPER_WIDTH_58MM_SETTING = "1F 1B 1F A4 01 02 03 11 12 13 33";
+        //public static string PAPER_WIDTH_80MM_SETTING = "1F 1B 1F A4 01 02 03 11 12 13 55";
+        //public static string PAPER_WIDTH_58MM_SETTING = "1F 1B 1F A4 01 02 03 11 12 13 33";
+
+        //設定錢箱功能
+        public static string DRAWER_OPEN_SETTING = "1F 1B 1F 53 5A 4A 42 5A 46 31 39 02 01";
+        public static string DRAWER_CLOSE_SETTING = "1F 1B 1F 53 5A 4A 42 5A 46 31 39 02 00";
+
 
         //設定馬達加速度命令開頭
         public static string ACCELERATION_OF_MOTOR_SETTING = "1F 1B 1F 16 19 16 18 15 17 14 ";
@@ -183,6 +193,13 @@ namespace G80Utility.Tool
 
         //設定DIP值HEADER
         public static string DIP_VALUE_SETTING_HEADER = "1F 1B 1F A1 10 11 12 13 14 15";
+
+
+        //收到58紙捲位置的命令分類
+        public static string ROLL_POSITION_SETTING_LEFT = "1F 1B 1F 53 5A 4A 42 5A 46 31 38 02 00";
+        public static string ROLL_POSITION_SETTING_CENTER = "1F 1B 1F 53 5A 4A 42 5A 46 31 38 02 01";
+        public static string ROLL_POSITION_SETTING_RIGHT = "1F 1B 1F 53 5A 4A 42 5A 46 31 38 02 02";
+
 
         //讀取所有欄位header
         public static string READ_ALL_HEADER = "1F 1B 1F 53 5A 4A 42 5A 46";
@@ -252,7 +269,10 @@ namespace G80Utility.Tool
         public static string RE_PAPEROUT_CLASSFY = "31-21";
 
         //收到打印紙寬的命令分類
-        public static string RE_PAPERWIDTH_CLASSFY = "31-30";
+        //public static string RE_PAPERWIDTH_CLASSFY = "31-30";
+
+        //收到錢箱功能的命令分類
+        public static string RE_DRAWER_CLASSFY = "31-39";
 
         //收到合蓋後自動切紙的命令分類
         public static string RE_HEADCLOSE_CUT_CLASSFY = "31-17";
@@ -286,6 +306,9 @@ namespace G80Utility.Tool
 
         //收到切紙鳴叫的命令分類
         public static string RE_CUT_BEEP = "31-32";
+
+        //收到58紙捲位置的命令分類
+        public static string RE_ROLL_POSITION = "31-38";
 
         #region 維護維修
         //清除打印機所有信息

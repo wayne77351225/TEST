@@ -461,13 +461,13 @@ namespace G80Utility
                 Config.isPaperOutReprintChecked = false;
             }
 
-            if (PaperWidthCheckbox.IsChecked == true)
+            if (DrawerCheckbox.IsChecked == true)
             {
-                Config.isPaperWidthChecked = true;
+                Config.isDrawerChecked = true;
             }
             else
             {
-                Config.isPaperWidthChecked = false;
+                Config.isDrawerChecked = false;
             }
 
             if (HeadCloseCutCheckbox.IsChecked == true)
@@ -531,6 +531,17 @@ namespace G80Utility
             else
             {
                 Config.isCutBeepChecked = false;
+            }
+
+            if (RollPositioncheckbox.IsChecked == true)
+            {
+
+                Config.isRollPositionChecked = true;
+            }
+            else
+            {
+
+                Config.isRollPositionChecked = false;
             }
         }
         #endregion
@@ -1068,14 +1079,14 @@ namespace G80Utility
                 CharNumberLabel.Content = FindResource("48") as string;
             }
 
-            //錢箱
-            if (CashboxCheckBox.IsChecked == true)
+            //紙寬
+            if (PaperWidthCheckBox.IsChecked == true)
             {
-                CashboxLabel.Content = FindResource("OpenAndCut") as string;
+                PaperWidthLabel.Content = "58mm";
             }
-            else if (CashboxCheckBox.IsChecked == false)
+            else if (PaperWidthCheckBox.IsChecked == false)
             {
-                CashboxLabel.Content = FindResource("OpenNotCut") as string;
+                PaperWidthLabel.Content = "80mm";
             }
         }
         #endregion
@@ -1303,9 +1314,9 @@ namespace G80Utility
                 checkIsGetData(null, PaperOutReprintCom, data, FindResource("ReprintPaperOut") as string, false, 1);
             }
 
-            if (receiveData.Contains(Command.RE_PAPERWIDTH_CLASSFY))
+            if (receiveData.Contains(Command.RE_DRAWER_CLASSFY))
             {
-                checkIsGetData(null, PaperWidthCom, data, FindResource("PaperWidth") as string, false, 1);
+                checkIsGetData(null, DrawerCom, data, FindResource("Drawer") as string, false, 1);
             }
 
             if (receiveData.Contains(Command.RE_HEADCLOSE_CUT_CLASSFY))
@@ -1360,7 +1371,8 @@ namespace G80Utility
                 DensityCheckBox.IsChecked = diparray[2];
                 ChineseForbiddenCheckBox.IsChecked = diparray[3];
                 CharNumberCheckBox.IsChecked = diparray[4];
-                CashboxCheckBox.IsChecked = diparray[5];
+                //CashboxCheckBox.IsChecked = diparray[5];
+                PaperWidthCheckBox.IsChecked = diparray[5];
 
                 string binary = Convert.ToInt32(diparray.Get(6)).ToString() + Convert.ToInt32(diparray.Get(7)).ToString();
                 switch (binary)
@@ -1392,6 +1404,11 @@ namespace G80Utility
                 //讀取時第三個字節為時間 beep duration
                 oneByteData[0] = data[10];
                 checkIsGetData(null, CutBeepDurationgCom, oneByteData, FindResource("BeepDurationg") as string, true, 10);
+            }
+
+            if (receiveData.Contains(Command.RE_ROLL_POSITION))
+            {
+                checkIsGetData(null, RollPositionCom, data, FindResource("RollPosition") as string, false, 2);
             }
 
         }
@@ -2123,12 +2140,13 @@ namespace G80Utility
         }
         #endregion
 
-        #region 設定打印紙寬按鈕事件
-        private void PaperWidthBtn_Click(object sender, RoutedEventArgs e)
+        #region 設定錢箱功能按鈕事件
+        private void DrawerBtn_Click(object sender, RoutedEventArgs e)
         {
-            DifferInterfaceConnectChkAndSend("PaperWidth");
+            DifferInterfaceConnectChkAndSend("Drawer");
         }
         #endregion
+
 
         #region 設定合蓋自動切紙按鈕事件
         private void HeadCloseCutBtn_Click(object sender, RoutedEventArgs e)
@@ -2200,6 +2218,13 @@ namespace G80Utility
         private void CutBeepDurationgBtn_Click(object sender, RoutedEventArgs e)
         {
             DifferInterfaceConnectChkAndSend("CutBeepSettings");
+        }
+        #endregion
+
+        #region 58紙捲位置
+        private void RollPositionBtn_Click(object sender, RoutedEventArgs e)
+        {
+            DifferInterfaceConnectChkAndSend("RollPositionSettings");
         }
         #endregion
 
@@ -2988,7 +3013,7 @@ namespace G80Utility
             //parasetting.DensityModeIndex = DensityModeCom.SelectedIndex;
             parasetting.DensityIndex = DensityCom.SelectedIndex;
             parasetting.PaperOutReprintIndex = PaperOutReprintCom.SelectedIndex;
-            parasetting.PaperWidthIndex = PaperWidthCom.SelectedIndex;
+            parasetting.DrawerIndex = DrawerCom.SelectedIndex;
             parasetting.HeadCloseCutIndex = HeadCloseCutCom.SelectedIndex;
             parasetting.YOffsetIndex = YOffsetCom.SelectedIndex;
             parasetting.LEDIndex = LEDCom.SelectedIndex;
@@ -3040,13 +3065,13 @@ namespace G80Utility
             {
                 parasetting.CharNumberCheck = true;
             }
-            if (CashboxCheckBox.IsChecked == true)
+            if (PaperWidthCheckBox.IsChecked == true)
             {
-                parasetting.CashboxCheck = false;
+                parasetting.PaperWidthCheck = false;
             }
             else
             {
-                parasetting.CashboxCheck = true;
+                parasetting.PaperWidthCheck = true;
             }
 
             parasetting.DIPBaudRateComIndex = DIPBaudRateCom.SelectedIndex;
@@ -3078,7 +3103,7 @@ namespace G80Utility
             //DensityModeCom.SelectedIndex = parasetting.DensityModeIndex;
             DensityCom.SelectedIndex = parasetting.DensityIndex;
             PaperOutReprintCom.SelectedIndex = parasetting.PaperOutReprintIndex;
-            PaperWidthCom.SelectedIndex = parasetting.PaperWidthIndex;
+            DrawerCom.SelectedIndex = parasetting.DrawerIndex;
             HeadCloseCutCom.SelectedIndex = parasetting.HeadCloseCutIndex;
             YOffsetCom.SelectedIndex = parasetting.YOffsetIndex;
             LEDCom.SelectedIndex = parasetting.LEDIndex;
@@ -3130,13 +3155,13 @@ namespace G80Utility
             {
                 CharNumberCheckBox.IsChecked = false;
             }
-            if (parasetting.CashboxCheck == false)
+            if (parasetting.PaperWidthCheck == false)
             {
-                CashboxCheckBox.IsChecked = true;
+                PaperWidthCheckBox.IsChecked = true;
             }
             else
             {
-                CashboxCheckBox.IsChecked = false;
+                PaperWidthCheckBox.IsChecked = false;
             }
             DIPBaudRateCom.SelectedIndex = parasetting.DIPBaudRateComIndex;
         }
@@ -3832,24 +3857,53 @@ namespace G80Utility
         }
         #endregion
 
-        #region 設定打印紙寬
-        private void PaperWidth()
+        #region 設定錢箱功能
+        private void Drawer()
         {
-            if (PaperWidthCom.SelectedIndex != -1)
+            if (DrawerCom.SelectedIndex != -1)
             {
                 byte[] sendArray = null;
-
-                if (PaperWidthCom.SelectedIndex == 0)
+                //打开:1
+                //关闭:0
+                if (DrawerCom.SelectedIndex == 0)
                 {
-                    sendArray = StringToByteArray(Command.PAPER_WIDTH_58MM_SETTING);
+                    sendArray = StringToByteArray(Command.DRAWER_CLOSE_SETTING);
                 }
-                else if (PaperWidthCom.SelectedIndex == 1)
+                else if (DrawerCom.SelectedIndex == 1)
                 {
-                    sendArray = StringToByteArray(Command.PAPER_WIDTH_80MM_SETTING);
+                    sendArray = StringToByteArray(Command.DRAWER_OPEN_SETTING);
                 }
                 SendCmd(sendArray, "BeepOrSetting", 0);
             }
             else { MessageBox.Show(FindResource("ColumnEmpty") as string); }
+        }
+        #endregion
+
+        #region 設定RollPositon
+        private void RollPositionSettings()
+        {
+            if (RollPositionCom.SelectedIndex != -1)
+            {
+                byte[] sendArray = null;
+                //居左:0
+                //居中:1
+                //居右:2
+                if (RollPositionCom.SelectedIndex == 0)
+                {
+                    sendArray = StringToByteArray(Command.ROLL_POSITION_SETTING_LEFT);
+                }
+                else if (RollPositionCom.SelectedIndex == 1)
+                {
+                    sendArray = StringToByteArray(Command.ROLL_POSITION_SETTING_CENTER);
+                }
+                else
+                {
+                    sendArray = StringToByteArray(Command.ROLL_POSITION_SETTING_RIGHT);
+                }
+                SendCmd(sendArray, "BeepOrSetting", 0);
+            }
+            else { MessageBox.Show(FindResource("ColumnEmpty") as string); }
+
         }
         #endregion
 
@@ -3978,6 +4032,7 @@ namespace G80Utility
         #region DIP值設定
         private void DIPSetting()
         {
+            if (!sendNoticeCmd()) return;
 
             BitArray dipArray = new BitArray(8);
 
@@ -4021,7 +4076,7 @@ namespace G80Utility
             {
                 dipArray.Set(4, true);
             }
-            if (CashboxCheckBox.IsChecked == true)
+            if (PaperWidthCheckBox.IsChecked == true)
             {
                 dipArray.Set(5, false);
             }
@@ -4062,6 +4117,137 @@ namespace G80Utility
             SendCmd(sendArray, "BeepOrSetting", 0);
             MessageBox.Show(FindResource("BaudChangeWarning") as string);
         }
+        #endregion
+
+        #region notice下發命令確認
+        private bool sendNoticeCmd()
+        {
+            byte[] sendArray;
+            string version = ConvertStringToHex(FindResource("Version") as string);
+            string reply = "";
+
+            if ((bool)RS232Radio.IsChecked)
+            {
+                if (RS232PortName != null)
+                {
+                    RS232Connect.CloseSerialPort(); //連線前會先判斷是否已開啟PORT    
+                    bool isError = RS232Connect.OpenSerialPort(RS232PortName, FindResource("CannotOpenComport") as string);
+                    if (!isError)
+                    {
+                        sendArray = StringToByteArray(Command.TOOL_VERSION_SEND_HEAD + version);
+                        RS232Connect.SerialPortSendCMD("NeedReceive", sendArray, null, 9);
+                        while (!RS232Connect.isReceiveData)
+                        {
+                            if (RS232Connect.mRecevieData != null)
+                            {
+                                reply = BitConverter.ToString(RS232Connect.mRecevieData);
+                                reply = reply.Replace("-", " ");
+                                Console.WriteLine(reply);
+                                break;
+                            }
+                        }
+                        SendCmdFail("R");
+                        RS232Connect.CloseSerialPort(); //最後關閉
+                    }
+                    else //serial open port failed
+                    {
+                        isRS232Connected = false;
+                        connectFailUI(RS232ConnectImage, FindResource("CannotOpenComport") as string);
+                    }
+                }
+                else
+                {
+                    MessageBox.Show(FindResource("NotSettingComport") as string);
+                }
+
+            }
+            else if ((bool)USBRadio.IsChecked)
+            {
+                int result = 0;
+                if (USBpath != null) //先判斷是否有USBpath
+                {    //已斷線，重新測試連線
+                    if (USBConnect.USBHandle == -1)
+                    {
+                        result = USBConnect.ConnectUSBDevice(USBpath);
+                    }
+                    else
+                    {
+                        result = 1; //usb已連線
+                    }
+                    if (result == 1)
+                    {
+
+                        byte[] sendArrayUSB = StringToByteArray(Command.TOOL_VERSION_SEND_HEAD + version);
+                        USBConnect.USBSendCMD("NeedReceive", sendArrayUSB, null, 9);
+                        while (!USBConnect.isReceiveData)
+                        {
+                            if (USBConnect.mRecevieData != null)
+                            {
+                                reply = BitConverter.ToString(USBConnect.mRecevieData);
+                                reply = reply.Replace("-", " ");
+                                Console.WriteLine(reply);
+                                break;
+                            }
+                        }
+                        SendCmdFail("U");
+                    }
+                    else //USB CreateFile失敗
+                    {
+                        isUSBConnected = false;
+                        connectFailUI(USBConnectImage, FindResource("NotSettingUSBport") as string);
+                    }
+                }
+                else
+                {
+                    MessageBox.Show(FindResource("NotSettingUSBport") as string);
+                }
+            }
+            else if ((bool)EhernetRadio.IsChecked)
+            {
+                bool isOK = chekckEthernetIPText();
+                if (isOK)
+                {
+                    //checkEthernetCommunitcation();
+                    int connectStatus = EthernetConnect.EthernetConnectStatus();
+                    switch (connectStatus)
+                    {
+                        case 0: //fail
+                            isEthernetConnected = false;
+                            connectFailUI(EthernetConnectImage, FindResource("NotSettingEthernetport") as string);
+                            break;
+                        case 1: //success
+                            byte[] sendArrayEthernet = StringToByteArray(Command.TOOL_VERSION_SEND_HEAD + version);
+                            EthernetConnect.EthernetSendCmd("NeedReceive", sendArrayEthernet, null, 9);
+                            while (!EthernetConnect.isReceiveData)
+                            {
+                                if (EthernetConnect.mRecevieData != null)
+                                {
+                                    reply = BitConverter.ToString(EthernetConnect.mRecevieData);
+                                    reply = reply.Replace("-", " ");
+                                    break;
+                                }
+                            }
+                            SendCmdFail("E");
+                            EthernetConnect.disconnect();
+                            break;
+                        case 2: //timeout
+                            isEthernetConnected = false;
+                            connectFailUI(EthernetConnectImage, FindResource("ConnectTimeout") as string);
+                            EthernetConnect.disconnect();
+                            break;
+
+                    }
+                }
+            }
+            if (reply != Command.TOOL_VERSION_RE)
+            {
+                MessageBox.Show(FindResource("ToolVerNoReturn") as string);
+                return false;
+            }
+
+            return true;
+        }
+
         #endregion
 
         #region 切刀鳴叫開關/次數/時間
@@ -4215,12 +4401,11 @@ namespace G80Utility
                 SendCmd(sendArray, "ReadPara", 9);
             }
 
-            if (Config.isPaperWidthChecked)
+            if (Config.isDrawerChecked)
             {
-                sendArray = StringToByteArray(Command.READ_ALL_HEADER + "31 30 01");
+                sendArray = StringToByteArray(Command.READ_ALL_HEADER + "31 39 01");
                 SendCmd(sendArray, "ReadPara", 9);
             }
-
             if (Config.isHeadCloseCutChecked)
             {
                 sendArray = StringToByteArray(Command.READ_ALL_HEADER + "31 17 01");
@@ -4269,6 +4454,14 @@ namespace G80Utility
             {
                 sendArray = StringToByteArray(Command.READ_ALL_HEADER + "31 32 01");
                 SendCmd(sendArray, "ReadPara", 11);
+            }
+
+
+            //58mm紙捲位置
+            if (Config.isRollPositionChecked)
+            {
+                sendArray = StringToByteArray(Command.READ_ALL_HEADER + "31 38 01");
+                SendCmd(sendArray, "ReadPara", 9);
             }
         }
         #endregion
@@ -4376,9 +4569,10 @@ namespace G80Utility
                 PaperOutReprint();
             }
 
-            if (Config.isPaperWidthChecked)
+
+            if (Config.isDrawerChecked)
             {
-                PaperWidth();
+                Drawer();
             }
 
             if (Config.isHeadCloseCutChecked)
@@ -4419,6 +4613,11 @@ namespace G80Utility
             if (Config.isCutBeepChecked)
             {
                 CutBeepSettings();
+            }
+
+            if (Config.isRollPositionChecked)
+            {
+                RollPositionSettings();
             }
         }
         #endregion
@@ -5620,8 +5819,8 @@ namespace G80Utility
                 case "PaperOutReprint":
                     PaperOutReprint();
                     break;
-                case "PaperWidth":
-                    PaperWidth();
+                case "Drawer":
+                    Drawer();
                     break;
                 case "HeadCloseCut":
                     HeadCloseCut();
@@ -5643,6 +5842,9 @@ namespace G80Utility
                     break;
                 case "DIPSetting":
                     DIPSetting();
+                    break;
+                case "RollPositionSettings":
+                    RollPositionSettings();
                     break;
                 case "readALL":
                     readALL();
