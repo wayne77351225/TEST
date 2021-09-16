@@ -3,9 +3,9 @@
                      xmlns:sys="clr-namespace:System;assembly=mscorlib">
     <!--Window Title-->
     <!--<sys:String x:Key="WindowTitle">G80 Utility Factory Beta v1.3.3(b)</sys:String>--> 
-    <sys:String x:Key="WindowTitle">G80 Utility Factory v1.3.3(r)</sys:String>
-    <!--<sys:String x:Key="Version">ver:1.3.3r</sys:String>-->
-    <sys:String x:Key="Version">ver:1.3.3b</sys:String>
+    <sys:String x:Key="WindowTitle">G80 Utility Factory v1.3.4(r)</sys:String>
+    <!--<sys:String x:Key="Version">ver:1.3.4b</sys:String>-->
+    <sys:String x:Key="Version">ver:1.3.4r</sys:String>
     
     <!--Top通讯介面-->
     <sys:String x:Key="ConnectionInterface">通讯介面</sys:String>
