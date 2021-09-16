@@ -202,8 +202,8 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:G80 for Factory"
-        "ProductCode" = "8:{695BE997-234A-4DE8-87BE-B16C4CEC9634}"
-        "PackageCode" = "8:{9353833D-C0D8-47F6-9FB2-28BB909D1685}"
+        "ProductCode" = "8:{63AC0586-2657-46F9-9FB1-24CB6636771C}"
+        "PackageCode" = "8:{AED42FB3-9134-4197-9CC0-DAB249073A3E}"
         "UpgradeCode" = "8:{E5B2E590-2F42-4A59-A00A-6AA7632ED8FE}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
