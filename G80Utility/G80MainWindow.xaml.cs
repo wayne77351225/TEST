@@ -1655,11 +1655,17 @@ namespace G80Utility
                     {
                         sendArray = StringToByteArray(Command.RS232_COMMUNICATION_TEST);
                         RS232Connect.SerialPortSendCMD("NeedReceive", sendArray, null, 8);
+                        System.DateTime StopTime;
+                        StopTime = System.DateTime.Now.AddSeconds(1);
                         while (!RS232Connect.isReceiveData)
                         {
                             if (RS232Connect.mRecevieData != null)
                             {
                                 isRS232CommunicateOK(RS232Connect.mRecevieData, "communication");
+                                break;
+                            }
+                            if (System.DateTime.Now >= StopTime)
+                            {
                                 break;
                             }
                         }
@@ -1691,12 +1697,18 @@ namespace G80Utility
                             byte[] sendArrayUSB = StringToByteArray(Command.USB_COMMUNICATION_TEST);
                             //USBConnectAndSendCmd("CommunicationTest", sendArray, 8);
                             USBConnect.USBSendCMD("NeedReceive", sendArrayUSB, null, 8);
+                            System.DateTime StopTime;
+                            StopTime = System.DateTime.Now.AddSeconds(3);
                             while (!USBConnect.isReceiveData)
                             {
                                 if (USBConnect.mRecevieData != null)
                                 {
                                     isUSBCommunicateOK(USBConnect.mRecevieData, "communication");
                                     USBConnect.closeHandle();
+                                    break;
+                                }
+                                if (System.DateTime.Now >= StopTime)
+                                {
                                     break;
                                 }
                             }
@@ -1732,11 +1744,17 @@ namespace G80Utility
                             byte[] sendArrayEthernet = StringToByteArray(Command.ETHERNET_COMMUNICATION_TEST);
                             //EthernetConnectAndSendCmd("CommunicationTest", sendArray, 8);
                             EthernetConnect.EthernetSendCmd("NeedReceive", sendArrayEthernet, null, 8);
+                            System.DateTime StopTime;
+                            StopTime = System.DateTime.Now.AddSeconds(2);
                             while (!EthernetConnect.isReceiveData)
                             {
                                 if (EthernetConnect.mRecevieData != null)
                                 {
                                     isEthernetCommunicateOK(EthernetConnect.mRecevieData, "communication");
+                                    break;
+                                }
+                                if (System.DateTime.Now >= StopTime)
+                                {
                                     break;
                                 }
                             }
