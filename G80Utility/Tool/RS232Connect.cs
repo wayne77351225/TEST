@@ -55,6 +55,8 @@ namespace G80Utility.Tool
             isReceiveData = false;
             mRecevieData = null;
 
+            if (data == null)
+                return isReceiveData;
             List<byte> buffer = new List<byte>();
             foreach (byte bytedata in data)
             {

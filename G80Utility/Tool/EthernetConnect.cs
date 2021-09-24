@@ -84,6 +84,8 @@ namespace G80Utility.Tool
             mRecevieData = null;
             Receive_Size = recevieLength;
 
+            if (data == null)
+                return isReceiveData;
             if (TimeoutObject.WaitOne(2000, false) && connectStatus == 1)
             {
                 ((G80MainWindow)Application.Current.MainWindow).EthernetConnectImage.Source = new BitmapImage(new Uri("Images/green_circle.png", UriKind.Relative)); //連線失敗時

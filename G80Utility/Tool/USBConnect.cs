@@ -73,6 +73,8 @@ namespace G80Utility.Tool
             overlap.OffsetHigh = 0;
 
             uint write = 0;
+            if(data==null)
+                return isReceiveData;
             bool isread = Kernel32.WriteFile((IntPtr)USBHandle, data, (uint)(data.Length), ref write, ref overlap);
             if (!isread && Marshal.GetLastWin32Error() == ERROR_IO_PENDING)
             {
