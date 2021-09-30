@@ -36,7 +36,7 @@ namespace G80Utility.Tool
             CPList.Add("30:Uigur");
             CPList.Add("31:Hebrew");
             CPList.Add("32:WPC1255");
-            CPList.Add("33：PC720");
+            CPList.Add("33:PC720");
             CPList.Add("34:WPC1256");
             CPList.Add("35:WPC1257(N");
             CPList.Add("255:Thai");
