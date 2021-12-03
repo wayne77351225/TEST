@@ -6966,7 +6966,10 @@ namespace G80Utility
         #region 選取傳輸通道
         private void ConnectType_SelectionChanged(object sender, RoutedEventArgs e)
         {
+            int SelectUSBNum=-1;
             //因為通訊測試所以全部傳輸通道要一次設定好
+            if (DeviceSelectUSB.SelectedIndex != -1)       
+                SelectUSBNum = DeviceSelectUSB.SelectedIndex;    //若有之前選擇USB紀錄，則沿用
             viewmodel.removePort(deviceList);
             deviceList.Clear(); //清空避免重複
             getSerialPort();
@@ -6981,7 +6984,10 @@ namespace G80Utility
                 DeviceSelectRS232.SelectedIndex = viewmodel.RS232Device.Count - 1;
             }
             viewmodel.getDeviceObserve("usb");
-            DeviceSelectUSB.SelectedIndex = viewmodel.USBDevice.Count - 1;//設定選取第一筆      
+            if (SelectUSBNum == -1)
+                DeviceSelectUSB.SelectedIndex = viewmodel.USBDevice.Count - 1;//設定選取第一筆
+            else
+                DeviceSelectUSB.SelectedIndex = SelectUSBNum;
 
             //增加判斷如果切換通道時未連線進行提醒
             if (USBRadio.IsChecked == true)
