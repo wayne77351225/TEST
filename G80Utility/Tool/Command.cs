@@ -321,6 +321,18 @@ namespace G80Utility.Tool
         //FALSH測試
         public static string FLASH_TEST = "1F 1B 1F 53 5A 4A 42 5A 46 44 11 00";
 
+        //讀取擴展端口
+        public static string PORT_EXTEND_LOAD = "1F 1B 1F 53 5A 4A 42 5A 46 31 19 01";
+
+        //寫入擴展端口
+        public static string PORT_EXTEND_SET = "1F 1B 1F 53 5A 4A 42 5A 46 31 19 02";
+
+        //讀取端口鮑率
+        public static string PORT_BAUDRATE_LOAD = "1F 1B 1F 53 5A 4A 42 5A 46 30 27 01";
+
+        //寫入端口鮑率
+        public static string PORT_BAUDRATE_SET = "1F 1B 1F 53 5A 4A 42 5A 46 30 22 02";
+
         //讀取藍牙名稱
         public static string BT_LAOD = "1F 1B 1F 53 5A 4A 42 5A 46 30 19 01";
 
@@ -335,6 +347,24 @@ namespace G80Utility.Tool
 
         //寫入WIFI密碼
         public static string WIFI_PWD_SET = "1F 1B 1F 53 5A 4A 42 5A 46 30 21 02";
+
+        //讀取IP模式
+        public static string IP_MODE_LOAD = "1F 1B 1F 53 5A 4A 42 5A 46 30 24 01";
+
+        //寫入IP模式
+        public static string IP_MODE_SET = "1F 1B 1F 53 5A 4A 42 5A 46 30 24 02";
+
+        //讀取STA IP位址
+        public static string STA_IP_LOAD = "1F 1B 1F 53 5A 4A 42 5A 46 30 25 01";
+
+        //寫入STA IP位址
+        public static string STA_IP_SET = "1F 1B 1F 53 5A 4A 42 5A 46 30 25 02";
+
+        //讀取閘道器位址
+        public static string GATEWAY_LOAD = "1F 1B 1F 53 5A 4A 42 5A 46 30 26 01";
+
+        //寫入閘道器位址
+        public static string GATEWAY_SET = "1F 1B 1F 53 5A 4A 42 5A 46 30 26 02";
         #endregion
 
         #region 工廠生產

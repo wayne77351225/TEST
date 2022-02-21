@@ -149,6 +149,26 @@
     <sys:String x:Key="GeneralCommand">通用指令</sys:String>
     <sys:String x:Key="PageMode">頁模式</sys:String>
     <sys:String x:Key="CommandTest">指令測試</sys:String>
+
+    <!--藍牙WiFi設置-->
+    <sys:String x:Key="WIFIBTSettingTitle">藍牙WiFi設置</sys:String>
+    <sys:String x:Key="WIFIBTTitle">WIFI/藍牙</sys:String>
+    <sys:String x:Key="WIFIName">WIFI名稱：</sys:String>
+    <sys:String x:Key="WIFIPwd">WIFI密碼：</sys:String>
+    <sys:String x:Key="LoadBTName">讀取藍牙名稱</sys:String>
+    <sys:String x:Key="BTName">藍牙名稱</sys:String>
+    <sys:String x:Key="PortSetting">端口設定</sys:String>
+    <sys:String x:Key="Port">端口：</sys:String>
+    <sys:String x:Key="BaudRate">鮑率：</sys:String>
+    <sys:String x:Key="NamePassword">名稱/密碼</sys:String>
+    <sys:String x:Key="WIFISetting">WIFI設定</sys:String>
+    <sys:String x:Key="IPMode">IP模式：</sys:String>
+    <sys:String x:Key="STAIPAddress">STA IP位址：</sys:String>
+    <sys:String x:Key="GatewayAddress">閘道器位址：</sys:String>
+    <sys:String x:Key="BT">Bluetooth</sys:String>
+    <sys:String x:Key="WIFI">WIFI</sys:String>
+    <sys:String x:Key="StaticIP">靜態IP</sys:String>
+    
     <!--黑標設定-->
     <sys:String x:Key="SetBLineBillMaxLen">設定黑標票據最大長度</sys:String>
     <sys:String x:Key="DetectBlineFeedPrintTest">檢測到黑標後吐紙列印測試</sys:String>

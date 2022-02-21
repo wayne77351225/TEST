@@ -150,6 +150,25 @@
     <sys:String x:Key="PageMode">页模式</sys:String>
     <sys:String x:Key="CommandTest">指令测试</sys:String>
 
+    <!--藍牙WiFi设置-->
+    <sys:String x:Key="WIFIBTSettingTitle">蓝牙WiFi设置</sys:String>
+    <sys:String x:Key="WIFIBTTitle">WIFI/蓝牙</sys:String>
+    <sys:String x:Key="WIFIName">WIFI名称：</sys:String>
+    <sys:String x:Key="WIFIPwd">WIFI密码：</sys:String>
+    <sys:String x:Key="LoadBTName">读取蓝牙名称</sys:String>
+    <sys:String x:Key="BTName">蓝牙名称</sys:String>
+    <sys:String x:Key="PortSetting">端口设定</sys:String>
+    <sys:String x:Key="Port">端口：</sys:String>
+    <sys:String x:Key="BaudRate">鲍率：</sys:String>
+    <sys:String x:Key="NamePassword">名称/密码</sys:String>
+    <sys:String x:Key="WIFISetting">WIFI设定</sys:String>
+    <sys:String x:Key="IPMode">IP模式：</sys:String>
+    <sys:String x:Key="STAIPAddress">STA IP位址：</sys:String>
+    <sys:String x:Key="GatewayAddress">闸道器位址：</sys:String>
+    <sys:String x:Key="BT">Bluetooth</sys:String>
+    <sys:String x:Key="WIFI">WIFI</sys:String>
+    <sys:String x:Key="StaticIP">静态IP</sys:String>
+
     <!--黑标设定-->
     <sys:String x:Key="SetBLineBillMaxLen">设置黑标票据最大长度</sys:String>
     <sys:String x:Key="DetectBlineFeedPrintTest">检测到黑标后进行打印测试</sys:String>

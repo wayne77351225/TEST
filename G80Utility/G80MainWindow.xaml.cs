@@ -1543,6 +1543,20 @@ namespace G80Utility
         }
         #endregion
 
+        #region Port設定至畫面
+        private void setPorttoUI(byte[] data)
+        {
+            PortCom.SelectedIndex = data[8] - 1;
+        }
+        #endregion
+
+        #region 端口鮑率設定至畫面
+        private void setBaudRatetoUI(byte[] data)
+        {
+            Baud_RateCom.SelectedIndex = data[8];
+        }
+        #endregion
+
         #region 藍牙名稱設定至畫面
         private void setBTNametoUI(byte[] data)
         {
@@ -1563,7 +1577,7 @@ namespace G80Utility
         {
             string WIFIname = null;
             //(0~7)前8個是無意義資料
-            for (int i = 8; i < 24; i++)
+            for (int i = 8; i < 40; i++)
             {
                 WIFIname += Convert.ToChar(data[i]);
             }
@@ -1572,17 +1586,38 @@ namespace G80Utility
         }
         #endregion
 
-        #region WIFI名稱設定至畫面
+        #region WIFI密碼設定至畫面
         private void setWIFIPwdtoUI(byte[] data)
         {
             string WIFIPWD = null;
             //(0~7)前8個是無意義資料
-            for (int i = 8; i < 24; i++)
+            for (int i = 8; i < 40; i++)
             {
                 WIFIPWD += Convert.ToChar(data[i]);
             }
             WIFIPwd_Txt.Text = WIFIPWD;
             //Console.WriteLine("WIFIPWD:" + WIFIPWD);
+        }
+        #endregion
+
+        #region IP模式設定至畫面
+        private void setIPModetoUI(byte[] data)
+        {
+            IPModeCom.SelectedIndex = data[8];
+        }
+        #endregion
+
+        #region STA IP位址設定至畫面
+        private void setSTAIPAddresstoUI(byte[] data)
+        {
+            STAIPAddress_Txt.Text = data[8] + "." + data[9] + "." + data[10] + "." + data[11];
+        }
+        #endregion
+
+        #region 閘道器設定至畫面
+        private void setGatewayAddresstoUI(byte[] data)
+        {
+            GatewayAddress_Txt.Text = data[8] + "." + data[9] + "." + data[10] + "." + data[11];
         }
         #endregion
 
@@ -2390,6 +2425,34 @@ namespace G80Utility
         }
         #endregion
 
+        #region 取得擴展端口資訊按鈕事件
+        private void PortLoad_Btn_Click(object sender, RoutedEventArgs e)
+        {
+            DifferInterfaceConnectChkAndSend("ReadPort");
+        }
+        #endregion
+
+        #region 寫入擴展端口資訊按鈕事件
+        private void PortWirte_Btn_Click(object sender, RoutedEventArgs e)
+        {
+            DifferInterfaceConnectChkAndSend("WritePort");
+        }
+        #endregion
+
+        #region 取得鮑率資訊按鈕事件
+        private void BaudRateLoad_Btn_Click(object sender, RoutedEventArgs e)
+        {
+            DifferInterfaceConnectChkAndSend("ReadBaudRate");
+        }
+        #endregion
+
+        #region 寫入鮑率資訊按鈕事件
+        private void BaudRateWirte_Btn_Click(object sender, RoutedEventArgs e)
+        {
+            DifferInterfaceConnectChkAndSend("WriteBaudRate");
+        }
+        #endregion
+
         #region 取得藍牙名稱按鈕事件
         private void BTName_Btn_Click(object sender, RoutedEventArgs e)
         {
@@ -2412,18 +2475,61 @@ namespace G80Utility
         #endregion
 
         #region 取得WIFI密碼按鈕事件
-        private void wIFIPwdLoad_Btn_Click(object sender, RoutedEventArgs e)
+        private void WIFIPwdLoad_Btn_Click(object sender, RoutedEventArgs e)
         {
             DifferInterfaceConnectChkAndSend("ReadWIFIPwd");
         }
         #endregion
 
         #region 寫入WIFI密碼按鈕事件
-        private void wIFIPwdWrite_Btn_Click(object sender, RoutedEventArgs e)
+        private void WIFIPwdWrite_Btn_Click(object sender, RoutedEventArgs e)
         {
             DifferInterfaceConnectChkAndSend("WriteWIFIPwd");
         }
         #endregion
+
+        #region 取得IP模式按鈕事件
+        private void IPModeLoad_Btn_Click(object sender, RoutedEventArgs e)
+        {
+            DifferInterfaceConnectChkAndSend("ReadIPMode");
+        }
+        #endregion
+
+        #region 寫入IP模式按鈕事件
+        private void IPModeWrite_Btn_Click(object sender, RoutedEventArgs e)
+        {
+            DifferInterfaceConnectChkAndSend("WriteIPMode");
+        }
+        #endregion
+
+        #region 取得STA IP位址按鈕事件
+        private void STAIPAddressLoad_Btn_Click(object sender, RoutedEventArgs e)
+        {
+            DifferInterfaceConnectChkAndSend("ReadSTAIPAddress");
+        }
+        #endregion
+
+        #region 寫入STA IP位址按鈕事件
+        private void STAIPAddressWrite_Btn_Click(object sender, RoutedEventArgs e)
+        {
+            DifferInterfaceConnectChkAndSend("WriteSTAIPAddress");
+        }
+        #endregion
+
+        #region 取得閘道器位址按鈕事件
+        private void GatewayAddressLoad_Btn_Click(object sender, RoutedEventArgs e)
+        {
+            DifferInterfaceConnectChkAndSend("ReadGatewayAddress");
+        }
+        #endregion
+
+        #region 寫入閘道器位址按鈕事件
+        private void GatewayAddressWrite_Btn_Click(object sender, RoutedEventArgs e)
+        {
+            DifferInterfaceConnectChkAndSend("WriteGatewayAddress");
+        }
+        #endregion
+
         //工廠生產按鈕
         #region 打印自檢頁(短)-工廠-按鈕事件
         private void PrintTest_S_Click(object sender, RoutedEventArgs e)
@@ -4467,6 +4573,14 @@ namespace G80Utility
         }
         #endregion
 
+        #region 讀取擴展端口
+        private void LoadPort()
+        {
+            byte[] sendArray = StringToByteArray(Command.PORT_EXTEND_LOAD);
+            SendCmd(sendArray, "ReadPort", 9);
+        }
+        #endregion
+
         #region 讀取BT名稱
         private void LoadBTName()
         {
@@ -4479,7 +4593,7 @@ namespace G80Utility
         private void LoadWIFIName()
         {
             byte[] sendArray = StringToByteArray(Command.WIFI_NAME_LOAD);
-            SendCmd(sendArray, "ReadWIFIName", 24);
+            SendCmd(sendArray, "ReadWIFIName", 40);
         }
         #endregion
 
@@ -4487,7 +4601,7 @@ namespace G80Utility
         private void LoadWIFIPwd()
         {
             byte[] sendArray = StringToByteArray(Command.WIFI_PWD_LOAD);
-            SendCmd(sendArray, "ReadWIFIPwd", 24);
+            SendCmd(sendArray, "ReadWIFIPwd", 40);
         }
         #endregion
 
@@ -4500,7 +4614,7 @@ namespace G80Utility
             {
                 name = WIFIName_Txt.Text.Replace("\0", "");
 
-                String result = ConvertStringToHex(name);
+                String result = ConvertStringToHex32(name);
                 if (result != null)
                 {
                     sendArray = StringToByteArray(Command.WIFI_NAME_SET + result);
@@ -4528,7 +4642,7 @@ namespace G80Utility
             {
                 pwd = WIFIPwd_Txt.Text.Replace("\0", "");
 
-                String result = ConvertStringToHex(pwd);
+                String result = ConvertStringToHex32(pwd);
                 if (result != null)
                 {
                     sendArray = StringToByteArray(Command.WIFI_PWD_SET + result);
@@ -4544,6 +4658,22 @@ namespace G80Utility
             {
                 MessageBox.Show(FindResource("ColumnEmpty") as string);
             }
+        }
+        #endregion
+
+        #region 讀取STA IP位址
+        private void LoadSTAIPAddress()
+        {
+            byte[] sendArray = StringToByteArray(Command.STA_IP_LOAD);
+            SendCmd(sendArray, "ReadSTAIPAddress", 12);
+        }
+        #endregion
+
+        #region 讀取閘道器位址
+        private void LoadGatewayAddress()
+        {
+            byte[] sendArray = StringToByteArray(Command.GATEWAY_LOAD);
+            SendCmd(sendArray, "ReadGatewayAddress", 12);
         }
         #endregion
 
@@ -5796,6 +5926,97 @@ namespace G80Utility
                         MessageBox.Show(FindResource("WaitforRedLight") as string);
                     }
                     break;
+                case "ReadPort":
+                    LoadPort();
+                    break;
+                case "WritePort":
+                    if (PortCom.SelectedIndex != -1)
+                    {
+                        byte[] PortArray = null;
+
+                        switch (PortCom.SelectedIndex)
+                        {
+                            case 0:
+                                PortArray = StringToByteArray(Command.PORT_EXTEND_SET + "01");
+                                break;
+                            case 1:
+                                PortArray = StringToByteArray(Command.PORT_EXTEND_SET + "02");
+                                break;
+                            case 2:
+                                PortArray = StringToByteArray(Command.PORT_EXTEND_SET + "03");
+                                break;
+                        }
+                        SendCmd(PortArray, "BeepOrSetting", 0);
+                    }
+                    else { MessageBox.Show(FindResource("ColumnEmpty") as string); }
+                    break;
+                case "ReadBaudRate":
+                    byte[] RaedBaudRateArray = StringToByteArray(Command.PORT_BAUDRATE_LOAD);
+                    SendCmd(RaedBaudRateArray, "ReadBaudRate", 9);
+                    break;
+                case "WriteBaudRate":
+                    if (Baud_RateCom.SelectedIndex != -1)
+                    {
+                        byte[] Baud_RateArray = null;
+
+                        switch (Baud_RateCom.SelectedIndex)
+                        {
+                            case 0:
+                                Baud_RateArray = StringToByteArray(Command.PORT_EXTEND_SET + "00");
+                                break;
+                            case 1:
+                                Baud_RateArray = StringToByteArray(Command.PORT_EXTEND_SET + "01");
+                                break;
+                            case 2:
+                                Baud_RateArray = StringToByteArray(Command.PORT_EXTEND_SET + "02");
+                                break;
+                            case 3:
+                                Baud_RateArray = StringToByteArray(Command.PORT_EXTEND_SET + "03");
+                                break;
+                            case 4:
+                                Baud_RateArray = StringToByteArray(Command.PORT_EXTEND_SET + "04");
+                                break;
+                            case 5:
+                                Baud_RateArray = StringToByteArray(Command.PORT_EXTEND_SET + "05");
+                                break;
+                            case 6:
+                                Baud_RateArray = StringToByteArray(Command.PORT_EXTEND_SET + "06");
+                                break;
+                            case 7:
+                                Baud_RateArray = StringToByteArray(Command.PORT_EXTEND_SET + "07");
+                                break;
+                            case 8:
+                                Baud_RateArray = StringToByteArray(Command.PORT_EXTEND_SET + "08");
+                                break;
+                            case 9:
+                                Baud_RateArray = StringToByteArray(Command.PORT_EXTEND_SET + "09");
+                                break;
+                            case 10:
+                                Baud_RateArray = StringToByteArray(Command.PORT_EXTEND_SET + "0a");
+                                break;
+                            case 11:
+                                Baud_RateArray = StringToByteArray(Command.PORT_EXTEND_SET + "0b");
+                                break;
+                            case 12:
+                                Baud_RateArray = StringToByteArray(Command.PORT_EXTEND_SET + "0c");
+                                break;
+                            case 13:
+                                Baud_RateArray = StringToByteArray(Command.PORT_EXTEND_SET + "0d");
+                                break;
+                            case 14:
+                                Baud_RateArray = StringToByteArray(Command.PORT_EXTEND_SET + "0e");
+                                break;
+                            case 15:
+                                Baud_RateArray = StringToByteArray(Command.PORT_EXTEND_SET + "0f");
+                                break;
+                            case 16:
+                                Baud_RateArray = StringToByteArray(Command.PORT_EXTEND_SET + "64");
+                                break;
+                        }
+                        SendCmd(Baud_RateArray, "BeepOrSetting", 0);
+                    }
+                    else { MessageBox.Show(FindResource("ColumnEmpty") as string); }
+                    break;
                 case "ReadBT":
                     LoadBTName();
                     break;
@@ -5810,6 +6031,80 @@ namespace G80Utility
                     break;
                 case "WriteWIFIPwd":
                     SetWIFIPWD();
+                    break;
+                case "ReadIPMode":
+                    byte[] ReadIPModeArray = StringToByteArray(Command.IP_MODE_LOAD);
+                    SendCmd(ReadIPModeArray, "ReadIPMode", 9);
+                    break;
+                case "WriteIPMode":
+                    if (IPModeCom.SelectedIndex != -1)
+                    {
+                        byte[] IPModeArray = null;
+
+                        switch (IPModeCom.SelectedIndex)
+                        {
+                            case 0:
+                                IPModeArray = StringToByteArray(Command.IP_MODE_SET + "00");
+                                break;
+                            case 1:
+                                IPModeArray = StringToByteArray(Command.IP_MODE_SET + "01");
+                                break;
+                        }
+                        SendCmd(IPModeArray, "BeepOrSetting", 0);
+                    }
+                    else { MessageBox.Show(FindResource("ColumnEmpty") as string); }
+                    break;
+                case "ReadSTAIPAddress":
+                    LoadSTAIPAddress();
+                    break;
+                case "WriteSTAIPAddress":
+                    byte[] STAIPAddressArray = null;
+                    string STAIP;
+                    if (STAIPAddress_Txt.Text != "")
+                    {
+                        STAIP = STAIPAddress_Txt.Text;
+                        if (checkIPFormat(STAIP))
+                        {
+                            String STAIPAddressResult = String.Concat(STAIP.Split('.').Select(x => int.Parse(x).ToString("X2")));
+                            STAIPAddressArray = StringToByteArray(Command.STA_IP_SET + STAIPAddressResult);
+                            SendCmd(STAIPAddressArray, "BeepOrSetting", 0);
+                        }
+                        else
+                        {
+                            STAIP = null;
+                            MessageBox.Show(FindResource("ErrorFormat") as string);
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show(FindResource("ColumnEmpty") as string);
+                    }
+                    break;
+                case "ReadGatewayAddress":
+                    LoadGatewayAddress();
+                    break;
+                case "WriteGatewayAddress":
+                    byte[] GatewayAddressArray = null;
+                    string GatewayIP;
+                    if (GatewayAddress_Txt.Text != "")
+                    {
+                        GatewayIP = GatewayAddress_Txt.Text;
+                        if (checkIPFormat(GatewayIP))
+                        {
+                            String GatewayAddressResult = String.Concat(GatewayIP.Split('.').Select(x => int.Parse(x).ToString("X2")));
+                            GatewayAddressArray = StringToByteArray(Command.GATEWAY_SET + GatewayAddressResult);
+                            SendCmd(GatewayAddressArray, "BeepOrSetting", 0);
+                        }
+                        else
+                        {
+                            GatewayIP = null;
+                            MessageBox.Show(FindResource("ErrorFormat") as string);
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show(FindResource("ColumnEmpty") as string);
+                    }
                     break;
                 case "CutBeepSettings":
                     CutBeepSettings();
@@ -6209,6 +6504,29 @@ namespace G80Utility
                             }
                         }
                         break;
+                    case "ReadPort": //擴展端口
+                        RS232Connect.SerialPortSendCMD("NeedReceive", data, null, receiveLength);
+                        while (!RS232Connect.isReceiveData)
+                        {
+                            if (RS232Connect.mRecevieData != null)
+                            {
+                                setPorttoUI(RS232Connect.mRecevieData);
+                                break;
+                            }
+                        }
+                        break;
+                    case "ReadBaudRate": //鮑率
+                        RS232Connect.SerialPortSendCMD("NeedReceive", data, null, receiveLength);
+                        while (!RS232Connect.isReceiveData)
+                        {
+                            if (RS232Connect.mRecevieData != null)
+                            {
+                                setBaudRatetoUI(RS232Connect.mRecevieData);
+                                break;
+                            }
+                        }
+                        break;
+                        break;
                     case "ReadBTName": //藍牙名稱
                         RS232Connect.SerialPortSendCMD("NeedReceive", data, null, receiveLength);
                         while (!RS232Connect.isReceiveData)
@@ -6238,6 +6556,39 @@ namespace G80Utility
                             if (RS232Connect.mRecevieData != null)
                             {
                                 setWIFIPwdtoUI(RS232Connect.mRecevieData);
+                                break;
+                            }
+                        }
+                        break;
+                    case "ReadIPMode": //IP模式
+                        RS232Connect.SerialPortSendCMD("NeedReceive", data, null, receiveLength);
+                        while (!RS232Connect.isReceiveData)
+                        {
+                            if (RS232Connect.mRecevieData != null)
+                            {
+                                setIPModetoUI(RS232Connect.mRecevieData);
+                                break;
+                            }
+                        }
+                        break;
+                    case "ReadSTAIPAddress": //STA IP
+                        RS232Connect.SerialPortSendCMD("NeedReceive", data, null, receiveLength);
+                        while (!RS232Connect.isReceiveData)
+                        {
+                            if (RS232Connect.mRecevieData != null)
+                            {
+                                setSTAIPAddresstoUI(RS232Connect.mRecevieData);
+                                break;
+                            }
+                        }
+                        break;
+                    case "ReadGatewayAddress": //閘道器
+                        RS232Connect.SerialPortSendCMD("NeedReceive", data, null, receiveLength);
+                        while (!RS232Connect.isReceiveData)
+                        {
+                            if (RS232Connect.mRecevieData != null)
+                            {
+                                setGatewayAddresstoUI(RS232Connect.mRecevieData);
                                 break;
                             }
                         }
@@ -6301,6 +6652,28 @@ namespace G80Utility
                             }
                         }
                         break;
+                    case "ReadPort": //擴展端口
+                        USBConnect.USBSendCMD("NeedReceive", data, null, receiveLength);
+                        while (!USBConnect.isReceiveData)
+                        {
+                            if (USBConnect.mRecevieData != null)
+                            {
+                                setPorttoUI(USBConnect.mRecevieData);
+                                break;
+                            }
+                        }
+                        break;
+                    case "ReadBaudRate": //端口鮑率
+                        USBConnect.USBSendCMD("NeedReceive", data, null, receiveLength);
+                        while (!USBConnect.isReceiveData)
+                        {
+                            if (USBConnect.mRecevieData != null)
+                            {
+                                setBaudRatetoUI(USBConnect.mRecevieData);
+                                break;
+                            }
+                        }
+                        break;
                     case "ReadBTName": //藍牙名稱
                         USBConnect.USBSendCMD("NeedReceive", data, null, receiveLength);
                         while (!USBConnect.isReceiveData)
@@ -6330,6 +6703,39 @@ namespace G80Utility
                             if (USBConnect.mRecevieData != null)
                             {
                                 setWIFIPwdtoUI(USBConnect.mRecevieData);
+                                break;
+                            }
+                        }
+                        break;
+                    case "ReadIPMode": //IP模式
+                        USBConnect.USBSendCMD("NeedReceive", data, null, receiveLength);
+                        while (!USBConnect.isReceiveData)
+                        {
+                            if (USBConnect.mRecevieData != null)
+                            {
+                                setIPModetoUI(USBConnect.mRecevieData);
+                                break;
+                            }
+                        }
+                        break;
+                    case "ReadSTAIPAddress": //STA IP位址
+                        USBConnect.USBSendCMD("NeedReceive", data, null, receiveLength);
+                        while (!USBConnect.isReceiveData)
+                        {
+                            if (USBConnect.mRecevieData != null)
+                            {
+                                setSTAIPAddresstoUI(USBConnect.mRecevieData);
+                                break;
+                            }
+                        }
+                        break;
+                    case "ReadGatewayAddress": //閘道器
+                        USBConnect.USBSendCMD("NeedReceive", data, null, receiveLength);
+                        while (!USBConnect.isReceiveData)
+                        {
+                            if (USBConnect.mRecevieData != null)
+                            {
+                                setGatewayAddresstoUI(USBConnect.mRecevieData);
                                 break;
                             }
                         }
@@ -6393,6 +6799,28 @@ namespace G80Utility
                             }
                         }
                         break;
+                    case "ReadPort": //擴展端口
+                        bool isReceivePort = EthernetConnect.EthernetSendCmd("NeedReceive", data, null, receiveLength);
+                        while (!EthernetConnect.isReceiveData)
+                        {
+                            if (EthernetConnect.mRecevieData != null)
+                            {
+                                setPorttoUI(EthernetConnect.mRecevieData);
+                                break;
+                            }
+                        }
+                        break;
+                    case "ReadBaudRate": //鮑率
+                        bool isReceiveBaudRate = EthernetConnect.EthernetSendCmd("NeedReceive", data, null, receiveLength);
+                        while (!EthernetConnect.isReceiveData)
+                        {
+                            if (EthernetConnect.mRecevieData != null)
+                            {
+                                setBaudRatetoUI(EthernetConnect.mRecevieData);
+                                break;
+                            }
+                        }
+                        break;
                     case "ReadBTName": //藍牙名稱
                         bool isReceivebt = EthernetConnect.EthernetSendCmd("NeedReceive", data, null, receiveLength);
                         while (!EthernetConnect.isReceiveData)
@@ -6422,6 +6850,39 @@ namespace G80Utility
                             if (EthernetConnect.mRecevieData != null)
                             {
                                 setWIFIPwdtoUI(EthernetConnect.mRecevieData);
+                                break;
+                            }
+                        }
+                        break;
+                    case "ReadIPMode": //IP模式
+                        bool isReceiveIPMode = EthernetConnect.EthernetSendCmd("NeedReceive", data, null, receiveLength);
+                        while (!EthernetConnect.isReceiveData)
+                        {
+                            if (EthernetConnect.mRecevieData != null)
+                            {
+                                setIPModetoUI(EthernetConnect.mRecevieData);
+                                break;
+                            }
+                        }
+                        break;
+                    case "ReadSTAIPAddress": //STA IP
+                        bool isReceiveSTAIPAddress = EthernetConnect.EthernetSendCmd("NeedReceive", data, null, receiveLength);
+                        while (!EthernetConnect.isReceiveData)
+                        {
+                            if (EthernetConnect.mRecevieData != null)
+                            {
+                                setSTAIPAddresstoUI(EthernetConnect.mRecevieData);
+                                break;
+                            }
+                        }
+                        break;
+                    case "ReadGatewayAddress": //閘道器
+                        bool isReceiveGatewayAddress = EthernetConnect.EthernetSendCmd("NeedReceive", data, null, receiveLength);
+                        while (!EthernetConnect.isReceiveData)
+                        {
+                            if (EthernetConnect.mRecevieData != null)
+                            {
+                                setGatewayAddresstoUI(EthernetConnect.mRecevieData);
                                 break;
                             }
                         }
@@ -6597,6 +7058,38 @@ namespace G80Utility
                 sbBytes.AppendFormat("{0:X2}", b);
             }
             return sbBytes.ToString();
+        }
+        #endregion
+
+        #region string to hex string without endoding(32)
+        public string ConvertStringToHex32(String input)
+        {
+            Byte[] stringBytes = Encoding.Default.GetBytes(input);
+            int stringLength = stringBytes.Length;
+            if (stringLength > 32)
+            {
+
+                return null;
+            }
+            else
+            {
+                StringBuilder sbBytes = new StringBuilder(32);
+                for (int i = 0; i < 32; i++)
+                {
+
+                    if (i > stringLength - 1)
+                    {
+                        sbBytes.AppendFormat("{0:X2}", 0);
+                    }
+                    else
+                    {
+                        sbBytes.AppendFormat("{0:X2}", stringBytes.ElementAt(i));
+                    }
+                }
+                Console.WriteLine(sbBytes.Length);
+                return sbBytes.ToString();
+            }
+
         }
         #endregion
 
