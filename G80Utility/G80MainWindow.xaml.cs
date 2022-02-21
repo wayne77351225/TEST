@@ -1546,7 +1546,7 @@ namespace G80Utility
         #region Port設定至畫面
         private void setPorttoUI(byte[] data)
         {
-            PortCom.SelectedIndex = data[8] - 1;
+            PortCom.SelectedIndex = data[8] - 2;
         }
         #endregion
 
@@ -5937,12 +5937,9 @@ namespace G80Utility
                         switch (PortCom.SelectedIndex)
                         {
                             case 0:
-                                PortArray = StringToByteArray(Command.PORT_EXTEND_SET + "01");
-                                break;
-                            case 1:
                                 PortArray = StringToByteArray(Command.PORT_EXTEND_SET + "02");
                                 break;
-                            case 2:
+                            case 1:
                                 PortArray = StringToByteArray(Command.PORT_EXTEND_SET + "03");
                                 break;
                         }
@@ -5958,60 +5955,119 @@ namespace G80Utility
                     if (Baud_RateCom.SelectedIndex != -1)
                     {
                         byte[] Baud_RateArray = null;
-
-                        switch (Baud_RateCom.SelectedIndex)
+                        if (PortCom.SelectedIndex == 1)
                         {
-                            case 0:
-                                Baud_RateArray = StringToByteArray(Command.PORT_EXTEND_SET + "00");
-                                break;
-                            case 1:
-                                Baud_RateArray = StringToByteArray(Command.PORT_EXTEND_SET + "01");
-                                break;
-                            case 2:
-                                Baud_RateArray = StringToByteArray(Command.PORT_EXTEND_SET + "02");
-                                break;
-                            case 3:
-                                Baud_RateArray = StringToByteArray(Command.PORT_EXTEND_SET + "03");
-                                break;
-                            case 4:
-                                Baud_RateArray = StringToByteArray(Command.PORT_EXTEND_SET + "04");
-                                break;
-                            case 5:
-                                Baud_RateArray = StringToByteArray(Command.PORT_EXTEND_SET + "05");
-                                break;
-                            case 6:
-                                Baud_RateArray = StringToByteArray(Command.PORT_EXTEND_SET + "06");
-                                break;
-                            case 7:
-                                Baud_RateArray = StringToByteArray(Command.PORT_EXTEND_SET + "07");
-                                break;
-                            case 8:
-                                Baud_RateArray = StringToByteArray(Command.PORT_EXTEND_SET + "08");
-                                break;
-                            case 9:
-                                Baud_RateArray = StringToByteArray(Command.PORT_EXTEND_SET + "09");
-                                break;
-                            case 10:
-                                Baud_RateArray = StringToByteArray(Command.PORT_EXTEND_SET + "0a");
-                                break;
-                            case 11:
-                                Baud_RateArray = StringToByteArray(Command.PORT_EXTEND_SET + "0b");
-                                break;
-                            case 12:
-                                Baud_RateArray = StringToByteArray(Command.PORT_EXTEND_SET + "0c");
-                                break;
-                            case 13:
-                                Baud_RateArray = StringToByteArray(Command.PORT_EXTEND_SET + "0d");
-                                break;
-                            case 14:
-                                Baud_RateArray = StringToByteArray(Command.PORT_EXTEND_SET + "0e");
-                                break;
-                            case 15:
-                                Baud_RateArray = StringToByteArray(Command.PORT_EXTEND_SET + "0f");
-                                break;
-                            case 16:
-                                Baud_RateArray = StringToByteArray(Command.PORT_EXTEND_SET + "64");
-                                break;
+                            switch (Baud_RateCom.SelectedIndex)
+                            {
+                                case 0:
+                                    Baud_RateArray = StringToByteArray(Command.PORT_BAUDRATE_BT_SET + "00");
+                                    break;
+                                case 1:
+                                    Baud_RateArray = StringToByteArray(Command.PORT_BAUDRATE_BT_SET + "01");
+                                    break;
+                                case 2:
+                                    Baud_RateArray = StringToByteArray(Command.PORT_BAUDRATE_BT_SET + "02");
+                                    break;
+                                case 3:
+                                    Baud_RateArray = StringToByteArray(Command.PORT_BAUDRATE_BT_SET + "03");
+                                    break;
+                                case 4:
+                                    Baud_RateArray = StringToByteArray(Command.PORT_BAUDRATE_BT_SET + "04");
+                                    break;
+                                case 5:
+                                    Baud_RateArray = StringToByteArray(Command.PORT_BAUDRATE_BT_SET + "05");
+                                    break;
+                                case 6:
+                                    Baud_RateArray = StringToByteArray(Command.PORT_BAUDRATE_BT_SET + "06");
+                                    break;
+                                case 7:
+                                    Baud_RateArray = StringToByteArray(Command.PORT_BAUDRATE_BT_SET + "07");
+                                    break;
+                                case 8:
+                                    Baud_RateArray = StringToByteArray(Command.PORT_BAUDRATE_BT_SET + "08");
+                                    break;
+                                case 9:
+                                    Baud_RateArray = StringToByteArray(Command.PORT_BAUDRATE_BT_SET + "09");
+                                    break;
+                                case 10:
+                                    Baud_RateArray = StringToByteArray(Command.PORT_BAUDRATE_BT_SET + "0a");
+                                    break;
+                                case 11:
+                                    Baud_RateArray = StringToByteArray(Command.PORT_BAUDRATE_BT_SET + "0b");
+                                    break;
+                                case 12:
+                                    Baud_RateArray = StringToByteArray(Command.PORT_BAUDRATE_BT_SET + "0c");
+                                    break;
+                                case 13:
+                                    Baud_RateArray = StringToByteArray(Command.PORT_BAUDRATE_BT_SET + "0d");
+                                    break;
+                                case 14:
+                                    Baud_RateArray = StringToByteArray(Command.PORT_BAUDRATE_BT_SET + "0e");
+                                    break;
+                                case 15:
+                                    Baud_RateArray = StringToByteArray(Command.PORT_BAUDRATE_BT_SET + "0f");
+                                    break;
+                                case 16:
+                                    Baud_RateArray = StringToByteArray(Command.PORT_BAUDRATE_BT_SET + "64");
+                                    break;
+                            }
+                        }
+                        else if(PortCom.SelectedIndex == 0)
+                        {
+                            switch (Baud_RateCom.SelectedIndex)
+                            {
+                                case 0:
+                                    Baud_RateArray = StringToByteArray(Command.PORT_BAUDRATE_SET + "00");
+                                    break;
+                                case 1:
+                                    Baud_RateArray = StringToByteArray(Command.PORT_BAUDRATE_SET + "01");
+                                    break;
+                                case 2:
+                                    Baud_RateArray = StringToByteArray(Command.PORT_BAUDRATE_SET + "02");
+                                    break;
+                                case 3:
+                                    Baud_RateArray = StringToByteArray(Command.PORT_BAUDRATE_SET + "03");
+                                    break;
+                                case 4:
+                                    Baud_RateArray = StringToByteArray(Command.PORT_BAUDRATE_SET + "04");
+                                    break;
+                                case 5:
+                                    Baud_RateArray = StringToByteArray(Command.PORT_BAUDRATE_SET + "05");
+                                    break;
+                                case 6:
+                                    Baud_RateArray = StringToByteArray(Command.PORT_BAUDRATE_SET + "06");
+                                    break;
+                                case 7:
+                                    Baud_RateArray = StringToByteArray(Command.PORT_BAUDRATE_SET + "07");
+                                    break;
+                                case 8:
+                                    Baud_RateArray = StringToByteArray(Command.PORT_BAUDRATE_SET + "08");
+                                    break;
+                                case 9:
+                                    Baud_RateArray = StringToByteArray(Command.PORT_BAUDRATE_SET + "09");
+                                    break;
+                                case 10:
+                                    Baud_RateArray = StringToByteArray(Command.PORT_BAUDRATE_SET + "0a");
+                                    break;
+                                case 11:
+                                    Baud_RateArray = StringToByteArray(Command.PORT_BAUDRATE_SET + "0b");
+                                    break;
+                                case 12:
+                                    Baud_RateArray = StringToByteArray(Command.PORT_BAUDRATE_SET + "0c");
+                                    break;
+                                case 13:
+                                    Baud_RateArray = StringToByteArray(Command.PORT_BAUDRATE_SET + "0d");
+                                    break;
+                                case 14:
+                                    Baud_RateArray = StringToByteArray(Command.PORT_BAUDRATE_SET + "0e");
+                                    break;
+                                case 15:
+                                    Baud_RateArray = StringToByteArray(Command.PORT_BAUDRATE_SET + "0f");
+                                    break;
+                                case 16:
+                                    Baud_RateArray = StringToByteArray(Command.PORT_BAUDRATE_SET + "64");
+                                    break;
+                            }
                         }
                         SendCmd(Baud_RateArray, "BeepOrSetting", 0);
                     }

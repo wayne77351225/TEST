@@ -837,8 +837,8 @@
                                 <StackPanel>
                                     <Label Margin="37,15,31,0" Content="{DynamicResource Port}" HorizontalAlignment="Center" Width="130"/>
                                     <ComboBox  Margin="41,0,27,0" SelectedIndex="-1"  Name="PortCom" Width="130" Height="28" Foreground="#BDBDBD">
-                                        <ComboBoxItem Content=""></ComboBoxItem>
                                         <ComboBoxItem Content="{DynamicResource WIFI}"></ComboBoxItem>
+                                        <ComboBoxItem Content="{DynamicResource BT}"></ComboBoxItem>
                                         <!--<ComboBoxItem Content="{DynamicResource BT}"></ComboBoxItem>-->
                                     </ComboBox>
                                     <StackPanel  Margin="42,10,26,0" Orientation="Horizontal" Width="130" >
