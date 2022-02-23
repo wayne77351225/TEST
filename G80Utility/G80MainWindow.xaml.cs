@@ -1553,7 +1553,12 @@ namespace G80Utility
         #region 端口鮑率設定至畫面
         private void setBaudRatetoUI(byte[] data)
         {
-            Baud_RateCom.SelectedIndex = data[8];
+            if (data[8] == 100) 
+            {
+                Baud_RateCom.SelectedIndex = 16;
+            }
+            else
+                Baud_RateCom.SelectedIndex = data[8];
         }
         #endregion
 
@@ -5948,9 +5953,19 @@ namespace G80Utility
                     else { MessageBox.Show(FindResource("ColumnEmpty") as string); }
                     break;
                 case "ReadBaudRate":
-                    byte[] RaedBaudRateArray = StringToByteArray(Command.PORT_BAUDRATE_LOAD);
-                    SendCmd(RaedBaudRateArray, "ReadBaudRate", 9);
-                    break;
+                    LoadPort();
+                    if (PortCom.SelectedIndex == 1)
+                    {
+                        byte[] RaedBaudRateArray = StringToByteArray(Command.PORT_BAUDRATE_BT_LOAD);
+                        SendCmd(RaedBaudRateArray, "ReadBaudRate", 9);
+                    }
+                    else if (PortCom.SelectedIndex == 0)
+                    { 
+                        byte[] RaedBaudRateArray = StringToByteArray(Command.PORT_BAUDRATE_LOAD);
+                        SendCmd(RaedBaudRateArray, "ReadBaudRate", 9);
+                    }
+
+            break;
                 case "WriteBaudRate":
                     if (Baud_RateCom.SelectedIndex != -1)
                     {
