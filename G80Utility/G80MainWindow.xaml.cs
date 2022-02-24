@@ -5967,6 +5967,7 @@ namespace G80Utility
 
             break;
                 case "WriteBaudRate":
+                    LoadPort();
                     if (Baud_RateCom.SelectedIndex != -1)
                     {
                         byte[] Baud_RateArray = null;
