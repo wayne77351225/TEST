@@ -168,7 +168,8 @@
     <sys:String x:Key="BT">Bluetooth</sys:String>
     <sys:String x:Key="WIFI">WIFI</sys:String>
     <sys:String x:Key="StaticIP">靜態IP</sys:String>
-    
+    <sys:String x:Key="Null">null</sys:String>
+
     <!--黑標設定-->
     <sys:String x:Key="SetBLineBillMaxLen">設定黑標票據最大長度</sys:String>
     <sys:String x:Key="DetectBlineFeedPrintTest">檢測到黑標後吐紙列印測試</sys:String>

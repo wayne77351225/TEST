@@ -1546,7 +1546,7 @@ namespace G80Utility
         #region Port設定至畫面
         private void setPorttoUI(byte[] data)
         {
-            PortCom.SelectedIndex = data[8] - 2;
+            PortCom.SelectedIndex = data[8] - 1;
         }
         #endregion
 
@@ -2504,7 +2504,9 @@ namespace G80Utility
         private void IPModeWrite_Btn_Click(object sender, RoutedEventArgs e)
         {
             DifferInterfaceConnectChkAndSend("WriteIPMode");
+        
         }
+       
         #endregion
 
         #region 取得STA IP位址按鈕事件
@@ -5941,10 +5943,10 @@ namespace G80Utility
 
                         switch (PortCom.SelectedIndex)
                         {
-                            case 0:
+                            case 1:
                                 PortArray = StringToByteArray(Command.PORT_EXTEND_SET + "02");
                                 break;
-                            case 1:
+                            case 2:
                                 PortArray = StringToByteArray(Command.PORT_EXTEND_SET + "03");
                                 break;
                         }
@@ -7628,6 +7630,48 @@ namespace G80Utility
                     }
                 }
                 this.Resources.MergedDictionaries.Add(langRd); //把抓取到的語系資源檔加入
+            }
+        }
+
+        private void IPModeCom_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (IPModeCom.SelectedIndex == 1)
+            {
+                STAIPAddress_Txt.IsEnabled = false;
+                STAIPAddressLoad_Btn.IsEnabled = false;
+                STAIPAddressWirte_Btn.IsEnabled = false;
+                GatewayAddress_Txt.IsEnabled = false;
+                GatewayAddressLoad_Btn.IsEnabled = false;
+                GatewayAddressWrite_Btn.IsEnabled = false;
+            }
+            else if((IPModeCom.SelectedIndex == 0))
+            {
+                STAIPAddress_Txt.IsEnabled = true;
+                STAIPAddressLoad_Btn.IsEnabled = true;
+                STAIPAddressWirte_Btn.IsEnabled = true;
+                GatewayAddress_Txt.IsEnabled = true;
+                GatewayAddressLoad_Btn.IsEnabled = true;
+                GatewayAddressWrite_Btn.IsEnabled = true;
+            }
+        }
+
+        private void PortCom_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (PortCom.SelectedIndex == 0)
+            {
+                PortLoad_Btn.IsEnabled = false;
+                PortWirte_Btn.IsEnabled = false;
+                Baud_RateCom.IsEnabled = false;
+                BaudRateLoad_Btn.IsEnabled = false;
+                BaudRateWirte_Btn.IsEnabled = false;
+            }
+            else if(PortCom.SelectedIndex == 1 || PortCom.SelectedIndex ==2)
+            {
+                PortLoad_Btn.IsEnabled = true;
+                PortWirte_Btn.IsEnabled = true;
+                Baud_RateCom.IsEnabled = true;
+                BaudRateLoad_Btn.IsEnabled = true;
+                BaudRateWirte_Btn.IsEnabled = true;
             }
         }
         #endregion

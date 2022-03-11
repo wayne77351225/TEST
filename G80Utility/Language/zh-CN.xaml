@@ -159,15 +159,16 @@
     <sys:String x:Key="BTName">蓝牙名称</sys:String>
     <sys:String x:Key="PortSetting">端口设定</sys:String>
     <sys:String x:Key="Port">端口：</sys:String>
-    <sys:String x:Key="BaudRate">鲍率：</sys:String>
+    <sys:String x:Key="BaudRate">波特率：</sys:String>
     <sys:String x:Key="NamePassword">名称/密码</sys:String>
     <sys:String x:Key="WIFISetting">WIFI设定</sys:String>
     <sys:String x:Key="IPMode">IP模式：</sys:String>
     <sys:String x:Key="STAIPAddress">STA IP位址：</sys:String>
-    <sys:String x:Key="GatewayAddress">闸道器位址：</sys:String>
+    <sys:String x:Key="GatewayAddress">网关：</sys:String>
     <sys:String x:Key="BT">Bluetooth</sys:String>
     <sys:String x:Key="WIFI">WIFI</sys:String>
     <sys:String x:Key="StaticIP">静态IP</sys:String>
+    <sys:String x:Key="Null">null</sys:String>
 
     <!--黑标设定-->
     <sys:String x:Key="SetBLineBillMaxLen">设置黑标票据最大长度</sys:String>
