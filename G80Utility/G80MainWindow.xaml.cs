@@ -5956,12 +5956,12 @@ namespace G80Utility
                     break;
                 case "ReadBaudRate":
                     LoadPort();
-                    if (PortCom.SelectedIndex == 1)
+               /*     if (PortCom.SelectedIndex == 2)
                     {
                         byte[] RaedBaudRateArray = StringToByteArray(Command.PORT_BAUDRATE_BT_LOAD);
                         SendCmd(RaedBaudRateArray, "ReadBaudRate", 9);
                     }
-                    else if (PortCom.SelectedIndex == 0)
+                    else if (PortCom.SelectedIndex == 1)*/
                     { 
                         byte[] RaedBaudRateArray = StringToByteArray(Command.PORT_BAUDRATE_LOAD);
                         SendCmd(RaedBaudRateArray, "ReadBaudRate", 9);
@@ -5973,7 +5973,7 @@ namespace G80Utility
                     if (Baud_RateCom.SelectedIndex != -1)
                     {
                         byte[] Baud_RateArray = null;
-                        if (PortCom.SelectedIndex == 1)
+                        if (PortCom.SelectedIndex == 2)
                         {
                             switch (Baud_RateCom.SelectedIndex)
                             {
@@ -6030,7 +6030,7 @@ namespace G80Utility
                                     break;
                             }
                         }
-                        else if(PortCom.SelectedIndex == 0)
+                        else if(PortCom.SelectedIndex == 1)
                         {
                             switch (Baud_RateCom.SelectedIndex)
                             {
