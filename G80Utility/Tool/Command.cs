@@ -165,6 +165,10 @@ namespace G80Utility.Tool
         public static string PAPEROUT_REPRINT_OFF_SETTING = "1F 1B 1F F4 11 22 33 33";
         public static string PAPEROUT_REPRINT_ON_SETTING = "1F 1B 1F F4 11 22 33 55";
 
+        //設定喇叭開關
+        public static string SPEAKER_OFF_SETTING = "1F 1B 1F 53 5A 4A 42 5A 46 31 40 02 00";      
+        public static string SPEAKER_ON_SETTING = " 1F 1B 1F 53 5A 4A 42 5A 46 31 40 02 01";
+
         //設定合蓋後自動切紙
         public static string HEADCLOSE_AUTOCUT_OFF_SETTING = "1F 1B 1F 53 5A 4A 42 5A 46 31 17 02 00";
         public static string HEADCLOSE_AUTOCUT_ON_SETTING = "1F 1B 1F 53 5A 4A 42 5A 46 31 17 02 01";
@@ -253,6 +257,9 @@ namespace G80Utility.Tool
 
         //收到打印紙寬的命令分類
         public static string RE_PAPERWIDTH_CLASSFY = "31-30";
+
+        //收到喇叭開關的命令分類
+        public static string RE_SPEAKER_ONOFF_CLASSFY = "31-40";
 
         //收到合蓋後自動切紙的命令分類
         public static string RE_HEADCLOSE_CUT_CLASSFY = "31-17";

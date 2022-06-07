@@ -470,6 +470,15 @@ namespace G80Utility
                 Config.isPaperWidthChecked = false;
             }
 
+            if (SoundCheckbox.IsChecked == true)
+            {
+                Config.isSoundOnOffChecked = true;
+            }
+            else
+            {
+                Config.isSoundOnOffChecked = false;
+            }
+
             if (HeadCloseCutCheckbox.IsChecked == true)
             {
                 Config.isHeadCloseCutChecked = true;
@@ -585,6 +594,11 @@ namespace G80Utility
             if (DIPSwitchCheckbox.IsChecked == now)
             {
                 DIPSwitchCheckbox.IsChecked = changeTo;
+            }
+
+            if (SoundCheckbox.IsChecked == now)
+            {
+                SoundCheckbox.IsChecked = changeTo;
             }
 
             if (HeadCloseCutCheckbox.IsChecked == now)
@@ -1306,6 +1320,11 @@ namespace G80Utility
             if (receiveData.Contains(Command.RE_PAPERWIDTH_CLASSFY))
             {
                 checkIsGetData(null, PaperWidthCom, data, FindResource("PaperWidth") as string, false, 1);
+            }
+
+            if (receiveData.Contains(Command.RE_SPEAKER_ONOFF_CLASSFY))          
+            {
+                checkIsGetData(null, SoundCom, data, FindResource("Speaker") as string, false, 1);
             }
 
             if (receiveData.Contains(Command.RE_HEADCLOSE_CUT_CLASSFY))
@@ -3120,6 +3139,7 @@ namespace G80Utility
             parasetting.DensityIndex = DensityCom.SelectedIndex;
             parasetting.PaperOutReprintIndex = PaperOutReprintCom.SelectedIndex;
             parasetting.PaperWidthIndex = PaperWidthCom.SelectedIndex;
+            parasetting.SoundOnOffIndex = SoundCom.SelectedIndex;
             parasetting.HeadCloseCutIndex = HeadCloseCutCom.SelectedIndex;
             parasetting.YOffsetIndex = YOffsetCom.SelectedIndex;
             parasetting.LEDIndex = LEDCom.SelectedIndex;
@@ -3210,6 +3230,7 @@ namespace G80Utility
             DensityCom.SelectedIndex = parasetting.DensityIndex;
             PaperOutReprintCom.SelectedIndex = parasetting.PaperOutReprintIndex;
             PaperWidthCom.SelectedIndex = parasetting.PaperWidthIndex;
+            SoundCom.SelectedIndex = parasetting.SoundOnOffIndex;
             HeadCloseCutCom.SelectedIndex = parasetting.HeadCloseCutIndex;
             YOffsetCom.SelectedIndex = parasetting.YOffsetIndex;
             LEDCom.SelectedIndex = parasetting.LEDIndex;
@@ -3984,6 +4005,27 @@ namespace G80Utility
         }
         #endregion
 
+        #region 設定喇叭開關
+        private void SoundOnOff()
+        {
+            if (SoundCom.SelectedIndex != -1)
+            {
+                byte[] sendArray = null;
+
+                if (SoundCom.SelectedIndex == 0)
+                {
+                    sendArray = StringToByteArray(Command.SPEAKER_OFF_SETTING);
+                }
+                else if (SoundCom.SelectedIndex == 1)
+                {
+                    sendArray = StringToByteArray(Command.SPEAKER_ON_SETTING);
+                }
+                SendCmd(sendArray, "BeepOrSetting", 0);
+            }
+            else { MessageBox.Show(FindResource("ColumnEmpty") as string); }
+        }
+        #endregion
+
         #region 設定合蓋自動切紙
         private void HeadCloseCut()
         {
@@ -4352,6 +4394,12 @@ namespace G80Utility
                 SendCmd(sendArray, "ReadPara", 9);
             }
 
+            if (Config.isSoundOnOffChecked)
+            {
+                sendArray = StringToByteArray(Command.READ_ALL_HEADER + "31 40 01");  
+                SendCmd(sendArray, "ReadPara", 9);
+            }
+
             if (Config.isHeadCloseCutChecked)
             {
                 sendArray = StringToByteArray(Command.READ_ALL_HEADER + "31 17 01");
@@ -4510,6 +4558,11 @@ namespace G80Utility
             if (Config.isPaperWidthChecked)
             {
                 PaperWidth();
+            }
+
+            if (Config.isSoundOnOffChecked)
+            {
+                SoundOnOff();
             }
 
             if (Config.isHeadCloseCutChecked)
@@ -5741,6 +5794,11 @@ namespace G80Utility
                             codePage.Add(char2[i]);
                         }
                         byte[] sendArrayCode = codePage.ToArray();
+                    /*    string TMP = "";
+                        for(int i=0;i< sendArrayCode.Length;i++)
+                        {
+                            TMP += sendArrayCode[i].ToString("X");
+                        }*/
                         SendCmd(sendArrayCode, "BeepOrSetting", 0);
                     }
                     else { MessageBox.Show(FindResource("ColumnEmpty") as string); }
@@ -5777,6 +5835,9 @@ namespace G80Utility
                     break;
                 case "PaperWidth":
                     PaperWidth();
+                    break;
+                case "SoundOnOff":
+                    SoundOnOff();
                     break;
                 case "HeadCloseCut":
                     HeadCloseCut();
@@ -7673,6 +7734,11 @@ namespace G80Utility
                 BaudRateLoad_Btn.IsEnabled = true;
                 BaudRateWirte_Btn.IsEnabled = true;
             }
+        }
+
+        private void SoundBtn_Click(object sender, RoutedEventArgs e)
+        {
+            DifferInterfaceConnectChkAndSend("SoundOnOff");
         }
         #endregion
 

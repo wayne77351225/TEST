@@ -24,21 +24,39 @@ namespace G80Utility.Tool
             CPList.Add("17:PC866");
             CPList.Add("18:PC852");
             CPList.Add("19:PC853");
+
             CPList.Add("20:lranll");
             CPList.Add("21:Latvian");
+            /*4/25待確認，是否修改
+            CPList.Add("20:Thai1");
+            CPList.Add("21:Thai2");*/
+
             CPList.Add("22:Arabic");
             CPList.Add("23:WPC1251");
             CPList.Add("24:PC747");
             CPList.Add("25:WPC1257");
+
+            /*4/25待確認，是否加入
+            CPList.Add("26:Thai3");*/
+
             CPList.Add("27:Vietnam");
             CPList.Add("28:PC864");
             CPList.Add("29:PC1001");
+
             CPList.Add("30:Uigur");
             CPList.Add("31:Hebrew");
+            /*4/25待確認，是否修改
+            CPList.Add("30:Vietnam1");
+            CPList.Add("31:Vietnam2");*/
+
             CPList.Add("32:WPC1255");
             CPList.Add("33:PC720");
             CPList.Add("34:WPC1256");
             CPList.Add("35:WPC1257(N");
+
+            /*4/25待確認，是否加入
+            CPList.Add("39:VISCII");*/
+
             CPList.Add("255:Thai");
             CPList.Add("48:WPC1254(T");
             CPList.Add("50:PC437");
@@ -81,7 +99,6 @@ namespace G80Utility.Tool
             CPList.Add("87:PC3012");
             CPList.Add("88:PC3021");
             CPList.Add("89:PC3041");
-
             return CPList;
         }
 

@@ -29,6 +29,7 @@ namespace G80Utility.Models
         public int DensityIndex;
         public int PaperOutReprintIndex;
         public int PaperWidthIndex;
+        public int SoundOnOffIndex;
         public int HeadCloseCutIndex;
         public int YOffsetIndex;
         //public int MACShowIndex;

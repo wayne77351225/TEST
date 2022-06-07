@@ -94,6 +94,7 @@
     <sys:String x:Key="ReprintPaperOut">纸尽重打</sys:String>
     <sys:String x:Key="PaperWidth">打印纸宽</sys:String>
     <sys:String x:Key="AutomaticallyCut">合盖后自动切纸</sys:String>
+    <sys:String x:Key="Speaker">喇叭</sys:String>
     <sys:String x:Key="CutPara">切纸</sys:String>
     <sys:String x:Key="NotCut">不切纸</sys:String>
     <sys:String x:Key="VerticalOffsetUnit">垂直移动单位</sys:String>
