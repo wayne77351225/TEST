@@ -593,11 +593,11 @@
                                         </StackPanel>
                                     </GroupBox>
                                     <StackPanel  Margin="0,7,0,10" Orientation="Horizontal">
-                                        <ComboBox  Margin="0,0,5,0" SelectedIndex="1"  Name="SoundCom" Width="90" Height="26" Foreground="#BDBDBD">
+                                        <ComboBox  Margin="0,0,5,0" SelectedIndex="1"  Name="SoundCom" Width="70" Height="26" Foreground="#BDBDBD">
                                             <ComboBoxItem>关闭</ComboBoxItem>
                                             <ComboBoxItem>打开</ComboBoxItem>
                                         </ComboBox>
-                                        <Button  Margin="0,0,5,0" Name="SoundBtn" Click="SoundBtn_Click" Content="喇叭" Padding="5" Width="90"/>
+                                        <Button  Margin="0,0,5,0" Name="SoundBtn" Click="SoundBtn_Click" Content="喇叭" Padding="5" Width="110"/>
                                         <CheckBox VerticalAlignment="Center" IsChecked="True" Name="SoundCheckbox"/>
                                     </StackPanel>
                                     <StackPanel  Margin="0,-5,0,10" Orientation="Horizontal">
