@@ -290,6 +290,15 @@ namespace G80Utility
                 Config.isSetIPChecked = false;
             }
 
+            if (SetSubnetCheckbox.IsChecked == true)
+            {
+                Config.isSetSubnetChecked = true;
+            }
+            else
+            {
+                Config.isSetSubnetChecked = false;
+            }
+
             if (SetGatewayCheckbox.IsChecked == true)
             {
                 Config.isSetGatewayChecked = true;
@@ -1145,6 +1154,11 @@ namespace G80Utility
             if (receiveData.Contains(Command.RE_IP_CLASSFY))
             {
                 checkIsGetData(SetIPText, null, data, FindResource("SetIP") as string, false, 0);
+            }
+
+            if (receiveData.Contains(Command.RE_SUBNET_CLASSFY))
+            {
+                checkIsGetData(SetSubnetText, null, data, FindResource("SetSubnet") as string, false, 0);
             }
 
             if (receiveData.Contains(Command.RE_GATEWAY_CLASSFY))
@@ -3491,6 +3505,33 @@ namespace G80Utility
         }
         #endregion
 
+        #region 設定Subnet Mask
+        private void SetSubnet()
+        {
+            byte[] sendArray = null;
+            string subnet;
+            if (SetSubnetText.Text != "")
+            {
+                subnet = SetSubnetText.Text;
+                if (checkIPFormat(subnet))
+                {
+                    String result = String.Concat(subnet.Split('.').Select(x => int.Parse(x).ToString("X2")));
+                    sendArray = StringToByteArray(Command.SUBNET_SETTING_HEADER + result);
+                    SendCmd(sendArray, "BeepOrSetting", 0);
+                }
+                else
+                {
+                    subnet = null;
+                    MessageBox.Show(FindResource("ErrorFormat") as string);
+                }
+            }
+            else
+            {
+                MessageBox.Show(FindResource("ColumnEmpty") as string);
+            }
+        }
+        #endregion
+
         #region  設定Gateway
         private void SetGateway()
         {
@@ -4274,6 +4315,13 @@ namespace G80Utility
 
             }
 
+            if (Config.isSetSubnetChecked)
+            {
+                sendArray = StringToByteArray(Command.READ_ALL_HEADER + "30 28 01");
+                SendCmd(sendArray, "ReadPara", 12);
+
+            }
+
             if (Config.isSetGatewayChecked)
             {
                 sendArray = StringToByteArray(Command.READ_ALL_HEADER + "30 11 01");
@@ -4458,6 +4506,11 @@ namespace G80Utility
             if (Config.isSetIPChecked)
             {
                 SetIP();
+            }
+
+            if (Config.isSetSubnetChecked)
+            {
+                SetSubnet();
             }
 
             if (Config.isSetGatewayChecked)
@@ -5707,6 +5760,9 @@ namespace G80Utility
                     break;
                 case "SetIP":
                     SetIP();
+                    break;
+                case "SetSubnet":
+                    SetSubnet();
                     break;
                 case "SetGateway":
                     SetGateway();
@@ -7739,6 +7795,11 @@ namespace G80Utility
         private void SoundBtn_Click(object sender, RoutedEventArgs e)
         {
             DifferInterfaceConnectChkAndSend("SoundOnOff");
+        }
+
+        private void SetSubnetBtn_Click(object sender, RoutedEventArgs e)
+        {
+            DifferInterfaceConnectChkAndSend("SetSubnet");
         }
         #endregion
 

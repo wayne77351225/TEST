@@ -44,6 +44,9 @@ namespace G80Utility.Tool
         //設定ip address HEADER
         public static string IP_SETTING_HEADER = "1F 1B 1F 91 00 49 50";
 
+        //設定subnet
+        public static string SUBNET_SETTING_HEADER = "1F 1B 1F 53 5A 4A 42 5A 46 30 28 02";
+
         //設定gateway
         public static string GATEWAY_SETTING_HEADER = "1F 1B 1F 53 5A 4A 42 5A 46 30 11 02";
 
@@ -196,6 +199,9 @@ namespace G80Utility.Tool
 
         //收到Gateway的命令分類
         public static string RE_GATEWAY_CLASSFY = "30-11";
+
+        //收到Subnet的命令分類
+        public static string RE_SUBNET_CLASSFY = "30-28";
 
         //收到Mac的命令分類
         public static string RE_MAC_CLASSFY = "30-12";

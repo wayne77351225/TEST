@@ -8,6 +8,7 @@ namespace G80Utility.Tool
     class Config
     {
         public static bool isSetIPChecked;
+        public static bool isSetSubnetChecked;
         public static bool isSetGatewayChecked;
         public static bool isSetMacChecked;
         public static bool isAutoDisconnectChecked;

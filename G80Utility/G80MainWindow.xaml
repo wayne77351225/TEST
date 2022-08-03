@@ -7,7 +7,7 @@
         xmlns:local="clr-namespace:G80Utility"
         mc:Ignorable="d"
         ResizeMode="CanMinimize"
-        Title="{DynamicResource WindowTitle}" Height="740" Width="1035">
+        Title="{DynamicResource WindowTitle}" Height="794" Width="1035">
     <StackPanel  Background="#333333">
         <!--Top 通讯-->
         <Border Margin="5,10,5,3" >
@@ -102,7 +102,7 @@
         </Border>
 
         <!--Tap分页-->
-        <TabControl Height="470" TabStripPlacement="Top" Margin="5,3,5,0"  Name="AllTabTC" GotFocus="AllTabTC_GotFocus">
+        <TabControl Height="525" TabStripPlacement="Top" Margin="5,3,5,0"  Name="AllTabTC" GotFocus="AllTabTC_GotFocus">
             <!--数据传输-->
             <TabItem Header="{DynamicResource DataTransfer}"  FontSize="14" >
                 <Border Margin="5,5,5,1" Name="DataSendTab"   >
@@ -168,11 +168,11 @@
                     />
                 </TabItem.Header>
                 <Border Background="#595959"  Name="ParaSetTab"  >
-                    <StackPanel Height="445" Width="1010" Orientation="Horizontal">
+                    <StackPanel Width="1010" Orientation="Horizontal" Margin="0,3,-1,0">
                         <StackPanel>
                             <TextBlock Text="勾选后才会下载参数到打印机中" Margin="0,5,0,5" Foreground="#99ef71" FontSize="14" HorizontalAlignment="Center" />
                             <!--全局操作-->
-                            <GroupBox Header="全局操作" Margin="5,0,0,5" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14" >
+                            <GroupBox Header="全局操作" Margin="5,-3,0,5" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14" >
                                 <StackPanel Name="AllSetAndRead" HorizontalAlignment="Center" Orientation="Horizontal"  Margin="5">
                                     <Button  Margin="0,0,10,0" Content="{DynamicResource SelectAll}" Name="SelectBtn" Click="SelectBtn_Click" Padding="10,5,10,5" Width="50"/>
                                     <Button  Margin="0,0,10,0" Content="{DynamicResource ClearAll}" Name="ClearAllBtn" Click="ClearAllBtn_Click" Padding="10,5,10,5" Width="50"/>
@@ -181,7 +181,7 @@
                                 </StackPanel>
                             </GroupBox>
                             <!--通讯参数设置-->
-                            <GroupBox Header="通讯参数设置" Margin="5,0,0,0" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14" Width="270">
+                            <GroupBox Header="通讯参数设置" Margin="5,0,0,0" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14" Width="270" Height="392">
                                 <!--針對特定BUTTON調整格式帶入所有設定-->
                                 <GroupBox.Resources>
                                     <Style TargetType="{x:Type Button}">
@@ -232,17 +232,22 @@
                                         <Button  Margin="0,0,5,0" Name="SetIPBtn" Click="SetIPBtn_Click" Content="设置IP地址" Padding="10,5,10,5" Width="110"/>
                                         <CheckBox VerticalAlignment="Center" IsChecked="True" Name="SetIPCheckbox" />
                                     </StackPanel>
-                                    <StackPanel  Margin="0,0,0,6" Orientation="Horizontal">
+                                    <StackPanel  Margin="0,0.5,0,6" Orientation="Horizontal">
+                                        <TextBox  Margin="0,0,5,0" Text="255.255.255.0" Name="SetSubnetText" Width="117" Height="26"  Foreground="#BDBDBD"/>
+                                        <Button  Margin="0,0,5,0" Name="SetSubnetBtn" Click="SetSubnetBtn_Click" Content="设置子网掩码" Padding="10,5,10,5" Width="110"/>
+                                        <CheckBox VerticalAlignment="Center" IsChecked="True" Name="SetSubnetCheckbox" />
+                                    </StackPanel>
+                                    <StackPanel  Margin="0,0.5,0,6" Orientation="Horizontal">
                                         <TextBox  Margin="0,0,5,0" Text="192.168.123.1" Name="SetGatewayText" Width="117" Height="26"  Foreground="#BDBDBD"/>
                                         <Button  Margin="0,0,5,0" Name="SetGatewayBtn"  Click="SetGatewayBtn_Click" Content="设置网关地址" Padding="10,5,10,5" Width="110"/>
                                         <CheckBox VerticalAlignment="Center" IsChecked="True" Name="SetGatewayCheckbox"/>
                                     </StackPanel>
-                                    <StackPanel  Margin="0,0,0,6" Orientation="Horizontal">
+                                    <StackPanel  Margin="0,0.5,0,6" Orientation="Horizontal">
                                         <TextBox  Margin="0,0,5,0" Name="SetMACText" Width="117" Height="26"  Foreground="#BDBDBD" IsEnabled="False"/>
                                         <Button  Margin="0,0,5,0" Name="SetMACBtn" Click="SetMACBtn_Click" Content="设置MAC地址" Padding="10,5,10,5" Width="110"/>
                                         <CheckBox VerticalAlignment="Center" IsChecked="True" Name="SetMACCheckbox"/>
                                     </StackPanel>
-                                    <StackPanel  Margin="0,0,0,6" Orientation="Horizontal">
+                                    <StackPanel  Margin="0,0.5,0,6" Orientation="Horizontal">
                                         <ComboBox  Margin="0,0,5,0" Width="117" SelectedIndex="0" Name="AutoDisconnectCom" Height="26" Foreground="#BDBDBD">
                                             <ComboBoxItem>无</ComboBoxItem>
                                             <ComboBoxItem>1分钟</ComboBoxItem>
@@ -258,7 +263,7 @@
                                         <Button  Margin="0,0,5,0" Content="自动断线时间" Name="AutoDisconnectBtn" Click="AutoDisconnectBtn_Click" Padding="10,5,10,5" Width="110"/>
                                         <CheckBox VerticalAlignment="Center" IsChecked="True" Name="AutoDisconnectheckbox"/>
                                     </StackPanel>
-                                    <StackPanel  Margin="0,0,0,6" Orientation="Horizontal">
+                                    <StackPanel  Margin="0,0.5,0,6" Orientation="Horizontal">
                                         <ComboBox  Margin="0,0,5,0" SelectedIndex="0"  Name="ConnectClientCom" Width="117" Height="26" Foreground="#BDBDBD">
                                             <ComboBoxItem>1个</ComboBoxItem>
                                             <ComboBoxItem>2个</ComboBoxItem>
@@ -266,7 +271,7 @@
                                         <Button  Margin="0,0,5,0" Content="网络连接数量" Name="ConnectClientBtn" Click="ConnectClientBtn_Click"  Padding="10,5,10,5" Width="110"/>
                                         <CheckBox VerticalAlignment="Center" IsChecked="True" Name="ConnectClientbox"/>
                                     </StackPanel>
-                                    <StackPanel  Margin="0,0,0,6" Orientation="Horizontal">
+                                    <StackPanel  Margin="0,0.5,0,6" Orientation="Horizontal">
                                         <ComboBox  Margin="0,0,5,0" SelectedIndex="1"  Name="EthernetSpeedCom" Width="117" Height="26" Foreground="#BDBDBD">
                                             <ComboBoxItem>10Base</ComboBoxItem>
                                             <ComboBoxItem>10Base/100Base</ComboBoxItem>
@@ -274,7 +279,7 @@
                                         <Button  Margin="0,0,5,0" Name="EthernetSpeedBtn" Click="EthernetSpeedBtn_Click" Content="网口通讯速度" Padding="10,5,10,5" Width="110"/>
                                         <CheckBox VerticalAlignment="Center" IsChecked="True"  Name="EthernetSpeedCheckbox"/>
                                     </StackPanel>
-                                    <StackPanel  Margin="0,0,0,6" Orientation="Horizontal">
+                                    <StackPanel  Margin="0,0.5,0,6" Orientation="Horizontal">
                                         <ComboBox Name="DHCPModeCom" SelectedIndex="0"   Margin="0,0,5,0" Width="117" Height="26" Foreground="#BDBDBD">
                                             <ComboBoxItem>静态DHCP</ComboBoxItem>
                                             <ComboBoxItem>模式1</ComboBoxItem>
@@ -284,7 +289,7 @@
                                         <Button  Margin="0,0,5,0" Content="DHCP模式" Name="DHCPModeBtn" Click="DHCPModeBtn_Click" Padding="10,5,10,5" Width="110"/>
                                         <CheckBox VerticalAlignment="Center" IsChecked="True" Name="DHCPModeCheckbox"/>
                                     </StackPanel>
-                                    <StackPanel  Margin="0,0,0,6" Orientation="Horizontal">
+                                    <StackPanel  Margin="0,0.5,0,6" Orientation="Horizontal">
                                         <ComboBox Name="USBModeCom" SelectedIndex="1"  Margin="0,0,5,0" Width="117" Height="26" Foreground="#BDBDBD">
                                             <ComboBoxItem>VCOM</ComboBoxItem>
                                             <ComboBoxItem>UTP</ComboBoxItem>
@@ -292,7 +297,7 @@
                                         <Button  Margin="0,0,5,0" Name="USBModeBtn" Click="USBModeBtn_Click" Content="USB模式" Padding="10,5,10,5" Width="110"/>
                                         <CheckBox VerticalAlignment="Center" IsChecked="True" Name="USBModeCheckbox"/>
                                     </StackPanel>
-                                    <StackPanel  Margin="0,0,0,0" Orientation="Horizontal">
+                                    <StackPanel  Margin="0,0.5,0,0" Orientation="Horizontal">
                                         <ComboBox  Name="USBFixedCom" SelectedIndex="1"  Margin="0,0,5,0" Width="117" Height="26" Text="IP Address" Foreground="#BDBDBD">
                                             <ComboBoxItem>不固定</ComboBoxItem>
                                             <ComboBoxItem>固定</ComboBoxItem>
@@ -304,7 +309,7 @@
                             </GroupBox>
                         </StackPanel>
                         <!--打印机属性设置-->
-                        <GroupBox Header="打印机属性设置" Margin="10,6,10,5" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14" Height="433" Width="720" VerticalAlignment="Top">
+                        <GroupBox Header="打印机属性设置" Margin="10,6,10,0" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14" Height="474" Width="720" VerticalAlignment="Top">
                             <!--針對特定BUTTON調整格式帶入所有設定-->
                             <GroupBox.Resources>
                                 <Style TargetType="{x:Type Button}">
@@ -361,7 +366,7 @@
                                     <RowDefinition/>
                                 </Grid.RowDefinitions>
                                 <!--切刀鳴叫設定-->
-                                <GroupBox  Margin="5,5,0,0" Grid.ColumnSpan="2" Height="58"  Width="485" Header="{DynamicResource SetCutBeepTitle}" VerticalAlignment="Center" HorizontalAlignment="Left" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14" >
+                                <GroupBox  Margin="5,21,0,55" Grid.ColumnSpan="2" Height="58"  Width="485" Header="{DynamicResource SetCutBeepTitle}" VerticalAlignment="Center" HorizontalAlignment="Left" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14" Grid.RowSpan="2" >
                                     <StackPanel  Margin="5,0,0,0" Orientation="Horizontal">
                                         <ComboBox  Margin="0,0,5,0" SelectedIndex="0"  Name="EnableCutBeepCom" Width="60" Height="28" Text="IP Address" Foreground="#BDBDBD">
                                             <ComboBoxItem Content="{DynamicResource Off}"></ComboBoxItem>
@@ -398,7 +403,7 @@
                                     </StackPanel>
                                 </GroupBox>
                                 <!--代码页-->
-                                <GroupBox   Margin="5,0,0,0" Grid.Row="1" Grid.ColumnSpan="2" Height="65"  Width="485" Header="代码页" VerticalAlignment="Center" HorizontalAlignment="Left" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14" >
+                                <GroupBox   Margin="5,17,0,300" Grid.Row="1" Grid.ColumnSpan="2" Height="65"  Width="485" Header="代码页" VerticalAlignment="Center" HorizontalAlignment="Left" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14" Grid.RowSpan="2" >
                                     <StackPanel  Margin="5,0,0,0" Orientation="Horizontal">
                                         <ComboBox  Margin="0,0,10,0" SelectedIndex="0"  Name="CodePageCom" Width="130" Height="28" Text="IP Address" Foreground="#BDBDBD"/>
                                         <Button  Margin="0,0,10,0" Name="CodePageSetBtn" Click="CodePageSetBtn_Click" Content="设置代码页" Padding="10,5,10,5" Width="130" Height="28"/>
@@ -407,7 +412,7 @@
                                     </StackPanel>
                                 </GroupBox>
                                 <!--column1-->
-                                <StackPanel Grid.Row="2"  Margin="5,5,5,0"  Name="PropertyColumn1" >
+                                <StackPanel Grid.Row="2"  Margin="5,28,5,0"  Name="PropertyColumn1" >
                                     <StackPanel  Margin="0,0,0,10" Orientation="Horizontal">
                                         <ComboBox SelectedIndex="0"  Margin="0,0,5,0" Name="LanguageSetCom" Width="100" Height="26" Foreground="#BDBDBD">
                                             <ComboBoxItem>简体GB18030</ComboBoxItem>
@@ -486,7 +491,7 @@
 
                                 </StackPanel>
                                 <!--column2-->
-                                <StackPanel Grid.Column="1" Grid.Row="2" Margin="5,5,0,0"  Name="PropertyColumn2">
+                                <StackPanel Grid.Column="1" Grid.Row="2" Margin="5,28,0,0"  Name="PropertyColumn2">
                                     <StackPanel  Margin="0,0,0,10" Orientation="Horizontal">
                                         <ComboBox  Margin="0,0,5,0" SelectedIndex="6"  Width="100" Height="26" Name="DensityCom" Foreground="#BDBDBD"/>
                                         <Button  Margin="0,0,5,0" Content="浓度调节" Name="DensityBtn" Click="DensityBtn_Click" Padding="10,5,10,5" Width="125" />
@@ -547,7 +552,7 @@
                                 </StackPanel>
                                 <!--column3-->
                                 <StackPanel  Grid.Column="2" Grid.RowSpan="3"  >
-                                    <StackPanel  Margin="0,3,0,3" Orientation="Horizontal">
+                                    <StackPanel  Margin="0,10,0,3" Orientation="Horizontal">
                                         <ComboBox  Margin="0,0,5,0" SelectedIndex="1"  Name="DIPSwitchCom" Width="100" Height="26" Foreground="#BDBDBD">
                                             <ComboBoxItem>不使用硬件DIP</ComboBoxItem>
                                             <ComboBoxItem>使用硬件DIP</ComboBoxItem>
@@ -592,7 +597,7 @@
                                             <Button Margin="10,10,0,5" Name="DIPSettingBtn" Click="DIPSettingBtn_Click" Content="设置DIP值"  FontSize="14" Padding="5"  Width="140" HorizontalAlignment="Left"/>
                                         </StackPanel>
                                     </GroupBox>
-                                    <StackPanel  Margin="0,7,0,10" Orientation="Horizontal">
+                                    <StackPanel  Margin="0,10,0,10" Orientation="Horizontal">
                                         <ComboBox  Margin="0,0,5,0" SelectedIndex="1"  Name="SoundCom" Width="70" Height="26" Foreground="#BDBDBD">
                                             <ComboBoxItem>关闭</ComboBoxItem>
                                             <ComboBoxItem>打开</ComboBoxItem>
@@ -600,7 +605,7 @@
                                         <Button  Margin="0,0,5,0" Name="SoundBtn" Click="SoundBtn_Click" Content="喇叭" Padding="5" Width="110"/>
                                         <CheckBox VerticalAlignment="Center" IsChecked="True" Name="SoundCheckbox"/>
                                     </StackPanel>
-                                    <StackPanel  Margin="0,-5,0,10" Orientation="Horizontal">
+                                    <StackPanel  Margin="0,0,0,10" Orientation="Horizontal">
                                         <ComboBox  Margin="0,0,5,0" SelectedIndex="0"  Name="HeadCloseCutCom" Width="70" Height="26" Foreground="#BDBDBD">
                                             <ComboBoxItem>不切纸</ComboBoxItem>
                                             <ComboBoxItem>切纸</ComboBoxItem>

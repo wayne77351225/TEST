@@ -48,6 +48,7 @@
     <sys:String x:Key="Set">設置</sys:String>
     <sys:String x:Key="CommunicationParameterSetting">通訊參數設置</sys:String>
     <sys:String x:Key="SetIP">設置ip地址</sys:String>
+    <sys:String x:Key="SetSubnet">設置網路遮罩</sys:String>
     <sys:String x:Key="SetGateway">設置網關地址</sys:String>
     <sys:String x:Key="SetMacAddress">設置mac地址</sys:String>
     <sys:String x:Key="AutomaticDisconnectTime">自動斷線時間</sys:String>
