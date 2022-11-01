@@ -21,28 +21,35 @@ namespace G80Utility.Tool
             bool isError = false;
 
             //Sets up serial port
-            mSerialPort.PortName = comPort;
-            Console.WriteLine("class:"+ (int)App.Current.Properties["BaudRateSetting"]);
-            mSerialPort.BaudRate = (int)App.Current.Properties["BaudRateSetting"];
-            mSerialPort.Parity = Parity.None;
-            mSerialPort.DataBits = 8;
-            mSerialPort.StopBits = StopBits.One;
-            mSerialPort.Handshake = Handshake.RequestToSend;
-            mSerialPort.ReadTimeout = 500;
-            mSerialPort.WriteTimeout = 500;
-            //不加下面兩行就會無法開啟serialport
-            mSerialPort.DtrEnable = true;
-            mSerialPort.RtsEnable = true;
             try
             {
-                mSerialPort.Open();
-                mSerialPort.DiscardOutBuffer();
-                mSerialPort.DiscardInBuffer();
+                mSerialPort.PortName = comPort;
+                Console.WriteLine("class:" + (int)App.Current.Properties["BaudRateSetting"]);
+                mSerialPort.BaudRate = (int)App.Current.Properties["BaudRateSetting"];
+                mSerialPort.Parity = Parity.None;
+                mSerialPort.DataBits = 8;
+                mSerialPort.StopBits = StopBits.One;
+                mSerialPort.Handshake = Handshake.RequestToSend;
+                mSerialPort.ReadTimeout = 500;
+                mSerialPort.WriteTimeout = 500;
+                //不加下面兩行就會無法開啟serialport
+                mSerialPort.DtrEnable = true;
+                mSerialPort.RtsEnable = true;
+                try
+                {
+                    mSerialPort.Open();
+                    mSerialPort.DiscardOutBuffer();
+                    mSerialPort.DiscardInBuffer();
+                }
+                catch (Exception)
+                {
+                    isError = true;
+                    mSerialPort.Close();
+                }
             }
-            catch (Exception) 
+            catch (Exception)
             {
                 isError = true;
-                mSerialPort.Close();
             }
             return isError;
         }
