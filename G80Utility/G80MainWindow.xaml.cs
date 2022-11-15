@@ -5034,7 +5034,8 @@ namespace G80Utility
                     {
                         sendArray[i] = snArray[i - sendLen];
                     }
-                    sn_reg.Remove(44, sn_reg.Length - 1);//多餘的移除
+                    sn_reg = sn_reg.Remove(32, sn_reg.Length - 32);//多餘的移除
+
                     //MessageBox.Show(FindResource("LessLength") as string);
                     //return;
                 }
@@ -7825,6 +7826,23 @@ namespace G80Utility
         }
         #endregion
 
+        #region 機器序號低位補0
+        private void AddZero_LostFocus(object sender, RoutedEventArgs e)
+        {
+            TextBox txt = (TextBox)sender;
+            if (txt.Text != "")
+            {
+                if (txt.Text.Length < 32)
+                {
+                    txt.Text = txt.Text.PadRight(32, '0');
+                }
+                else if(txt.Text.Length > 32)
+                {
+                    txt.Text = txt.Text.Substring(0, 32);
+                }
+            }
+        }
+        #endregion
 
     }
 }

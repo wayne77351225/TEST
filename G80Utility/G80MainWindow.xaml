@@ -66,7 +66,7 @@
                 <GroupBox Header="机器信息" Margin="10,5,0,10" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14" Height="150" >
                     <StackPanel VerticalAlignment="Top">
                         <Label Content="机器序列号:" FontSize="14" Margin="5,0,0,0"/>
-                        <TextBox Width="220" Height="30" FontSize="14" Name="PrinterSNTxt" HorizontalAlignment="Left" Margin="5,0,0,0"/>
+                        <TextBox Width="220" Height="30" FontSize="13" Name="PrinterSNTxt" HorizontalAlignment="Left" Margin="5,0,0,0" LostFocus="AddZero_LostFocus"/>
                         <Viewbox  Margin="5,0,0,0" >
                             <Label Content="ZLPPT01  VER1.01.00：2020-03-25" Name="PrinterModule" />
                         </Viewbox>
@@ -971,7 +971,7 @@
                             </GroupBox>
                             <StackPanel Grid.Column="1" Grid.Row="0">
                                 <!--机器信息-->
-                                <GroupBox  Header="机器信息" Margin="20,0,0,20" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14" Height="150"  Width="260">
+                                <GroupBox  Header="机器信息" Margin="20,0,0,20" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14" Height="162"  Width="260">
                                     <StackPanel VerticalAlignment="Top" HorizontalAlignment="Center">
                                         <Label Content="机器序列号:" FontSize="14" Margin="5,0,0,0"/>
                                         <TextBox FontSize="14" Width="230" Height="30"  Name="PrinterSNFacTxt" HorizontalAlignment="Left" Margin="5,0,0,0"/>

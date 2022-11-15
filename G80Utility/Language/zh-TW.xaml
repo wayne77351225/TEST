@@ -284,7 +284,7 @@
     <sys:String x:Key="CanNotParse">檔案無法解析，請重新選擇檔案！</sys:String>
     <sys:String x:Key="WIFINameTooLarge">WIFI名稱超過長度</sys:String>
     <sys:String x:Key="WIFIPwdTooLarge">WIFI密碼超過長度</sys:String>
-    
+
 
     <!--Printer Status-->
     <sys:String x:Key="Ready">就緒</sys:String>
