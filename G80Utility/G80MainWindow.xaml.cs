@@ -4906,6 +4906,11 @@ namespace G80Utility
                     {
                         PrinterSNFacTxt.Text = PrinterSNFacTxt.Text.Replace('\0', '0');
                     }
+                    else if (PrinterSNFacTxt.Text.Length > 32)
+                    {
+                        PrinterSNFacTxt.Text = PrinterSNFacTxt.Text.Substring(0, 32);
+                    }
+
                     sn_input = PrinterSNFacTxt.Text;
                     break;
                 case "communication":
@@ -4917,6 +4922,11 @@ namespace G80Utility
                     {
                         PrinterSNTxt.Text = PrinterSNTxt.Text.Replace('\0', '0');
                     }
+                    else if (PrinterSNTxt.Text.Length > 32)
+                    {
+                        PrinterSNTxt.Text = PrinterSNTxt.Text.Substring(0, 32);
+                    }
+
                     sn_input = PrinterSNTxt.Text;
                     break;
             }
