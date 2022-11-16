@@ -4898,9 +4898,25 @@ namespace G80Utility
             switch (SNTxtSettingPosition)
             {
                 case "factory":
+                    if (PrinterSNFacTxt.Text.Length < 32)
+                    {
+                        PrinterSNFacTxt.Text = PrinterSNFacTxt.Text.PadRight(32, '0');
+                    }
+                    else if (PrinterSNFacTxt.Text.Length == 32)
+                    {
+                        PrinterSNFacTxt.Text = PrinterSNFacTxt.Text.Replace('\0', '0');
+                    }
                     sn_input = PrinterSNFacTxt.Text;
                     break;
                 case "communication":
+                    if (PrinterSNTxt.Text.Length < 32)
+                    {
+                        PrinterSNTxt.Text = PrinterSNTxt.Text.PadRight(32, '0');
+                    }
+                    else if(PrinterSNTxt.Text.Length ==32)
+                    {
+                        PrinterSNTxt.Text = PrinterSNTxt.Text.Replace('\0', '0');
+                    }
                     sn_input = PrinterSNTxt.Text;
                     break;
             }
@@ -7839,6 +7855,10 @@ namespace G80Utility
                 else if(txt.Text.Length > 32)
                 {
                     txt.Text = txt.Text.Substring(0, 32);
+                }
+                else if (txt.Text.Length == 32)
+                {
+                    txt.Text = txt.Text.Replace('\0', '0');
                 }
             }
         }
