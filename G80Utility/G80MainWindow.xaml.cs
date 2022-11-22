@@ -4898,13 +4898,12 @@ namespace G80Utility
             switch (SNTxtSettingPosition)
             {
                 case "factory":
+                    if (PrinterSNFacTxt.Text.Length>0)
+                        PrinterSNFacTxt.Text = PrinterSNFacTxt.Text.Replace("\0", string.Empty).Replace(" ", string.Empty);
+
                     if (PrinterSNFacTxt.Text.Length < 32)
                     {
                         PrinterSNFacTxt.Text = PrinterSNFacTxt.Text.PadRight(32, '0');
-                    }
-                    else if (PrinterSNFacTxt.Text.Length == 32)
-                    {
-                        PrinterSNFacTxt.Text = PrinterSNFacTxt.Text.Replace('\0', '0');
                     }
                     else if (PrinterSNFacTxt.Text.Length > 32)
                     {
@@ -4914,13 +4913,12 @@ namespace G80Utility
                     sn_input = PrinterSNFacTxt.Text;
                     break;
                 case "communication":
+                    if(PrinterSNTxt.Text.Length>0)
+                        PrinterSNTxt.Text = PrinterSNTxt.Text.Replace("\0", string.Empty).Replace(" ", string.Empty);
+
                     if (PrinterSNTxt.Text.Length < 32)
                     {
                         PrinterSNTxt.Text = PrinterSNTxt.Text.PadRight(32, '0');
-                    }
-                    else if(PrinterSNTxt.Text.Length ==32)
-                    {
-                        PrinterSNTxt.Text = PrinterSNTxt.Text.Replace('\0', '0');
                     }
                     else if (PrinterSNTxt.Text.Length > 32)
                     {
@@ -7858,6 +7856,8 @@ namespace G80Utility
             TextBox txt = (TextBox)sender;
             if (txt.Text != "")
             {
+                txt.Text = txt.Text.Replace("\0", string.Empty).Replace(" ", string.Empty);
+
                 if (txt.Text.Length < 32)
                 {
                     txt.Text = txt.Text.PadRight(32, '0');
@@ -7865,10 +7865,6 @@ namespace G80Utility
                 else if(txt.Text.Length > 32)
                 {
                     txt.Text = txt.Text.Substring(0, 32);
-                }
-                else if (txt.Text.Length == 32)
-                {
-                    txt.Text = txt.Text.Replace('\0', '0');
                 }
             }
         }
