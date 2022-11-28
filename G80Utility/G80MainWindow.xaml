@@ -792,7 +792,7 @@
                             <GroupBox Grid.Column="2" Grid.RowSpan="2" Header="测试" Margin="10,10,5,0" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14">
                                 <StackPanel>
                                     <Button  Margin="10,15,10,5" Name="PrintTest_S_Maintanin" Click="PrintTest_S_Maintanin_Click" Content="自检页(短)" Padding="5" FontSize="14" Width="180"  />
-                                    <Button  Margin="10,5,10,5" Name="PrintTest_L_Maintanin" Click="PrintTest_L_Maintanin_Click" Content="自检页(长)" Padding="5" FontSize="14" Width="180" />
+                                    <Button  Margin="10,5,10,5" Name="PrintTest_L_Maintanin" Click="PrintTest_L_Maintanin_Click" Content="自检页(长)" Padding="5" FontSize="14" Width="180" Visibility="Collapsed"/>
                                     <Button  Margin="10,5,10,5" Name="PrintTest_EVEN_Maintanin" Click="PrintTest_EVEN_Maintanin_Click" Content="打印均匀测试" Padding="5" FontSize="14" Width="180" />
                                     <StackPanel   Margin="10,5,10,5" Orientation="Horizontal" HorizontalAlignment="Center" >
                                         <TextBox  FontSize="14" Width="70" Text="1" Name="CutTimes_Maintanin_Txt" />
@@ -951,7 +951,7 @@
                             <GroupBox Header="测试" Margin="10,0,0,5" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14">
                                 <StackPanel>
                                     <Button  Margin="10,15,10,5" Name="PrintTest_S" Click="PrintTest_S_Click" Content="自检页(短)" Padding="5" FontSize="14" Width="180"  />
-                                    <Button  Margin="10,5,10,5" Name="PrintTest_L" Click="PrintTest_L_Click" Content="自检页(长)" Padding="5" FontSize="14" Width="180" />
+                                    <Button  Margin="10,5,10,5" Name="PrintTest_L" Click="PrintTest_L_Click" Content="自检页(长)" Padding="5" FontSize="14" Width="180" Visibility="Collapsed"/>
                                     <Button  Margin="10,5,10,5" Name="PrintTest_EVEN" Click="PrintTest_EVEN_Click" Content="打印均匀测试" Padding="5" FontSize="14" Width="180" />
                                     <StackPanel   Margin="10,5,10,5" Orientation="Horizontal" HorizontalAlignment="Center" >
                                         <TextBox  Text="1" FontSize="14" Width="70" Name="CutTimesTxt"/>
