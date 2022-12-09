@@ -826,7 +826,7 @@
             </TabItem>
 
             <!--藍牙WIFI設置-->
-            <TabItem   FontSize="14" Visibility="Visible">
+            <TabItem   FontSize="14" Visibility="Visible" Name="WIFIBTSettingTabItem">
                 <TabItem.Header>
                     <!--MouseLeftButtonDown="BTWIFITab_MouseLeftButtonDown"-->
                     <Label Content="{DynamicResource WIFIBTSettingTitle}"

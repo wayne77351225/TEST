@@ -284,6 +284,7 @@
     <sys:String x:Key="CanNotParse">文件无法解析，请重新选择文件!</sys:String>
     <sys:String x:Key="WIFINameTooLarge">WIFI名称超过长度</sys:String>
     <sys:String x:Key="WIFIPwdTooLarge">WIFI密码超过长度</sys:String>
+    <sys:String x:Key="LoadFail">读取时发生错误</sys:String>
 
     <!--Printer Status-->
     <sys:String x:Key="Ready">就绪</sys:String>

@@ -32,32 +32,35 @@ namespace G80Utility.Tool
 
         public static bool IsConnect;
 
+        //事前讀取FW
+        public static bool IsReadFW = false;
+
         #region 連接usb設備
         public static int ConnectUSBDevice(string DeviceName)
         {
-                USBHandle = Kernel32.CreateFile
-               (
-                   DeviceName,
-                   //讀或寫
-                   GENERIC_READ | GENERIC_WRITE,
-                   //共享讀寫
-                   FILE_SHARE_READ | FILE_SHARE_WRITE,
-                   0,
-                   OPEN_EXISTING,
-                   OVERLAPPED,
-                   0
-                );
-                //Console.WriteLine(" IN_DeviceName = " + DeviceName);                    //查看参数是否传入           
-                if (USBHandle == -1)
-                {
-                    Console.WriteLine(" 失败 HidHandle = 0x" + "{0:x}", USBHandle);
-                    return 0;
-                }
-                else    //连接成功
-                {
-                    Console.WriteLine(" 成功 HidHandle = 0x" + "{0:x}", USBHandle);
-                    return 1;
-                }      
+            USBHandle = Kernel32.CreateFile
+           (
+               DeviceName,
+               //讀或寫
+               GENERIC_READ | GENERIC_WRITE,
+               //共享讀寫
+               FILE_SHARE_READ | FILE_SHARE_WRITE,
+               0,
+               OPEN_EXISTING,
+               OVERLAPPED,
+               0
+            );
+            //Console.WriteLine(" IN_DeviceName = " + DeviceName);                    //查看参数是否传入           
+            if (USBHandle == -1)
+            {
+                Console.WriteLine(" 失败 HidHandle = 0x" + "{0:x}", USBHandle);
+                return 0;
+            }
+            else    //连接成功
+            {
+                Console.WriteLine(" 成功 HidHandle = 0x" + "{0:x}", USBHandle);
+                return 1;
+            }
         }
         #endregion
 
@@ -73,7 +76,7 @@ namespace G80Utility.Tool
             overlap.OffsetHigh = 0;
 
             uint write = 0;
-            if(data==null)
+            if (data == null)
                 return isReceiveData;
             bool isread = Kernel32.WriteFile((IntPtr)USBHandle, data, (uint)(data.Length), ref write, ref overlap);
             if (!isread && Marshal.GetLastWin32Error() == ERROR_IO_PENDING)
@@ -105,7 +108,7 @@ namespace G80Utility.Tool
             Kernel32.OVERLAPPED overlap = new Kernel32.OVERLAPPED();
             overlap.Offset = 0;
             overlap.OffsetHigh = 0;
-  
+
             int elapsed = 0;
 
             while (nReadLen < size)
@@ -122,13 +125,17 @@ namespace G80Utility.Tool
                     }
                     Kernel32.GetOverlappedResult((IntPtr)USBHandle, ref overlap, ref dwRead, true);
                 }
-                nReadLen += (int)dwRead;
+                if (IsReadFW)
+                    nReadLen += size;
+                else
+                    nReadLen += (int)dwRead;
                 IsConnect = true;
                 if (elapsed == 3000) //3Secs timeout
                 {
                     isReceiveData = true;
                     break;
                 }
+
             }
 
             if (nReadLen < size) //timeout 後回覆狀態
@@ -137,6 +144,7 @@ namespace G80Utility.Tool
                 isReceiveData = true;
                 closeHandle(); //timeout後關閉USBHandle
             }
+
             mRecevieData = buffer;
             //Console.WriteLine("USB接收資料" + BitConverter.ToString(buffer));
             isReceiveData = true;

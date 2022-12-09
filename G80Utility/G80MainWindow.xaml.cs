@@ -152,6 +152,10 @@ namespace G80Utility
         public static bool isStopUpdate;
         //是否正在更新
         public static bool isRunning;
+        //是否只讀取FW不顯示
+        public static bool isReadFW = false;
+        //是否為207主板
+        public static bool is207Board=false;
         #endregion
 
         public G80MainWindow()
@@ -252,6 +256,7 @@ namespace G80Utility
             collectMacAddress();
 
             DipContentChk();
+
         }
         #endregion
 
@@ -1129,7 +1134,7 @@ namespace G80Utility
             }
             for (int i = 50; i < 60; i++)
             {
-                sfvesion += Convert.ToChar(buffer[i]);   //軟件版本    
+                sfvesion += Convert.ToChar(buffer[i]);   //固件版本    
             }
 
             for (int i = 60; i < 70; i++)
@@ -1137,10 +1142,18 @@ namespace G80Utility
                 date += Convert.ToChar(buffer[i]);    //多傳了一次軟件版本
             }
 
-            PrinterSNFacTxt.Text = sn;
-            PrinterSNTxt.Text = sn;
-            PrinterModuleFac.Content = moudle.Replace(" ", "") + sfvesion + "：" + date;
-            PrinterModule.Content = moudle.Replace(" ", "") + sfvesion + "：" + date;
+            if (sfvesion.Contains("(N"))
+                is207Board = true;
+            else
+                is207Board = false;
+            
+            if (!isReadFW)
+            {
+                PrinterSNFacTxt.Text = sn;
+                PrinterSNTxt.Text = sn;
+                PrinterModuleFac.Content = moudle.Replace(" ", "") + sfvesion + "：" + date;
+                PrinterModule.Content = moudle.Replace(" ", "") + sfvesion + "：" + date;
+            }
 
         }
         #endregion
@@ -1336,7 +1349,7 @@ namespace G80Utility
                 checkIsGetData(null, PaperWidthCom, data, FindResource("PaperWidth") as string, false, 1);
             }
 
-            if (receiveData.Contains(Command.RE_SPEAKER_ONOFF_CLASSFY))          
+            if (receiveData.Contains(Command.RE_SPEAKER_ONOFF_CLASSFY))
             {
                 checkIsGetData(null, SoundCom, data, FindResource("Speaker") as string, false, 1);
             }
@@ -1586,7 +1599,7 @@ namespace G80Utility
         #region 端口鮑率設定至畫面
         private void setBaudRatetoUI(byte[] data)
         {
-            if (data[8] == 100) 
+            if (data[8] == 100)
             {
                 Baud_RateCom.SelectedIndex = 16;
             }
@@ -1729,7 +1742,7 @@ namespace G80Utility
                         sendArray = StringToByteArray(Command.RS232_COMMUNICATION_TEST);
                         RS232Connect.SerialPortSendCMD("NeedReceive", sendArray, null, 8);
                         System.DateTime StopTime;
-                        StopTime = System.DateTime.Now.AddSeconds(1);
+                        StopTime = System.DateTime.Now.AddSeconds(1.5);
                         while (!RS232Connect.isReceiveData)
                         {
                             if (RS232Connect.mRecevieData != null)
@@ -1771,7 +1784,7 @@ namespace G80Utility
                             //USBConnectAndSendCmd("CommunicationTest", sendArray, 8);
                             USBConnect.USBSendCMD("NeedReceive", sendArrayUSB, null, 8);
                             System.DateTime StopTime;
-                            StopTime = System.DateTime.Now.AddSeconds(3);
+                            StopTime = System.DateTime.Now.AddSeconds(4);
                             while (!USBConnect.isReceiveData)
                             {
                                 if (USBConnect.mRecevieData != null)
@@ -1818,7 +1831,7 @@ namespace G80Utility
                             //EthernetConnectAndSendCmd("CommunicationTest", sendArray, 8);
                             EthernetConnect.EthernetSendCmd("NeedReceive", sendArrayEthernet, null, 8);
                             System.DateTime StopTime;
-                            StopTime = System.DateTime.Now.AddSeconds(2);
+                            StopTime = System.DateTime.Now.AddSeconds(3);
                             while (!EthernetConnect.isReceiveData)
                             {
                                 if (EthernetConnect.mRecevieData != null)
@@ -1847,6 +1860,13 @@ namespace G80Utility
             //DifferInterfaceConnectChkAndSend("Send3Empty");
             //因為機器狀態為故障時不能傳送正常命令
             send3empty();
+            isReadFW = true;
+            DifferInterfaceConnectChkAndSend("RoadPrinterSN");
+            isReadFW = false;
+            if (is207Board)
+                WIFIBTSettingTabItem.Visibility = Visibility.Collapsed;
+            else
+                WIFIBTSettingTabItem.Visibility = Visibility.Visible;
         }
         #endregion
 
@@ -1877,7 +1897,6 @@ namespace G80Utility
         #region 讀取機器序列號(通訊)按鈕事件
         private void ReadSNBtn_Click(object sender, RoutedEventArgs e)
         {
-            
             DifferInterfaceConnectChkAndSend("RoadPrinterSN");
         }
         #endregion
@@ -2537,9 +2556,9 @@ namespace G80Utility
         private void IPModeWrite_Btn_Click(object sender, RoutedEventArgs e)
         {
             DifferInterfaceConnectChkAndSend("WriteIPMode");
-        
+
         }
-       
+
         #endregion
 
         #region 取得STA IP位址按鈕事件
@@ -2824,7 +2843,7 @@ namespace G80Utility
         #region 升級程序tab按鈕事件
         private void FWUpdateTab_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            
+
             //initialIAP();
         }
         #endregion
@@ -2844,7 +2863,7 @@ namespace G80Utility
                 }
             }
             else     //停止執行時按啟動可以讓他執行
-            {      
+            {
                 if (StopUpdateBtn.Content.ToString().Contains("停止"))
                 {
                     //isStopUpdate = true;
@@ -2866,7 +2885,7 @@ namespace G80Utility
 
 
             }
-            
+
 
 
         }
@@ -2928,7 +2947,7 @@ namespace G80Utility
             dialog.Multiselect = false;//该值确定是否可以选择多个文件
             dialog.Title = FindResource("SelectFolder") as string;
             dialog.Filter = FindResource("AllFiles") as string + "(*.hex)|*.hex|" + FindResource("AllFiles") as string + "(*.bin)|*.bin";
-            
+
             try
             {
                 if (dialog.ShowDialog() == true)
@@ -4115,8 +4134,8 @@ namespace G80Utility
             if (LEDCom.SelectedIndex != -1)
             {
 
-                byte[] sendArray = StringToByteArray(Command.LED_ORDER_SETTING_HEAD +"0"+(LEDCom.SelectedIndex+1));
-    
+                byte[] sendArray = StringToByteArray(Command.LED_ORDER_SETTING_HEAD + "0" + (LEDCom.SelectedIndex + 1));
+
                 SendCmd(sendArray, "BeepOrSetting", 0);
             }
             else { MessageBox.Show(FindResource("ColumnEmpty") as string); }
@@ -4444,7 +4463,7 @@ namespace G80Utility
 
             if (Config.isSoundOnOffChecked)
             {
-                sendArray = StringToByteArray(Command.READ_ALL_HEADER + "31 40 01");  
+                sendArray = StringToByteArray(Command.READ_ALL_HEADER + "31 40 01");
                 SendCmd(sendArray, "ReadPara", 9);
             }
 
@@ -4884,7 +4903,15 @@ namespace G80Utility
         private void RoadPrinterSN()
         {
             byte[] sendArray = StringToByteArray(Command.DEVICE_INFO_READING);
-            SendCmd(sendArray, "ReadSN", 70);
+            try
+            {
+                SendCmd(sendArray, "ReadSN", 70);
+            }
+            catch 
+            {
+                is207Board = false;
+                MessageBox.Show(FindResource("LoadFail") as string);
+            }
         }
         #endregion
 
@@ -4898,7 +4925,7 @@ namespace G80Utility
             switch (SNTxtSettingPosition)
             {
                 case "factory":
-                    if (PrinterSNFacTxt.Text.Length>0)
+                    if (PrinterSNFacTxt.Text.Length > 0)
                         PrinterSNFacTxt.Text = PrinterSNFacTxt.Text.Replace("\0", string.Empty).Replace(" ", string.Empty);
 
                     if (PrinterSNFacTxt.Text.Length < 32)
@@ -4913,7 +4940,7 @@ namespace G80Utility
                     sn_input = PrinterSNFacTxt.Text;
                     break;
                 case "communication":
-                    if(PrinterSNTxt.Text.Length>0)
+                    if (PrinterSNTxt.Text.Length > 0)
                         PrinterSNTxt.Text = PrinterSNTxt.Text.Replace("\0", string.Empty).Replace(" ", string.Empty);
 
                     if (PrinterSNTxt.Text.Length < 32)
@@ -5020,26 +5047,26 @@ namespace G80Utility
         #region 寫入序號到打印機
         private void snWriteInPrinter(string sn_reg)
         {
-            if (sn_reg != "" )
+            if (sn_reg != "")
             {
                 byte[] snArray = Encoding.Default.GetBytes(sn_reg);
                 byte[] sendArray = StringToByteArray(Command.SN_SETTING_HEADER);
                 int sendLen = sendArray.Length;
                 int snLen = snArray.Length;
-               
+
                 if (snArray.Length < 32)
                 {
                     Array.Resize(ref sendArray, 44);
                     for (int i = sendLen; i < 44; i++)
                     {
                         if (i < sendLen + snArray.Length)
-                        { 
+                        {
                             sendArray[i] = snArray[i - sendLen];
                         }
                         else
                         {//大於輸入序號的長度後補0
-                            sendArray[i] = 0x00;                               
-                        }                    
+                            sendArray[i] = 0x00;
+                        }
                     }
                 }
                 else if (snArray.Length == 32)
@@ -5063,14 +5090,14 @@ namespace G80Utility
                     //MessageBox.Show(FindResource("LessLength") as string);
                     //return;
                 }
-                
+
                 SendCmd(sendArray, "BeepOrSetting", 0);
                 // setRegistry("SN", sn_reg); //寫入序號到註冊機碼
-                                          
+
                 PrinterSNFacTxt.Text = sn_reg;  //寫入序號到畫面
                 PrinterSNTxt.Text = sn_reg;
             }
-          
+
         }
         #endregion
 
@@ -5139,7 +5166,7 @@ namespace G80Utility
 
             //初始化
             UIintial();
-            
+
 
             //iap初始化
             if (iap_download != null)
@@ -5193,7 +5220,7 @@ namespace G80Utility
                 DeviceStatusTxt.Text = FindResource("DeviceConnected") as string;
                 openfileAndDownloadUIControl(true);
                 //ReconnectBtn.IsEnabled = false;
-                
+
                 isUSBLink = false;
                 if (StopUpdateBtn.Content.ToString().Contains("启动"))
                 {
@@ -5334,7 +5361,7 @@ namespace G80Utility
             if (isBin || isLoadBinSuccess || isLoadHexSuccess)
             {
                 iap_download.get_bin_array(sender);
-                
+
             }
             else
             {
@@ -5344,7 +5371,7 @@ namespace G80Utility
                 thread.IsBackground = true;
                 thread.Start(this);
             }
-            
+
         }
         #endregion
 
@@ -5875,11 +5902,11 @@ namespace G80Utility
                             codePage.Add(char2[i]);
                         }
                         byte[] sendArrayCode = codePage.ToArray();
-                    /*    string TMP = "";
-                        for(int i=0;i< sendArrayCode.Length;i++)
-                        {
-                            TMP += sendArrayCode[i].ToString("X");
-                        }*/
+                        /*    string TMP = "";
+                            for(int i=0;i< sendArrayCode.Length;i++)
+                            {
+                                TMP += sendArrayCode[i].ToString("X");
+                            }*/
                         SendCmd(sendArrayCode, "BeepOrSetting", 0);
                     }
                     else { MessageBox.Show(FindResource("ColumnEmpty") as string); }
@@ -6070,6 +6097,12 @@ namespace G80Utility
                         List<byte> sendList = sendArrayDownload.ToList();
                         sendList.Insert(2, insertBtye[0]);
                         sendArrayDownload = sendList.ToArray();
+                        FileStream pFileStream = null;
+
+                        pFileStream = new FileStream("C:\\test111.txt", FileMode.OpenOrCreate);
+
+                        pFileStream.Write(sendArrayDownload, 0, sendArrayDownload.Length);
+
                         SendCmd(sendArrayDownload, "BeepOrSetting", 0);
                         Console.WriteLine(BitConverter.ToString(sendArrayDownload).Replace("-", ""));
                         MessageBox.Show(FindResource("WaitforRedLight") as string);
@@ -6098,18 +6131,18 @@ namespace G80Utility
                     break;
                 case "ReadBaudRate":
                     LoadPort();
-               /*     if (PortCom.SelectedIndex == 2)
+                    /*     if (PortCom.SelectedIndex == 2)
+                         {
+                             byte[] RaedBaudRateArray = StringToByteArray(Command.PORT_BAUDRATE_BT_LOAD);
+                             SendCmd(RaedBaudRateArray, "ReadBaudRate", 9);
+                         }
+                         else if (PortCom.SelectedIndex == 1)*/
                     {
-                        byte[] RaedBaudRateArray = StringToByteArray(Command.PORT_BAUDRATE_BT_LOAD);
-                        SendCmd(RaedBaudRateArray, "ReadBaudRate", 9);
-                    }
-                    else if (PortCom.SelectedIndex == 1)*/
-                    { 
                         byte[] RaedBaudRateArray = StringToByteArray(Command.PORT_BAUDRATE_LOAD);
                         SendCmd(RaedBaudRateArray, "ReadBaudRate", 9);
                     }
 
-            break;
+                    break;
                 case "WriteBaudRate":
                     LoadPort();
                     if (Baud_RateCom.SelectedIndex != -1)
@@ -6172,7 +6205,7 @@ namespace G80Utility
                                     break;
                             }
                         }
-                        else if(PortCom.SelectedIndex == 1)
+                        else if (PortCom.SelectedIndex == 1)
                         {
                             switch (Baud_RateCom.SelectedIndex)
                             {
@@ -6836,15 +6869,19 @@ namespace G80Utility
                         }
                         break;
                     case "ReadSN":
+                        USBConnect.IsReadFW = true;
                         USBConnect.USBSendCMD("NeedReceive", data, null, receiveLength);
                         while (!USBConnect.isReceiveData)
                         {
                             if (USBConnect.mRecevieData != null)
                             {
                                 SetPrinterInfo(USBConnect.mRecevieData);
+                               USBConnect.IsReadFW = false;
                                 break;
                             }
                         }
+
+                        USBConnect.IsReadFW = false;
                         break;
                     case "ReadPrinterInfo": //打印機統計信息
                         USBConnect.USBSendCMD("NeedReceive", data, null, receiveLength);
@@ -7415,68 +7452,70 @@ namespace G80Utility
             {
                 foreach (String usbTypePath in rkUsbPrint.GetSubKeyNames())
                 {
-                    //取得device instance
-                    string deviceinstance = (string)rkUsbPrint.OpenSubKey(usbTypePath).GetValue("DeviceInstance");
-                    //deviceinstance:USB\VID_0471&PID_0055\0003D0000000
-                    // deviceinstance: USB\VID_0471 & PID_8E00\001
-                    //要把vid和pid取出來，後面開usb要用
-                    string sn = null;
-                    string vidpid = null;
-                    vidpid = deviceinstance.Split('\\')[1];
-                    sn = deviceinstance.Split('\\')[2];
-                    RegistryKey Device = rkUsbPrint.OpenSubKey(usbTypePath + "\\#\\Device Parameters");
-                    string portdescription = null;
+                    if (usbTypePath.Contains("##?#USB#VID"))
+                    {      //取得device instance
+                        string deviceinstance = (string)rkUsbPrint.OpenSubKey(usbTypePath).GetValue("DeviceInstance");
+                        //deviceinstance:USB\VID_0471&PID_0055\0003D0000000
+                        // deviceinstance: USB\VID_0471 & PID_8E00\001
+                        //要把vid和pid取出來，後面開usb要用
+                        string sn = null;
+                        string vidpid = null;
+                        vidpid = deviceinstance.Split('\\')[1];
+                        sn = deviceinstance.Split('\\')[2];
+                        RegistryKey Device = rkUsbPrint.OpenSubKey(usbTypePath + "\\#\\Device Parameters");
+                        string portdescription = null;
 
-                    //取得port number 
-                    //win10沒有連線時會沒有portNumber，此數字會=0
-                    int portnumber = 0;
-                    if (Device.GetValue("Port Number") != null)
-                    {
-                        portnumber = (int)Device.GetValue("Port Number");
-
-                    }
-
-                    //for winxp
-                    bool isLinked = false;
-                    if (OSVersion == "5.1")
-                    {
-                        RegistryKey Linked = rkUsbPrint.OpenSubKey(usbTypePath + "\\#\\Control");
-                        if (Linked != null) //沒有抓到usb時會沒#\\Control
+                        //取得port number 
+                        //win10沒有連線時會沒有portNumber，此數字會=0
+                        int portnumber = 0;
+                        if (Device.GetValue("Port Number") != null)
                         {
-                            if (Linked.GetValue("Linked").ToString() == "1")
+                            portnumber = (int)Device.GetValue("Port Number");
+
+                        }
+
+                        //for winxp
+                        bool isLinked = false;
+                        if (OSVersion == "5.1")
+                        {
+                            RegistryKey Linked = rkUsbPrint.OpenSubKey(usbTypePath + "\\#\\Control");
+                            if (Linked != null) //沒有抓到usb時會沒#\\Control
                             {
-                                isLinked = true;
-                                isUSBLink = true;
+                                if (Linked.GetValue("Linked").ToString() == "1")
+                                {
+                                    isLinked = true;
+                                    isUSBLink = true;
+                                }
+                                else
+                                {
+                                    isUSBLink = false;
+                                    isLinked = false;
+                                }
+                                portdescription = (string)Device.GetValue("Port Description");//取得port description
+                                Device device = new Device() { DeviceType = "usb", USBSN = sn, USBPortDescritption = portdescription, USBDeviceInstance = deviceinstance, USBVIDPID = vidpid, USBisLinked = isLinked, USBPortName = "USB" + portnumber.ToString("D3") };
+                                deviceList.Add(device);
                             }
                             else
                             {
-                                isUSBLink = false;
-                                isLinked = false;
+                                //MessageBox.Show(FindResource("USBNotRegistYet") as string);
                             }
-                            portdescription = (string)Device.GetValue("Port Description");//取得port description
-                            Device device = new Device() { DeviceType = "usb", USBSN = sn, USBPortDescritption = portdescription, USBDeviceInstance = deviceinstance, USBVIDPID = vidpid, USBisLinked = isLinked, USBPortName = "USB" + portnumber.ToString("D3") };
-                            deviceList.Add(device);
                         }
                         else
                         {
-                            //MessageBox.Show(FindResource("USBNotRegistYet") as string);
-                        }
-                    }
-                    else
-                    {
-                        //判斷如果註冊碼資料中"Port Description"不加入此項資料
-                        // win7的註冊碼中沒有這項資料
-                        if (Device.GetValue("Port Description") + "" == "")
-                        {   //win7
-                            //ToString("D3")，代表這是三位數的格式不到三位數者自動補0.
-                            Device device = new Device() { DeviceType = "usb", USBSN = sn, USBDeviceInstance = deviceinstance, USBVIDPID = vidpid, USBPortName = "USB" + portnumber.ToString("D3") };
-                            deviceList.Add(device);
-                        }
-                        else
-                        {
-                            portdescription = (string)Device.GetValue("Port Description");//取得port description
-                            Device device = new Device() { DeviceType = "usb", USBSN = sn, USBPortDescritption = portdescription, USBDeviceInstance = deviceinstance, USBVIDPID = vidpid, USBPortName = "USB" + portnumber.ToString("D3") };
-                            deviceList.Add(device);
+                            //判斷如果註冊碼資料中"Port Description"不加入此項資料
+                            // win7的註冊碼中沒有這項資料
+                            if (Device.GetValue("Port Description") + "" == "")
+                            {   //win7
+                                //ToString("D3")，代表這是三位數的格式不到三位數者自動補0.
+                                Device device = new Device() { DeviceType = "usb", USBSN = sn, USBDeviceInstance = deviceinstance, USBVIDPID = vidpid, USBPortName = "USB" + portnumber.ToString("D3") };
+                                deviceList.Add(device);
+                            }
+                            else
+                            {
+                                portdescription = (string)Device.GetValue("Port Description");//取得port description
+                                Device device = new Device() { DeviceType = "usb", USBSN = sn, USBPortDescritption = portdescription, USBDeviceInstance = deviceinstance, USBVIDPID = vidpid, USBPortName = "USB" + portnumber.ToString("D3") };
+                                deviceList.Add(device);
+                            }
                         }
                     }
                 }
@@ -7592,13 +7631,16 @@ namespace G80Utility
             {
                 foreach (String usbTypePath in rkUsbPrint.GetSubKeyNames())
                 {
-                    //seletedItem!=null,要加判斷選取項目不為null不然找不到時會出現錯誤
-                    //因為rkUsbPrint.GetSubKeyNames()撈出來的資料是所有有註冊的印表機資料，要比對選取項目的sn
-                    //因為傳送路徑時前面##?#要改為\\?\，並且除了sn全部小寫
-                    if (seletedItem != null && usbTypePath.Contains(seletedItem.USBVIDPID) && usbTypePath.Contains(seletedItem.USBSN))
+                    if (usbTypePath.Contains("##?#USB#VID"))
                     {
-                        usbpath = "\\\\?\\" + usbTypePath.ToLower().Substring(4);
-                        break;
+                        //seletedItem!=null,要加判斷選取項目不為null不然找不到時會出現錯誤
+                        //因為rkUsbPrint.GetSubKeyNames()撈出來的資料是所有有註冊的印表機資料，要比對選取項目的sn
+                        //因為傳送路徑時前面##?#要改為\\?\，並且除了sn全部小寫
+                        if (seletedItem != null && usbTypePath.Contains(seletedItem.USBVIDPID) && usbTypePath.Contains(seletedItem.USBSN))
+                        {
+                            usbpath = "\\\\?\\" + usbTypePath.ToLower().Substring(4);
+                            break;
+                        }
                     }
                 }
                 if (usbpath != null)
@@ -7675,9 +7717,9 @@ namespace G80Utility
         #region 選取傳輸通道
         private void ConnectType_SelectionChanged(object sender, RoutedEventArgs e)
         {
-            int SelectUSBNum=-1;
+            int SelectUSBNum = -1;
             //因為通訊測試所以全部傳輸通道要一次設定好
-            if (DeviceSelectUSB.SelectedIndex != -1)       
+            if (DeviceSelectUSB.SelectedIndex != -1)
                 SelectUSBNum = DeviceSelectUSB.SelectedIndex;    //若有之前選擇USB紀錄，則沿用
             viewmodel.removePort(deviceList);
             deviceList.Clear(); //清空避免重複
@@ -7786,7 +7828,7 @@ namespace G80Utility
                 GatewayAddressLoad_Btn.IsEnabled = false;
                 GatewayAddressWrite_Btn.IsEnabled = false;
             }
-            else if((IPModeCom.SelectedIndex == 0))
+            else if ((IPModeCom.SelectedIndex == 0))
             {
                 STAIPAddress_Txt.IsEnabled = true;
                 STAIPAddressLoad_Btn.IsEnabled = true;
@@ -7807,7 +7849,7 @@ namespace G80Utility
                 BaudRateLoad_Btn.IsEnabled = false;
                 BaudRateWirte_Btn.IsEnabled = false;
             }
-            else if(PortCom.SelectedIndex == 1 || PortCom.SelectedIndex ==2)
+            else if (PortCom.SelectedIndex == 1 || PortCom.SelectedIndex == 2)
             {
                 PortLoad_Btn.IsEnabled = true;
                 PortWirte_Btn.IsEnabled = true;
@@ -7862,7 +7904,7 @@ namespace G80Utility
                 {
                     txt.Text = txt.Text.PadRight(32, '0');
                 }
-                else if(txt.Text.Length > 32)
+                else if (txt.Text.Length > 32)
                 {
                     txt.Text = txt.Text.Substring(0, 32);
                 }
