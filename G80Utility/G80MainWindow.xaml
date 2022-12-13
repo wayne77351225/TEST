@@ -846,26 +846,20 @@
                                 <RowDefinition/>
                                 <RowDefinition/>
                             </Grid.RowDefinitions>
-                            <GroupBox Header="{DynamicResource PortSetting}" Grid.RowSpan="2" Margin="145,10,304,80" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14" Height="300" RenderTransformOrigin="0.535,0.317" Grid.ColumnSpan="2">
+                            <GroupBox Header="{DynamicResource PortSetting}" Grid.RowSpan="2" Margin="145,10,304,10" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14" RenderTransformOrigin="0.535,0.317" Grid.ColumnSpan="2">
                                 <StackPanel>
-                                    <Label Margin="37,15,31,0" Content="{DynamicResource Port}" HorizontalAlignment="Center" Width="130"/>
+                                    <Label Margin="37,5,31,0" Content="{DynamicResource Port}" HorizontalAlignment="Center" Width="130"/>
                                     <ComboBox  Margin="41,0,27,0" SelectedIndex="-1"  Name="PortCom" Width="130" Height="28" Foreground="#BDBDBD" SelectionChanged="PortCom_SelectionChanged">
                                         <ComboBoxItem Content="{DynamicResource Null}"></ComboBoxItem>
                                         <ComboBoxItem Content="{DynamicResource WIFI}"></ComboBoxItem>
-                                        <ComboBoxItem Content="{DynamicResource BT}"></ComboBoxItem>
                                         <!--<ComboBoxItem Content="{DynamicResource BT}"></ComboBoxItem>-->
                                     </ComboBox>
                                     <StackPanel  Margin="42,10,26,0" Orientation="Horizontal" Width="130" >
                                         <Button Margin="0,0,10,0"  Name="PortLoad_Btn" Click="PortLoad_Btn_Click" Content="{DynamicResource Load}" Padding="5" FontSize="14"  Width="60"/>
                                         <Button  Name="PortWirte_Btn" Click="PortWirte_Btn_Click" Content="{DynamicResource Set}" Padding="5" FontSize="14"  Width="60"/>
                                     </StackPanel>
-                                    <Label Margin="38,25,30,0" Content="{DynamicResource BaudRate}" HorizontalAlignment="Center" Width="130"/>
+                                    <Label Margin="38,18,30,0" Content="{DynamicResource BaudRate}" HorizontalAlignment="Center" Width="130"/>
                                     <ComboBox  Margin="42,0,26,0" SelectedIndex="-1"  Name="Baud_RateCom" Width="130" Height="28" Foreground="#BDBDBD">
-                                        <ComboBoxItem Content="1000000"></ComboBoxItem>
-                                        <ComboBoxItem Content="1500000"></ComboBoxItem>
-                                        <ComboBoxItem Content="76800"></ComboBoxItem>
-                                        <ComboBoxItem Content="2000000"></ComboBoxItem>
-                                        <ComboBoxItem Content="921600"></ComboBoxItem>
                                         <ComboBoxItem Content="460800"></ComboBoxItem>
                                         <ComboBoxItem Content="115200"></ComboBoxItem>
                                         <ComboBoxItem Content="57600"></ComboBoxItem>
@@ -876,12 +870,21 @@
                                         <ComboBoxItem Content="9600"></ComboBoxItem>
                                         <ComboBoxItem Content="4800"></ComboBoxItem>
                                         <ComboBoxItem Content="2400"></ComboBoxItem>
+                                        <ComboBoxItem Content="1800"></ComboBoxItem>
                                         <ComboBoxItem Content="1200"></ComboBoxItem>
                                         <ComboBoxItem Content="auto"></ComboBoxItem>
                                     </ComboBox>
                                     <StackPanel  Margin="42,10,26,0" Orientation="Horizontal" Width="130" >
                                         <Button Margin="0,0,10,0"  Name="BaudRateLoad_Btn" Click="BaudRateLoad_Btn_Click" Content="{DynamicResource Load}" Padding="5" FontSize="14"  Width="60"/>
                                         <Button  Name="BaudRateWirte_Btn" Click="BaudRateWirte_Btn_Click" Content="{DynamicResource Set}" Padding="5" FontSize="14"  Width="60"/>
+                                    </StackPanel>
+                                    <Label Margin="38,16,30,0" Content="{DynamicResource WIFIModuleBrand}" HorizontalAlignment="Center" Width="130"/>
+                                    <ComboBox  Margin="41,0,27,0" SelectedIndex="-1"  Name="WIFIModuleBrandCom" Width="130" Height="28" Foreground="#BDBDBD">
+                                        <ComboBoxItem Content="{DynamicResource ESPRESSIF}"></ComboBoxItem>
+                                        <ComboBoxItem Content="{DynamicResource HF}"></ComboBoxItem>
+                                    </ComboBox>
+                                    <StackPanel  Margin="40,10,26,0" Orientation="Horizontal" Width="130" >
+                                        <Button Margin="0,0,10,0"  Name="WIFIModuleBrandLoad_Btn" Click="WIFIModuleBrandLoad_Btn_Click" Content="{DynamicResource Load}" Padding="5" FontSize="14"  Width="129"/>
                                     </StackPanel>
                                 </StackPanel>
                             </GroupBox>
@@ -951,7 +954,7 @@
                             <GroupBox Header="测试" Margin="10,0,0,5" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14">
                                 <StackPanel>
                                     <Button  Margin="10,15,10,5" Name="PrintTest_S" Click="PrintTest_S_Click" Content="自检页(短)" Padding="5" FontSize="14" Width="180"  />
-                                    <Button  Margin="10,5,10,5" Name="PrintTest_L" Click="PrintTest_L_Click" Content="自检页(长)" Padding="5" FontSize="14" Width="180" Visibility="Collapsed"/>
+                                    <Button  Margin="10,5,10,5" Name="PrintTest_L" Click="PrintTest_L_Click" Content="自检页(长)" Padding="5" FontSize="14" Width="180"/>
                                     <Button  Margin="10,5,10,5" Name="PrintTest_EVEN" Click="PrintTest_EVEN_Click" Content="打印均匀测试" Padding="5" FontSize="14" Width="180" />
                                     <StackPanel   Margin="10,5,10,5" Orientation="Horizontal" HorizontalAlignment="Center" >
                                         <TextBox  Text="1" FontSize="14" Width="70" Name="CutTimesTxt"/>

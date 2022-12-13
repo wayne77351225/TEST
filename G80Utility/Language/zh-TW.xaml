@@ -162,6 +162,10 @@
     <sys:String x:Key="PortSetting">端口設定</sys:String>
     <sys:String x:Key="Port">端口：</sys:String>
     <sys:String x:Key="BaudRate">鮑率：</sys:String>
+    <sys:String x:Key="WIFIModuleBrand">WIFI模塊廠牌：</sys:String>
+    <sys:String x:Key="HF">漢楓</sys:String>
+    <sys:String x:Key="ESPRESSIF">樂鑫</sys:String>
+    <sys:String x:Key="WebWIFISetting">請至網站進行WIFI設定</sys:String>
     <sys:String x:Key="NamePassword">名稱/密碼</sys:String>
     <sys:String x:Key="WIFISetting">WIFI設定</sys:String>
     <sys:String x:Key="IPMode">IP模式：</sys:String>

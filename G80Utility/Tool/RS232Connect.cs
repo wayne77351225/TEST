@@ -73,7 +73,11 @@ namespace G80Utility.Tool
             try
             {
                 IsConnect = true;
-                mSerialPort.Write(dataSend, 0, dataSend.Length);
+                for (int dataSendByteNum = 0; dataSendByteNum < dataSend.Length; dataSendByteNum++)
+                {
+                    byte[] Writebuffer = { dataSend[dataSendByteNum] };
+                    mSerialPort.Write(Writebuffer, 0, 1);
+                }
 
                 switch (cmdType)
                 {

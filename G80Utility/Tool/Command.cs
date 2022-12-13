@@ -344,7 +344,10 @@ namespace G80Utility.Tool
         public static string PORT_BAUDRATE_LOAD = "1F 1B 1F 53 5A 4A 42 5A 46 30 27 01";
 
         //寫入端口鮑率
-        public static string PORT_BAUDRATE_SET = "1F 1B 1F 53 5A 4A 42 5A 46 30 22 02";
+        public static string PORT_BAUDRATE_SET = "1F 1B 1F 53 5A 4A 42 5A 46 30 27 02";
+
+        //讀取WIFI模塊廠牌
+        public static string WIFI_BRAND_LOAD = "1F 1B 1F 53 5A 4A 42 5A 46 30 29 01";
 
         //讀取端口鮑率(藍牙)
         public static string PORT_BAUDRATE_BT_LOAD = "1F 1B 1F 53 5A 4A 42 5A 46 30 23 01";

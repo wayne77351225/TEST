@@ -1601,10 +1601,60 @@ namespace G80Utility
         {
             if (data[8] == 100)
             {
-                Baud_RateCom.SelectedIndex = 16;
+                Baud_RateCom.SelectedIndex = 12;
             }
             else
                 Baud_RateCom.SelectedIndex = data[8];
+        }
+        #endregion
+
+        #region WIFI模塊廠牌設定至畫面
+        private void setWIFIModuleBrandtoUI(byte[] data)
+        {
+            WIFIModuleBrandCom.SelectedIndex = data[8]-1;
+            if (WIFIModuleBrandCom.SelectedIndex==1)
+            {
+                Baud_RateCom.IsEnabled = false;
+                BaudRateLoad_Btn.IsEnabled = false;
+                BaudRateWirte_Btn.IsEnabled = false;
+                WIFIName_Txt.IsEnabled = false;
+                WIFINameLoad_Btn.IsEnabled = false;
+                WIFINameWirte_Btn.IsEnabled = false;
+                WIFIPwd_Txt.IsEnabled = false;
+                WIFIPwdLoad_Btn.IsEnabled = false;
+                WIFIPwdWrite_Btn.IsEnabled = false;
+                IPModeCom.IsEnabled = false;
+                IPModeLoad_Btn.IsEnabled = false;
+                IPModeWirte_Btn.IsEnabled = false;
+                STAIPAddress_Txt.IsEnabled = false;
+                STAIPAddressLoad_Btn.IsEnabled = false;
+                STAIPAddressWirte_Btn.IsEnabled = false;
+                GatewayAddress_Txt.IsEnabled = false;
+                GatewayAddressLoad_Btn.IsEnabled = false;
+                GatewayAddressWrite_Btn.IsEnabled = false;
+                MessageBox.Show(FindResource("WebWIFISetting") as string);
+            }
+            else
+            {
+                Baud_RateCom.IsEnabled = true;
+                BaudRateLoad_Btn.IsEnabled = true;
+                BaudRateWirte_Btn.IsEnabled = true;
+                WIFIName_Txt.IsEnabled = true;
+                WIFINameLoad_Btn.IsEnabled = true;
+                WIFINameWirte_Btn.IsEnabled = true;
+                WIFIPwd_Txt.IsEnabled = true;
+                WIFIPwdLoad_Btn.IsEnabled = true;
+                WIFIPwdWrite_Btn.IsEnabled = true;
+                IPModeCom.IsEnabled = true;
+                IPModeLoad_Btn.IsEnabled = true;
+                IPModeWirte_Btn.IsEnabled = true;
+                STAIPAddress_Txt.IsEnabled = true;
+                STAIPAddressLoad_Btn.IsEnabled = true;
+                STAIPAddressWirte_Btn.IsEnabled = true;
+                GatewayAddress_Txt.IsEnabled = true;
+                GatewayAddressLoad_Btn.IsEnabled = true;
+                GatewayAddressWrite_Btn.IsEnabled = true;
+            }
         }
         #endregion
 
@@ -4713,6 +4763,14 @@ namespace G80Utility
         }
         #endregion
 
+        #region 讀取WIFI模塊廠牌
+        private void LoadWIFIModuleBrand()
+        {
+            byte[] sendArray = StringToByteArray(Command.WIFI_BRAND_LOAD);
+            SendCmd(sendArray, "ReadWIFIModuleBrand", 9);
+        }
+        #endregion
+
         #region 讀取BT名稱
         private void LoadBTName()
         {
@@ -6130,7 +6188,7 @@ namespace G80Utility
                     else { MessageBox.Show(FindResource("ColumnEmpty") as string); }
                     break;
                 case "ReadBaudRate":
-                    LoadPort();
+             //       LoadPort();
                     /*     if (PortCom.SelectedIndex == 2)
                          {
                              byte[] RaedBaudRateArray = StringToByteArray(Command.PORT_BAUDRATE_BT_LOAD);
@@ -6144,11 +6202,11 @@ namespace G80Utility
 
                     break;
                 case "WriteBaudRate":
-                    LoadPort();
+              //      LoadPort();
                     if (Baud_RateCom.SelectedIndex != -1)
                     {
                         byte[] Baud_RateArray = null;
-                        if (PortCom.SelectedIndex == 2)
+                /*        if (PortCom.SelectedIndex == 2)
                         {
                             switch (Baud_RateCom.SelectedIndex)
                             {
@@ -6205,7 +6263,7 @@ namespace G80Utility
                                     break;
                             }
                         }
-                        else if (PortCom.SelectedIndex == 1)
+                        else if (PortCom.SelectedIndex == 1)*/
                         {
                             switch (Baud_RateCom.SelectedIndex)
                             {
@@ -6246,18 +6304,6 @@ namespace G80Utility
                                     Baud_RateArray = StringToByteArray(Command.PORT_BAUDRATE_SET + "0b");
                                     break;
                                 case 12:
-                                    Baud_RateArray = StringToByteArray(Command.PORT_BAUDRATE_SET + "0c");
-                                    break;
-                                case 13:
-                                    Baud_RateArray = StringToByteArray(Command.PORT_BAUDRATE_SET + "0d");
-                                    break;
-                                case 14:
-                                    Baud_RateArray = StringToByteArray(Command.PORT_BAUDRATE_SET + "0e");
-                                    break;
-                                case 15:
-                                    Baud_RateArray = StringToByteArray(Command.PORT_BAUDRATE_SET + "0f");
-                                    break;
-                                case 16:
                                     Baud_RateArray = StringToByteArray(Command.PORT_BAUDRATE_SET + "64");
                                     break;
                             }
@@ -6265,6 +6311,9 @@ namespace G80Utility
                         SendCmd(Baud_RateArray, "BeepOrSetting", 0);
                     }
                     else { MessageBox.Show(FindResource("ColumnEmpty") as string); }
+                    break;
+                case "ReadWIFIModuleBrand":
+                    LoadWIFIModuleBrand();
                     break;
                 case "ReadBT":
                     LoadBTName();
@@ -6923,6 +6972,17 @@ namespace G80Utility
                             if (USBConnect.mRecevieData != null)
                             {
                                 setBaudRatetoUI(USBConnect.mRecevieData);
+                                break;
+                            }
+                        }
+                        break;
+                    case "ReadWIFIModuleBrand": //讀取WIFI模塊廠牌
+                        USBConnect.USBSendCMD("NeedReceive", data, null, receiveLength);
+                        while (!USBConnect.isReceiveData)
+                        {
+                            if (USBConnect.mRecevieData != null)
+                            {
+                                setWIFIModuleBrandtoUI(USBConnect.mRecevieData);
                                 break;
                             }
                         }
@@ -7778,6 +7838,7 @@ namespace G80Utility
                     //    break;
             }
         }
+        #endregion
 
         //load language resource
         private void LoadLanguage(String name)
@@ -7868,7 +7929,6 @@ namespace G80Utility
         {
             DifferInterfaceConnectChkAndSend("SetSubnet");
         }
-        #endregion
 
         #region 依照os系統設定語系
         //暫時關閉繁中
@@ -7889,6 +7949,13 @@ namespace G80Utility
                     //    break;
             }
 
+        }
+        #endregion
+
+        #region 設定WIFI模塊廠牌
+        private void WIFIModuleBrandLoad_Btn_Click(object sender, RoutedEventArgs e)
+        {
+            DifferInterfaceConnectChkAndSend("ReadWIFIModuleBrand");          
         }
         #endregion
 
