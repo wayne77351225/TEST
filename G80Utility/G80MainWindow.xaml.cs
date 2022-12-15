@@ -1117,7 +1117,6 @@ namespace G80Utility
             string moudle = null;
             string sfvesion = null;
             string date = null;
-
             //(0~7)前8個是無意義資料
             for (int i = 8; i < 40; i++)
             {
@@ -1154,7 +1153,7 @@ namespace G80Utility
                 PrinterModuleFac.Content = moudle.Replace(" ", "") + sfvesion + "：" + date;
                 PrinterModule.Content = moudle.Replace(" ", "") + sfvesion + "：" + date;
             }
-
+      //      Console.WriteLine("DATA:"+date);
         }
         #endregion
 
@@ -6824,6 +6823,16 @@ namespace G80Utility
                             }
                         }
                         break;
+                    case "ReadWIFIModuleBrand": //讀取WIFI模塊廠牌
+                        RS232Connect.SerialPortSendCMD("NeedReceive", data, null, receiveLength);
+                        while (!RS232Connect.isReceiveData)
+                        {
+                            if (RS232Connect.mRecevieData != null)
+                            {
+                                setWIFIModuleBrandtoUI(RS232Connect.mRecevieData);
+                                break;
+                            }
+                        }
                         break;
                     case "ReadBTName": //藍牙名稱
                         RS232Connect.SerialPortSendCMD("NeedReceive", data, null, receiveLength);
@@ -7130,6 +7139,17 @@ namespace G80Utility
                             if (EthernetConnect.mRecevieData != null)
                             {
                                 setBaudRatetoUI(EthernetConnect.mRecevieData);
+                                break;
+                            }
+                        }
+                        break;
+                    case "ReadWIFIModuleBrand": //讀取WIFI模塊廠牌
+                        bool isReceiveWIFIModuleBrand = EthernetConnect.EthernetSendCmd("NeedReceive", data, null, receiveLength);
+                        while (!EthernetConnect.isReceiveData)
+                        {
+                            if (EthernetConnect.mRecevieData != null)
+                            {
+                                setWIFIModuleBrandtoUI(EthernetConnect.mRecevieData);
                                 break;
                             }
                         }
