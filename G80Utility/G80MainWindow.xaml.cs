@@ -1817,7 +1817,8 @@ namespace G80Utility
                 {
                     MessageBox.Show(FindResource("NotSettingComport") as string);
                 }
-
+                DeviceType = "RS232";
+                send3empty();
             }
             if ((bool)USBCheckbox.IsChecked)
             {
@@ -1861,6 +1862,8 @@ namespace G80Utility
                 {
                     MessageBox.Show(FindResource("NotSettingUSBport") as string);
                 }
+                DeviceType = "USB";
+                send3empty();
             }
             if ((bool)EthernetCheckbox.IsChecked)
             {
@@ -1904,11 +1907,25 @@ namespace G80Utility
 
                     }
                 }
+                DeviceType = "Ethernet";
+                send3empty();
             }
             //一樣傳送命令前確認開通通道再關閉，避免前面測試完通道已經關閉造成錯誤
             //DifferInterfaceConnectChkAndSend("Send3Empty");
             //因為機器狀態為故障時不能傳送正常命令
-            send3empty();
+//            send3empty();
+            if (USBRadio.IsChecked == true)
+            {
+                DeviceType = "USB";
+            }
+            else if (EhernetRadio.IsChecked == true)
+            {
+                DeviceType = "Ethernet";
+            }
+            else if (RS232Radio.IsChecked == true)
+            {
+                DeviceType = "RS232";
+            }
             isReadFW = true;
             DifferInterfaceConnectChkAndSend("RoadPrinterSN");
             isReadFW = false;
