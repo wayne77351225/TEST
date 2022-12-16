@@ -1611,7 +1611,7 @@ namespace G80Utility
         private void setWIFIModuleBrandtoUI(byte[] data)
         {
             WIFIModuleBrandCom.SelectedIndex = data[8]-1;
-            if (WIFIModuleBrandCom.SelectedIndex==1)
+            if (WIFIModuleBrandCom.SelectedIndex !=0)
             {
                 PortLoad_Btn.IsEnabled = false;
                 PortWirte_Btn.IsEnabled = false;
@@ -1634,9 +1634,10 @@ namespace G80Utility
                 GatewayAddress_Txt.IsEnabled = false;
                 GatewayAddressLoad_Btn.IsEnabled = false;
                 GatewayAddressWrite_Btn.IsEnabled = false;
-                MessageBox.Show(FindResource("WebWIFISetting") as string);
+                if (WIFIModuleBrandCom.SelectedIndex == 1)
+                    MessageBox.Show(FindResource("WebWIFISetting") as string);
             }
-            else
+            else if(WIFIModuleBrandCom.SelectedIndex == 0)
             {
                 PortLoad_Btn.IsEnabled = true;
                 PortWirte_Btn.IsEnabled = true;
