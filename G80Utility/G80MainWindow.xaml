@@ -849,14 +849,14 @@
                             <GroupBox Header="{DynamicResource PortSetting}" Grid.RowSpan="2" Margin="145,10,304,10" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14" RenderTransformOrigin="0.535,0.317" Grid.ColumnSpan="2">
                                 <StackPanel>
                                     <Label Margin="37,5,31,0" Content="{DynamicResource Port}" HorizontalAlignment="Center" Width="130"/>
-                                    <ComboBox  Margin="41,0,27,0" SelectedIndex="-1"  Name="PortCom" Width="130" Height="28" Foreground="#BDBDBD" SelectionChanged="PortCom_SelectionChanged" IsEnabled="False">
+                                    <ComboBox  Margin="41,0,27,0" SelectedIndex="-1"  Name="PortCom" Width="130" Height="28" Foreground="#BDBDBD" SelectionChanged="PortCom_SelectionChanged">
                                         <ComboBoxItem Content="{DynamicResource Null}"></ComboBoxItem>
                                         <ComboBoxItem Content="{DynamicResource WIFI}"></ComboBoxItem>
-                                        <!--<ComboBoxItem Content="{DynamicResource BT}"></ComboBoxItem>-->
+                                        <ComboBoxItem Content="{DynamicResource BT}"></ComboBoxItem>
                                     </ComboBox>
                                     <StackPanel  Margin="42,10,26,0" Orientation="Horizontal" Width="130" >
-                                        <Button Margin="0,0,10,0"  Name="PortLoad_Btn" Click="PortLoad_Btn_Click" Content="{DynamicResource Load}" Padding="5" FontSize="14"  Width="60" IsEnabled="False"/>
-                                        <Button  Name="PortWirte_Btn" Click="PortWirte_Btn_Click" Content="{DynamicResource Set}" Padding="5" FontSize="14"  Width="60" IsEnabled="False"/>
+                                        <Button Margin="0,0,10,0"  Name="PortLoad_Btn" Click="PortLoad_Btn_Click" Content="{DynamicResource Load}" Padding="5" FontSize="14"  Width="60" />
+                                        <Button  Name="PortWirte_Btn" Click="PortWirte_Btn_Click" Content="{DynamicResource Set}" Padding="5" FontSize="14"  Width="60" />
                                     </StackPanel>
                                     <Label Margin="38,18,30,0" Content="{DynamicResource BaudRate}" HorizontalAlignment="Center" Width="130"/>
                                     <ComboBox  Margin="42,0,26,0" SelectedIndex="-1"  Name="Baud_RateCom" Width="130" Height="28" Foreground="#BDBDBD" IsEnabled="False">
@@ -879,12 +879,12 @@
                                         <Button  Name="BaudRateWirte_Btn" Click="BaudRateWirte_Btn_Click" Content="{DynamicResource Set}" Padding="5" FontSize="14"  Width="60" IsEnabled="False"/>
                                     </StackPanel>
                                     <Label Margin="38,16,30,0" Content="{DynamicResource WIFIModuleBrand}" HorizontalAlignment="Center" Width="130"/>
-                                    <ComboBox  Margin="41,0,27,0" SelectedIndex="-1"  Name="WIFIModuleBrandCom" Width="130" Height="28" Foreground="#BDBDBD">
+                                    <ComboBox  Margin="41,0,27,0" SelectedIndex="-1"  Name="WIFIModuleBrandCom" Width="130" Height="28" Foreground="#BDBDBD" IsEnabled="False">
                                         <ComboBoxItem Content="{DynamicResource ESPRESSIF}"></ComboBoxItem>
                                         <ComboBoxItem Content="{DynamicResource HF}"></ComboBoxItem>
                                     </ComboBox>
                                     <StackPanel  Margin="40,10,26,0" Orientation="Horizontal" Width="130" >
-                                        <Button Margin="0,0,10,0"  Name="WIFIModuleBrandLoad_Btn" Click="WIFIModuleBrandLoad_Btn_Click" Content="{DynamicResource Load}" Padding="5" FontSize="14"  Width="129"/>
+                                        <Button Margin="0,0,10,0"  Name="WIFIModuleBrandLoad_Btn" Click="WIFIModuleBrandLoad_Btn_Click" Content="{DynamicResource Load}" Padding="5" FontSize="14"  Width="129" IsEnabled="False"/>
                                     </StackPanel>
                                 </StackPanel>
                             </GroupBox>
@@ -892,8 +892,8 @@
                             <GroupBox Grid.RowSpan="2" Header="{DynamicResource NamePassword}" Margin="55,10,61,10" BorderThickness="1" BorderBrush="#A9A9A9" FontSize="14" Height="370" Grid.Column="1">
                                 <StackPanel >
                                     <Label  Content="{DynamicResource  BTName}" HorizontalAlignment="Center" Width="130" Margin="40,6,42,0"/>
-                                    <TextBox Margin="41,0,31,10" FontSize="14" Width="130" Text="" Name="BTName_Txt" Padding="5"/>
-                                    <Button  Margin="41,0,31,0" Name="BTName_Btn"  Click="BTName_Btn_Click" Content="{DynamicResource LoadBTName}" Padding="5" FontSize="14"  Width="129"/>
+                                    <TextBox Margin="41,0,31,10" FontSize="14" Width="130" Text="" Name="BTName_Txt" Padding="5" IsEnabled="False"/>
+                                    <Button  Margin="41,0,31,0" Name="BTName_Btn"  Click="BTName_Btn_Click" Content="{DynamicResource LoadBTName}" Padding="5" FontSize="14"  Width="129" IsEnabled="False"/>
                                     <Label Margin="37,15,35,0" Content="{DynamicResource WIFIName}" HorizontalAlignment="Center" Width="130"/>
                                     <TextBox Margin="41,0,31,10" FontSize="14" Width="130" Text="" Name="WIFIName_Txt" Padding="5" IsEnabled="False"/>
                                     <StackPanel  Margin="41,0,31,0" Orientation="Horizontal" Width="130" >

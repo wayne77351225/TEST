@@ -1592,6 +1592,20 @@ namespace G80Utility
         private void setPorttoUI(byte[] data)
         {
             PortCom.SelectedIndex = data[8] - 1;
+            if (PortCom.SelectedIndex == 1)
+            {
+                WIFIModuleBrandCom.IsEnabled = true;
+                WIFIModuleBrandLoad_Btn.IsEnabled = true;
+                BTName_Txt.IsEnabled = false;
+                BTName_Btn.IsEnabled = false;
+            }
+            else
+            {
+                WIFIModuleBrandCom.IsEnabled = false;
+                WIFIModuleBrandLoad_Btn.IsEnabled = false;
+                BTName_Txt.IsEnabled = true;
+                BTName_Btn.IsEnabled = true;
+            }
         }
         #endregion
 
@@ -1613,9 +1627,6 @@ namespace G80Utility
             WIFIModuleBrandCom.SelectedIndex = data[8]-1;
             if (WIFIModuleBrandCom.SelectedIndex !=0)
             {
-                PortLoad_Btn.IsEnabled = false;
-                PortWirte_Btn.IsEnabled = false;
-                PortCom.IsEnabled = false;
                 Baud_RateCom.IsEnabled = false;
                 BaudRateLoad_Btn.IsEnabled = false;
                 BaudRateWirte_Btn.IsEnabled = false;
@@ -1639,9 +1650,6 @@ namespace G80Utility
             }
             else if(WIFIModuleBrandCom.SelectedIndex == 0)
             {
-                PortLoad_Btn.IsEnabled = true;
-                PortWirte_Btn.IsEnabled = true;
-                PortCom.IsEnabled = true;
                 Baud_RateCom.IsEnabled = true;
                 BaudRateLoad_Btn.IsEnabled = true;
                 BaudRateWirte_Btn.IsEnabled = true;
@@ -7950,17 +7958,11 @@ namespace G80Utility
             {
                 PortLoad_Btn.IsEnabled = false;
                 PortWirte_Btn.IsEnabled = false;
-                Baud_RateCom.IsEnabled = false;
-                BaudRateLoad_Btn.IsEnabled = false;
-                BaudRateWirte_Btn.IsEnabled = false;
             }
             else if (PortCom.SelectedIndex == 1 || PortCom.SelectedIndex == 2)
             {
                 PortLoad_Btn.IsEnabled = true;
                 PortWirte_Btn.IsEnabled = true;
-                Baud_RateCom.IsEnabled = true;
-                BaudRateLoad_Btn.IsEnabled = true;
-                BaudRateWirte_Btn.IsEnabled = true;
             }
         }
 
