@@ -5728,6 +5728,10 @@ namespace G80Utility
         {
             Dispatcher.BeginInvoke(new Action(() =>
             {
+                if ((bool)RS232Radio.IsChecked)
+                {
+                    RS232Connect.CloseSerialPort(); //最後關閉
+                }
                 PrinterNowStatus();
                 //DifferInterfaceConnectChkAndSend("PrinterNowStatus");
             }), null);
