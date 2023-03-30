@@ -1805,8 +1805,8 @@ namespace G80Utility
                     {
                         sendArray = StringToByteArray(Command.RS232_COMMUNICATION_TEST);
                         RS232Connect.SerialPortSendCMD("NeedReceive", sendArray, null, 8);
-                        System.DateTime StopTime;
-                        StopTime = System.DateTime.Now.AddSeconds(1.5);
+                /*        System.DateTime StopTime;
+                        StopTime = System.DateTime.Now.AddSeconds(1.5);*/
                         while (!RS232Connect.isReceiveData)
                         {
                             if (RS232Connect.mRecevieData != null)
@@ -1814,10 +1814,10 @@ namespace G80Utility
                                 isRS232CommunicateOK(RS232Connect.mRecevieData, "communication");
                                 break;
                             }
-                            if (System.DateTime.Now >= StopTime)
+                     /*       if (System.DateTime.Now >= StopTime)
                             {
                                 break;
-                            }
+                            }*/
                         }
                         SendCmdFail("R");
                         RS232Connect.CloseSerialPort(); //最後關閉
@@ -3097,7 +3097,7 @@ namespace G80Utility
             {
                 case "RS232":
                     if (RS232PortName != null) //先判斷是否有get prot name
-                    {
+                    { 
                         bool isError = RS232Connect.OpenSerialPort(RS232PortName, FindResource("CannotOpenComport") as string);
                         if (!isError)
                         {
@@ -3150,6 +3150,7 @@ namespace G80Utility
                     bool isOK = chekckEthernetIPText();
                     if (isOK)
                     {
+                        Thread.Sleep(1000);
                         int connectStatus = EthernetConnect.EthernetConnectStatus();
                         switch (connectStatus)
                         {
@@ -6507,6 +6508,7 @@ namespace G80Utility
                     bool isOK = chekckEthernetIPText();
                     if (isOK)
                     {
+                        Thread.Sleep(1000);
                         int connectStatus = EthernetConnect.EthernetConnectStatus();
                         if (connectStatus != 1)
                         {
