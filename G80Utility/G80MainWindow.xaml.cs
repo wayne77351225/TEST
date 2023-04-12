@@ -6807,15 +6807,19 @@ namespace G80Utility
                         }
                         break;
                     case "ReadSN":
+                        RS232Connect.IsReadFW = true;
                         RS232Connect.SerialPortSendCMD("NeedReceive", data, null, receiveLength);
                         while (!RS232Connect.isReceiveData)
                         {
                             if (RS232Connect.mRecevieData != null)
                             {
                                 SetPrinterInfo(RS232Connect.mRecevieData);
+                                RS232Connect.IsReadFW = false;
                                 break;
                             }
                         }
+
+                        RS232Connect.IsReadFW = false;
                         break;
                     case "ReadPrinterInfo": //打印機統計信息
                         RS232Connect.SerialPortSendCMD("NeedReceive", data, null, receiveLength);
