@@ -15,9 +15,6 @@ namespace G80Utility.Tool
         public static byte[] mRecevieData;
         public static bool IsConnect;
 
-        //事前讀取FW
-        public static bool IsReadFW = false;
-
         #region 開啟SerialPort
         public static bool OpenSerialPort(string comPort, string msg)
         {
@@ -119,10 +116,7 @@ namespace G80Utility.Tool
                 {
                     int bytesRead = mSerialPort.Read(buffer, offset, count);
                     offset += bytesRead;
-                    if (IsReadFW)
-                        count -= count;
-                    else
-                        count -= bytesRead;
+                    count -= bytesRead;
                     IsConnect = true;
                 }
                 catch (Exception)
