@@ -1885,6 +1885,7 @@ namespace G80Utility
                 bool isOK = chekckEthernetIPText();
                 if (isOK)
                 {
+                    Thread.Sleep(1000);
                     //checkEthernetCommunitcation();
                     int connectStatus = EthernetConnect.EthernetConnectStatus();
                     switch (connectStatus)
@@ -5619,6 +5620,7 @@ namespace G80Utility
                     bool isOK = chekckEthernetIPText();
                     if (isOK)
                     {
+                        Thread.Sleep(1000);
                         int connectStatus = EthernetConnect.EthernetConnectStatus();
                         switch (connectStatus)
                         {
